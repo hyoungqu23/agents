@@ -4,5 +4,14 @@
     "name": "HM2"
   },
   "description": "Cross-platform agent tools by HM2.",
-  "plugins": []
+  "plugins": [
+    {
+      "name": "content",
+      "source": "./plugins/content",
+      "description": "Content writing skills for drafting, editing, rewriting, and auditing English or Korean prose.",
+      "version": "0.1.0",
+      "category": "Productivity",
+      "keywords": ["writing", "editing", "content", "korean", "english"]
+    }
+  ]
 }

@@ -6,6 +6,12 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 - Display name: `HM2 Agent Tools`
 - Repository: `agent-tools`
 
+## Contents
+
+| Plugin | Skills | Description |
+| --- | --- | --- |
+| [`content`](plugins/content) | `un-ai` | Content writing skills for drafting, editing, rewriting, and auditing English or Korean prose. |
+
 ## Repository layout
 
 ```text
@@ -13,9 +19,17 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 ├── .claude-plugin/marketplace.json
 ├── .agents/plugins/marketplace.json
 └── plugins/
+    └── content/
+        ├── .claude-plugin/plugin.json
+        ├── .codex-plugin/plugin.json
+        └── skills/
+            └── un-ai/
+                ├── SKILL.md
+                ├── agents/openai.yaml
+                └── references/
 ```
 
-The Claude Code and Codex manifests are platform-specific wrappers over the same plugin sources under `plugins/`.
+The Claude Code and Codex manifests are platform-specific wrappers. Each skill is stored once under `plugins/<plugin>/skills/<skill>/` and shared by both.
 
 ## Local testing
 
@@ -25,13 +39,14 @@ From the parent directory of this repository:
 
 ```text
 /plugin marketplace add ./agent-tools
+/plugin install content@hm2-tools
 ```
 
 After publishing to GitHub, replace the local path with `<github-owner>/agent-tools`.
 
 ### Codex
 
-Add this repository as an explicit local marketplace:
+Add this repository as an explicit local marketplace, then install `content` from `HM2 Agent Tools`:
 
 ```sh
 codex plugin marketplace add /absolute/path/to/agent-tools
@@ -45,4 +60,8 @@ Run:
 ./scripts/validate.sh
 ```
 
-The script validates the marketplace manifests and runs Claude Code validation when the `claude` CLI is installed.
+The script validates JSON files, runs the installed Codex plugin validator when available, and runs Claude Code validation when the `claude` CLI is installed.
+
+## Publishing note
+
+Resolve the public license and third-party attribution requirements before the first public release.
