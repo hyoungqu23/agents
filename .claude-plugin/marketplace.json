@@ -23,7 +23,7 @@
       "name": "review",
       "source": "./plugins/review",
       "description": "Code review skills for pull requests, branches, diffs, and working-tree changes.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "Productivity",
       "keywords": [
         "review",

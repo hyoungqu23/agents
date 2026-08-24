@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review PR"
+  short_description: "Worktree, review, approve, post"
+  default_prompt: "Use $review-pr to review a pull request and post the approved comments."
