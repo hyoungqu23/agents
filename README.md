@@ -11,6 +11,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | Plugin | Skills | Description |
 | --- | --- | --- |
 | [`content`](plugins/content) | `un-ai` | Content writing skills for drafting, editing, rewriting, and auditing English or Korean prose. |
+| [`review`](plugins/review) | `review-code` | Code review skills for pull requests, branches, diffs, and working-tree changes. |
 
 ## Repository layout
 
@@ -19,14 +20,10 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 ├── .claude-plugin/marketplace.json
 ├── .agents/plugins/marketplace.json
 └── plugins/
-    └── content/
-        ├── .claude-plugin/plugin.json
-        ├── .codex-plugin/plugin.json
-        └── skills/
-            └── un-ai/
-                ├── SKILL.md
-                ├── agents/openai.yaml
-                └── references/
+    ├── content/
+    │   └── skills/un-ai/
+    └── review/
+        └── skills/review-code/
 ```
 
 The Claude Code and Codex manifests are platform-specific wrappers. Each skill is stored once under `plugins/<plugin>/skills/<skill>/` and shared by both.
@@ -40,13 +37,14 @@ From the parent directory of this repository:
 ```text
 /plugin marketplace add ./agents
 /plugin install content@hm2-tools
+/plugin install review@hm2-tools
 ```
 
 After publishing to GitHub, replace the local path with `<github-owner>/agents`.
 
 ### Codex
 
-Add this repository as an explicit local marketplace, then install `content` from `HM2 Agent Tools`:
+Add this repository as an explicit local marketplace, then install the plugins from `HM2 Agent Tools`:
 
 ```sh
 codex plugin marketplace add /absolute/path/to/agents

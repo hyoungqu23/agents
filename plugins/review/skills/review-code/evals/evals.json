@@ -1,0 +1,180 @@
+{
+  "skill_name": "review-code",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "현재 생성된 코드베이스 변경사항을 리뷰해줘. Next.js App Router와 React 컴포넌트 변경이 있고, untracked preview page도 포함되어 있을 수 있어.",
+      "expected_output": "Inventories staged, unstaged, and untracked files in a coverage ledger; detects Next.js and React; applies the local gate or matching common/frontend routes; treats an accidental preview page as in scope; closes or explicitly reports every completion-gate gap.",
+      "files": [],
+      "expectations": [
+        "The review scope explicitly includes staged, unstaged, and untracked files.",
+        "A temporary preview or harness page is classified and is not silently omitted.",
+        "Every promoted finding has a repository-relative file:line anchor.",
+        "The verification section reports scope, intent evidence, routing, commands, and residual risk."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review this branch hard. Minor issues can be fixed automatically, but do not touch semantic or API behavior.",
+      "expected_output": "Autofixes only mechanical issues, re-diffs those edits, and reports semantic, API, persistence, auth, UX, test-strategy, and ambiguous issues without editing.",
+      "files": [],
+      "expectations": [
+        "Every autofix is mechanical, local, and behavior-preserving.",
+        "The review does not edit API contracts or semantic behavior.",
+        "The post-autofix diff is reviewed again and reported.",
+        "Larger findings state the concrete change, effect, smallest fix, and expected post-fix state."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "이 저장소의 로컬 리뷰 게이트 기준으로 프론트엔드 PR을 리뷰해줘. 로컬 게이트가 따로 있으면 그 기준으로 봐줘.",
+      "expected_output": "Routes to the project-specific gate named by local instructions, reads its referenced criteria, and uses its vocabulary and severity contract before applying non-conflicting generic checks.",
+      "files": [],
+      "expectations": [
+        "The named local project gate is loaded before generic output rules.",
+        "Findings use the local gate's criterion codes and severity vocabulary when required.",
+        "Untracked files remain in scope.",
+        "Generic guidance does not override a directly conflicting local convention."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "이 리팩터링이 기존 동작을 깨지 않는지, 중복/응집도/결합도/테스트까지 같이 봐줘.",
+      "expected_output": "Runs separate Standards, Spec, and Runtime Contract discovery passes, traces behavior preservation across callers and consumers, checks maintainability and tests, then refutes every candidate before promotion.",
+      "files": [],
+      "expectations": [
+        "The review identifies the available source of old and intended behavior.",
+        "Standards, Spec, and Runtime Contract are investigated independently.",
+        "High-risk behavior is traced from a caller or entry point to an observable effect.",
+        "Every candidate is promoted, disproved, deduplicated, scoped out, or reported as unresolved residual risk."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "API DTO, Zod schema, client model transformer, status union이 바뀐 변경사항을 리뷰해줘. 타입만 맞는지 말고 런타임 boundary와 exhaustive handling까지 봐줘.",
+      "expected_output": "Traces source DTO through runtime parsing, transformation, domain union, exhaustive consumers, rendering, and tests; catches drift hidden by assertions or casts with concrete evidence.",
+      "files": [],
+      "expectations": [
+        "The review compares both sides of each DTO/schema/domain boundary.",
+        "Runtime parsing is distinguished from compile-time typing.",
+        "All exhaustive switches, maps, and downstream consumers are searched.",
+        "Contract-focused tests and command outcomes are included in verification."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Tauri 앱의 Rust 백엔드 변경사항 리뷰해줘. src-tauri 쪽 adapter랑 domain 로직이 바뀌었어.",
+      "expected_output": "Detects Rust/Tauri per changed area, applies the common and relevant backend/release lenses through Rust idioms, and selects Cargo verification without forcing React, rendering, aria, or Next.js criteria onto non-UI code.",
+      "files": [],
+      "expectations": [
+        "Cargo.toml and Tauri configuration are used as stack evidence.",
+        "The review covers trust boundaries, async/concurrency, exhaustive matches, adapters, and tests through Rust idioms.",
+        "Frontend-only criteria are not applied to non-UI Rust code.",
+        "Cargo commands are repository-native and are reported as run, blocked, unavailable, or not run."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "https://github.com/acme/web/pull/4171 이 PR 리뷰해줘. 최종 보고서에는 실제로 달 만한 인라인 코멘트도 파일과 라인별로 추천해줘.",
+      "expected_output": "Acquires available PR title/body/base/head/commits/files/linked intent, reviews the full diff, and adds one copy-ready inline recommendation per promoted finding after applying dumbify then anti-ai-writing.",
+      "files": [],
+      "expectations": [
+        "The review attempts to acquire PR metadata and records any inaccessible source instead of inventing it.",
+        "Each recommended comment maps one-to-one to a promoted finding.",
+        "Each inline recommendation uses a verified repository-relative head-side diff line or is marked unsuitable for inline placement.",
+        "Comment text is concrete and concise after dumbify then anti-ai-writing, without severity labels inside the quoted text.",
+        "An unfamiliar technical term keeps its exact name and receives one short plain-language explanation on first use; shared terms and repeated occurrences are not over-explained.",
+        "No comment or review is posted without a separate explicit request."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "첨부된 Vite PR을 엄격하게 리뷰해줘. 문제가 없으면 억지로 찾지 말고, 실제로 검증한 범위도 알려줘.",
+      "expected_output": "Recognizes a clean Vite + TypeScript change, does not invent a finding, does not route to Next.js-specific guidance, and reports that repository commands were not executed because the fixture is not a checkout.",
+      "files": [
+        "evals/files/clean-vite-pr.md"
+      ],
+      "expectations": [
+        "No evidence-backed finding is emitted for the supplied implementation.",
+        "The route is Vite/TypeScript and not Next.js-specific.",
+        "The two supplied tests are mapped to both acceptance criteria.",
+        "Vitest, typecheck, lint, and build are not claimed as executed; the missing runnable checkout is reported as residual verification risk."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "첨부된 archived invoice PR을 파일 간 계약까지 추적해서 리뷰해줘.",
+      "expected_output": "Finds the cross-file contract regression where an unsafe cast admits archived into an unchanged domain union and label map, causing the promised Archived label to render as missing, and reports absent coverage without fabricating command results.",
+      "files": [
+        "evals/files/cross-file-runtime-regression.md"
+      ],
+      "expectations": [
+        "A promoted finding anchors the unsafe cast at src/api/toInvoice.ts:9.",
+        "The finding traces invoiceSchema through toInvoice, InvoiceStatus, and InvoiceStatusLabel.",
+        "The concrete effect is that archived is accepted at runtime but has no Archived label.",
+        "The requested fix removes the unsafe contract gap and adds archived to the domain/consumer path rather than merely changing the cast.",
+        "The lack of a runnable checkout and contract-focused tests is reported accurately."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "첨부된 FastAPI PR을 acceptance criteria 기준으로 하드 리뷰해줘.",
+      "expected_output": "Maps all three acceptance criteria, promotes the missing admin-role authorization check, confirms the not-found membership behavior and transactional rotation from available evidence, and does not limit backend review to generic Python style.",
+      "files": [
+        "evals/files/fastapi-spec-mismatch.md"
+      ],
+      "expectations": [
+        "A promoted finding anchors the membership-only authorization path at app/api/workspace_keys.py:27 or another precise changed line in that path.",
+        "The trigger is a non-admin workspace member and the effect is unauthorized key rotation.",
+        "The review maps each acceptance criterion to implemented, missing, or insufficiently tested evidence.",
+        "The transaction and nonmember not-found requirements are not falsely reported as absent.",
+        "Pytest, Ruff, mypy, and build/startup checks are not claimed as run against the non-runnable fixture."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "첨부된 Go 서비스 변경을 리뷰해줘. FE 기준을 억지로 적용하지 말고 동시 요청 경로와 검증 계획까지 봐줘.",
+      "expected_output": "Detects Go backend code, traces singleton HTTP concurrency to unsynchronized map reads/writes, promotes the race/panic risk, and proposes Go-native verification without applying frontend criteria.",
+      "files": [
+        "evals/files/go-concurrency-change.md"
+      ],
+      "expectations": [
+        "The review promotes a finding on a precise changed cache read or write line in internal/features/service.go.",
+        "The finding explains concurrent map access from singleton HTTP handlers and the observable race or runtime panic risk.",
+        "The smallest fix uses synchronization or a concurrency-safe cache with ownership semantics, not a frontend pattern.",
+        "Go tests and race-enabled verification are proposed but not claimed as executed against the fixture.",
+        "No React, Next.js, aria, or component-fit criteria appear."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "첨부 변경을 리뷰해줘. 전문 스킬도 없고 의존성도 설치되지 않은 환경이야. 권장 fallback으로 진행해줘.",
+      "expected_output": "Continues with the built-in frontend lens, emits no invented issue for the simple optional description behavior, does not install dependencies or use the network, and records missing specialist and command validation as residual risk.",
+      "files": [
+        "evals/files/missing-specialist-and-tools.md"
+      ],
+      "expectations": [
+        "The review explicitly falls back to the built-in frontend lens because matching specialists are unavailable.",
+        "No Next.js-specific guidance is applied to the Vite component.",
+        "No dependency installation, network access, or fabricated command result is claimed.",
+        "The verification section records specialist absence and blocked or not-run tests/typecheck/lint/build as residual risk.",
+        "No evidence-backed finding is invented for the supplied component."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "첨부된 Go 변경을 PR 리뷰하고 실제로 달 인라인 코멘트까지 추천해줘. 기술 용어는 유지하되, 낯설 수 있는 용어는 첫 등장에 쉬운 설명도 같이 써줘.",
+      "expected_output": "Promotes the concurrent map access finding and produces a copy-ready Korean inline comment that preserves exact technical terminology and code identifiers while explaining an unfamiliar term's mechanism once in plain language before applying anti-ai-writing.",
+      "files": [
+        "evals/files/go-concurrency-change.md"
+      ],
+      "expectations": [
+        "The promoted finding and inline recommendation use a precise changed cache read or write line in internal/features/service.go.",
+        "The quoted comment retains an exact term such as race condition or concurrent map access and exact identifiers such as `cache`, `map`, or `sync.RWMutex` instead of replacing them with a vague phrase.",
+        "The first unfamiliar technical term is paired with a short explanation that says concurrent requests read or write the same map; a mere dictionary translation does not satisfy this expectation.",
+        "The same plain-language gloss is not repeated after the first occurrence, and already-shared code vocabulary is not unnecessarily explained.",
+        "The anti-ai-writing pass removes filler without deleting the technical term, its needed first-use explanation, the trigger, or the requested smallest fix."
+      ]
+    }
+  ]
+}

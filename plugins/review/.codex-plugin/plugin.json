@@ -1,0 +1,19 @@
+{
+  "name": "review",
+  "version": "0.1.0",
+  "description": "Code review skills for pull requests, branches, diffs, and working-tree changes.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": ["review", "code-review", "pull-request", "quality"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Review",
+    "shortDescription": "Evidence-backed code review",
+    "longDescription": "Completion-gated code review that inventories every changed file, routes stack specialists, and promotes only evidence-backed findings with exact file:line placement.",
+    "developerName": "HM2",
+    "category": "Productivity",
+    "capabilities": ["Read"],
+    "defaultPrompt": "Review the current changes and report evidence-backed findings."
+  }
+}
