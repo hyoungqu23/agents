@@ -11,7 +11,26 @@
       "description": "Content writing skills for drafting, editing, rewriting, and auditing English or Korean prose.",
       "version": "0.1.0",
       "category": "Productivity",
-      "keywords": ["writing", "editing", "content", "korean", "english"]
+      "keywords": [
+        "writing",
+        "editing",
+        "content",
+        "korean",
+        "english"
+      ]
+    },
+    {
+      "name": "review",
+      "source": "./plugins/review",
+      "description": "Code review skills for pull requests, branches, diffs, and working-tree changes.",
+      "version": "0.1.0",
+      "category": "Productivity",
+      "keywords": [
+        "review",
+        "code-review",
+        "pull-request",
+        "quality"
+      ]
     }
   ]
 }
