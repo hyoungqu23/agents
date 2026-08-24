@@ -11,7 +11,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | Plugin | Skills | Description |
 | --- | --- | --- |
 | [`content`](plugins/content) | `un-ai` | Content writing skills for drafting, editing, rewriting, and auditing English or Korean prose. |
-| [`review`](plugins/review) | `min-hard-review` | Code review skills for pull requests, branches, diffs, and working-tree changes. |
+| [`review`](plugins/review) | `review-code` | Code review skills for pull requests, branches, diffs, and working-tree changes. |
 
 ## Repository layout
 
@@ -23,7 +23,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
     ├── content/
     │   └── skills/un-ai/
     └── review/
-        └── skills/min-hard-review/
+        └── skills/review-code/
 ```
 
 The Claude Code and Codex manifests are platform-specific wrappers. Each skill is stored once under `plugins/<plugin>/skills/<skill>/` and shared by both.

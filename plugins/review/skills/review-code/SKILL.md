@@ -1,9 +1,9 @@
 ---
-name: min-hard-review
+name: review-code
 description: Completion-gated hard code review workflow for PRs, branches, diffs, and working-tree changes in any language or stack. Acquires available PR/spec context, inventories every changed and untracked file, routes matching project and stack specialists, discovers candidates broadly, promotes only evidence-backed findings, and verifies them with repository-native checks. Use when the user asks for code review, current changes review, PR review, pre-merge review, branch/diff review, project-specific review gate checks, strict file:line findings, or safe mechanical autofixes. For PR links or explicit PR-review requests, also recommends copy-ready inline review comments with exact file and diff-line placement.
 ---
 
-# Min Hard Review
+# Review Code
 
 ## Overview
 

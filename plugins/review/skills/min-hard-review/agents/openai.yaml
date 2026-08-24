@@ -1,4 +1,0 @@
-interface:
-  display_name: "Min Hard Review"
-  short_description: "Completion-gated full-scope code reviews"
-  default_prompt: "Use $min-hard-review to review the current codebase changes."
