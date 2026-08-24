@@ -31,7 +31,7 @@ if [[ -f "${codex_validator}" ]]; then
   if python3 -c 'import yaml' >/dev/null 2>&1; then
     codex_python=(python3)
   elif command -v uv >/dev/null 2>&1; then
-    codex_python=(env "UV_CACHE_DIR=${TMPDIR:-/tmp}/hm2-agent-tools-uv-cache" uv run --with pyyaml python)
+    codex_python=(env "UV_CACHE_DIR=${TMPDIR:-/tmp}/hm2-agents-uv-cache" uv run --with pyyaml python)
   else
     echo "Codex validation requires PyYAML or uv." >&2
     exit 1
