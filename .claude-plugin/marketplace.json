@@ -1,0 +1,8 @@
+{
+  "name": "hm2-tools",
+  "owner": {
+    "name": "HM2"
+  },
+  "description": "Cross-platform agent tools by HM2.",
+  "plugins": []
+}

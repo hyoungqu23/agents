@@ -1,0 +1,7 @@
+{
+  "name": "hm2-tools",
+  "interface": {
+    "displayName": "HM2 Agent Tools"
+  },
+  "plugins": []
+}
