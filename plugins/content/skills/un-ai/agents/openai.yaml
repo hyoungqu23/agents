@@ -1,0 +1,4 @@
+interface:
+  display_name: "Un-AI"
+  short_description: "Clear, specific prose without flattening voice"
+  default_prompt: "Use $un-ai to edit this draft for clarity, specificity, and voice."

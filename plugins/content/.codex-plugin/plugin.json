@@ -1,0 +1,19 @@
+{
+  "name": "content",
+  "version": "0.1.0",
+  "description": "Content writing skills for drafting, editing, rewriting, and auditing English or Korean prose.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": ["writing", "editing", "content", "korean", "english"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Content",
+    "shortDescription": "Content writing skills",
+    "longDescription": "Skills for drafting, editing, rewriting, and auditing English or Korean prose.",
+    "developerName": "HM2",
+    "category": "Productivity",
+    "capabilities": ["Write"],
+    "defaultPrompt": "Edit this draft for clarity, specificity, and voice without flattening its style."
+  }
+}
