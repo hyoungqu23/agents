@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Activity layout exploration</title>
+<link rel="stylesheet" href="styles/screen.css">
+<main>
+  <article data-variant="A"><h1>Activity list</h1><p>A compact list for scanning updates.</p></article>
+  <article data-variant="B" hidden>
+    <h1>이번 달 기록</h1>
+    <div class="record" role="img" aria-label="월간 레코드"></div>
+    <p>함께 남긴 기록을 확인하세요.</p>
+    <button id="detail-toggle" aria-expanded="false" aria-controls="details">상세 보기</button>
+    <section id="details" hidden><h2>함께한 순간</h2><p>선택한 기록의 상세 내용입니다.</p></section>
+    <label for="note">메모</label><input id="note" placeholder="메모를 입력하세요">
+  </article>
+  <article data-variant="C" hidden><h1>Activity timeline</h1><p>Updates arranged along a vertical timeline.</p></article>
+</main>
+<nav id="variant-switcher" aria-label="Prototype variants">
+  <button id="previous" aria-label="Previous variant">←</button>
+  <output id="variant-label">A</output>
+  <button id="next" aria-label="Next variant">→</button>
+</nav>
+<script src="scripts/ui.js"></script>
+</html>

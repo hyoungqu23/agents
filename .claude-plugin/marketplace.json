@@ -31,6 +31,20 @@
         "pull-request",
         "quality"
       ]
+    },
+    {
+      "name": "design",
+      "source": "./plugins/design",
+      "description": "Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references.",
+      "version": "0.1.0",
+      "category": "Productivity",
+      "keywords": [
+        "design",
+        "prototype",
+        "html",
+        "design-system",
+        "handoff"
+      ]
     }
   ]
 }

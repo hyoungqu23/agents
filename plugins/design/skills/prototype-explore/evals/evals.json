@@ -1,0 +1,34 @@
+{
+  "skill_name": "prototype-explore",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "첨부한 activity brief로 독립 HTML 시안 세 가지를 만들어줘. URL로 각 안을 열고 비교할 수 있게 해줘.",
+      "expected_output": "Creates a local flow and three distinct runnable variants with working comparison controls.",
+      "files": [
+        "evals/files/activity-brief.md"
+      ],
+      "expectations": [
+        "Establishes entry/action/outcome in a compact flow before drawing.",
+        "Produces structurally distinct variants and labels sample content.",
+        "Variant URLs survive reload, handle an unknown key, and remain consistent with back/forward.",
+        "Keyboard switching does not interfere with editable or widget controls.",
+        "No live mutations occur and actual verification limits are reported."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "기존 activity 화면 안에서 시안 두 가지를 비교하고 싶어. 선택 메뉴와 탭의 키보드 동작은 유지하고, production 화면은 그대로여야 해. 먼저 제공된 앱을 확인해줘.",
+      "expected_output": "Uses the actual app development boundary, respects the requested count and protects production routing.",
+      "files": [
+        "evals/files/in-app-request.md"
+      ],
+      "expectations": [
+        "Requests or inspects a runnable app before claiming implementation; this text alone is not a checkout.",
+        "Uses exactly two variants per user request.",
+        "Keeps experiment routing and switcher out of the production path.",
+        "Native select and tab arrow-key navigation are preserved."
+      ]
+    }
+  ]
+}

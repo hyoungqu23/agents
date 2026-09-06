@@ -1,0 +1,17 @@
+{
+  "name": "design",
+  "displayName": "Design",
+  "version": "0.1.0",
+  "description": "Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "design",
+    "prototype",
+    "html",
+    "design-system",
+    "handoff"
+  ],
+  "skills": "./skills/"
+}

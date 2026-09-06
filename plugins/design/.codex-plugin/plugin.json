@@ -1,0 +1,29 @@
+{
+  "name": "design",
+  "version": "0.1.0",
+  "description": "Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "design",
+    "prototype",
+    "html",
+    "design-system",
+    "handoff"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Design",
+    "shortDescription": "Explore and preserve design decisions",
+    "longDescription": "Document project design rules, compare interactive HTML layouts, and turn a selected prototype into a durable reference with working assets and an implementation handoff.",
+    "developerName": "HM2",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": "Preserve my selected prototype as a design reference."
+  }
+}

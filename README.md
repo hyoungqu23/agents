@@ -12,6 +12,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | --- | --- | --- |
 | [`content`](plugins/content) | `un-ai` | Content writing skills for drafting, editing, rewriting, and auditing English or Korean prose. |
 | [`review`](plugins/review) | `review-pr`, `review-code` | Code review skills for pull requests, branches, diffs, and working-tree changes. |
+| [`design`](plugins/design) | `design-brief`, `prototype-explore`, `prototype-promote` | Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references. |
 
 ## Repository layout
 
@@ -22,8 +23,11 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 └── plugins/
     ├── content/
     │   └── skills/un-ai/
-    └── review/
-        └── skills/{review-pr,review-code}/
+    ├── review/
+    │   └── skills/{review-pr,review-code}/
+    └── design/
+        ├── references/
+        └── skills/{design-brief,prototype-explore,prototype-promote}/
 ```
 
 The Claude Code and Codex manifests are platform-specific wrappers. Each skill is stored once under `plugins/<plugin>/skills/<skill>/` and shared by both.
@@ -38,6 +42,7 @@ From the parent directory of this repository:
 /plugin marketplace add ./agents
 /plugin install content@hm2-tools
 /plugin install review@hm2-tools
+/plugin install design@hm2-tools
 ```
 
 After publishing to GitHub, replace the local path with `<github-owner>/agents`.
