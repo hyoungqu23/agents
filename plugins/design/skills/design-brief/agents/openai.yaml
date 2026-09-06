@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Brief"
+  short_description: "Document project design rules and decisions"
+  default_prompt: "Use $design-brief to establish the design reference for this app from its existing code and documents."

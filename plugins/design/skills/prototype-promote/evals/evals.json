@@ -1,0 +1,89 @@
+{
+  "skill_name": "prototype-promote",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "scratch/explore/index.html의 B안을 apps/web/src/activity.txt 화면의 기준으로 선택했어. prototype/activity에 승격해줘. 기존 디자인 문서는 유지하고, 앱 토큰에 맞춰줘.",
+      "expected_output": "Creates an independent B reference and handoff using the nearest app tokens while preserving source and production files.",
+      "files": [
+        "evals/files/variant-board"
+      ],
+      "expectations": [
+        "Uses apps/web/DESIGN.md and maps accent to #185adb, not the root palette or exploration purple.",
+        "Keeps B content, the detail toggle, editable note and reduced-motion behavior.",
+        "Removes A/C and comparison routing/controls without removing B interaction logic.",
+        "All CSS imports and SVG paths resolve from the final artifact.",
+        "Source, existing DESIGN.md rules and production sentinel remain intact.",
+        "Reference note records selection, authority, token differences, states, dependencies and actual verification."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "scratch/explore/index.html을 apps/web의 기준 프로토타입으로 승격해줘.",
+      "expected_output": "Asks for the missing selection before creating or overwriting a reference.",
+      "files": [
+        "evals/files/variant-board"
+      ],
+      "expectations": [
+        "Does not infer selection from default A or the currently visible variant.",
+        "Asks one focused variant-selection question.",
+        "Does not write the reference or mutate source/design files."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "B안을 apps/web의 기준으로 승격해줘. 원본이 있는 scratch/explore/index.html은 보존해줘. 결과도 가능하면 그 폴더를 쓰고 싶어.",
+      "expected_output": "Detects the source/output collision and writes a separate reference without destroying exploration.",
+      "files": [
+        "evals/files/variant-board"
+      ],
+      "expectations": [
+        "Resolves source and destination before writing.",
+        "Keeps original HTML, variants and transitive assets intact.",
+        "Uses a separate reference location or clarifies an unavoidable destination conflict."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "이전에 B안을 승격한 기준 파일에서 상세 버튼 문구를 내가 바꿨어. 같은 원본으로 다시 승격하되 내 수정은 유지해줘.",
+      "expected_output": "Preserves the existing hand edit and avoids duplicate decision entries or meaningless rewrites.",
+      "files": [
+        "evals/files/variant-board"
+      ],
+      "expectations": [
+        "Evaluator first promotes B and edits only the promoted detail-button label.",
+        "Agent inspects existing source/reference provenance and the local change.",
+        "Hand edit survives and source does not change.",
+        "No duplicate decisions are appended merely because the skill ran again."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "B안을 apps/web의 기준으로 승격해줘. 이 환경에는 브라우저 도구가 없으니 설치하지 말고, 확인하지 못한 항목을 정확히 남겨줘.",
+      "expected_output": "Creates a source-checked reference with explicit visual and interaction verification gaps.",
+      "files": [
+        "evals/files/variant-board"
+      ],
+      "expectations": [
+        "No browser or other dependency is installed.",
+        "Asset relocation and selected behavior are inspected from source.",
+        "Browser viewport, interaction and screenshot checks are not claimed as executed.",
+        "The handoff includes concrete manual checks and distinguishes reference status from verification status."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "원본 HTML과 기준 파일은 그대로지만 apps/web/DESIGN.md의 accent가 바뀌었어. 최신 디자인 기준으로 B안을 다시 승격해줘.",
+      "expected_output": "Re-resolves design authority and updates the reference tokens even though the source HTML and previous reference are unchanged.",
+      "files": [
+        "evals/files/variant-board"
+      ],
+      "expectations": [
+        "Evaluator first promotes B, then changes only apps/web/DESIGN.md accent from #185adb to #126345.",
+        "Agent detects changed design-authority input rather than treating unchanged HTML as a no-op.",
+        "Promoted system token uses #126345 and the handoff records updated authority/differences.",
+        "Source HTML and unrelated rules/behavior remain intact; affected checks are rerun or accurately marked unrun."
+      ]
+    }
+  ]
+}

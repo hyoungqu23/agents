@@ -1,0 +1,31 @@
+{
+  "skill_name": "design-brief",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "apps/dashboard의 기존 디자인 기준에 토큰 출처와 Decisions Log만 보완해줘. 기존 문서 형식과 규칙은 유지해줘.",
+      "expected_output": "Updates the nearest app design source additively and preserves its component rules.",
+      "files": [
+        "evals/files/existing-system.md"
+      ],
+      "expectations": [
+        "Uses apps/dashboard/DESIGN_SYSTEM.md rather than root DESIGN.md.",
+        "Preserves existing token values, headings and component architecture rules.",
+        "Adds only relevant source mapping and decision evidence; no invented approval or browser pass."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "apps/reading에 조용한 종이와 잉크 컨셉의 DESIGN.md 초안을 작성해줘. 아직 색상이나 폰트는 확정하지 않았어.",
+      "expected_output": "Creates a target-local proposed brief with concrete, explicitly proposed tokens.",
+      "files": [
+        "evals/files/new-brief.md"
+      ],
+      "expectations": [
+        "Writes the document within apps/reading.",
+        "Separates the selected concept from proposed palette/type values.",
+        "Does not invent research, an existing design system, or user approval of token choices."
+      ]
+    }
+  ]
+}
