@@ -32,6 +32,14 @@ if [[ -f "${codex_validator}" ]]; then
     codex_python=(python3)
   elif command -v uv >/dev/null 2>&1; then
     codex_python=(env "UV_CACHE_DIR=${TMPDIR:-/tmp}/hm2-agents-uv-cache" uv run --with pyyaml python)
+    if ! "${codex_python[@]}" -c 'import yaml' >/dev/null 2>&1; then
+      echo "Cached validation environment unavailable; retrying with a fresh temporary cache." >&2
+      validation_cache="$(mktemp -d "${TMPDIR:-/tmp}/hm2-validation.XXXXXX")"
+      trap 'rm -rf -- "$validation_cache"' EXIT
+      codex_python=(env "UV_CACHE_DIR=${validation_cache}" uv run --with pyyaml python)
+      # A failed retry remains a validation failure; never silently skip the validator.
+      "${codex_python[@]}" -c 'import yaml'
+    fi
   else
     echo "Codex validation requires PyYAML or uv." >&2
     exit 1
