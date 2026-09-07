@@ -23,7 +23,7 @@
       "name": "review",
       "source": "./plugins/review",
       "description": "Code review skills for pull requests, branches, diffs, and working-tree changes.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "category": "Productivity",
       "keywords": [
         "review",
@@ -36,7 +36,7 @@
       "name": "design",
       "source": "./plugins/design",
       "description": "Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references.",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "category": "Productivity",
       "keywords": [
         "design",

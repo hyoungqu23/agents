@@ -76,13 +76,14 @@
     {
       "id": 7,
       "prompt": "https://github.com/acme/web/pull/4171 이 PR 리뷰해줘. 최종 보고서에는 실제로 달 만한 인라인 코멘트도 파일과 라인별로 추천해줘.",
-      "expected_output": "Acquires available PR title/body/base/head/commits/files/linked intent, reviews the full diff, and adds one copy-ready inline recommendation per promoted finding after applying dumbify then anti-ai-writing.",
+      "expected_output": "Acquires available PR title/body/base/head/commits/files/linked intent, reviews the full diff, and adds one copy-ready inline recommendation per promoted finding after applying un-ai under the PR comment wording constraints.",
       "files": [],
       "expectations": [
         "The review attempts to acquire PR metadata and records any inaccessible source instead of inventing it.",
         "Each recommended comment maps one-to-one to a promoted finding.",
         "Each inline recommendation uses a verified repository-relative head-side diff line or is marked unsuitable for inline placement.",
-        "Comment text is concrete and concise after dumbify then anti-ai-writing, without severity labels inside the quoted text.",
+        "Comment text is concrete and concise after the un-ai wording pass, without severity labels inside the quoted text.",
+        "Only un-ai is loaded for comment wording; no other writing skill is loaded or claimed.",
         "An unfamiliar technical term keeps its exact name and receives one short plain-language explanation on first use; shared terms and repeated occurrences are not over-explained.",
         "No comment or review is posted without a separate explicit request."
       ]
@@ -164,7 +165,7 @@
     {
       "id": 13,
       "prompt": "첨부된 Go 변경을 PR 리뷰하고 실제로 달 인라인 코멘트까지 추천해줘. 기술 용어는 유지하되, 낯설 수 있는 용어는 첫 등장에 쉬운 설명도 같이 써줘.",
-      "expected_output": "Promotes the concurrent map access finding and produces a copy-ready Korean inline comment that preserves exact technical terminology and code identifiers while explaining an unfamiliar term's mechanism once in plain language before applying anti-ai-writing.",
+      "expected_output": "Promotes the concurrent map access finding and produces a copy-ready Korean inline comment that preserves exact technical terminology and code identifiers while explaining an unfamiliar term's mechanism once in plain language within the un-ai wording pass.",
       "files": [
         "evals/files/go-concurrency-change.md"
       ],
@@ -173,7 +174,7 @@
         "The quoted comment retains an exact term such as race condition or concurrent map access and exact identifiers such as `cache`, `map`, or `sync.RWMutex` instead of replacing them with a vague phrase.",
         "The first unfamiliar technical term is paired with a short explanation that says concurrent requests read or write the same map; a mere dictionary translation does not satisfy this expectation.",
         "The same plain-language gloss is not repeated after the first occurrence, and already-shared code vocabulary is not unnecessarily explained.",
-        "The anti-ai-writing pass removes filler without deleting the technical term, its needed first-use explanation, the trigger, or the requested smallest fix."
+        "The un-ai wording pass removes filler without deleting the technical term, its needed first-use explanation, the trigger, or the requested smallest fix."
       ]
     }
   ]

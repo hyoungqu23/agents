@@ -10,3 +10,5 @@ Code review skills for Claude Code and Codex.
 | [`review-code`](skills/review-code) | Completion-gated hard review for PRs, branches, diffs, and working-tree changes. Inventories every changed file, routes stack specialists, and promotes only evidence-backed findings. |
 
 Each skill is stored once under `skills/<skill>/` and shared by both platform manifests.
+
+`review-code` polishes PR inline comment text with `un-ai` from the [`content`](../content) plugin. Install both plugins for that pass; without `content`, the review applies its comment wording rules directly and reports the missing pass.

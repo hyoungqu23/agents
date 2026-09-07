@@ -33,7 +33,3 @@ For detailed behavior, see [design authority](references/design-authority.md),
 ## Validation
 
 Run `./scripts/validate.sh` from the repository root. Behavioral scenarios and raw fixtures are in each skill's `evals/` directory; see [the evaluation guide](evals/README.md) for exercising them in a disposable workspace.
-
-## Design references
-
-The workflow is informed by [mattpocock's prototype skill](https://github.com/mattpocock/skills/tree/main/skills/engineering/prototype) for structural variation and [gstack's design-html skill](https://github.com/garrytan/gstack/tree/main/design-html) for design-token authority and viewport verification. These are references, not runtime dependencies. HM2's promotion workflow preserves a separate reference artifact and handoff after selection.
