@@ -2,6 +2,15 @@
 
 Verify the artifact from its **final location**, using a browser or page-automation tool available in the environment. No particular browser package, CLI, or hosting service is required. Inspect local tools before choosing a command; do not invent a tool API or install a dependency just to make the report look complete.
 
+## Choose an opening mode
+
+State the artifact's opening mode before building or relocating it, then test that exact mode from the final folder:
+
+- **Direct file:** use classic scripts or a self-contained inline bundle, with local CSS and image assets. Do not depend on loading local files with module imports, dynamic `import()`, or `fetch()`: normal `file://` browser security can block them even when every path exists. Inline modules without external loads can work, but are not a reason to assume local imports work too. Query parameters and same-file history changes do not require an HTTP server.
+- **HTTP preview:** when local module/data loading is required, preserve those dependencies and document a reproducible preview command, its working directory, required runtime and URL. Start a fresh preview from the final artifact folder and test it. The reference must not depend on an already-running development server or another checkout.
+
+If the user requires double-click use, make the result direct-file compatible or identify the unresolved conversion before calling it ready. If the user requires retaining modules, use the HTTP contract rather than promising double-click support. Do not disable browser security to make a test pass. With no browser, inspect opening-mode constraints and mark runtime verification not run.
+
 ## Checks
 
 1. Open the final HTML or its required local preview command. Confirm styles, scripts, fonts, images, and other assets load from the relocated artifact. Trace CSS `url()` and imports, ES module imports, data URLs, and dynamic asset paths as well as HTML `src`/`href`. List unavoidable external dependencies and offline limitations.

@@ -16,7 +16,7 @@ Design authority: <applicable document or inline rules; otherwise derived local 
 Verification: <verified scope, or source-only with browser checks not run>
 
 ## Open the reference
-<File to open, or the verified preview command, and required dependencies.>
+<Opening mode: direct file or HTTP preview. File to open, or preview command with working directory, runtime and URL. Distinguish a verified command from a suggested but unrun command.>
 
 ## Design to preserve
 <Purpose, concept, hierarchy, components, important content and responsive behavior.>

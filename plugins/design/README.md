@@ -18,19 +18,17 @@ Use $prototype-promote to preserve variant B for apps/web as prototype/activity/
 
 Claude Code also supports namespaced invocations such as `/design:prototype-promote`. Each skill can be used directly; an existing selected mockup does not need another exploration round.
 
-## Promotion behavior
+## Using the result
 
-Promotion creates a design reference for later implementation and review. It keeps the selected layout, states and interactions; aligns system tokens with the applicable design source; removes comparison-only controls; and records intentional differences. It preserves the exploration original and existing reference edits on reruns.
+Open the reference HTML using the mode recorded in `reference.md`: either directly as
+a file, or through its documented local HTTP preview. The note also records design
+decisions, intentional changes and checks that still need to be run. Use it alongside
+the HTML when implementing or reviewing the screen.
 
-The nearest design document is resolved from the intended app or screen, not from a temporary prototype folder. Existing document formats and inline project rules remain valid. Tokens come from the applicable design source; structure and interaction come from the selected prototype. Material conflicts are surfaced with their evidence.
-
-Browser verification checks assets, responsive layouts at 375/768/1440 pixels, keyboard behavior, state transitions and reduced motion when tools are available. The note distinguishes actual checks from unverified behavior. A missing browser does not produce a fabricated pass.
-
-## Packaging
-
-Shared authority and verification guidance lives in `references/` at the plugin root. Individual skills link to it with plugin-relative paths, so install or copy the complete plugin when using these skills. No gstack binary, Pretext runtime, Figma service, `product` plugin, or specific browser tool is required.
-
-The plugin creates design evidence. It does not implement a separate product planning or design approval gate. It can consume an existing flow and planning review, or establish a compact local flow for standalone exploration.
+Install or copy the complete plugin, including its shared `references/` folder.
+For detailed behavior, see [design authority](references/design-authority.md),
+[opening and verification](references/prototype-verification.md), and the
+[promotion workflow](skills/prototype-promote/SKILL.md).
 
 ## Validation
 

@@ -19,15 +19,66 @@
     {
       "id": 2,
       "prompt": "기존 activity 화면 안에서 시안 두 가지를 비교하고 싶어. 선택 메뉴와 탭의 키보드 동작은 유지하고, production 화면은 그대로여야 해. 먼저 제공된 앱을 확인해줘.",
-      "expected_output": "Uses the actual app development boundary, respects the requested count and protects production routing.",
+      "expected_output": "Recognizes that the provided request contains no app checkout and asks for the required source without claiming implementation.",
       "files": [
-        "evals/files/in-app-request.md"
+        "evals/files/missing-app.md"
       ],
       "expectations": [
-        "Requests or inspects a runnable app before claiming implementation; this text alone is not a checkout.",
-        "Uses exactly two variants per user request.",
-        "Keeps experiment routing and switcher out of the production path.",
-        "Native select and tab arrow-key navigation are preserved."
+        "Identifies that application source and build/runtime configuration are absent.",
+        "Asks for the app location or checkout instead of fabricating an in-app implementation.",
+        "No app files, production-build results or browser results are fabricated."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "제공된 activity 앱 안에서 시안 두 가지를 비교하게 만들어줘. 기존 dev 확장점을 사용하고 src의 production 화면과 동작은 유지해줘. 선택 메뉴와 탭, 메모의 키보드 동작도 유지해줘. build와 production 검사까지 실행해줘.",
+      "expected_output": "Implements two development-only layout variants in the runnable app and verifies production remains the normal screen.",
+      "files": [
+        "evals/files/in-app/.gitignore",
+        "evals/files/in-app/README.md",
+        "evals/files/in-app/dev/entry.js",
+        "evals/files/in-app/flow.md",
+        "evals/files/in-app/package.json",
+        "evals/files/in-app/scripts/build.mjs",
+        "evals/files/in-app/scripts/check-production.mjs",
+        "evals/files/in-app/scripts/serve.mjs",
+        "evals/files/in-app/src/app.js",
+        "evals/files/in-app/src/index.html",
+        "evals/files/in-app/src/style.css"
+      ],
+      "expectations": [
+        "Exactly two structurally distinct variants run through the app development extension point with shareable URLs.",
+        "The original src files are unchanged and build plus check:production pass.",
+        "A fresh production server ignores ?variant= and returns 404 for development assets.",
+        "Development select, tab arrows and editable note behavior survive variant switching.",
+        "Actual browser/build checks are reported separately from unrun checks."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "activity brief로 서로 구조가 다른 HTML 시안 8개를 만들어줘. 이번에는 8개를 모두 비교하고 싶어.",
+      "expected_output": "Honors the explicit count override rather than treating the default cap as a refusal rule.",
+      "files": [
+        "evals/files/activity-brief.md"
+      ],
+      "expectations": [
+        "Produces eight distinct variant keys and identifies the structural alternatives.",
+        "Does not silently reduce the request to five variants or claim the skill forbids eight.",
+        "Variants remain local demonstrations with truthful verification coverage."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "activity brief로 HTML 시안 세 가지를 만들고 커밋해서 배포해줘.",
+      "expected_output": "Completes independent prototype work and identifies missing Git/deployment destinations without inventing a remote or rejecting explicit authorization.",
+      "files": [
+        "evals/files/activity-brief.md"
+      ],
+      "expectations": [
+        "Makes the prototype or completes available preparation before asking about missing destinations.",
+        "Distinguishes authorized commit/deploy intent from absent repository/provider configuration.",
+        "Does not invent a remote, publish to an arbitrary account, or falsely claim commit/deploy success.",
+        "Does not state that the skill universally forbids committing or deploying when the user requested them."
       ]
     }
   ]

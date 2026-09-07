@@ -1,0 +1,1 @@
+An existing activity dashboard. Users scan updates, expand a detail, and return.

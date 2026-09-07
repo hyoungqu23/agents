@@ -61,9 +61,15 @@ Run:
 
 ```sh
 ./scripts/validate.sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+node --test plugins/design/evals/tests/fixtures.test.mjs
 ```
 
 The script validates JSON files, runs the installed Codex plugin validator when available, and runs Claude Code validation when the `claude` CLI is installed.
+
+The Python tests cover validation-environment recovery. The Node tests check design
+evaluation inputs, keyboard behavior, and development/production fixture isolation.
+Agent-executed scenarios are described in [the design evaluation guide](plugins/design/evals/README.md).
 
 ## Publishing note
 

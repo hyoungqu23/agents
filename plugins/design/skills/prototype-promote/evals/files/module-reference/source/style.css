@@ -1,0 +1,5 @@
+:root { --ink: #182033; --surface: #f6f8ff; --accent: #185adb; }
+body { margin: 0; color: var(--ink); background: var(--surface); font: 18px/1.5 system-ui, sans-serif; }
+main { max-width: 42rem; margin: auto; padding: 2rem 1rem; }
+button { font: inherit; color: white; background: var(--accent); border: 0; padding: .7rem 1rem; }
+button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }

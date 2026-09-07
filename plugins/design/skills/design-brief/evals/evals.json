@@ -6,7 +6,10 @@
       "prompt": "apps/dashboard의 기존 디자인 기준에 토큰 출처와 Decisions Log만 보완해줘. 기존 문서 형식과 규칙은 유지해줘.",
       "expected_output": "Updates the nearest app design source additively and preserves its component rules.",
       "files": [
-        "evals/files/existing-system.md"
+        "evals/files/existing-system/DESIGN.md",
+        "evals/files/existing-system/apps/dashboard/DESIGN_SYSTEM.md",
+        "evals/files/existing-system/apps/dashboard/src/screen.txt",
+        "evals/files/existing-system/apps/dashboard/src/theme.css"
       ],
       "expectations": [
         "Uses apps/dashboard/DESIGN_SYSTEM.md rather than root DESIGN.md.",
