@@ -1,0 +1,114 @@
+{
+  "skill_name": "review-respond",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "PR #88에 달린 리뷰 코멘트 처리해줘. 첨부한 스냅샷이 현재 상태야.",
+      "expected_output": "Collects inline threads, the CHANGES_REQUESTED review body, and the conversation comment as three sources; classifies T1 fix, T2 answer, T3 pushback, T4 already-addressed, T5 apply-suggestion, T6 waiting on reviewer, T7 defer; verifies each against the code excerpts; presents a numbered plan and posts nothing before approval; resolves no thread.",
+      "files": [
+        "evals/files/mixed-review-round.md"
+      ],
+      "expectations": [
+        "The CHANGES_REQUESTED review body and the conversation comment are both kept as items, not dropped for lacking a thread.",
+        "T3 is classified as pushback with the evidence that fetchInvoices is a module-level import, not a closure value, so it is not a missing dependency.",
+        "T4 is classified as already-addressed and cites commit 9f1e2d3; its outdated state does not remove it from scope.",
+        "T6 is listed as waiting on the reviewer because the last comment is the author's, and no action or reply is planned for it.",
+        "T7 is classified as defer because the production performance claim cannot be verified locally and the v2 move conflicts with the decision recorded in the PR body.",
+        "A numbered plan with class, commit, and exact reply text is presented, and nothing is pushed or posted before the user answers.",
+        "No thread is resolved and no review is re-requested."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "첨부 스냅샷 기준으로 PR #88 코멘트 전부 바로 고쳐서 답글까지 달아줘.",
+      "expected_output": "Stops before implementing anything because T7 is unclear and needs the user's decision; asks the defer question first instead of fixing the clear items and leaving T7 for later.",
+      "files": [
+        "evals/files/mixed-review-round.md"
+      ],
+      "expectations": [
+        "No code change, commit, push, or reply happens before the T7 question is answered.",
+        "The question states what evidence or decision would settle T7.",
+        "The other items keep their classification so work can start immediately after the answer."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "PR #91에 새 코멘트가 달렸다는데 처리해줘.",
+      "expected_output": "Reads the existing state file, skips PRRT_A1 because its last comment is already recorded, handles only PRRT_A2, and stops before committing because the PR is approved; does not use the reviewer's -review worktree.",
+      "files": [
+        "evals/files/approved-followup.md"
+      ],
+      "expectations": [
+        "PRRT_A1 is not handled again; the state file and the review-respond marker in the author's reply are both recognized.",
+        "PRRT_A2 is the only item in scope.",
+        "Because reviewDecision is APPROVED, the skill asks before committing rather than pushing a new commit.",
+        "The existing ../billing-web-pr-91-review worktree is not used; a -respond worktree or the PR branch checkout is chosen instead."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "https://github.com/acme/billing-web/pull/70 리뷰 코멘트 대응해줘. 이 PR은 dana가 올린 거야.",
+      "expected_output": "Stops because viewerDidAuthor is false, explains that the skill answers only the user's own PRs, and points to review-pr if the user wants to review the PR instead.",
+      "files": [],
+      "expectations": [
+        "No reply, commit, or push is made on someone else's PR.",
+        "review-pr is named as the skill for reviewing the PR."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "첨부 스냅샷의 PR #88에서 봇이 남긴 suggestion만 처리해줘.",
+      "expected_output": "Verifies the CodeRabbit suggestion against client.ts before accepting it, applies the diff locally as a new commit with a Co-authored-by trailer for the bot account, and does not claim an API applied the suggestion or use a fixup commit.",
+      "files": [
+        "evals/files/mixed-review-round.md"
+      ],
+      "expectations": [
+        "The suggestion is checked against the swallowed catch block before it is accepted.",
+        "The change is a new commit, not a fixup, amend, or force-push.",
+        "A Co-authored-by trailer credits the suggesting account.",
+        "No claim is made that GitHub applied the suggestion through an API."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "첨부 스냅샷의 T1 수정하고 답글 문안까지 만들어줘. 게시는 내가 확인하고.",
+      "expected_output": "Drafts a reply that states the change and the commit, in the thread's language, with no thanks or performative agreement, ending with the review-respond marker, after an un-ai Edit pass or a recorded fallback.",
+      "files": [
+        "evals/files/mixed-review-round.md"
+      ],
+      "expectations": [
+        "The reply names the early return in parseInvoice and the commit that added it.",
+        "The reply contains no thanks, no agreement filler, and no promise phrased as future work.",
+        "The reply ends with the review-respond HTML comment marker.",
+        "un-ai is applied in Edit mode, or its absence is recorded under 검증 without substituting another writing skill."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "첨부 스냅샷 PR #88 처리하고 스레드도 닫아줘.",
+      "expected_output": "Because the user asked by name, resolves only threads classified fix, apply-suggestion, or already-addressed with viewerCanResolve true, and leaves the question, pushback, deferred, and waiting-on-reviewer threads open.",
+      "files": [
+        "evals/files/mixed-review-round.md"
+      ],
+      "expectations": [
+        "T1, T4, and T5 are the only threads planned for resolution.",
+        "T2, T3, T6, and T7 stay open.",
+        "Resolution happens after push and replies, and only after the user's approval of the plan."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "PR #88 답글 게시 단계까지 진행해줘. 승인은 방금 했어.",
+      "expected_output": "Pushes with a plain git push before posting, replies inside each thread with the thread node ID, answers the review body and the conversation comment with one conversation comment that mentions the reviewer, records any failed post without retrying, and writes the state file inside the git directory.",
+      "files": [
+        "evals/files/mixed-review-round.md"
+      ],
+      "expectations": [
+        "git push happens before any reply and is never forced.",
+        "Inline replies use addPullRequestReviewThreadReply with the PRRT thread ID, not a top-level PR comment.",
+        "A failed post is reported by thread and not retried into a duplicate.",
+        "The state file records thread node IDs, last comment IDs, classes, and commits under the git directory, not at the repository root."
+      ]
+    }
+  ]
+}

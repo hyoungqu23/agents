@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Respond"
+  short_description: "Verify, fix, reply inside the thread"
+  default_prompt: "Use $review-respond to address the review comments on my pull request."

@@ -1,11 +1,11 @@
 ---
 name: review-pr
-description: Review a GitHub pull request end to end. Creates a dedicated worktree for the PR, delegates the review to review-code, then posts the findings the user approves as inline review comments. Use when asked to review a PR by number or URL, to post review comments to GitHub, or to continue reviewing a PR that has new commits or new replies. Do not use for uncommitted local changes; call review-code directly for those.
+description: Review a GitHub pull request end to end. Creates a dedicated worktree for the PR, delegates the review to review-code, then posts the findings the user approves as inline review comments. Use when asked to review a PR by number or URL, to post review comments to GitHub, or to continue reviewing a PR that has new commits or new replies. Do not use for uncommitted local changes; call review-code directly for those. Do not use to answer a review on a PR you authored; call review-respond for that.
 ---
 
 # Review PR
 
-Orchestrate a pull request review. This skill owns worktree setup, approval, and posting. It produces no findings of its own — `review-code` is the only source of findings.
+Orchestrate a pull request review. This skill owns worktree setup, approval, and posting. It produces no findings of its own — `review-code` is the only source of findings. It is the reviewer's side of a review; `review-respond` handles the author's side on your own PRs.
 
 ## Input
 
@@ -43,6 +43,10 @@ Record the reviewed head in `.review-state.json` at the worktree root so a later
 ```json
 { "pr": 4137, "reviewedSha": "<HEAD sha>", "answeredThreads": [] }
 ```
+
+`answeredThreads` holds GraphQL thread node IDs (`PRRT_…`) of the threads this skill has already replied to. `review-respond` records the same ID type for the author side, so the two state files never need translating.
+
+This worktree is detached and belongs to the reviewer. Do not fix the PR's code in it; `review-respond` works from the PR branch.
 
 ## 3. Delegate the review
 
