@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Activity</title>
+<link rel="stylesheet" href="/style.css">
+<header><strong>Activity</strong><span>Local sample workspace</span></header>
+<main>
+  <h1>Recent records</h1>
+  <div class="layout">
+    <section class="list-panel" aria-label="Records">
+      <label for="sort">Record order</label>
+      <select id="sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select>
+      <ol id="records"><li data-order="2">Weekend project</li><li data-order="1">Book club</li></ol>
+    </section>
+    <section class="detail-panel" aria-label="Selected record">
+      <h2>Weekend project</h2>
+      <button id="detail-toggle" aria-expanded="false" aria-controls="details">Show details</button>
+      <div id="details" hidden>
+        <div role="tablist" aria-label="Record details">
+          <button id="summary-tab" role="tab" aria-selected="true" aria-controls="summary-panel">Summary</button>
+          <button id="note-tab" role="tab" aria-selected="false" aria-controls="note-panel" tabindex="-1">Note</button>
+        </div>
+        <div id="summary-panel" role="tabpanel" aria-labelledby="summary-tab">Finished the first working draft.</div>
+        <div id="note-panel" role="tabpanel" aria-labelledby="note-tab" hidden><label for="note">Local note</label><textarea id="note">Try a smaller first step.</textarea></div>
+      </div>
+    </section>
+  </div>
+</main>
+<script src="/app.js"></script>
+<!-- development-entry -->
+</html>

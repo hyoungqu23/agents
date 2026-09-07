@@ -1,0 +1,15 @@
+:root { --ink: #182033; --surface: #f6f8ff; --accent: #185adb; }
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--surface); font: 16px/1.5 system-ui, sans-serif; }
+header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 20px; background: white; }
+main { max-width: 900px; margin: auto; padding: 24px 20px; }
+.layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.list-panel, .detail-panel { padding: 20px; border: 1px solid #c3c9d5; border-radius: 12px; }
+button, select, textarea { font: inherit; padding: 12px; }
+button { cursor: pointer; }
+textarea { width: 100%; min-height: 100px; }
+label { display: block; }
+[role="tablist"] { display: flex; gap: 8px; margin: 16px 0; }
+[role="tab"][aria-selected="true"] { color: white; background: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 600px) { .layout { grid-template-columns: 1fr; } }

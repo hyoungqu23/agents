@@ -15,7 +15,7 @@ function cycle(direction) {
 document.querySelector('#previous').addEventListener('click', () => cycle(-1));
 document.querySelector('#next').addEventListener('click', () => cycle(1));
 document.addEventListener('keydown', event => {
-  if (event.target.closest('input,textarea,select,[contenteditable],button')) return;
+  if (event.target.closest('input,textarea,select,[contenteditable],[role="tab"],[role="slider"],[role="radio"],[role="combobox"],[role="spinbutton"]')) return;
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     event.preventDefault(); cycle(event.key === 'ArrowLeft' ? -1 : 1);
   }

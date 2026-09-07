@@ -11,3 +11,5 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: ./scripts/validate.sh
+      - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+      - run: node --test plugins/design/evals/tests/fixtures.test.mjs
