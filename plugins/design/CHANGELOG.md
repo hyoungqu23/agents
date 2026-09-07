@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 - 2026-09-07
+
+- Remove references to external plugins and skills from the design authority reference and README.
+
 ## 0.1.1 - 2026-09-07
 
 - Distinguish double-click HTML from references requiring a reproducible HTTP preview.

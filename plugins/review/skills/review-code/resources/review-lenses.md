@@ -1,15 +1,6 @@
 # Review Lenses
 
-Use this file when a review touches frontend behavior, framework conventions, tests, architecture, or broad maintainability. It condenses the local review sources from the skill workspace and the portable parts of GStack `/review`.
-
-## Source Synthesis
-
-- GStack review: base-branch diff, scope drift, confidence calibration, pre-emit evidence gate, fix-first classification, and adversarial self-review.
-- Generic review gate patterns: safety/completeness categories, frontend criteria, and FAIL/WARN discipline.
-- Review history patterns: repo-convention priority, async lifecycle tracing, i18n/toast/query consistency, UI state completeness, and preserving prior behavior.
-- Matt Pocock style: split Standards review from Spec review so a clean implementation of the wrong thing still gets caught.
-- Caveman review: keep final comments short, actionable, and fix-directed.
-- Code Review Excellence: prioritize defects, architecture, tests, security, performance, and maintainable feedback over taste.
+Use this file when a review touches frontend behavior, framework conventions, tests, architecture, or broad maintainability.
 
 ## General Axes
 
@@ -41,7 +32,7 @@ Runtime correctness:
 Runtime Contract pass escalation:
 - Use the pass when a finding depends on what an external or server-owned contract really is. Do not infer the contract only from a client type, mock, label, or generated assumption.
 - Prefer primary sources in this order: server router/controller/schema, OpenAPI/GraphQL/protobuf/JSON schema, database migration/model, generated client source, official third-party docs, then tests/fixtures/mocks as supporting evidence.
-- If the primary source is not already in context and the contract decides the finding, use `contract-research` or explicitly mark the candidate as excluded for insufficient contract evidence.
+- If the primary source is not already in context and the contract decides the finding, read that source directly when it is reachable; otherwise explicitly mark the candidate as excluded for insufficient contract evidence.
 
 Maintainability:
 - Favor high cohesion and low coupling: domain logic should live near the owning domain, not leak through UI glue or shared utilities prematurely.

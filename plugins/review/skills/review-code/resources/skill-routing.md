@@ -23,7 +23,7 @@ Use this resource for every review. Supporting skills deepen a matching area; th
 | Visual behavior where a runnable UI is available and visual verification is relevant | `visual-tester`, `design-review`, or a matching installed visual QA skill | Static UI-state review; record that live visual verification was not performed |
 | PostgreSQL/Supabase schema, query, RLS, index, or migration behavior | `supabase-postgres-best-practices` or an installed Postgres specialist | Backend and release-safety lenses plus repository schema/migration evidence |
 | Unresolved framework, API, standard, or external contract | `contract-research` | Keep the candidate unresolved and record the missing primary-source validation |
-| PR inline comment wording | `dumbify`, then `anti-ai-writing` | Do not claim those transformations were applied; use the PR comment rules and report the missing wording pass if comments are still requested |
+| PR inline comment wording | `un-ai` from the `content` plugin | Apply the PR comment wording rules directly without substituting another writing skill; report the missing `un-ai` pass if comments are still requested |
 
 Backend framework skills are optional, not a whitelist. FastAPI, Django, Flask, NestJS, Express, Fastify, Rails, Spring, ASP.NET, Go HTTP stacks, Rust servers, and equivalent backends all receive the built-in backend and common lenses when their change shape matches. Load a framework specialist only if one is actually installed and relevant.
 
@@ -61,12 +61,13 @@ A higher source can override a specific recommendation, but it does not erase un
 For every promoted finding selected for an inline comment:
 
 1. Draft the concrete trigger, effect, and requested smallest change.
-2. Apply `dumbify`: use plain words, short sentences, one concern, and concrete identifiers while preserving exact technical terms, API/type names, and code identifiers.
+2. Load `un-ai` from the `content` plugin and apply it in Edit mode. `un-ai` is the only wording skill for this route; if it is not installed, apply the constraints below directly and report the missing pass instead of substituting another writing skill.
+3. Plain-language constraints for the `un-ai` pass: use plain words, short sentences, one concern, and concrete identifiers while preserving exact technical terms, API/type names, and code identifiers.
    - If the likely reviewer may not know a term, keep the term and explain what it does on first use: `race condition(동시 요청이 같은 상태를 읽고 쓰며 생기는 충돌)`. A short following clause is also valid when it reads better than parentheses.
    - Explain the mechanism, not merely a translated label. `race condition(경쟁 상태)` repeats the name without making the failure easier to understand.
    - After the first explanation, use the technical term alone. Do not annotate shared vocabulary or repeat the same parenthetical gloss throughout the comment.
    - Keep code identifiers exact and formatted as code, such as `cache`, `InvoiceStatus`, or `sync.RWMutex`; a plain explanation supplements them instead of replacing them.
-3. Apply `anti-ai-writing`: remove filler, praise sandwiches, vague hedging, inflated significance, canned transitions, and unnecessary formatting without changing the technical claim. This pass may tighten the explanation but must preserve the exact term and enough plain-language context to understand the mechanism.
-4. Recheck the comment against the finding evidence and exact diff anchor.
+4. Generic-pattern constraints for the same pass: remove filler, praise sandwiches, vague hedging, inflated significance, canned transitions, and unnecessary formatting without changing the technical claim. This may tighten the explanation but must preserve the exact term and enough plain-language context to understand the mechanism.
+5. Recheck the comment against the finding evidence and exact diff anchor.
 
-These wording skills change presentation only. They must never add a new finding, increase severity, invent a runtime effect, or turn an invalid line into a valid PR anchor.
+The wording pass changes presentation only. It must never add a new finding, increase severity, invent a runtime effect, or turn an invalid line into a valid PR anchor.
