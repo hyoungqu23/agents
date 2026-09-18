@@ -1,6 +1,6 @@
 ---
 name: design-brief
-description: Create or update a project's DESIGN.md from existing design rules, code, HTML, and a product brief. Use when establishing reusable visual, interaction, and concept decisions before prototyping, or documenting an existing design system. Preserve the nearest existing design source and its format.
+description: Create or update a project's DESIGN.md from existing design rules, code, HTML, and a product brief. Use when establishing reusable visual, interaction, and concept decisions before prototyping, or documenting an existing design system. Preserve the nearest existing design source and its format. Do not use to compare layout or interaction alternatives, which is prototype-explore, or to preserve an already chosen mockup, which is prototype-promote.
 ---
 
 # Design Brief

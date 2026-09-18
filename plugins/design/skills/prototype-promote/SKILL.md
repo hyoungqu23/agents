@@ -1,6 +1,6 @@
 ---
 name: prototype-promote
-description: Turn an explicitly selected HTML prototype or variant into a durable design reference with resolved tokens, working assets and interactions, and an implementation handoff. Use when the user says to keep a chosen mockup as the baseline or promote a prototype; promotion creates reference artifacts, while production implementation remains a separate task.
+description: Turn an explicitly selected HTML prototype or variant into a durable design reference with resolved tokens, working assets and interactions, and an implementation handoff. Use when the user says to keep a chosen mockup as the baseline or promote a prototype; promotion creates reference artifacts, while production implementation remains a separate task. Do not use to compare alternatives that have not been chosen, which is prototype-explore, and do not use it to write production code.
 ---
 
 # Prototype Promote
