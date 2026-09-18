@@ -10,6 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      # validate.sh skips its `claude plugin validate` pass when the CLI is absent.
+      # Without this install the job reported a skipped check as a pass.
+      - run: npm install -g @anthropic-ai/claude-code
       - run: ./scripts/validate.sh
+      - run: ./scripts/load-check.sh
       - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
       - run: node --test plugins/design/evals/tests/fixtures.test.mjs

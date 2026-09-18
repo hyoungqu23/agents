@@ -61,11 +61,14 @@ Run:
 
 ```sh
 ./scripts/validate.sh
+./scripts/load-check.sh
 python3 -m unittest discover -s scripts/tests -p 'test_*.py'
 node --test plugins/design/evals/tests/fixtures.test.mjs
 ```
 
-The script validates JSON files, runs the installed Codex plugin validator when available, and runs Claude Code validation when the `claude` CLI is installed.
+`validate.sh` validates JSON files, runs the installed Codex plugin validator when available, and runs Claude Code validation when the `claude` CLI is installed.
+
+`load-check.sh` installs every plugin from the checkout into a scratch `CLAUDE_CONFIG_DIR` and fails unless each one reaches `enabled` with all of its skills in the loaded inventory. Manifest validation accepts a marketplace entry whose `source` path does not exist, and a skill directory whose `SKILL.md` is missing; the load check does not. It requires the `claude` CLI, touches no installed plugin of its own, and needs no network.
 
 The Python tests cover validation-environment recovery. The Node tests check design
 evaluation inputs, keyboard behavior, and development/production fixture isolation.
