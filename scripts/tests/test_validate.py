@@ -30,6 +30,8 @@ class ValidationEnvironmentTests(unittest.TestCase):
             (old_cache / "preserve.txt").write_text("original cache")
             validator = root / "validator.py"
             validator.write_text("# test validator")
+            if scenario == "missing":
+                validator.unlink()
             commands = root / "bin"
             commands.mkdir()
             # Command doubles isolate environment selection from installed Python,
@@ -78,6 +80,13 @@ elif name == "uv":
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertFalse(any(e["name"] == "uv" for e in events))
         self.assertFalse(fresh)
+
+    def test_missing_validator_fails_instead_of_succeeding_with_skip(self):
+        result, events, fresh = self.run_validation("missing")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Codex validator not found", result.stderr)
+        self.assertNotIn("Validation complete", result.stdout)
+        self.assertFalse(any(e["name"] == "claude" for e in events))
 
     def test_healthy_cache_is_reused_for_both_plugins(self):
         result, events, fresh = self.run_validation("healthy")
