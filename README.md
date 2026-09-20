@@ -84,6 +84,30 @@ the platform validators. The Node tests check design
 evaluation inputs, keyboard behavior, and development/production fixture isolation.
 Agent-executed scenarios are described in [the design evaluation guide](plugins/design/evals/README.md).
 
+### Behavioral smoke checks
+
+Structural tests do not establish that an agent follows a skill. Run actual Codex
+invocations separately, using a logged-in CLI or `CODEX_API_KEY`:
+
+```sh
+python3 scripts/behavioral/run.py --model <model-id> --output /tmp/hm2-behavioral-unique-run
+```
+
+This uses model capacity and sends the selected plugin instructions, references and
+synthetic fixtures to OpenAI. It runs three scenarios in disposable workspaces and
+checks real artifacts for design-rule preservation, editing fidelity, and a known
+cross-file review defect. Failures, timeouts and missing outputs return nonzero;
+the output directory retains prompts, traces, snapshots and individual checks.
+
+The separate **behavioral-smoke** workflow runs on explicit dispatch against reviewed
+`main`, requires the `CODEX_API_KEY` repository secret and a model ID, and uploads
+evidence even on scenario failure. It deliberately does not run credentialed agents
+against fork PR code. Before release, require a successful run for the release commit
+and inspect its artifacts; the ordinary `validate` job is not a behavioral pass.
+Branch protection/release policy must enforce that requirement if publishing is
+automated. See [the behavioral runner guide](scripts/behavioral/README.md) for scope
+and the remaining human evaluation requirements.
+
 ## Publishing note
 
 Resolve the public license and third-party attribution requirements before the first public release.

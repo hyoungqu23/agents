@@ -15,3 +15,4 @@
 - [ ] Plugin `CHANGELOG.md` updated and version bumped
 - [ ] Root `README.md` plugin table updated
 - [ ] Installed and exercised locally (`/plugin install <plugin>@hm2-tools`)
+- [ ] For skill behavior changes: attach real behavioral run evidence (commit, model, result), or explicitly record not run; fixture/unit tests alone are not a behavioral pass

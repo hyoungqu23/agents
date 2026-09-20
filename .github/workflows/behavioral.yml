@@ -1,0 +1,49 @@
+name: behavioral-smoke
+
+# Explicit dispatch opts into model usage. Never expose model credentials to
+# pull_request_target or unreviewed fork code. Run only the trusted main branch.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'Exact Codex model ID to evaluate (recorded in artifacts)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  behavioral-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Require trusted branch and model credential
+        env:
+          CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
+        run: |
+          test "$GITHUB_REF" = refs/heads/main || { echo 'Run this workflow on reviewed main only.' >&2; exit 1; }
+          test -n "$CODEX_API_KEY" || { echo 'CODEX_API_KEY is required; behavioral checks were NOT run.' >&2; exit 1; }
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: npm install -g @openai/codex@0.153.4
+      - name: Execute real skill scenarios
+        env:
+          CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
+          EVAL_MODEL: ${{ inputs.model }}
+        run: python3 scripts/behavioral/run.py --model "$EVAL_MODEL" --output "$RUNNER_TEMP/behavioral-results"
+      - name: Preserve evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: behavioral-smoke-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/behavioral-results
+          if-no-files-found: warn
+          retention-days: 14
