@@ -13,10 +13,25 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
+      # Pin the official validator and its sibling imports; never depend on a
+      # developer's ~/.codex installation being present on a hosted runner.
+      - uses: actions/checkout@v7
+        with:
+          repository: openai/codex
+          ref: 5c5308fc9a9ee789049d646ef11e5400384b9c6f
+          path: .ci/codex
+          sparse-checkout: codex-rs/skills/src/assets/samples/plugin-creator/scripts
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install PyYAML==6.0.2
       # validate.sh skips its `claude plugin validate` pass when the CLI is absent.
       # Without this install the job reported a skipped check as a pass.
       - run: npm install -g @anthropic-ai/claude-code
       - run: ./scripts/validate.sh
+        env:
+          CODEX_PLUGIN_VALIDATOR: ${{ github.workspace }}/.ci/codex/codex-rs/skills/src/assets/samples/plugin-creator/scripts/validate_plugin.py
       - run: ./scripts/load-check.sh
       - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
       - run: node --test plugins/design/evals/tests/fixtures.test.mjs

@@ -1,0 +1,160 @@
+{
+  "started_at": "2026-09-20T13:37:53.425489+00:00",
+  "model": "gpt-5.6-sol",
+  "reasoning_effort": "low",
+  "scope": "behavioral smoke, not full qualitative evaluation",
+  "full_suite": true,
+  "not_run": [],
+  "cases": [
+    {
+      "case": "design-existing",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "existing_rules_and_headings_preserved",
+          "passed": true
+        },
+        {
+          "check": "css_source_mapped",
+          "passed": true
+        },
+        {
+          "check": "decision_log_added",
+          "passed": true
+        },
+        {
+          "check": "app_tokens_preserved",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/design/skills/design-brief/evals/evals.json#1",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 51.4
+    },
+    {
+      "case": "content-fidelity",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "requested_intro_removed",
+          "passed": true
+        },
+        {
+          "check": "dates_and_counts_preserved",
+          "passed": true
+        },
+        {
+          "check": "cause_stays_unconfirmed",
+          "passed": true
+        },
+        {
+          "check": "schedule_stays_tentative",
+          "passed": true
+        }
+      ],
+      "scenario": "scripts/behavioral/cases.py:content-fidelity",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 30.15
+    },
+    {
+      "case": "review-runtime",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "unsafe_cast_anchored",
+          "passed": true
+        },
+        {
+          "check": "cross_file_contract_traced",
+          "passed": true
+        },
+        {
+          "check": "consumer_fix_requested",
+          "passed": true
+        },
+        {
+          "check": "nonrunnable_tests_not_claimed",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/review/skills/review-code/evals/evals.json#9",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 49.51
+    }
+  ],
+  "status": "passed",
+  "commit": "bff8bd35124e79d763db260bb546900a31034462",
+  "working_tree": " M .github/pull_request_template.md\n M .github/workflows/validate.yml\n M .gitignore\n M README.md\n M plugins/design/evals/README.md\n M scripts/tests/test_validate.py\n M scripts/validate.sh\n?? .github/workflows/behavioral.yml\n?? reports/\n?? scripts/behavioral/\n?? scripts/tests/test_behavioral.py\n",
+  "codex_version": "codex-cli 0.153.4",
+  "harness_sha256": {
+    "run.py": "e227971e170fbdaf9eb41941c81c5268b4a50388f6c4f452c2d6a8545f60233f",
+    "cases.py": "a405b7d3644e981c86ffe219e4af73bc3d9e5feef9b22dda7699cd98e2e5c319"
+  },
+  "finished_at": "2026-09-20T13:40:04.510348+00:00"
+}

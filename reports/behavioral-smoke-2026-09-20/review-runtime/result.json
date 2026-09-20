@@ -1,0 +1,47 @@
+{
+  "case": "review-runtime",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "unsafe_cast_anchored",
+      "passed": true
+    },
+    {
+      "check": "cross_file_contract_traced",
+      "passed": true
+    },
+    {
+      "check": "consumer_fix_requested",
+      "passed": true
+    },
+    {
+      "check": "nonrunnable_tests_not_claimed",
+      "passed": true
+    }
+  ],
+  "scenario": "plugins/review/skills/review-code/evals/evals.json#9",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-5.6-sol",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "duration_seconds": 49.51
+}

@@ -1,0 +1,47 @@
+{
+  "case": "content-fidelity",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "requested_intro_removed",
+      "passed": true
+    },
+    {
+      "check": "dates_and_counts_preserved",
+      "passed": true
+    },
+    {
+      "check": "cause_stays_unconfirmed",
+      "passed": true
+    },
+    {
+      "check": "schedule_stays_tentative",
+      "passed": true
+    }
+  ],
+  "scenario": "scripts/behavioral/cases.py:content-fidelity",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-5.6-sol",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "duration_seconds": 30.15
+}

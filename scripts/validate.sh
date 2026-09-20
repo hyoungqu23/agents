@@ -48,7 +48,8 @@ if [[ -f "${codex_validator}" ]]; then
     "${codex_python[@]}" "${codex_validator}" "${plugin_root}"
   done
 else
-  echo "Skipping Codex validation: validator not found."
+  echo "Codex validator not found: ${codex_validator}. Set CODEX_PLUGIN_VALIDATOR to the official validate_plugin.py path." >&2
+  exit 1
 fi
 
 if command -v claude >/dev/null 2>&1; then

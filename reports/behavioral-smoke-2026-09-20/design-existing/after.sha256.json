@@ -1,0 +1,19 @@
+{
+  ".eval-plugins/design/.claude-plugin/plugin.json": "0c0ad15545543639ea477fe045fd1a620bd123794ea04bb9aabd713293896d05",
+  ".eval-plugins/design/.codex-plugin/plugin.json": "d9262ad0358a5ed67c8762bb1f149ed3aff4818cc19277263e86323864c65f68",
+  ".eval-plugins/design/CHANGELOG.md": "8f6a774f5c5c2bc1ab5f0552daf2b380d50fa1fbf6e1228824fd3affa4d0a7c9",
+  ".eval-plugins/design/README.md": "62391dbd54607f439fc060e5163ca19d3eeb8eb8b9b5c2b5a8e118b0b729873f",
+  ".eval-plugins/design/references/design-authority.md": "8e1bad6efc0a045d9a6db849af98af1a1c43499f81af95024507ead954be002b",
+  ".eval-plugins/design/references/prototype-verification.md": "6dff0d49132fa9285a01b9bab3d21154642855de77d9255829dcc71f37e4e8f8",
+  ".eval-plugins/design/skills/design-brief/SKILL.md": "e16d1461aec9b03ec8439192b4dc959e501ca54eac806d02c429470f33209622",
+  ".eval-plugins/design/skills/design-brief/agents/openai.yaml": "3c6bcecdb796d2814c179fc27f8f28cdf53a69c2ec3ede5bcc208086c1bbb8bc",
+  ".eval-plugins/design/skills/prototype-explore/SKILL.md": "0fb098ccf9944954dc3e6e2cb17f794066dd7c80b3579b60b84798bdeaccb71b",
+  ".eval-plugins/design/skills/prototype-explore/agents/openai.yaml": "1274a7d260d0a1841495022265ea0e50f895a90a01f5b4bb46e065b9d7c1ed46",
+  ".eval-plugins/design/skills/prototype-promote/SKILL.md": "811e020ab40b7f4312e8c1fa75df890f4534ad0c0373173b0bb8ab53e55bc459",
+  ".eval-plugins/design/skills/prototype-promote/agents/openai.yaml": "82622fbd1edf080aafa84c4a55de054eeed5991b105ada51de1e9fa6ae120bc5",
+  ".eval-plugins/design/skills/prototype-promote/references/reference-note.md": "b17870411c37313a026f6deba051a9e6d8146375c9d5806af9225052eab782d0",
+  "DESIGN.md": "a006cb518c56d4a177eaf6170dad9e8a14fb9b11323f4ef2cd774947af54220c",
+  "apps/dashboard/DESIGN_SYSTEM.md": "407665410324f0e61cd61870f857af676aec0a502c08c2cbb5206822131e8e2a",
+  "apps/dashboard/src/screen.txt": "ddfbaeb9f312b25f44a09384c82b843223ca4f9143c95727297b2cfb80da6c99",
+  "apps/dashboard/src/theme.css": "67fc66299e377d05a90bf314c3e14fd350ae6f833d73d22a8206bc82fcec77e3"
+}

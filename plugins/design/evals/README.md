@@ -51,3 +51,12 @@ invoke its skill entrypoint with its sibling references accessible.
 
 Report scenario pass/fail counts separately from checks that were not run. A source-only
 evaluation cannot be reported as a successful browser test or marketplace installation.
+
+## Automated behavioral smoke
+
+The repository's [behavioral runner](../../../scripts/behavioral/README.md) executes
+`design-brief` scenario 1 with a real Codex agent and checks the resulting document,
+alongside one content and one review scenario. It keeps the grading expectations
+outside the executor workspace and preserves outputs and event traces. This is a
+narrow automated subset; the other design scenarios and qualitative requirements
+above still need independent execution and artifact review.

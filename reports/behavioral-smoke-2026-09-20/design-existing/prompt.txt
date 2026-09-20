@@ -1,0 +1,2 @@
+Read and apply .eval-plugins/design/skills/design-brief/SKILL.md and the references it calls for. Only edit the task's output files; .eval-plugins contains the skill source, not output targets.
+apps/dashboard의 기존 디자인 기준에 토큰 출처와 Decisions Log만 보완해줘. 기존 문서 형식과 규칙은 유지해줘.
