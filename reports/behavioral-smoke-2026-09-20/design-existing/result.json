@@ -1,0 +1,47 @@
+{
+  "case": "design-existing",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "existing_rules_and_headings_preserved",
+      "passed": true
+    },
+    {
+      "check": "css_source_mapped",
+      "passed": true
+    },
+    {
+      "check": "decision_log_added",
+      "passed": true
+    },
+    {
+      "check": "app_tokens_preserved",
+      "passed": true
+    }
+  ],
+  "scenario": "plugins/design/skills/design-brief/evals/evals.json#1",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-5.6-sol",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "duration_seconds": 51.4
+}

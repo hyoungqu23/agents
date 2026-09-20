@@ -1,0 +1,2 @@
+Read and apply .eval-plugins/content/skills/un-ai/SKILL.md and the references it calls for. Only edit the task's output files; .eval-plugins contains the skill source, not output targets.
+draft.md의 고객 안내를 간결하게 편집해 edited.md에 저장해줘. 도입부의 ‘안내드립니다.’는 삭제해줘. 날짜·인원·불확실성·일정 변경 가능성은 그대로 유지하고, 새로운 원인이나 약속을 추가하지 마. 원문 파일은 보존하고 편집한 본문만 저장해줘.

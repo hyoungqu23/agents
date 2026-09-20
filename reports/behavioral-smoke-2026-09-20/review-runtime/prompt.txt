@@ -1,0 +1,4 @@
+Read and apply .eval-plugins/review/skills/review-code/SKILL.md and the references it calls for. Only edit the task's output files; .eval-plugins contains the skill source, not output targets.
+첨부된 archived invoice PR을 파일 간 계약까지 추적해서 리뷰해줘.
+첨부 자료는 change.md입니다. 외부 도구나 네트워크 없이 제공된 자료만 검토하세요.
+추가로 review.json을 작성하세요. 형식은 {"findings":[{"file":"상대 경로","line":정수,"description":"원인과 영향","fix":"수정 제안"}],"tests_executed":불리언,"limitations":"검증 한계"}입니다.
