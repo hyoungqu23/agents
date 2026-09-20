@@ -67,7 +67,10 @@ node --test plugins/design/evals/tests/fixtures.test.mjs
 
 The script validates JSON files, runs the installed Codex plugin validator when available, and runs Claude Code validation when the `claude` CLI is installed.
 
-The Python tests cover validation-environment recovery. The Node tests check design
+The Python tests cover validation-environment recovery and every skill's SKILL.md
+frontmatter: delimiters that parse, a `name` matching its directory, a description that
+states both when to use the skill and what to use instead, and no reference file that
+nothing reaches. Neither plugin validator reads skill frontmatter. The Node tests check design
 evaluation inputs, keyboard behavior, and development/production fixture isolation.
 Agent-executed scenarios are described in [the design evaluation guide](plugins/design/evals/README.md).
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 - 2026-09-18
+
+- State in `review-code`'s description what it is not for: posting comments to a pull request is `review-pr`, and answering a review on a pull request you authored is `review-respond`.
+
 ## 0.3.0 - 2026-09-08
 
 - Add the `review-respond` skill for answering reviews on pull requests you authored: verify each claim, commit fixes as new commits, reply inside the threads, resolve nothing unless asked.

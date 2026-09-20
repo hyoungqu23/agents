@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 - 2026-09-18
+
+- State in each skill's description what it is not for, so a request reaches one skill rather than the nearest of three: `design-brief` points layout comparison at `prototype-explore` and mockup preservation at `prototype-promote`, `prototype-explore` states its exclusion directly instead of implying it, and `prototype-promote` excludes unchosen alternatives and production code.
+
 ## 0.1.2 - 2026-09-07
 
 - Remove references to external plugins and skills from the design authority reference and README.

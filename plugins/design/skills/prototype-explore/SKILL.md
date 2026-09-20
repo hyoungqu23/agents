@@ -1,6 +1,6 @@
 ---
 name: prototype-explore
-description: Explore structurally different UI options in an interactive HTML prototype with shareable variant URLs. Use when comparing screen layouts or interactions before selecting a design. For an already selected design that should become an implementation reference, use prototype-promote instead.
+description: Explore structurally different UI options in an interactive HTML prototype with shareable variant URLs. Use when comparing screen layouts or interactions before selecting a design. Do not use for an already selected design that should become an implementation reference; use prototype-promote instead.
 ---
 
 # Prototype Explore
