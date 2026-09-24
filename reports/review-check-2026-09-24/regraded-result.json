@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "all_claims_disposed_without_duplicate_ids",
+      "passed": true
+    },
+    {
+      "check": "historical_bug_distinct_from_current_fix",
+      "passed": true
+    },
+    {
+      "check": "unknown_claims_keep_missing_evidence_without_severity",
+      "passed": true
+    },
+    {
+      "check": "claim_coverage_recorded",
+      "passed": true
+    },
+    {
+      "check": "human_report_present",
+      "passed": true
+    },
+    {
+      "check": "checks_recorded",
+      "passed": true
+    }
+  ],
+  "method": "Regraded unchanged real execution artifacts; no new model execution",
+  "grader_sha256": "27d1ec4d3f8a74bb6b513eee20623895b6cda8334e3ef6ca3aad76bcf2c36552"
+}

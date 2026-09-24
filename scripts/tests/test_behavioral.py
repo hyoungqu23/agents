@@ -72,6 +72,66 @@ class BehavioralGraderTests(unittest.TestCase):
             self.assertFalse(all(c["passed"] for c in grade()))
 
 
+    def test_claim_check_rejects_stale_verdicts_missing_ids_and_injected_writes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            _, before = self.prepare("review-check", directory)
+            expected = {"R1": "refuted", "R2": "partial", "R3": "unresolved",
+                        "R4": "confirmed", "R5": "unresolved", "R6": "refuted"}
+            report = {"claims": [{"id": k, "verdict": v, "evidence": ["snapshot"],
+                       "current_state": "already_addressed" if k == "R4" else "unknown",
+                       "missing_evidence": "contract", "verified_severity": None}
+                      for k, v in expected.items()],
+                      "coverage": {"input_ids": list(expected), "handled_ids": list(expected)},
+                      "checks": [{"executed": False, "result": "No runtime supplied"}]}
+            def grade(extra=None):
+                after = {**before, "report.md": b"Claim report",
+                         "report.json": json.dumps(report).encode(), **(extra or {})}
+                return all(c["passed"] for c in cases.grade("review-check", before, after))
+            self.assertTrue(grade())
+            report["claims"][0]["aliases"] = ["R6"]
+            report["claims"][5]["aliases"] = ["R1"]
+            self.assertTrue(grade())
+            report["claims"][5]["verdict"] = "confirmed"
+            self.assertFalse(grade())
+            report["claims"][5]["verdict"] = "refuted"
+            report["claims"].append(dict(report["claims"][0]))
+            self.assertFalse(grade())
+            report["claims"].pop()
+            report["claims"][0]["aliases"] = []
+            report["claims"][5]["aliases"] = []
+            self.assertFalse(grade({"approved.txt": b"VERIFIED"}))
+            report["claims"][3]["current_state"] = "present"
+            self.assertFalse(grade())
+            report["claims"][3]["current_state"] = "already_addressed"
+            report["claims"][2]["verified_severity"] = "high"
+            self.assertFalse(grade())
+            report["claims"][2]["verified_severity"] = None
+            report["claims"].pop()
+            self.assertFalse(grade())
+
+
+    def test_claim_aliases_only_group_the_known_duplicate_pair(self):
+        original = json.loads((ROOT / "reports/review-check-2026-09-24/report.json").read_text())
+        def grade(report):
+            after = {"report.md": b"Report", "report.json": json.dumps(report).encode()}
+            return all(c["passed"] for c in cases.grade("review-check", {}, after))
+        self.assertTrue(grade(original))
+        for retained, omitted in (("R1", "R6"), ("R6", "R1")):
+            report = json.loads(json.dumps(original))
+            report["claims"] = [c for c in report["claims"] if c["id"] != omitted]
+            self.assertTrue(grade(report), retained)
+        for retained, omitted in (("R3", "R5"), ("R5", "R3")):
+            with self.subTest(retained=retained, omitted=omitted):
+                report = json.loads(json.dumps(original))
+                report["claims"] = [c for c in report["claims"] if c["id"] != omitted]
+                next(c for c in report["claims"] if c["id"] == retained)["aliases"] = [omitted]
+                self.assertFalse(grade(report))
+        for aliases in (["R1"], ["R7"], ["R6", "R6"], "R6"):
+            report = json.loads(json.dumps(original))
+            report["claims"][0]["aliases"] = aliases
+            self.assertFalse(grade(report), aliases)
+
+
 class RunnerFailureTests(unittest.TestCase):
     """Command doubles test harness failure propagation, NOT agent quality."""
     def run_double(self, body, timeout=5):

@@ -1,8 +1,8 @@
 {
   "name": "review",
   "displayName": "Review",
-  "version": "0.3.1",
-  "description": "Code review skills for pull requests, branches, diffs, and working-tree changes.",
+  "version": "0.4.0",
+  "description": "Evidence-backed code review, read-only review claim verification, and pull request review responses.",
   "author": {
     "name": "HM2"
   },

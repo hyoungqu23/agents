@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 - 2026-09-20
+
+- Add `review-check` for read-only verification of supplied review claims, with separate historical validity and current fix status.
+- Share the claim-verification procedure with `review-respond` while preserving its action classes and posting workflow.
+- Reject unrelated claim aliases in the behavioral grader; only the fixture’s known duplicate pair may be grouped.
+- Add six evaluation scenarios covering false positives, partial claims, stale findings, missing evidence, policy conflicts, and review-text injection.
+
 ## 0.3.1 - 2026-09-18
 
 - State in `review-code`'s description what it is not for: posting comments to a pull request is `review-pr`, and answering a review on a pull request you authored is `review-respond`.

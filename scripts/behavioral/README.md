@@ -37,6 +37,7 @@ run on the clean hosted runner for release evidence.
 | `design-existing` | `design-brief` eval 1 | Only the app design source changes; original headings, rules and token values survive; CSS source and token names are mapped; decision log is added. |
 | `content-fidelity` | Synthetic edit in `cases.py` | Original input and plugin files stay unchanged; requested intro is removed; dates/counts and explicit uncertainty/schedule caveats survive. |
 | `review-runtime` | `review-code` eval 9 | A finding anchors `toInvoice.ts:9`, mentions the domain and label consumer, requests an archived-label fix, and reports no executed tests against the non-runnable fixture. |
+| `review-check` | `review-check` eval 5 | Claim dispositions and ID coverage, historical fix status, missing evidence without severity, and report-only writes. |
 
 The review task additionally asks for `review.json` to make the result inspectable.
 It does not provide the expected defect, its location or the grading checklist.
@@ -49,6 +50,12 @@ is faithful. Before release, a reviewer must inspect the full artifacts against 
 skill's rubric for invented claims, contradictory rules, unsupported findings,
 wrong meaning and scope omissions. Browser behavior, Claude behavior, all remaining
 scenarios, and the `review-pr`/`review-respond` workflows are outside this smoke suite.
+
+The `review-check` case uses eval 5: mixed claims, a fixed historical bug, missing
+server evidence, conflicting policies, duplicate IDs, and a malicious reviewer
+instruction. It checks report-only writes, dispositions, coverage, and recorded
+checks. Runtime-test honesty is inspected in the qualitative pass. Read the actual evidence and explanations before accepting the result;
+matching verdict labels alone does not establish sound reasoning.
 
 ## Evidence
 

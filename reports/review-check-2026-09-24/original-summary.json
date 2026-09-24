@@ -1,0 +1,78 @@
+{
+  "started_at": "2026-09-24T04:52:03.177514+00:00",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "scope": "behavioral smoke, not full qualitative evaluation",
+  "full_suite": false,
+  "not_run": [
+    "design-existing",
+    "content-fidelity",
+    "review-runtime"
+  ],
+  "cases": [
+    {
+      "case": "review-check",
+      "status": "failed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "all_claims_disposed_without_duplicate_ids",
+          "passed": false
+        },
+        {
+          "check": "historical_bug_distinct_from_current_fix",
+          "passed": true
+        },
+        {
+          "check": "unknown_claims_keep_missing_evidence_without_severity",
+          "passed": true
+        },
+        {
+          "check": "claim_coverage_recorded",
+          "passed": true
+        },
+        {
+          "check": "human_report_present",
+          "passed": true
+        },
+        {
+          "check": "checks_recorded",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/review/skills/review-check/evals/evals.json#5",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 183.71
+    }
+  ],
+  "status": "failed",
+  "commit": "e7928d57e7d196f1e370e0682c583bc1d6b16af7",
+  "working_tree": " M .claude-plugin/marketplace.json\n M README.md\n M plugins/review/.claude-plugin/plugin.json\n M plugins/review/.codex-plugin/plugin.json\n M plugins/review/CHANGELOG.md\n M plugins/review/README.md\n M plugins/review/skills/review-code/SKILL.md\n M plugins/review/skills/review-pr/SKILL.md\n M plugins/review/skills/review-respond/SKILL.md\n M scripts/behavioral/README.md\n M scripts/behavioral/cases.py\n M scripts/tests/test_behavioral.py\n?? plugins/review/references/\n?? plugins/review/skills/review-check/\n",
+  "codex_version": "codex-cli 0.153.4",
+  "harness_sha256": {
+    "run.py": "e227971e170fbdaf9eb41941c81c5268b4a50388f6c4f452c2d6a8545f60233f",
+    "cases.py": "f52d4e740d45deecaa741714fecb12c67129ec172fc28f0cb314e2712321230c"
+  },
+  "finished_at": "2026-09-24T04:55:06.911754+00:00"
+}

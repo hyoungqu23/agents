@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "all_claims_disposed_without_duplicate_ids",
+      "passed": true
+    },
+    {
+      "check": "historical_bug_distinct_from_current_fix",
+      "passed": true
+    },
+    {
+      "check": "unknown_claims_keep_missing_evidence_without_severity",
+      "passed": true
+    },
+    {
+      "check": "claim_coverage_recorded",
+      "passed": true
+    },
+    {
+      "check": "human_report_present",
+      "passed": true
+    },
+    {
+      "check": "checks_recorded",
+      "passed": true
+    }
+  ],
+  "method": "Regrade retained report artifacts after restricting aliases to the fixture duplicate pair. No new model execution. Archived full-workspace hashes separately confirm report-only writes.",
+  "grader_sha256": "ca4ce92d073bc4c2a10a6ec04f2d9371d37d74fbeda889cc1ced97c8a28e5234"
+}

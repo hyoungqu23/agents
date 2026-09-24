@@ -1,7 +1,7 @@
 {
   "name": "review",
-  "version": "0.3.1",
-  "description": "Code review skills for pull requests, branches, diffs, and working-tree changes.",
+  "version": "0.4.0",
+  "description": "Evidence-backed code review, read-only review claim verification, and pull request review responses.",
   "author": {
     "name": "HM2"
   },
@@ -15,7 +15,7 @@
   "interface": {
     "displayName": "Review",
     "shortDescription": "Evidence-backed code review",
-    "longDescription": "Completion-gated code review that inventories every changed file, routes stack specialists, and promotes only evidence-backed findings with exact file:line placement. Also answers reviews on your own pull requests with verified fixes and in-thread replies.",
+    "longDescription": "Completion-gated code review that inventories every changed file, routes stack specialists, and promotes only evidence-backed findings with exact file:line placement. Also answers reviews on your own pull requests with verified fixes and in-thread replies. Checks existing review claims without editing code or posting replies with review-check.",
     "developerName": "HM2",
     "category": "Productivity",
     "capabilities": [
