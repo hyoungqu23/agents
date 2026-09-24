@@ -1,6 +1,6 @@
 ---
 name: review-pr
-description: Review a GitHub pull request end to end. Creates a dedicated worktree for the PR, delegates the review to review-code, then posts the findings the user approves as inline review comments. Use when asked to review a PR by number or URL, to post review comments to GitHub, or to continue reviewing a PR that has new commits or new replies. Do not use for uncommitted local changes; call review-code directly for those. Do not use to answer a review on a PR you authored; call review-respond for that.
+description: Review a GitHub pull request end to end. Creates a dedicated worktree for the PR, delegates the review to review-code, then posts the findings the user approves as inline review comments. Use when asked to review a PR by number or URL, to post review comments to GitHub, or to continue reviewing a PR that has new commits or new replies. Do not use for uncommitted local changes; call review-code directly for those. Do not use to answer a review on a PR you authored; call review-respond for that. For checking existing review claims without changes or posting, use review-check.
 ---
 
 # Review PR

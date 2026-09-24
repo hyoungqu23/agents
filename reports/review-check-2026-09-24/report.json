@@ -1,0 +1,192 @@
+{
+  "claims": [
+    {
+      "review_ref": "snapshot: review-snapshot.md#before.md",
+      "target_ref": "snapshot: review-snapshot.md#current.md",
+      "verified_severity": null,
+      "id": "R1",
+      "aliases": [
+        "R6"
+      ],
+      "claim": "Current formatTotal crashes on an empty response because it reads rows[0].",
+      "verdict": "refuted",
+      "current_state": "already_addressed",
+      "evidence": [
+        "review-snapshot.md:23-26: current.md의 빈 배열 가드는 '0.00'을 반환한다.",
+        "review-snapshot.md:46-48: before.md에는 가드가 없다."
+      ],
+      "trigger": "formatTotal([])",
+      "impact": "현재는 '0.00'을 반환한다. 과거에는 예외가 발생했다.",
+      "counterevidence": [
+        "review-snapshot.md:24: 빈 배열은 rows[0] 접근 전에 반환된다."
+      ],
+      "missing_evidence": "호출부와 런타임 재현은 제공되지 않았다.",
+      "action": "현재 오류라는 지적을 정정하고 가드를 유지한다."
+    },
+    {
+      "review_ref": "snapshot: review-snapshot.md#before.md",
+      "target_ref": "snapshot: review-snapshot.md#current.md",
+      "verified_severity": null,
+      "id": "R2",
+      "aliases": [],
+      "claim": "Current submitInvoice retries send on status 503, and it also retries on every other error status.",
+      "verdict": "partial",
+      "current_state": "present",
+      "evidence": [
+        "review-snapshot.md:29-32: 최초 send 오류의 status가 숫자 503일 때 한 번 더 호출한다."
+      ],
+      "trigger": "최초 send가 status === 503인 오류로 실패",
+      "impact": "503이면 이 함수에서 최대 두 번 호출한다. 비503이면 재시도 없이 오류를 전달한다.",
+      "counterevidence": [
+        "review-snapshot.md:32-33: 다른 상태는 throw error로 종료한다. 모든 상태 재시도 주장은 반증된다."
+      ],
+      "missing_evidence": "send 구현, 호출부, 오류 변환 및 재시도·멱등성 계약이 없다.",
+      "action": "리뷰를 503일 때 한 번 재시도한다는 설명으로 정정한다."
+    },
+    {
+      "review_ref": "snapshot: review-snapshot.md#before.md",
+      "target_ref": "snapshot: review-snapshot.md#current.md",
+      "verified_severity": null,
+      "id": "R3",
+      "aliases": [],
+      "claim": "Current timeout guarantees the server cancels the billing operation.",
+      "verdict": "unresolved",
+      "current_state": "unknown",
+      "evidence": [
+        "review-snapshot.md:51-54: fetch의 AbortSignal.timeout(5000) 사용만 제공되었다."
+      ],
+      "trigger": "요청이 타임아웃에 도달",
+      "impact": null,
+      "counterevidence": [
+        "review-snapshot.md:53-54: 클라이언트 설정만으로 서버 취소 보장을 확인할 수 없고 서버 소스·계약이 없다."
+      ],
+      "missing_evidence": "대상 버전 서버의 취소 처리 소스와 요청 취소 계약, 필요시 통합 재현 결과.",
+      "action": "서버 취소 보장은 미확인으로 두고 일치하는 계약과 구현을 확보한다."
+    },
+    {
+      "review_ref": "snapshot: review-snapshot.md#before.md",
+      "target_ref": "snapshot: review-snapshot.md#current.md",
+      "verified_severity": null,
+      "id": "R4",
+      "aliases": [],
+      "claim": "An empty response crashed formatTotal in before.md.",
+      "verdict": "confirmed",
+      "current_state": "already_addressed",
+      "evidence": [
+        "review-snapshot.md:46-48: before.md는 rows[0].total을 가드 없이 읽어 빈 배열에서 예외가 발생한다.",
+        "review-snapshot.md:23-26: current.md는 빈 배열을 가드로 처리한다."
+      ],
+      "trigger": "before.md의 formatTotal([])",
+      "impact": "과거 합계 포맷팅 호출이 예외로 끝났다. 현재 동일 입력은 0.00을 반환한다.",
+      "counterevidence": [
+        "review-snapshot.md:24: 현재 수정은 과거 오류의 타당성을 뒤집지 않는다."
+      ],
+      "missing_evidence": "실제 운영 발생 이력·호출부·런타임 재현은 없다.",
+      "action": "과거 타당·현재 수정됨으로 기록하고 가드를 유지한다."
+    },
+    {
+      "review_ref": "snapshot: review-snapshot.md#before.md",
+      "target_ref": "snapshot: review-snapshot.md#current.md",
+      "verified_severity": null,
+      "id": "R5",
+      "aliases": [],
+      "claim": "Current invoices() returns cancelled invoices contrary to the required status policy.",
+      "verdict": "unresolved",
+      "current_state": "unknown",
+      "evidence": [
+        "review-snapshot.md:38-40: draft만 제외하므로 cancelled는 포함된다.",
+        "review-snapshot.md:58: policy-v1은 cancelled 제외를 요구한다."
+      ],
+      "trigger": "입력 rows에 cancelled 상태 행이 존재",
+      "impact": "cancelled 행이 반환된다. 정책 위반인지는 미확인이다.",
+      "counterevidence": [
+        "review-snapshot.md:59: policy-v2는 감사용 cancelled 포함을 요구한다.",
+        "review-snapshot.md:60: 적용일·승인·대체 관계가 없다."
+      ],
+      "missing_evidence": "대상 리비전에 적용되는 승인된 정책과 시행일 또는 정책 우선순위 결정.",
+      "action": "정책 권위 확정 후 v1이면 필터 변경을 검토하고 v2이면 현재 동작을 유지한다."
+    },
+    {
+      "review_ref": "snapshot: review-snapshot.md#before.md",
+      "target_ref": "snapshot: review-snapshot.md#current.md",
+      "verified_severity": null,
+      "id": "R6",
+      "aliases": [
+        "R1"
+      ],
+      "claim": "Current formatTotal crashes on an empty response (same concern as R1).",
+      "verdict": "refuted",
+      "current_state": "already_addressed",
+      "evidence": [
+        "review-snapshot.md:13: R1과 동일 지적임을 명시한다.",
+        "review-snapshot.md:23-26: 빈 배열은 0.00으로 반환된다."
+      ],
+      "trigger": "formatTotal([])",
+      "impact": "현재 빈 배열 예외는 발생하지 않는다.",
+      "counterevidence": [
+        "review-snapshot.md:24: 첫 요소 접근 전 반환된다.",
+        "review-snapshot.md:46-48: 과거 조건은 R4에서 별도 확인했다."
+      ],
+      "missing_evidence": "호출부와 런타임 재현은 제공되지 않았다.",
+      "action": "R1 중복으로 연결하고 현재 오류라는 문구를 정정한다."
+    }
+  ],
+  "coverage": {
+    "input_ids": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6"
+    ],
+    "handled_ids": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6"
+    ],
+    "limitations": [
+      "스냅샷만 검토했으며 원 리뷰 before.md 및 현재 current.md의 커밋 SHA는 없다.",
+      "실제 호출부·서버 소스·취소 계약·실행 환경이 없다.",
+      "정책 v1/v2의 적용 권위를 결정할 수 없다.",
+      "R6은 R1 중복이며 각 원본 ID를 보존했다.",
+      "검증 심각도는 부여하지 않았다.",
+      "전체 코드 감사가 아닌 제공된 리뷰 전체의 정적 검증이다."
+    ]
+  },
+  "checks": [
+    {
+      "command": "로컬 스킬 및 claim-verification.md 읽기",
+      "result": "필수 검증 절차와 출력 형식을 확인했다.",
+      "executed": true
+    },
+    {
+      "command": "cat review-snapshot.md; nl -ba review-snapshot.md",
+      "result": "전체 입력과 근거 줄 번호를 확인했다.",
+      "executed": true
+    },
+    {
+      "command": "정적 검토: 빈 배열 경로, 503/비503 분기, 과거·현재 비교, 취소 계약 및 정책 권위",
+      "result": "R1·R6 refuted, R2 partial, R3·R5 unresolved, R4 confirmed 및 already_addressed.",
+      "executed": true
+    },
+    {
+      "command": "Python json.loads 및 필수 키·ID·별칭 검증",
+      "result": "JSON 파싱 성공, 모든 필수 키와 6개 ID 및 R1/R6 중복 별칭 확인. 제품 테스트가 아니다.",
+      "executed": true
+    },
+    {
+      "command": "제품 테스트·런타임 재현·빌드",
+      "result": "미실행. 실행 가능한 저장소, 테스트 명령 및 런타임이 제공되지 않았다.",
+      "executed": false
+    },
+    {
+      "command": "외부 도구·네트워크·서버·Git 조회",
+      "result": "미실행. 제공된 스냅샷과 로컬 지침만 사용했다.",
+      "executed": false
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Check"
+  short_description: "Check whether review comments are correct"
+  default_prompt: "Use $review-check to verify these review comments against the current code, without making changes."

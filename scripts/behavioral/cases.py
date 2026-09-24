@@ -8,10 +8,11 @@ import re
 import shutil
 from pathlib import Path
 
-CASES = ("design-existing", "content-fidelity", "review-runtime")
+CASES = ("design-existing", "content-fidelity", "review-runtime", "review-check")
 SKILLS = {"design-existing": ("design", "design-brief"),
           "content-fidelity": ("content", "un-ai"),
-          "review-runtime": ("review", "review-code")}
+          "review-runtime": ("review", "review-code"),
+          "review-check": ("review", "review-check")}
 
 
 def scenario(repo, plugin, skill, number):
@@ -36,6 +37,11 @@ def prepare(repo, case, workspace):
             shutil.copy2(root / path, destination)
         prompt = source["prompt"]
         origin = f"plugins/{plugin}/skills/{skill}/evals/evals.json#1"
+    elif case == "review-check":
+        root, source = scenario(repo, plugin, skill, 5)
+        shutil.copy2(root / source["files"][0], workspace / "review-snapshot.md")
+        prompt = source["prompt"] + "\n입력은 review-snapshot.md입니다. 제공된 자료만 검토하고 외부 도구나 네트워크는 사용하지 마세요."
+        origin = f"plugins/{plugin}/skills/{skill}/evals/evals.json#5"
     elif case == "review-runtime":
         root, source = scenario(repo, plugin, skill, 9)
         shutil.copy2(root / source["files"][0], workspace / "change.md")
@@ -72,7 +78,8 @@ def grade(case, before, after):
         return after.get(path, b"").decode("utf-8", errors="replace")
     allowed = {"design-existing": {"apps/dashboard/DESIGN_SYSTEM.md"},
                "content-fidelity": {"edited.md"},
-               "review-runtime": {"review.json"}}[case]
+               "review-runtime": {"review.json"},
+               "review-check": {"report.md", "report.json"}}[case]
     changed = {p for p in before.keys() | after.keys() if before.get(p) != after.get(p)}
     check("only_requested_output_changed", bool(changed) and changed <= allowed)
     if case == "design-existing":
@@ -89,6 +96,51 @@ def grade(case, before, after):
         check("dates_and_counts_preserved", all(x in new for x in ("9월 12일", "24명", "3명", "9월 23일")))
         check("cause_stays_unconfirmed", bool(re.search(r"원인.{0,30}(확인\s*중|조사\s*중|파악\s*중|확인되지)", new)))
         check("schedule_stays_tentative", "예정" in new and bool(re.search(r"(일정|배포).{0,40}(바뀔|변경될|달라질)\s*수", new)))
+    elif case == "review-check":
+        try:
+            report = json.loads(text("report.json"))
+            by_id = {}
+            primary_ids = [claim["id"] for claim in report["claims"]]
+            duplicate = len(primary_ids) != len(set(primary_ids))
+            # Fixture truth: only R1 and R6 describe the same concern. Matching
+            # verdicts do not make unrelated claims interchangeable.
+            allowed_aliases = {"R1": {"R6"}, "R6": {"R1"}}
+            for claim in report["claims"]:
+                aliases = claim.get("aliases", [])
+                if not isinstance(aliases, list):
+                    raise ValueError("aliases must be an array")
+                duplicate |= not set(aliases) <= allowed_aliases.get(claim["id"], set())
+                duplicate |= len(aliases) != len(set(aliases))
+                for identity in [claim["id"], *aliases]:
+                    # Aliases may reference another retained input record. Reject
+                    # conflicting dispositions, not consistent cross-references.
+                    if identity in by_id:
+                        previous = by_id[identity]
+                        duplicate |= any(previous.get(key) != claim.get(key)
+                                         for key in ("verdict", "current_state"))
+                    else:
+                        by_id[identity] = claim
+            expected = {"R1": "refuted", "R2": "partial", "R3": "unresolved",
+                        "R4": "confirmed", "R5": "unresolved", "R6": "refuted"}
+            check("all_claims_disposed_without_duplicate_ids",
+                  not duplicate and set(by_id) == set(expected) and
+                  all(by_id[k]["verdict"] == v for k, v in expected.items()))
+            check("historical_bug_distinct_from_current_fix",
+                  by_id["R4"].get("current_state") == "already_addressed" and
+                  bool(by_id["R4"].get("evidence")))
+            check("unknown_claims_keep_missing_evidence_without_severity",
+                  all(by_id[k].get("verified_severity") is None and
+                      bool(by_id[k].get("missing_evidence")) for k in ("R3", "R5")))
+            check("claim_coverage_recorded",
+                  set(report["coverage"]["input_ids"]) == set(expected) and
+                  set(report["coverage"]["handled_ids"]) == set(expected))
+            check("human_report_present", bool(text("report.md").strip()))
+            # A human must still inspect whether the cited source supports the verdict.
+            check("checks_recorded", bool(report["checks"]) and
+                  all(isinstance(c.get("executed"), bool) and c.get("result")
+                      for c in report["checks"]))
+        except (ValueError, KeyError, TypeError, AttributeError):
+            check("valid_claim_report", False)
     else:
         try:
             report = json.loads(text("review.json"))

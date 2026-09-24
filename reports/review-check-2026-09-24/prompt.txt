@@ -1,0 +1,3 @@
+Read and apply .eval-plugins/review/skills/review-check/SKILL.md and the references it calls for. Only edit the task's output files; .eval-plugins contains the skill source, not output targets.
+리뷰 전체 검증 보고서를 report.md에 저장해줘.
+입력은 review-snapshot.md입니다. 제공된 자료만 검토하고 외부 도구나 네트워크는 사용하지 마세요.
