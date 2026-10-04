@@ -1,0 +1,3 @@
+Read and apply .eval-plugins/product/skills/problem-frame/SKILL.md and the references it calls for. Only edit the task's output files; .eval-plugins contains the skill source, not output targets.
+existing-problem.md를 update-notes.md의 변경만 반영해서 갱신해줘.
+제공된 로컬 입력만 사용하세요. 외부 조회나 네트워크는 사용하지 마세요.

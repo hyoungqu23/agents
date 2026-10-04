@@ -1,0 +1,86 @@
+[
+  {
+    "repo": "github/spec-kit",
+    "stars": 140073,
+    "archived": false,
+    "fork": false,
+    "ref": "ae5ade7234be5cb1d975f736c4e06dd46d1326d6",
+    "url": "https://github.com/github/spec-kit",
+    "license_api": "MIT",
+    "pushed_at": "2026-10-03T16:48:20Z",
+    "observed_date": "2026-10-04",
+    "observation": "GitHub REST API authenticated read"
+  },
+  {
+    "repo": "obra/superpowers",
+    "stars": 295112,
+    "archived": false,
+    "fork": false,
+    "ref": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+    "url": "https://github.com/obra/superpowers",
+    "license_api": "MIT",
+    "pushed_at": "2026-09-27T02:37:47Z",
+    "observed_date": "2026-10-04",
+    "observation": "GitHub REST API authenticated read"
+  },
+  {
+    "repo": "Fission-AI/OpenSpec",
+    "stars": 71024,
+    "archived": false,
+    "fork": false,
+    "ref": "2500d6da971336167548b53731a35b2127df35ac",
+    "url": "https://github.com/Fission-AI/OpenSpec",
+    "license_api": "MIT",
+    "pushed_at": "2026-10-02T17:44:49Z",
+    "observed_date": "2026-10-04",
+    "observation": "GitHub REST API authenticated read"
+  },
+  {
+    "repo": "bmad-code-org/BMAD-METHOD",
+    "stars": 53767,
+    "archived": false,
+    "fork": false,
+    "ref": "3cae711ea5274cf7c7cf6e173bb8d7f29cd71497",
+    "url": "https://github.com/bmad-code-org/BMAD-METHOD",
+    "license_api": "NOASSERTION",
+    "pushed_at": "2026-10-04T08:03:15Z",
+    "observed_date": "2026-10-04",
+    "observation": "GitHub REST API authenticated read"
+  },
+  {
+    "repo": "gsd-build/get-shit-done",
+    "stars": 64385,
+    "archived": true,
+    "fork": false,
+    "ref": "bdcaab2c752d9a33a1a1ca9acf3a3c81fb991815",
+    "url": "https://github.com/gsd-build/get-shit-done",
+    "license_api": "MIT",
+    "pushed_at": "2026-05-31T17:46:54Z",
+    "observed_date": "2026-10-04",
+    "observation": "GitHub REST API authenticated read"
+  },
+  {
+    "repo": "EveryInc/compound-engineering-plugin",
+    "stars": 25387,
+    "archived": false,
+    "fork": false,
+    "ref": "9af474a70e7f2a844338519ad9e92aafbd92d4fb",
+    "url": "https://github.com/EveryInc/compound-engineering-plugin",
+    "license_api": "MIT",
+    "pushed_at": "2026-10-02T09:55:48Z",
+    "observed_date": "2026-10-04",
+    "observation": "GitHub REST API authenticated read"
+  },
+  {
+    "repo": "garrytan/gstack",
+    "stars": 135008,
+    "archived": false,
+    "fork": false,
+    "ref": "4015c2870b064644131ed6f7cfcc1469cfe9808c",
+    "url": "https://github.com/garrytan/gstack",
+    "license_api": "MIT",
+    "pushed_at": "2026-10-04T11:41:24Z",
+    "observed_date": "2026-10-04",
+    "observation": "GitHub REST API authenticated read"
+  }
+]

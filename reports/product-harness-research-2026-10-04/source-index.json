@@ -1,0 +1,163 @@
+[
+  {
+    "repo": "github/spec-kit",
+    "sha": "ae5ade7234be5cb1d975f736c4e06dd46d1326d6",
+    "path": "templates/spec-template.md",
+    "url": "https://github.com/github/spec-kit/blob/ae5ade7234be5cb1d975f736c4e06dd46d1326d6/templates/spec-template.md",
+    "bytes": 4556
+  },
+  {
+    "repo": "github/spec-kit",
+    "sha": "ae5ade7234be5cb1d975f736c4e06dd46d1326d6",
+    "path": "templates/commands/specify.md",
+    "url": "https://github.com/github/spec-kit/blob/ae5ade7234be5cb1d975f736c4e06dd46d1326d6/templates/commands/specify.md",
+    "bytes": 18453
+  },
+  {
+    "repo": "github/spec-kit",
+    "sha": "ae5ade7234be5cb1d975f736c4e06dd46d1326d6",
+    "path": "templates/commands/clarify.md",
+    "url": "https://github.com/github/spec-kit/blob/ae5ade7234be5cb1d975f736c4e06dd46d1326d6/templates/commands/clarify.md",
+    "bytes": 19507
+  },
+  {
+    "repo": "github/spec-kit",
+    "sha": "ae5ade7234be5cb1d975f736c4e06dd46d1326d6",
+    "path": "templates/commands/analyze.md",
+    "url": "https://github.com/github/spec-kit/blob/ae5ade7234be5cb1d975f736c4e06dd46d1326d6/templates/commands/analyze.md",
+    "bytes": 11764
+  },
+  {
+    "repo": "obra/superpowers",
+    "sha": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+    "path": "skills/brainstorming/SKILL.md",
+    "url": "https://github.com/obra/superpowers/blob/8ca22dba9a94f28898bbce59f2537ff4d87c747d/skills/brainstorming/SKILL.md",
+    "bytes": 17548
+  },
+  {
+    "repo": "obra/superpowers",
+    "sha": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+    "path": "skills/brainstorming/spec-document-reviewer-prompt.md",
+    "url": "https://github.com/obra/superpowers/blob/8ca22dba9a94f28898bbce59f2537ff4d87c747d/skills/brainstorming/spec-document-reviewer-prompt.md",
+    "bytes": 1747
+  },
+  {
+    "repo": "Fission-AI/OpenSpec",
+    "sha": "2500d6da971336167548b53731a35b2127df35ac",
+    "path": "schemas/spec-driven/schema.yaml",
+    "url": "https://github.com/Fission-AI/OpenSpec/blob/2500d6da971336167548b53731a35b2127df35ac/schemas/spec-driven/schema.yaml",
+    "bytes": 15493
+  },
+  {
+    "repo": "Fission-AI/OpenSpec",
+    "sha": "2500d6da971336167548b53731a35b2127df35ac",
+    "path": "schemas/spec-driven/templates/proposal.md",
+    "url": "https://github.com/Fission-AI/OpenSpec/blob/2500d6da971336167548b53731a35b2127df35ac/schemas/spec-driven/templates/proposal.md",
+    "bytes": 1468
+  },
+  {
+    "repo": "Fission-AI/OpenSpec",
+    "sha": "2500d6da971336167548b53731a35b2127df35ac",
+    "path": "schemas/spec-driven/templates/spec.md",
+    "url": "https://github.com/Fission-AI/OpenSpec/blob/2500d6da971336167548b53731a35b2127df35ac/schemas/spec-driven/templates/spec.md",
+    "bytes": 374
+  },
+  {
+    "repo": "Fission-AI/OpenSpec",
+    "sha": "2500d6da971336167548b53731a35b2127df35ac",
+    "path": "skills/openspec-explore/SKILL.md",
+    "url": "https://github.com/Fission-AI/OpenSpec/blob/2500d6da971336167548b53731a35b2127df35ac/skills/openspec-explore/SKILL.md",
+    "bytes": 22797
+  },
+  {
+    "repo": "bmad-code-org/BMAD-METHOD",
+    "sha": "3cae711ea5274cf7c7cf6e173bb8d7f29cd71497",
+    "path": "LICENSE",
+    "url": "https://github.com/bmad-code-org/BMAD-METHOD/blob/3cae711ea5274cf7c7cf6e173bb8d7f29cd71497/LICENSE",
+    "bytes": 1572
+  },
+  {
+    "repo": "bmad-code-org/BMAD-METHOD",
+    "sha": "3cae711ea5274cf7c7cf6e173bb8d7f29cd71497",
+    "path": "skills/bmad-product-brief/SKILL.md",
+    "url": "https://github.com/bmad-code-org/BMAD-METHOD/blob/3cae711ea5274cf7c7cf6e173bb8d7f29cd71497/skills/bmad-product-brief/SKILL.md",
+    "bytes": 12266
+  },
+  {
+    "repo": "bmad-code-org/BMAD-METHOD",
+    "sha": "3cae711ea5274cf7c7cf6e173bb8d7f29cd71497",
+    "path": "skills/bmad-prd/SKILL.md",
+    "url": "https://github.com/bmad-code-org/BMAD-METHOD/blob/3cae711ea5274cf7c7cf6e173bb8d7f29cd71497/skills/bmad-prd/SKILL.md",
+    "bytes": 14727
+  },
+  {
+    "repo": "bmad-code-org/BMAD-METHOD",
+    "sha": "3cae711ea5274cf7c7cf6e173bb8d7f29cd71497",
+    "path": "skills/bmad-prd/references/validate.md",
+    "url": "https://github.com/bmad-code-org/BMAD-METHOD/blob/3cae711ea5274cf7c7cf6e173bb8d7f29cd71497/skills/bmad-prd/references/validate.md",
+    "bytes": 5712
+  },
+  {
+    "repo": "bmad-code-org/BMAD-METHOD",
+    "sha": "3cae711ea5274cf7c7cf6e173bb8d7f29cd71497",
+    "path": "skills/bmad-prd/assets/prd-validation-checklist.md",
+    "url": "https://github.com/bmad-code-org/BMAD-METHOD/blob/3cae711ea5274cf7c7cf6e173bb8d7f29cd71497/skills/bmad-prd/assets/prd-validation-checklist.md",
+    "bytes": 7432
+  },
+  {
+    "repo": "gsd-build/get-shit-done",
+    "sha": "bdcaab2c752d9a33a1a1ca9acf3a3c81fb991815",
+    "path": "README.md",
+    "url": "https://github.com/gsd-build/get-shit-done/blob/bdcaab2c752d9a33a1a1ca9acf3a3c81fb991815/README.md",
+    "bytes": 329
+  },
+  {
+    "repo": "gsd-build/get-shit-done",
+    "sha": "bdcaab2c752d9a33a1a1ca9acf3a3c81fb991815",
+    "path": "commands/gsd/new-project.md",
+    "url": "https://github.com/gsd-build/get-shit-done/blob/bdcaab2c752d9a33a1a1ca9acf3a3c81fb991815/commands/gsd/new-project.md",
+    "bytes": 1612
+  },
+  {
+    "repo": "gsd-build/get-shit-done",
+    "sha": "bdcaab2c752d9a33a1a1ca9acf3a3c81fb991815",
+    "path": "get-shit-done/templates/requirements.md",
+    "url": "https://github.com/gsd-build/get-shit-done/blob/bdcaab2c752d9a33a1a1ca9acf3a3c81fb991815/get-shit-done/templates/requirements.md",
+    "bytes": 6071
+  },
+  {
+    "repo": "EveryInc/compound-engineering-plugin",
+    "sha": "9af474a70e7f2a844338519ad9e92aafbd92d4fb",
+    "path": "skills/ce-brainstorm/SKILL.md",
+    "url": "https://github.com/EveryInc/compound-engineering-plugin/blob/9af474a70e7f2a844338519ad9e92aafbd92d4fb/skills/ce-brainstorm/SKILL.md",
+    "bytes": 7798
+  },
+  {
+    "repo": "EveryInc/compound-engineering-plugin",
+    "sha": "9af474a70e7f2a844338519ad9e92aafbd92d4fb",
+    "path": "skills/ce-plan/SKILL.md",
+    "url": "https://github.com/EveryInc/compound-engineering-plugin/blob/9af474a70e7f2a844338519ad9e92aafbd92d4fb/skills/ce-plan/SKILL.md",
+    "bytes": 7779
+  },
+  {
+    "repo": "garrytan/gstack",
+    "sha": "4015c2870b064644131ed6f7cfcc1469cfe9808c",
+    "path": "office-hours/sections/phase-2a-startup-diagnostic.md",
+    "url": "https://github.com/garrytan/gstack/blob/4015c2870b064644131ed6f7cfcc1469cfe9808c/office-hours/sections/phase-2a-startup-diagnostic.md",
+    "bytes": 13477
+  },
+  {
+    "repo": "garrytan/gstack",
+    "sha": "4015c2870b064644131ed6f7cfcc1469cfe9808c",
+    "path": "office-hours/sections/phase-2b-builder-brainstorm.md",
+    "url": "https://github.com/garrytan/gstack/blob/4015c2870b064644131ed6f7cfcc1469cfe9808c/office-hours/sections/phase-2b-builder-brainstorm.md",
+    "bytes": 3224
+  },
+  {
+    "repo": "garrytan/gstack",
+    "sha": "4015c2870b064644131ed6f7cfcc1469cfe9808c",
+    "path": "office-hours/sections/design-and-handoff.md",
+    "url": "https://github.com/garrytan/gstack/blob/4015c2870b064644131ed6f7cfcc1469cfe9808c/office-hours/sections/design-and-handoff.md",
+    "bytes": 38706
+  }
+]

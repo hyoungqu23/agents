@@ -8,11 +8,14 @@ import re
 import shutil
 from pathlib import Path
 
-CASES = ("design-existing", "content-fidelity", "review-runtime", "review-check")
+CASES = ("design-existing", "content-fidelity", "review-runtime", "review-check",
+         "problem-observed", "problem-hypothesis", "problem-update")
 SKILLS = {"design-existing": ("design", "design-brief"),
           "content-fidelity": ("content", "un-ai"),
           "review-runtime": ("review", "review-code"),
-          "review-check": ("review", "review-check")}
+          "review-check": ("review", "review-check"),
+          **{name: ("product", "problem-frame") for name in
+             ("problem-observed", "problem-hypothesis", "problem-update")}}
 
 
 def scenario(repo, plugin, skill, number):
@@ -37,6 +40,13 @@ def prepare(repo, case, workspace):
             shutil.copy2(root / path, destination)
         prompt = source["prompt"]
         origin = f"plugins/{plugin}/skills/{skill}/evals/evals.json#1"
+    elif case.startswith("problem-"):
+        number = {"problem-observed": 1, "problem-hypothesis": 2, "problem-update": 4}[case]
+        root, source = scenario(repo, plugin, skill, number)
+        for path in source["files"]:
+            shutil.copy2(root / path, workspace / Path(path).name)
+        prompt = source["prompt"] + "\n제공된 로컬 입력만 사용하세요. 외부 조회나 네트워크는 사용하지 마세요."
+        origin = f"plugins/{plugin}/skills/{skill}/evals/evals.json#{number}"
     elif case == "review-check":
         root, source = scenario(repo, plugin, skill, 5)
         shutil.copy2(root / source["files"][0], workspace / "review-snapshot.md")
@@ -79,7 +89,10 @@ def grade(case, before, after):
     allowed = {"design-existing": {"apps/dashboard/DESIGN_SYSTEM.md"},
                "content-fidelity": {"edited.md"},
                "review-runtime": {"review.json"},
-               "review-check": {"report.md", "report.json"}}[case]
+               "review-check": {"report.md", "report.json"},
+               "problem-observed": {"problem.md"},
+               "problem-hypothesis": {"problem.md"},
+               "problem-update": {"existing-problem.md"}}[case]
     changed = {p for p in before.keys() | after.keys() if before.get(p) != after.get(p)}
     check("only_requested_output_changed", bool(changed) and changed <= allowed)
     if case == "design-existing":
@@ -96,6 +109,36 @@ def grade(case, before, after):
         check("dates_and_counts_preserved", all(x in new for x in ("9월 12일", "24명", "3명", "9월 23일")))
         check("cause_stays_unconfirmed", bool(re.search(r"원인.{0,30}(확인\s*중|조사\s*중|파악\s*중|확인되지)", new)))
         check("schedule_stays_tentative", "예정" in new and bool(re.search(r"(일정|배포).{0,40}(바뀔|변경될|달라질)\s*수", new)))
+    elif case.startswith("problem-"):
+        target = "existing-problem.md" if case == "problem-update" else "problem.md"
+        new = text(target)
+        # Fixture-specific scalar checks, not a general YAML/semantic validator.
+        match = re.match(r"\A---\s*\n(.*?)\n---\s*\n", new, re.S)
+        fields = {}
+        if match:
+            for key in ("id", "revision", "status"):
+                values = re.findall(r"^" + key + r":\s*([^\n]+)$", match.group(1), re.M)
+                if len(values) == 1:
+                    fields[key] = values[0].strip().strip("\"'")
+        check("problem_identity_and_maturity_recorded", bool(fields.get("id")) and
+              fields.get("revision", "").isdigit() and int(fields["revision"]) >= 1 and
+              fields.get("status") in ("draft", "needs_evidence", "needs_decision", "ready_for_review"))
+        if case == "problem-observed":
+            check("reported_count_preserved", bool(re.search(r"(?:4.{0,30}12|12.{0,30}4)", new, re.S)))
+            check("actual_source_cited", "observed-notes.md" in new)
+            check("source_limit_stays_visible", bool(re.search(r"미검증|검증되지|독립.{0,30}(?:검증|확인).{0,20}(?:않|없|못)|검증.{0,15}(?:않|없|못)|unverified", new, re.I)))
+        elif case == "problem-hypothesis":
+            check("hypothesis_not_promoted_to_ready", fields.get("status") in ("draft", "needs_evidence", "needs_decision"))
+            check("hypothetical_input_cited", "idea-only.md" in new)
+        else:
+            check("document_identity_and_revision_preserved", fields.get("id") == "problem:revision-access" and
+                  fields.get("revision", "").isdigit() and int(fields["revision"]) == 3)
+            check("stable_claim_ids_preserved", all(x in new for x in ("EV-001", "DEC-001", "OD-001")))
+            check("unrelated_date_and_uncertainty_preserved", "2026-11-12" in new and "tentative" in new)
+            check("updated_workflow_recorded", bool(re.search(r"email|이메일|메일",new,re.I)) and
+                  bool(re.search(r"link|링크",new,re.I)))
+        # Review source fidelity, decision preservation, fabricated claims and question
+        # behavior manually against the exact inputs; matching words is insufficient.
     elif case == "review-check":
         try:
             report = json.loads(text("report.json"))

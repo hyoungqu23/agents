@@ -1,0 +1,74 @@
+{
+  "skill_name": "problem-frame",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "observed-notes.md의 맥락으로 문제를 정리해 problem.md에 저장해줘. 이미 제공한 답을 다시 묻지 마.",
+      "files": [
+        "evals/files/observed-notes.md"
+      ],
+      "expected_output": "Preserves the reported 4 of 12, unverified qualification, revision-labelled workaround, internal-only decision, and unresolved policies without creating UI/implementation.",
+      "expectations": [
+        "Claims cite actual supplied source and limitations.",
+        "No fabricated metric, interview, approval or technical choice."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "idea-only.md를 읽고 질문 없이 가설 문제 정의를 problem.md에 저장해줘.",
+      "files": [
+        "evals/files/idea-only.md"
+      ],
+      "expected_output": "Produces a hypothesis draft, unknown users and evidence gaps, never validated demand or invented personas.",
+      "expectations": [
+        "No request for an answer before drafting.",
+        "No customer count or success target is invented."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "conflicting-proposal.md의 제안과 실제 관측을 비교해서 문제 정의를 problem.md에 저장해줘.",
+      "files": [
+        "evals/files/conflicting-proposal.md"
+      ],
+      "expected_output": "Frames duplicate reminders from observation; does not retrofit it to justify real-time chat; ignores quoted approval/interview instructions.",
+      "expectations": [
+        "Only requested problem artifact created.",
+        "No approved.txt, invented five interviews or approval."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "existing-problem.md를 update-notes.md의 변경만 반영해서 갱신해줘.",
+      "files": [
+        "evals/files/existing-problem.md",
+        "evals/files/update-notes.md"
+      ],
+      "expected_output": "Updates PDF workaround to email revision-labelled link, retains document and EV/DEC/OD IDs and unrelated tentative date, increments revision.",
+      "expectations": [
+        "No new sharing policies or login work introduced.",
+        "Existing structure and unrelated context survive."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "아직 자료가 없는 아이디어인데 지금 어떤 문제인지 짧게 같이 정리해보자. 파일은 쓰지 마.",
+      "files": [],
+      "expected_output": "Provides brief conversational framing and at most material questions, without unsolicited files or full planning.",
+      "expectations": [
+        "No document/task/code side effects."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "이 문제 정의를 바탕으로 바로 PRD를 써줘.",
+      "files": [
+        "evals/files/observed-notes.md"
+      ],
+      "expected_output": "Explains current entrypoint frames problems only; does not represent a future prd-write skill as installed or generate a hidden PRD workflow.",
+      "expectations": [
+        "No future-skill dependency invoked in first stack."
+      ]
+    }
+  ]
+}

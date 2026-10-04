@@ -45,6 +45,19 @@
         "design-system",
         "handoff"
       ]
+    },
+    {
+      "name": "product",
+      "source": "./plugins/product",
+      "description": "Product problem framing with traceable evidence, assumptions, decisions, and open questions.",
+      "version": "0.1.0",
+      "category": "Productivity",
+      "keywords": [
+        "product",
+        "problem",
+        "requirements",
+        "evidence"
+      ]
     }
   ]
 }

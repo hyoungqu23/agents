@@ -1,0 +1,16 @@
+{
+  "name": "product",
+  "displayName": "Product",
+  "version": "0.1.0",
+  "description": "Product problem framing with traceable evidence, assumptions, decisions, and open questions.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "product",
+    "problem",
+    "requirements",
+    "evidence"
+  ],
+  "skills": "./skills/"
+}

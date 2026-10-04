@@ -1,0 +1,51 @@
+{
+  "case": "problem-update",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "problem_identity_and_maturity_recorded",
+      "passed": true
+    },
+    {
+      "check": "document_identity_and_revision_preserved",
+      "passed": true
+    },
+    {
+      "check": "stable_claim_ids_preserved",
+      "passed": true
+    },
+    {
+      "check": "unrelated_date_and_uncertainty_preserved",
+      "passed": true
+    },
+    {
+      "check": "updated_workflow_recorded",
+      "passed": true
+    }
+  ],
+  "scenario": "plugins/product/skills/problem-frame/evals/evals.json#4",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "duration_seconds": 36.09
+}
