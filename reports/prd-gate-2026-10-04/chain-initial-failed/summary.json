@@ -1,0 +1,70 @@
+{
+  "started_at": "2026-10-04T14:36:05.984039+00:00",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "scope": "behavioral smoke, not full qualitative evaluation",
+  "full_suite": false,
+  "not_run": [
+    "design-existing",
+    "content-fidelity",
+    "review-runtime",
+    "review-check",
+    "problem-observed",
+    "problem-hypothesis",
+    "problem-update",
+    "prd-from-problem",
+    "prd-update",
+    "prd-direct",
+    "gate-clean",
+    "gate-policy",
+    "gate-stale",
+    "gate-missing"
+  ],
+  "cases": [
+    {
+      "case": "product-chain",
+      "status": "failed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "valid_gate_report",
+          "passed": false
+        }
+      ],
+      "scenario": "plugins/product/skills/prd-gate/evals/files/chain-notes.md:single orchestrating request",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "timeout_seconds": 900,
+      "duration_seconds": 172.32
+    }
+  ],
+  "status": "failed",
+  "commit": "391f3893c78c7d64f0c4751197a48971b52d592e",
+  "working_tree": " M .claude-plugin/marketplace.json\n M .github/workflows/behavioral.yml\n M README.md\n M plugins/product/.claude-plugin/plugin.json\n M plugins/product/.codex-plugin/plugin.json\n M plugins/product/CHANGELOG.md\n M plugins/product/README.md\n M plugins/product/skills/prd-write/SKILL.md\n M scripts/behavioral/README.md\n M scripts/behavioral/cases.py\n M scripts/behavioral/run.py\n M scripts/tests/test_behavioral.py\n?? plugins/product/references/prd-review-contract.md\n?? plugins/product/skills/prd-gate/\n",
+  "codex_version": "codex-cli 0.156.1",
+  "harness_sha256": {
+    "run.py": "b0dec47d15bf7ed0fe9943a3454ad45a377205e1cf365d3a875a51477a90c203",
+    "cases.py": "4b3d30819575b359ddd44ec5b315f92cc36c05c2fa22d3b22aa6af3681fe14be"
+  },
+  "finished_at": "2026-10-04T14:38:58.324143+00:00"
+}

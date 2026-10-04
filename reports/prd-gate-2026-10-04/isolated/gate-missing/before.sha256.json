@@ -1,0 +1,17 @@
+{
+  ".eval-plugins/product/.claude-plugin/plugin.json": "3ec9bdfb9ba266d7e4239d594f0571ac10820785d2f86dd6ef92cd3c44e9a52e",
+  ".eval-plugins/product/.codex-plugin/plugin.json": "7fc1db79c1869cfec50bc15f03027a0375a15e8e455e6f9d7942540e8c4d49e4",
+  ".eval-plugins/product/CHANGELOG.md": "522c620118ac976307ac0c812e32399a50e43a6c99693d7589a479fc5aa15c6c",
+  ".eval-plugins/product/README.md": "5bc2a27afb708d867ae46c70eb01c666d1b4f5013858fc1d681071d7c8958155",
+  ".eval-plugins/product/references/artifact-contract.md": "61bce2dcb4858c866b74e524f4ea08e5518005203d75b0130cab3baf46dfa02d",
+  ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+  ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+  ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+  ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+  ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+  ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+  ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+  ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+  ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78",
+  "missing-prd.md": "41ae537d22329075963ff7044f6d24b34bbdcf237763f9fbbc5a9ea5a0de0cd7"
+}

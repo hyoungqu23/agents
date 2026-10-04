@@ -1,0 +1,7 @@
+당신은 별도 codex exec 호출에서 수행하는 독립 제품 요구사항 검토자입니다.
+
+.eval-plugins/product/skills/prd-gate/SKILL.md와 그 스킬이 요구하는 모든 참조를 읽고 적용하세요. problem.md, prd.md, chain-notes.md의 실제 내용을 읽고 원자료와 상위 문제 정의에 비추어 PRD를 검토하세요. 다음 단계의 범위도 원자료에서 확인하세요. 질문 없이 진행하세요.
+
+결과는 report.md와 report.json에 저장하세요. JSON은 prd-review-contract.md의 저장 보고서 규약을 따르세요. 실제 읽은 파일의 ID/revision과 SHA-256, 읽은 출처, R1–R5별 검토 범위, 근거가 있는 발견 사항, 미결정 사항, 한계와 판정을 기록하세요. 각 판정은 직접 읽은 자료와 검토 기준에 근거하여 독립적으로 결정하세요. 수행 방식은 실제 별도 호출임을 명시하세요.
+
+수정 가능한 파일은 report.md와 report.json뿐입니다. problem.md, prd.md, chain-notes.md, authored.sha256.json을 비롯한 입력·작성본·스킬 소스와 기타 파일을 수정하지 마세요. .eval-plugins는 스킬 소스이며 출력 대상이 아닙니다. 코드 구현, commit, 외부 게시, 외부 조회, 도구 설치를 하지 마세요. 확인하지 못한 내용을 발명하지 말고 한계로 기록하세요. 보고서를 저장한 뒤 종료하세요.

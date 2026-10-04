@@ -49,8 +49,8 @@
     {
       "name": "product",
       "source": "./plugins/product",
-      "description": "Product problem framing and traceable requirements drafting with evidence, decisions, and acceptance criteria.",
-      "version": "0.2.0",
+      "description": "Product problem framing, traceable PRD authoring and read-only readiness review.",
+      "version": "0.3.0",
       "category": "Productivity",
       "keywords": [
         "product",

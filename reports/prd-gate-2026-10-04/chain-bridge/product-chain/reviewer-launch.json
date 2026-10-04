@@ -1,0 +1,29 @@
+{
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "model": "gpt-6-astra",
+  "prompt_sha256": "ad5401f3fd7525c49bb230bb50c522beb157d52a86d75c750c69928f622fa376",
+  "before_sha256": {
+    "problem.md": "d0b0e26dbed3baabde1fe832400f36fc8390d58d67f895152db711a11e3f0576",
+    "prd.md": "53f3d403eebdef876ace54f89d9fa28859cbcf33692a4c0995dca8e7475bed91",
+    "chain-notes.md": "9e447b45b313241b2ef36b025ced1afb8c5283f6aa64b2252117072602f4d952"
+  },
+  "scope": "one fixed reviewer invocation"
+}

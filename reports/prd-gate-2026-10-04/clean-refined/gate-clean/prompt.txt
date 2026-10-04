@@ -1,0 +1,3 @@
+Read and apply .eval-plugins/product/skills/prd-gate/SKILL.md and the references it calls for. Only edit the task's output files; .eval-plugins contains the skill source, not output targets.
+clean-prd.md와 clean-source.md를 읽고 다음 사용자 흐름 설계 준비 여부를 검토해줘. 원본 수정 없이 report.md와 report.json에 저장해줘. 질문은 하지 마.
+제공된 로컬 입력만 사용하고 외부 조회는 하지 마세요.

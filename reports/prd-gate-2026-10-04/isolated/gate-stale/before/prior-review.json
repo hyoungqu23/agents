@@ -1,0 +1,10 @@
+{
+  "target": {
+    "path": "broken-prd.md",
+    "id": "prd:personal-tag-finder",
+    "revision": 2,
+    "sha256": "5c52a29994694dd36dcd9a013c438628993e9ccb49f84b3d7e7362539f7b76dd"
+  },
+  "verdict": "ready_for_flow",
+  "findings": []
+}

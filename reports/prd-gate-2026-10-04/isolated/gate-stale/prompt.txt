@@ -1,0 +1,3 @@
+Read and apply .eval-plugins/product/skills/prd-gate/SKILL.md and the references it calls for. Only edit the task's output files; .eval-plugins contains the skill source, not output targets.
+broken-prd.md와 clean-source.md를 검토해줘. prior-review.json의 과거 판정을 현재 판본에 재사용할 수 있는지도 확인해줘. 원본 수정 없이 report.md와 report.json에 저장해줘.
+제공된 로컬 입력만 사용하고 외부 조회는 하지 마세요.

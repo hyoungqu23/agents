@@ -111,3 +111,29 @@ checks drafting without a fabricated problem artifact. The grader checks observa
 preservation and metadata only. Inspect whole PRDs for AC testability, source links,
 unknown policies, numerical claims and scope drift before accepting quality evidence.
 These cases test PRD authoring, not an independent PRD gate.
+
+
+## PRD gate and connected workflow
+
+gate-clean, gate-policy, gate-stale and gate-missing check clean acceptance, actual
+PR2 policy gaps, changed content with a stale ready report, and critical missing input.
+JSON checks verify target digests, R1–R5 coverage and finding evidence fields; whole
+outputs still need inspection for sound judgment. Only requested reports may change.
+
+product-chain gives one coordinating invocation the raw notes and all three skills.
+It must write problem.md, consume it into prd.md, record pre-review SHA-256 values,
+and request a separate Codex CLI reviewer with the same explicit model through the
+one-shot host ReviewerBridge. The parent must
+not alter the reviewer's report. review-prompt.txt, nested events and hashes are retained.
+The grader checks reviewer completion and unchanged author outputs; the outer trace
+must also be inspected to verify a real separate invocation, not fabricated events.
+Host CLI availability/auth and extra model capacity are required for this evaluation,
+not for ordinary skill use. The chain defaults to a 900s process-group timeout controlled by --chain-timeout;
+all other cases use --timeout. A reviewer failure fails the case instead of self-scoring.
+
+The author sandbox cannot initialize a nested CLI app-server in this local host.
+The evaluator therefore watches a fixed review-request.json action, then launches
+one reviewer with its own workspace-write sandbox. It accepts no arbitrary command,
+model override or external path. Host launch/result evidence stays outside the author
+workspace; report content is generated only by the reviewer. Failure is recorded and
+never replaced with an assembled or self-scored report.

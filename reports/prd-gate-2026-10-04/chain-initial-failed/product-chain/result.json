@@ -1,0 +1,36 @@
+{
+  "case": "product-chain",
+  "status": "failed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "valid_gate_report",
+      "passed": false
+    }
+  ],
+  "scenario": "plugins/product/skills/prd-gate/evals/files/chain-notes.md:single orchestrating request",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "timeout_seconds": 900,
+  "duration_seconds": 172.32
+}

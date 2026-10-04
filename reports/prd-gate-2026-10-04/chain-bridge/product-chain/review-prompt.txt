@@ -1,0 +1,7 @@
+독립 제품 요구사항 검토를 수행하세요. 이 요청은 작성자와 별도 Codex CLI 호출에서 실행하는 검토용입니다. 실제 실행 맥락을 근거로 독립성 수준을 기록하세요.
+
+.eval-plugins/product/skills/prd-gate/SKILL.md를 읽고 적용하세요. 그 스킬이 요구하는 .eval-plugins/product/references/artifact-contract.md 및 .eval-plugins/product/references/prd-review-contract.md와 추가 참조가 있다면 해당 참조도 읽으세요.
+
+실제 problem.md, prd.md, chain-notes.md를 읽어 검토하세요. 선언된 다음 단계에 대한 검토 범위는 원자료에서 파악하세요. 파일의 실제 내용과 출처를 근거로 R1–R5를 검토하고, 판정은 독립적으로 내리세요. 질문 없이 진행하고 확인되지 않은 사항은 한계로 남기세요. 실제 읽은 파일의 SHA-256과 문서 ID/revision을 보고서에 기록하세요.
+
+검토 결과는 report.md와 report.json에 저장하세요. JSON은 prd-review-contract.md의 저장 형식을 따르세요. 원본 problem.md, prd.md, chain-notes.md 및 authored.sha256.json, review-prompt.txt, 스킬·참조 파일을 수정하지 마세요. 보고서 두 파일 외의 파일을 생성하거나 수정하지 마세요. review-events.jsonl, review-stderr.log, review-result.json은 하네스가 관리합니다. 코드 구현, commit, 외부 게시, 외부 조회, 별도 검토자 실행은 하지 마세요.

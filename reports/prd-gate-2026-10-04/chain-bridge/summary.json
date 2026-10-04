@@ -1,0 +1,111 @@
+{
+  "started_at": "2026-10-04T14:43:22.092166+00:00",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "scope": "behavioral smoke, not full qualitative evaluation",
+  "full_suite": false,
+  "not_run": [
+    "design-existing",
+    "content-fidelity",
+    "review-runtime",
+    "review-check",
+    "problem-observed",
+    "problem-hypothesis",
+    "problem-update",
+    "prd-from-problem",
+    "prd-update",
+    "prd-direct",
+    "gate-clean",
+    "gate-policy",
+    "gate-stale",
+    "gate-missing"
+  ],
+  "cases": [
+    {
+      "case": "product-chain",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "actual_target_identity_and_digest",
+          "passed": true
+        },
+        {
+          "check": "all_lenses_recorded",
+          "passed": true
+        },
+        {
+          "check": "findings_have_evidence_gate",
+          "passed": true
+        },
+        {
+          "check": "fixture_disposition",
+          "passed": true
+        },
+        {
+          "check": "human_report_present",
+          "passed": true
+        },
+        {
+          "check": "no_forced_findings_or_blocking_choices",
+          "passed": true
+        },
+        {
+          "check": "real_upstream_consumed",
+          "passed": true
+        },
+        {
+          "check": "review_preserved_authored_documents",
+          "passed": true
+        },
+        {
+          "check": "separate_reviewer_completed",
+          "passed": true
+        },
+        {
+          "check": "review_capability_completed_without_input_changes",
+          "passed": true
+        },
+        {
+          "check": "review_request_uses_gate",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/product/skills/prd-gate/evals/files/chain-notes.md:single orchestrating request",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "timeout_seconds": 900,
+      "duration_seconds": 270.3
+    }
+  ],
+  "status": "passed",
+  "commit": "391f3893c78c7d64f0c4751197a48971b52d592e",
+  "working_tree": " M .claude-plugin/marketplace.json\n M .github/workflows/behavioral.yml\n M README.md\n M plugins/product/.claude-plugin/plugin.json\n M plugins/product/.codex-plugin/plugin.json\n M plugins/product/CHANGELOG.md\n M plugins/product/README.md\n M plugins/product/skills/prd-write/SKILL.md\n M scripts/behavioral/README.md\n M scripts/behavioral/cases.py\n M scripts/behavioral/run.py\n M scripts/tests/test_behavioral.py\n?? plugins/product/references/prd-review-contract.md\n?? plugins/product/skills/prd-gate/\n?? scripts/behavioral/reviewer.py\n?? scripts/tests/test_reviewer_bridge.py\n",
+  "codex_version": "codex-cli 0.156.1",
+  "harness_sha256": {
+    "run.py": "126c1c6f7d11256d7aa2f35ebccf090270c105c6f910ac5b1189befcc93cfdc5",
+    "cases.py": "77739187a36d04cea102af4fbee236fe550ec537c8e922e9a9ce6ab14d4bed38",
+    "reviewer.py": "0f6f50ec157be574f4d9dea2ccff1d62830a9a668bf9ba1637e7a947a2571f9d"
+  },
+  "finished_at": "2026-10-04T14:47:52.409233+00:00"
+}

@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import hashlib
 import os
 from pathlib import Path
 import subprocess
@@ -178,9 +179,51 @@ class BehavioralGraderTests(unittest.TestCase):
             self.assertFalse(all(c['passed'] for c in cases.grade('prd-update',before,after)))
 
 
+    def test_gate_clean_rejects_tampering_false_freshness_and_forced_findings(self):
+        with tempfile.TemporaryDirectory() as directory:
+            _, before = self.prepare('gate-clean', directory)
+            report = {
+                'target': {'path':'clean-prd.md','id':'prd:personal-tag-finder','revision':1,
+                           'sha256': hashlib.sha256(before['clean-prd.md']).hexdigest()},
+                'verdict':'ready_for_flow',
+                'coverage':[{'lens':f'R{i}','status':'assessed','note':'inspected supplied scope'} for i in range(1,6)],
+                'findings':[], 'open_decisions':[]}
+            def grade(extra=None):
+                return all(c['passed'] for c in cases.grade('gate-clean',before,
+                    {**before,'report.md':b'Review','report.json':json.dumps(report).encode(),**(extra or {})}))
+            self.assertTrue(grade())
+            self.assertFalse(grade({'clean-prd.md':before['clean-prd.md']+b'changed'}))
+            report['target']['sha256']='invented'
+            self.assertFalse(grade())
+            report['target']['sha256']=hashlib.sha256(before['clean-prd.md']).hexdigest()
+            report['findings']=[{'id':'F-001','lens':'R1','disposition':'confirmed',
+                                'location':'summary','evidence':['claim'],'impact':'scope','action':'revise'}]
+            self.assertFalse(grade())
+
+    def test_gate_stale_rejects_reused_verdict_and_unsubstantiated_findings(self):
+        with tempfile.TemporaryDirectory() as directory:
+            _, before = self.prepare('gate-stale', directory)
+            report = {
+                'target': {'path':'broken-prd.md','id':'prd:personal-tag-finder','revision':2,
+                           'sha256':hashlib.sha256(before['broken-prd.md']).hexdigest()},
+                'verdict':'revise',
+                'coverage':[{'lens':f'R{i}','status':'assessed','note':'inspected current content'} for i in range(1,6)],
+                'findings':[{'id':f'F-{i}','lens':'R3','disposition':'confirmed',
+                             'location':loc,'evidence':['supplied source'],'impact':'flow blocker','action':'correct'}
+                            for i,loc in enumerate(['broken-prd.md / AC-001','broken-prd.md / FR-003'],1)],
+                'prior_review':{'status':'stale','reason':'same nominal revision, different content hash'}}
+            def grade():
+                return all(c['passed'] for c in cases.grade('gate-stale',before,
+                    {**before,'report.md':b'Review','report.json':json.dumps(report).encode()}))
+            self.assertTrue(grade())
+            report['verdict']='ready_for_flow';self.assertFalse(grade())
+            report['verdict']='revise';report['prior_review']['status']='current';self.assertFalse(grade())
+            report['prior_review']['status']='stale';report['findings'][0]['evidence']=[];self.assertFalse(grade())
+
+
 class RunnerFailureTests(unittest.TestCase):
     """Command doubles test harness failure propagation, NOT agent quality."""
-    def run_double(self, body, timeout=5):
+    def run_double(self, body, timeout=5, case="content-fidelity"):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             binary = root / "bin"
@@ -192,13 +235,19 @@ class RunnerFailureTests(unittest.TestCase):
             output = root / "evidence"
             result = subprocess.run([sys.executable, str(ROOT / "scripts/behavioral/run.py"),
                                      "--model", "test-double", "--output", str(output),
-                                     "--case", "content-fidelity", "--timeout", str(timeout)],
+                                     "--case", case, "--timeout", str(timeout), "--chain-timeout", str(timeout)],
                                     env={**os.environ, "PATH": f"{binary}{os.pathsep}{os.environ['PATH']}"},
                                     text=True, capture_output=True, timeout=15)
             report = json.loads((output / "summary.json").read_text())
-            self.assertTrue((output / "content-fidelity/events.jsonl").exists())
-            self.assertTrue((output / "content-fidelity/prompt.txt").exists())
+            self.assertTrue((output / case / "events.jsonl").exists())
+            self.assertTrue((output / case / "prompt.txt").exists())
             return result, report
+
+    def test_chain_honors_explicit_timeout_and_records_failure(self):
+        result, report = self.run_double("time.sleep(10)\n", timeout=1, case="product-chain")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(report["cases"][0]["timeout_seconds"], 1)
+        self.assertIn("exceeded 1s", report["cases"][0]["error"])
 
     def test_zero_exit_without_completion_is_error(self):
         result, report = self.run_double("print('{}')\n")
