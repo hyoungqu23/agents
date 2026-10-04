@@ -1,0 +1,15 @@
+{
+  ".eval-plugins/product/.claude-plugin/plugin.json": "04f967a426e3d854120a3bfc2d1075154a8b4b8f94268364ab3794fbaacd1c55",
+  ".eval-plugins/product/.codex-plugin/plugin.json": "a251f00366bd7bb1d1a111ec5d9752b546ff06f4a4ae262ada00b42e4edb619c",
+  ".eval-plugins/product/CHANGELOG.md": "8dd59bdd8b8aa0cc97d76d573286cd159aab1d8677b148b7c6d2ef930fc0a278",
+  ".eval-plugins/product/README.md": "d5429c55cde97c2ea86c5195476456d839bd79caff076e9851bc8b609265e128",
+  ".eval-plugins/product/references/artifact-contract.md": "61bce2dcb4858c866b74e524f4ea08e5518005203d75b0130cab3baf46dfa02d",
+  ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+  ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+  ".eval-plugins/product/skills/prd-write/SKILL.md": "05522c5ab04384cfb07ddea86110e0712312f659be67e44a7f6e235e2e68e7ee",
+  ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+  ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+  ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78",
+  "existing-prd.md": "1c8ecd70cd108e0b9f4bf643c5d2309f78ddea5935a588c41497ae1211e8bfbc",
+  "prd-update.md": "83f9b25f744555c00d0226a9c5ab34b44241c335b0f157c108f0949b7e4d94d1"
+}

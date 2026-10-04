@@ -1,7 +1,7 @@
 {
   "name": "product",
-  "version": "0.1.0",
-  "description": "Product problem framing with traceable evidence, assumptions, decisions, and open questions.",
+  "version": "0.2.0",
+  "description": "Product problem framing and traceable requirements drafting with evidence, decisions, and acceptance criteria.",
   "author": {
     "name": "HM2"
   },
@@ -14,8 +14,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Product",
-    "shortDescription": "Frame problems before requirements",
-    "longDescription": "Define the user problem from supplied context, distinguish evidence from assumptions and decisions, and preserve unresolved questions. This first stack provides problem-frame only.",
+    "shortDescription": "Frame problems and write traceable PRDs",
+    "longDescription": "Frame product problems and draft or update PRDs with stable sources, assumptions, user decisions, requirements and observable acceptance criteria. No automatic implementation or independent PRD gate.",
     "developerName": "HM2",
     "category": "Productivity",
     "capabilities": [

@@ -16,7 +16,7 @@ permissions:
 jobs:
   behavioral-smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: Require trusted branch and model credential
         env:

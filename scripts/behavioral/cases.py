@@ -9,13 +9,16 @@ import shutil
 from pathlib import Path
 
 CASES = ("design-existing", "content-fidelity", "review-runtime", "review-check",
-         "problem-observed", "problem-hypothesis", "problem-update")
+         "problem-observed", "problem-hypothesis", "problem-update",
+         "prd-from-problem", "prd-update", "prd-direct")
 SKILLS = {"design-existing": ("design", "design-brief"),
           "content-fidelity": ("content", "un-ai"),
           "review-runtime": ("review", "review-code"),
           "review-check": ("review", "review-check"),
           **{name: ("product", "problem-frame") for name in
-             ("problem-observed", "problem-hypothesis", "problem-update")}}
+             ("problem-observed", "problem-hypothesis", "problem-update")},
+          **{name: ("product", "prd-write") for name in
+             ("prd-from-problem", "prd-update", "prd-direct")}}
 
 
 def scenario(repo, plugin, skill, number):
@@ -40,6 +43,13 @@ def prepare(repo, case, workspace):
             shutil.copy2(root / path, destination)
         prompt = source["prompt"]
         origin = f"plugins/{plugin}/skills/{skill}/evals/evals.json#1"
+    elif case.startswith("prd-"):
+        number = {"prd-from-problem": 1, "prd-update": 2, "prd-direct": 3}[case]
+        root, source = scenario(repo, plugin, skill, number)
+        for path in source["files"]:
+            shutil.copy2(root / path, workspace / Path(path).name)
+        prompt = source["prompt"] + "\n제공된 로컬 입력만 사용하세요. 네트워크나 외부 조회는 사용하지 마세요."
+        origin = f"plugins/{plugin}/skills/{skill}/evals/evals.json#{number}"
     elif case.startswith("problem-"):
         number = {"problem-observed": 1, "problem-hypothesis": 2, "problem-update": 4}[case]
         root, source = scenario(repo, plugin, skill, number)
@@ -80,6 +90,18 @@ def snapshot(root):
             if p.is_file() and not p.is_symlink()}
 
 
+def document_fields(text):
+    # Narrow scalar checks for evaluation artifacts, not a general YAML parser.
+    match = re.match(r"\A---\s*\n(.*?)\n---\s*\n", text, re.S)
+    fields = {}
+    if match:
+        for key in ("id", "revision", "status"):
+            values = re.findall(r"^" + key + r":\s*([^\n]+)$", match.group(1), re.M)
+            if len(values) == 1:
+                fields[key] = values[0].strip().strip("\"'")
+    return fields
+
+
 def grade(case, before, after):
     results = []
     def check(name, passed):
@@ -92,7 +114,9 @@ def grade(case, before, after):
                "review-check": {"report.md", "report.json"},
                "problem-observed": {"problem.md"},
                "problem-hypothesis": {"problem.md"},
-               "problem-update": {"existing-problem.md"}}[case]
+               "problem-update": {"existing-problem.md"},
+               "prd-from-problem": {"prd.md"}, "prd-direct": {"prd.md"},
+               "prd-update": {"existing-prd.md"}}[case]
     changed = {p for p in before.keys() | after.keys() if before.get(p) != after.get(p)}
     check("only_requested_output_changed", bool(changed) and changed <= allowed)
     if case == "design-existing":
@@ -109,17 +133,31 @@ def grade(case, before, after):
         check("dates_and_counts_preserved", all(x in new for x in ("9월 12일", "24명", "3명", "9월 23일")))
         check("cause_stays_unconfirmed", bool(re.search(r"원인.{0,30}(확인\s*중|조사\s*중|파악\s*중|확인되지)", new)))
         check("schedule_stays_tentative", "예정" in new and bool(re.search(r"(일정|배포).{0,40}(바뀔|변경될|달라질)\s*수", new)))
+    elif case.startswith("prd-"):
+        target = "existing-prd.md" if case == "prd-update" else "prd.md"
+        new = text(target); fields = document_fields(new)
+        check("prd_identity_and_maturity_recorded", fields.get("id", "").startswith("prd:") and
+              fields.get("revision", "").isdigit() and int(fields["revision"]) >= 1 and
+              fields.get("status") in ("draft", "needs_evidence", "needs_decision", "ready_for_review"))
+        check("requirements_and_acceptance_present", bool(re.search(r"FR-\d+",new)) and bool(re.search(r"AC-\d+",new)))
+        if case == "prd-from-problem":
+            check("actual_upstream_cited", "problem:internal-document-revision-access" in new and "problem.md" in new)
+            check("source_context_preserved", "observed-notes.md" in new and "OD-001" in new)
+        elif case == "prd-direct":
+            check("direct_source_cited", "direct-input.md" in new)
+            check("hypothetical_maturity_retained", fields.get("status") in ("draft", "needs_evidence", "needs_decision"))
+        else:
+            check("prd_identity_and_revision_preserved", fields.get("id") == "prd:internal-revision-access" and fields.get("revision") == "3")
+            check("requirement_ids_preserved", all(x in new for x in ("GOAL-001","FR-001","AC-001","FR-002","AC-002","DEC-001","OD-001")))
+            check("untouched_requirement_text_preserved", 'FR-001: Internal recipients can access the revision selected for their review.' in new and
+                  'The mobile-app launch date is 2026-11-12 and remains tentative.' in new)
+            check("portal_change_recorded", bool(re.search(r"portal|포털",new,re.I)))
+        # Whole-output review must verify the meaning of constraints, AC testability,
+        # no invented policy/metrics, and links. These are narrow checks only.
     elif case.startswith("problem-"):
         target = "existing-problem.md" if case == "problem-update" else "problem.md"
         new = text(target)
-        # Fixture-specific scalar checks, not a general YAML/semantic validator.
-        match = re.match(r"\A---\s*\n(.*?)\n---\s*\n", new, re.S)
-        fields = {}
-        if match:
-            for key in ("id", "revision", "status"):
-                values = re.findall(r"^" + key + r":\s*([^\n]+)$", match.group(1), re.M)
-                if len(values) == 1:
-                    fields[key] = values[0].strip().strip("\"'")
+        fields = document_fields(new)
         check("problem_identity_and_maturity_recorded", bool(fields.get("id")) and
               fields.get("revision", "").isdigit() and int(fields["revision"]) >= 1 and
               fields.get("status") in ("draft", "needs_evidence", "needs_decision", "ready_for_review"))

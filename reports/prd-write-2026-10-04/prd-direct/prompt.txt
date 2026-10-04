@@ -1,0 +1,3 @@
+Read and apply .eval-plugins/product/skills/prd-write/SKILL.md and the references it calls for. Only edit the task's output files; .eval-plugins contains the skill source, not output targets.
+direct-input.md로 질문 없이 PRD를 prd.md에 저장해줘.
+제공된 로컬 입력만 사용하세요. 네트워크나 외부 조회는 사용하지 마세요.

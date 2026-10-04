@@ -1,0 +1,47 @@
+{
+  "case": "prd-direct",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "prd_identity_and_maturity_recorded",
+      "passed": true
+    },
+    {
+      "check": "requirements_and_acceptance_present",
+      "passed": true
+    },
+    {
+      "check": "direct_source_cited",
+      "passed": true
+    },
+    {
+      "check": "hypothetical_maturity_retained",
+      "passed": true
+    }
+  ],
+  "scenario": "plugins/product/skills/prd-write/evals/evals.json#3",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "duration_seconds": 102.95
+}

@@ -102,3 +102,12 @@ and source qualification, or stable IDs and unrelated update context. It is not 
 YAML schema validator or semantic judge. Human review must inspect the whole output
 for invented users/metrics, solution-biased framing, lost decisions and needless
 questions. The first stack supplies no PRD writer or gate; those are separate changes.
+
+## PRD writing cases
+
+prd-from-problem consumes the actual PR1 model output and its supplied source;
+prd-update checks targeted changes and stable requirements/decisions; prd-direct
+checks drafting without a fabricated problem artifact. The grader checks observable
+preservation and metadata only. Inspect whole PRDs for AC testability, source links,
+unknown policies, numerical claims and scope drift before accepting quality evidence.
+These cases test PRD authoring, not an independent PRD gate.

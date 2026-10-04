@@ -156,6 +156,28 @@ class BehavioralGraderTests(unittest.TestCase):
             self.assertFalse(all(c['passed'] for c in cases.grade('problem-update',before,after)))
 
 
+    def test_prd_direct_rejects_ready_claim_and_extra_upstream_file(self):
+        document=b"---\nid: prd:notes\nrevision: 1\nstatus: draft\n---\nSource: direct-input.md\nFR-001: find notes\nAC-001: matching note returned\n"
+        after={'prd.md':document}
+        self.assertTrue(all(c['passed'] for c in cases.grade('prd-direct',{},after)))
+        after['prd.md']=document.replace(b'draft',b'ready_for_review')
+        self.assertFalse(all(c['passed'] for c in cases.grade('prd-direct',{},after)))
+        after['prd.md']=document;after['problem.md']=b'invented source'
+        self.assertFalse(all(c['passed'] for c in cases.grade('prd-direct',{},after)))
+
+    def test_prd_update_rejects_unrelated_change_and_id_loss(self):
+        with tempfile.TemporaryDirectory() as directory:
+            _,before=self.prepare('prd-update',directory)
+            old=before['existing-prd.md'].decode()
+            new=old.replace('revision: 2','revision: 3').replace('by email','through the existing internal portal').replace('email review','portal review')
+            after={**before,'existing-prd.md':new.encode()}
+            self.assertTrue(all(c['passed'] for c in cases.grade('prd-update',before,after)))
+            after['existing-prd.md']=new.replace('OD-001','OD-099').encode()
+            self.assertFalse(all(c['passed'] for c in cases.grade('prd-update',before,after)))
+            after['existing-prd.md']=new.replace('tentative','final').encode()
+            self.assertFalse(all(c['passed'] for c in cases.grade('prd-update',before,after)))
+
+
 class RunnerFailureTests(unittest.TestCase):
     """Command doubles test harness failure propagation, NOT agent quality."""
     def run_double(self, body, timeout=5):
