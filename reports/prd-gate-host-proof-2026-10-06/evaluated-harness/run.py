@@ -100,9 +100,6 @@ def main():
                            "--sandbox", "workspace-write", "--model", args.model,
                            "-c", 'model_reasoning_effort="low"', "-c", 'web_search="disabled"',
                            "--json", "--color", "never", "-"]
-                if case == "product-chain":
-                    command[-1:-1] = ["-c", "sandbox_workspace_write.exclude_slash_tmp=true",
-                                      "-c", "sandbox_workspace_write.exclude_tmpdir_env_var=true"]
                 result["command"] = command
                 case_timeout = args.chain_timeout if case == "product-chain" else args.timeout
                 result["timeout_seconds"] = case_timeout

@@ -137,3 +137,17 @@ one reviewer with its own workspace-write sandbox. It accepts no arbitrary comma
 model override or external path. Host launch/result evidence stays outside the author
 workspace; report content is generated only by the reviewer. Failure is recorded and
 never replaced with an assembled or self-scored report.
+
+
+The chain verifier requires host completion evidence, not the author-visible result
+notification. The host reviewer runs in a separate protected workspace with a copy of
+the author inputs and the runner's initial skill snapshot. Its event stream, completion
+result and report SHA-256 values are retained outside the author workspace. Reports
+are published only after a successful review; the runner compares their final bytes
+against those host digests. No review request, a failed reviewer or replaced report
+fails the chain even if author-visible events/result files claim success.
+
+Chain author/reviewer invocations explicitly exclude `/tmp` and `$TMPDIR` from their
+extra writable roots, so a temporary output directory does not grant the author write
+access to the host evidence or reviewer workspace. This is a per-invocation setting,
+not a change to the user's Codex configuration.

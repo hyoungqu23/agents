@@ -221,6 +221,26 @@ class BehavioralGraderTests(unittest.TestCase):
             report['prior_review']['status']='stale';report['findings'][0]['evidence']=[];self.assertFalse(grade())
 
 
+    def test_chain_requires_host_completion_and_unchanged_reviewer_reports(self):
+        with tempfile.TemporaryDirectory() as directory:
+            _, before = self.prepare('product-chain', directory)
+            evidence=ROOT/'reports/prd-gate-2026-10-04/chain-bridge/product-chain'
+            outputs=('problem.md','prd.md','authored.sha256.json','review-prompt.txt',
+                     'review-request.json','review-result.json','review-events.jsonl',
+                     'review-stderr.log','report.md','report.json')
+            after={**before,**{name:(evidence/name).read_bytes() for name in outputs}}
+            host=json.loads((evidence/'reviewer-result.json').read_text())
+            host['report_sha256']={name:hashlib.sha256(after[name]).hexdigest() for name in ('report.md','report.json')}
+            def grade(result=host, files=after):
+                return all(c['passed'] for c in cases.grade('product-chain',before,files,result))
+            self.assertTrue(grade())
+            self.assertFalse(grade(None))  # Copied workspace events cannot stand in for a launched reviewer.
+            self.assertFalse(grade({**host,'status':'failed','returncode':7}))
+            self.assertFalse(grade(files={**after,'report.md':b'Coordinator replacement'}))
+            changed=json.loads(after['report.json']);changed['independence']='self_review'
+            self.assertFalse(grade(files={**after,'report.json':json.dumps(changed).encode()}))
+
+
 class RunnerFailureTests(unittest.TestCase):
     """Command doubles test harness failure propagation, NOT agent quality."""
     def run_double(self, body, timeout=5, case="content-fidelity"):
@@ -242,6 +262,21 @@ class RunnerFailureTests(unittest.TestCase):
             self.assertTrue((output / case / "events.jsonl").exists())
             self.assertTrue((output / case / "prompt.txt").exists())
             return result, report
+
+    def test_chain_runner_rejects_replayed_reports_without_reviewer_request(self):
+        evidence=ROOT/'reports/prd-gate-2026-10-04/chain-bridge/product-chain'
+        outputs=('problem.md','prd.md','authored.sha256.json','review-prompt.txt',
+                 'review-result.json','review-events.jsonl','review-stderr.log','report.md','report.json')
+        body=("from pathlib import Path\nimport shutil\n"
+              f"source=Path({str(evidence)!r})\n"
+              f"for name in {outputs!r}: shutil.copy2(source/name,Path.cwd()/name)\n"
+              "print('{\"type\":\"turn.completed\"}')\n")
+        result,report=self.run_double(body,timeout=5,case='product-chain')
+        self.assertNotEqual(result.returncode,0)
+        self.assertEqual(report['cases'][0]['status'],'failed')
+        self.assertIn({'check':'host_reviewer_completed','passed':False},report['cases'][0]['checks'])
+        self.assertIn('sandbox_workspace_write.exclude_slash_tmp=true',report['cases'][0]['command'])
+        self.assertIn('sandbox_workspace_write.exclude_tmpdir_env_var=true',report['cases'][0]['command'])
 
     def test_chain_honors_explicit_timeout_and_records_failure(self):
         result, report = self.run_double("time.sleep(10)\n", timeout=1, case="product-chain")

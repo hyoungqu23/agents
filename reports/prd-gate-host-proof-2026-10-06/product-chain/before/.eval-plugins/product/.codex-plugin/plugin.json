@@ -1,0 +1,28 @@
+{
+  "name": "product",
+  "version": "0.3.0",
+  "description": "Product problem framing, traceable PRD authoring and read-only readiness review.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "product",
+    "problem",
+    "requirements",
+    "evidence"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Product",
+    "shortDescription": "Frame, write and review product requirements",
+    "longDescription": "Frame product problems, draft or update traceable PRDs, and review evidence, acceptance, decisions and readiness for user-flow design without modifying inputs.",
+    "developerName": "HM2",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": "Define the problem behind this product idea."
+  }
+}

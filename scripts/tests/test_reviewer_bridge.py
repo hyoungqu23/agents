@@ -15,7 +15,7 @@ SPEC.loader.exec_module(module)
 
 
 class ReviewerBridgeTests(unittest.TestCase):
-    def run_bridge(self, body, request=None):
+    def run_bridge(self, body, request=None, skill_snapshot=None):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);workspace=root/'workspace';workspace.mkdir();evidence=root/'evidence';evidence.mkdir()
             for name in ('problem.md','prd.md','chain-notes.md'):
@@ -25,7 +25,7 @@ class ReviewerBridgeTests(unittest.TestCase):
             (workspace/'review-prompt.txt').write_text('Review only')
             (workspace/'review-request.json').write_text(json.dumps(request if request is not None else
                 {'action':'review','prompt_path':'review-prompt.txt'}))
-            bridge=module.ReviewerBridge([sys.executable,'-c',body],workspace,evidence,time.monotonic()+5,'process-double')
+            bridge=module.ReviewerBridge([sys.executable,'-c',body],workspace,evidence,time.monotonic()+5,'process-double',skill_snapshot)
             bridge.start();bridge.thread.join(timeout=7);bridge.stop()
             result=json.loads((evidence/'reviewer-result.json').read_text())
             return result,{p.name:p.read_text() for p in workspace.iterdir() if p.is_file()},(evidence/'reviewer-launch.json').exists()
@@ -36,9 +36,20 @@ class ReviewerBridgeTests(unittest.TestCase):
         self.assertEqual(result['status'],'failed');self.assertFalse(launched);self.assertNotIn('invoked',files)
 
     def test_completed_reviewer_preserves_inputs_and_records_host_launch(self):
-        result,files,launched=self.run_bridge("import sys;from pathlib import Path;sys.stdin.read();Path('report.md').write_text('review');print('{\"type\":\"turn.completed\"}')")
+        result,files,launched=self.run_bridge("import sys;from pathlib import Path;sys.stdin.read();Path('report.md').write_text('review');Path('report.json').write_text('{}');print('{\"type\":\"turn.completed\"}')")
         self.assertTrue(launched);self.assertEqual(result['status'],'completed')
         self.assertEqual(result['before_sha256'],result['after_sha256']);self.assertEqual(files['report.md'],'review')
+        self.assertEqual(result['report_sha256'],{name:hashlib.sha256(files[name].encode()).hexdigest() for name in ('report.md','report.json')})
+
+    def test_reviewer_cannot_change_copied_skill_source(self):
+        result,_,_=self.run_bridge("from pathlib import Path;Path('.eval-plugins/SKILL.md').write_text('changed');print('{\"type\":\"turn.completed\"}')",
+            skill_snapshot={'.eval-plugins/SKILL.md':b'original skill'})
+        self.assertEqual(result['status'],'failed')
+        self.assertIn('changed skill sources',result['error'])
+
+    def test_completed_reviewer_without_reports_is_failure(self):
+        result,_,_=self.run_bridge("print('{\"type\":\"turn.completed\"}')")
+        self.assertEqual(result['status'],'failed')
 
     def test_zero_exit_without_completed_turn_is_failure(self):
         for body in ("print('{}')", "print('[]')"):

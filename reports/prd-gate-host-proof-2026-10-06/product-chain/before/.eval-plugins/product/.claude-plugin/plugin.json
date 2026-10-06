@@ -1,0 +1,16 @@
+{
+  "name": "product",
+  "displayName": "Product",
+  "version": "0.3.0",
+  "description": "Product problem framing, traceable PRD authoring and read-only readiness review.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "product",
+    "problem",
+    "requirements",
+    "evidence"
+  ],
+  "skills": "./skills/"
+}

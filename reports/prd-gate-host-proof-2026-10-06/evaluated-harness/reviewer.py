@@ -118,9 +118,6 @@ class ReviewerBridge:
                         raise RuntimeError("reviewer changed author/source inputs")
                     if self.input_hashes() != before:
                         raise RuntimeError("author changed inputs during review")
-                    if any(self.read_file(name, self.review_workspace) != data
-                           for name, data in self.skill_snapshot.items()):
-                        raise RuntimeError("reviewer changed skill sources")
                     reports = {name: self.read_file(name, self.review_workspace)
                                for name in ("report.md", "report.json")}
                     result["report_sha256"] = {name: hashlib.sha256(data).hexdigest()

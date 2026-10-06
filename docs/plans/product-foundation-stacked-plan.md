@@ -476,3 +476,18 @@ ready_for_flow/revise/needs_decision/incomplete 및 평가를 구현했다.
 실패로 보존하고 고정 host request capability로 연결을 수정·검증했다.
 [PR3 검증 기록과 한계](../../reports/prd-gate-2026-10-04/README.md)에 실제 실행을
 보존했다. 사용자 요청에 따라 PR2를 base로 PR3를 게시하며 자동 머지는 하지 않는다.
+
+
+## PR3 리뷰 보완 — 2026-10-06
+
+review-pr에서 확정된 P2(검토자가 실행되지 않은 결과 복사도 연결 평가 통과)를
+수정했다. host 완료 결과와 원래 보고서 SHA-256을 최종 grader에 연결하고 검토자
+작업 공간 및 이벤트 기록을 분리했다. 임시 디렉터리 추가 쓰기 권한은 이 평가의
+CLI 호출에서만 제외했다. 36개 Python 검사, 실제 연결 1회, 좁은 OS 쓰기 검사와
+수정 diff 재검토를 완료했다. 상세 증거와 실행 판본 한계는
+[보완 검증](../../reports/prd-gate-host-proof-2026-10-06/README.md)에 보존한다.
+
+
+PR #12/#13은 리뷰 보완 중 main에 병합되어 PR #14의 base가 main으로 변경됐다.
+원격 head 64734d7은 기존 c3c03cf와 tree가 동일함을 확인했다. 기존 변경을
+보존하여 그 최신 head에서 수정 커밋을 작성한다.

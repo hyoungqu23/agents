@@ -1,0 +1,23 @@
+[
+  "codex",
+  "exec",
+  "--ignore-user-config",
+  "--ephemeral",
+  "--skip-git-repo-check",
+  "--sandbox",
+  "workspace-write",
+  "--model",
+  "gpt-6-astra",
+  "-c",
+  "model_reasoning_effort=\"low\"",
+  "-c",
+  "web_search=\"disabled\"",
+  "-c",
+  "sandbox_workspace_write.exclude_slash_tmp=true",
+  "-c",
+  "sandbox_workspace_write.exclude_tmpdir_env_var=true",
+  "--json",
+  "--color",
+  "never",
+  "-"
+]
