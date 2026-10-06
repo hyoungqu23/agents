@@ -13,6 +13,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | [`content`](plugins/content) | `un-ai` | Content writing skills for drafting, editing, rewriting, and auditing English or Korean prose. |
 | [`review`](plugins/review) | `review-pr`, `review-code`, `review-respond`, `review-check` | Code review, read-only review claim verification, and pull request responses. |
 | [`design`](plugins/design) | `design-brief`, `prototype-explore`, `prototype-promote` | Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references. |
+| [`product`](plugins/product) | `problem-frame` | Product problem framing with explicit evidence, assumptions, decisions, and open questions. |
 
 ## Repository layout
 
@@ -25,6 +26,8 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
     │   └── skills/un-ai/
     ├── review/
     │   └── skills/{review-pr,review-code,review-respond,review-check}/
+    ├── product/
+    │   └── skills/problem-frame/
     └── design/
         ├── references/
         └── skills/{design-brief,prototype-explore,prototype-promote}/
@@ -94,7 +97,7 @@ python3 scripts/behavioral/run.py --model <model-id> --output /tmp/hm2-behaviora
 ```
 
 This uses model capacity and sends the selected plugin instructions, references and
-synthetic fixtures to OpenAI. It runs four scenarios in disposable workspaces and
+synthetic fixtures to OpenAI. It runs seven scenarios in disposable workspaces and
 checks real artifacts for design-rule preservation, editing fidelity, and a known
 cross-file review defect. Failures, timeouts and missing outputs return nonzero;
 the output directory retains prompts, traces, snapshots and individual checks.

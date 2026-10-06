@@ -132,6 +132,30 @@ class BehavioralGraderTests(unittest.TestCase):
             self.assertFalse(grade(report), aliases)
 
 
+    def test_problem_frame_grader_rejects_fabricated_maturity_and_unrequested_writes(self):
+        before = {"idea-only.md": b"raw input"}
+        document = b"---\nid: problem:idea\nrevision: 1\nstatus: needs_evidence\n---\nSource: idea-only.md\n"
+        after = {**before, "problem.md": document}
+        self.assertTrue(all(c['passed'] for c in cases.grade('problem-hypothesis',before,after)))
+        after['problem.md'] = document.replace(b'needs_evidence', b'ready_for_review')
+        self.assertFalse(all(c['passed'] for c in cases.grade('problem-hypothesis',before,after)))
+        after['problem.md'] = document
+        after['approved.txt'] = b'approved'
+        self.assertFalse(all(c['passed'] for c in cases.grade('problem-hypothesis',before,after)))
+
+    def test_problem_update_requires_stable_identity_and_original_context(self):
+        with tempfile.TemporaryDirectory() as directory:
+            _, before = self.prepare('problem-update', directory)
+            old = before['existing-problem.md'].decode()
+            new = old.replace('revision: 2', 'revision: 3').replace('sends a PDF', 'sends an email link')
+            after = {**before,'existing-problem.md':new.encode()}
+            self.assertTrue(all(c['passed'] for c in cases.grade('problem-update',before,after)))
+            after['existing-problem.md']=new.replace('DEC-001','DEC-099').encode()
+            self.assertFalse(all(c['passed'] for c in cases.grade('problem-update',before,after)))
+            after['existing-problem.md']=new.replace('tentative','final').encode()
+            self.assertFalse(all(c['passed'] for c in cases.grade('problem-update',before,after)))
+
+
 class RunnerFailureTests(unittest.TestCase):
     """Command doubles test harness failure propagation, NOT agent quality."""
     def run_double(self, body, timeout=5):

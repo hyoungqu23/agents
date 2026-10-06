@@ -1,0 +1,47 @@
+{
+  "case": "problem-observed",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "problem_identity_and_maturity_recorded",
+      "passed": true
+    },
+    {
+      "check": "reported_count_preserved",
+      "passed": true
+    },
+    {
+      "check": "actual_source_cited",
+      "passed": true
+    },
+    {
+      "check": "source_limit_stays_visible",
+      "passed": true
+    }
+  ],
+  "scenario": "plugins/product/skills/problem-frame/evals/evals.json#1",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "duration_seconds": 78.7
+}

@@ -1,0 +1,43 @@
+{
+  "case": "problem-hypothesis",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "problem_identity_and_maturity_recorded",
+      "passed": true
+    },
+    {
+      "check": "hypothesis_not_promoted_to_ready",
+      "passed": true
+    },
+    {
+      "check": "hypothetical_input_cited",
+      "passed": true
+    }
+  ],
+  "scenario": "plugins/product/skills/problem-frame/evals/evals.json#2",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "duration_seconds": 73.44
+}

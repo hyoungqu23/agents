@@ -1,0 +1,11 @@
+{
+  ".eval-plugins/product/.claude-plugin/plugin.json": "a900c64b00b2f8c5e817dc3233d2384ebbbe3865b03c2cb9f1b3cfc9f4926f37",
+  ".eval-plugins/product/.codex-plugin/plugin.json": "86a62be0f6272beaf88d7ac74ab10361036e1154e841b828bf397014ffc0bf4c",
+  ".eval-plugins/product/CHANGELOG.md": "2631ed6c4e76901970414296b90e750bf261f12e7c5457b9eeb60ac85de9cfed",
+  ".eval-plugins/product/README.md": "463507a405e541a35ec2ef67b5fc004044fb984452e79321c64a4f80685508ae",
+  ".eval-plugins/product/references/artifact-contract.md": "61bce2dcb4858c866b74e524f4ea08e5518005203d75b0130cab3baf46dfa02d",
+  ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+  ".eval-plugins/product/skills/problem-frame/SKILL.md": "3e98e6a00e2030feceaac9875ceb44acc426b68f60b356419794cb78682a803a",
+  ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78",
+  "idea-only.md": "cac3da157f199248525669200bbaeecf18e4968750fb2aafa380399a25b37434"
+}

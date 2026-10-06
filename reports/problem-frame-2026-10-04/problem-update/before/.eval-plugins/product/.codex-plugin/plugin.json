@@ -1,0 +1,28 @@
+{
+  "name": "product",
+  "version": "0.1.0",
+  "description": "Product problem framing with traceable evidence, assumptions, decisions, and open questions.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "product",
+    "problem",
+    "requirements",
+    "evidence"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Product",
+    "shortDescription": "Frame problems before requirements",
+    "longDescription": "Define the user problem from supplied context, distinguish evidence from assumptions and decisions, and preserve unresolved questions. This first stack provides problem-frame only.",
+    "developerName": "HM2",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": "Define the problem behind this product idea."
+  }
+}

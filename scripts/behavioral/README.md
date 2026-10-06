@@ -92,3 +92,13 @@ protection/publishing gates are external configuration and are not changed by th
 repository patch. A missing or undispatched run is **not run**, never passed.
 
 Execution follows the [official non-interactive Codex documentation](https://learn.chatgpt.com/docs/non-interactive-mode).
+
+## Product foundation cases
+
+problem-observed, problem-hypothesis, and problem-update invoke problem-frame with
+raw synthetic inputs (evals 1, 2, 4); expected answers and rubric files are excluded.
+The narrow grader checks output-only changes, frame identity/maturity, supplied count
+and source qualification, or stable IDs and unrelated update context. It is not a
+YAML schema validator or semantic judge. Human review must inspect the whole output
+for invented users/metrics, solution-biased framing, lost decisions and needless
+questions. The first stack supplies no PRD writer or gate; those are separate changes.

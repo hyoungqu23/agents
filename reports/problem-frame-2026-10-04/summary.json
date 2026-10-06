@@ -1,0 +1,165 @@
+{
+  "started_at": "2026-10-04T13:49:36.329918+00:00",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "scope": "behavioral smoke, not full qualitative evaluation",
+  "full_suite": false,
+  "not_run": [
+    "design-existing",
+    "content-fidelity",
+    "review-runtime",
+    "review-check"
+  ],
+  "cases": [
+    {
+      "case": "problem-observed",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "problem_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "reported_count_preserved",
+          "passed": true
+        },
+        {
+          "check": "actual_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_limit_stays_visible",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/product/skills/problem-frame/evals/evals.json#1",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 78.7
+    },
+    {
+      "case": "problem-hypothesis",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "problem_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "hypothesis_not_promoted_to_ready",
+          "passed": true
+        },
+        {
+          "check": "hypothetical_input_cited",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/product/skills/problem-frame/evals/evals.json#2",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 73.44
+    },
+    {
+      "case": "problem-update",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "problem_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "document_identity_and_revision_preserved",
+          "passed": true
+        },
+        {
+          "check": "stable_claim_ids_preserved",
+          "passed": true
+        },
+        {
+          "check": "unrelated_date_and_uncertainty_preserved",
+          "passed": true
+        },
+        {
+          "check": "updated_workflow_recorded",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/product/skills/problem-frame/evals/evals.json#4",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 36.09
+    }
+  ],
+  "status": "passed",
+  "commit": "8665161c98b2a399073498001e3121aabc834a9b",
+  "working_tree": " M .agents/plugins/marketplace.json\n M .claude-plugin/marketplace.json\n M .github/workflows/behavioral.yml\n M README.md\n M scripts/behavioral/README.md\n M scripts/behavioral/cases.py\n M scripts/tests/test_behavioral.py\n?? docs/\n?? plugins/product/\n?? reports/product-harness-research-2026-10-04/\n",
+  "codex_version": "codex-cli 0.156.1",
+  "harness_sha256": {
+    "run.py": "e227971e170fbdaf9eb41941c81c5268b4a50388f6c4f452c2d6a8545f60233f",
+    "cases.py": "767c14f32c9328eabfb94533f57ed60faf76e00db933089f5dc574fe29de93fa"
+  },
+  "finished_at": "2026-10-04T13:52:42.608450+00:00"
+}
