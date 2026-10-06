@@ -1,7 +1,7 @@
 # Product 첫 버전 — 조사 기반 Stacked 구현 플랜
 
 작성: 2026-10-04
-상태: PR1 구현·로컬 검증 완료 (2026-10-04), 리뷰·커밋 대기; PR2/PR3 미착수
+상태: PR1 #12 게시 완료 (de68aff); PR2 별도 워크트리 구현·검증 완료; 사용자 요청으로 게시; PR3 미착수
 대상: `problem-frame` → `prd-write` → `prd-gate`
 배포 단위: 신규 `product` 플러그인 / 기존 hm2-tools 마켓플레이스
 
@@ -448,5 +448,18 @@ security-review의 미커밋 작업은 별도 워크트리에 있으며 product�
 공식 plugin 검증·load check도 통과했다. 증거와 미실행 범위는
 `reports/problem-frame-2026-10-04/README.md`에 있다.
 
-PR2/PR3 기능은 아직 설치된 것처럼 안내하지 않는다. PR1 리뷰 후 커밋한 HEAD가
-PR2의 부모가 된다. 현재 작업은 커밋·push·GitHub PR 생성 전이다.
+PR1은 리뷰 후 de68aff로 커밋·push했고 https://github.com/hyoungqu23/agents/pull/12 를 생성했다.
+사용자의 다음 스택 요청에 따라 이 HEAD에서 codex/product-prd-write를 분기하고
+별도 managed worktree에 PR2를 구현한다. PR3는 아직 시작하지 않았다.
+
+
+## PR2 진행 기록 — 2026-10-04
+
+PR1 #12의 de68aff에서 codex/product-prd-write를 분기하여 별도 워크트리에
+prd-write, PRD template, 직접 입력·국소 갱신 평가와 product 0.2.0 정보를 구현했다.
+PR1의 실제 문제 정의 산출물을 PRD 입력으로 보존하여 실제 의존성을 검증했다.
+25개 Python 검사와 공식 형식·로딩·스킬 검증이 통과했고, 실제 모델 세 사례의
+17개 좁은 검사 및 전체 출력 대조를 마쳤다. 상세 기록과 제한은
+[prd-write 검증 기록](../../reports/prd-write-2026-10-04/README.md)에 있다.
+사용자의 게시 요청에 따라 PR2를 커밋·push하고 PR1 브랜치를 대상으로 PR을 올린다.
+그 HEAD에서 별도 워크트리에 PR3를 분기하여 진행한다.

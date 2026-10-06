@@ -1,0 +1,176 @@
+{
+  "started_at": "2026-10-04T14:20:45.912233+00:00",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "scope": "behavioral smoke, not full qualitative evaluation",
+  "full_suite": false,
+  "not_run": [
+    "design-existing",
+    "content-fidelity",
+    "review-runtime",
+    "review-check",
+    "problem-observed",
+    "problem-hypothesis",
+    "problem-update"
+  ],
+  "cases": [
+    {
+      "case": "prd-from-problem",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "prd_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "requirements_and_acceptance_present",
+          "passed": true
+        },
+        {
+          "check": "actual_upstream_cited",
+          "passed": true
+        },
+        {
+          "check": "source_context_preserved",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/product/skills/prd-write/evals/evals.json#1",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 132.57
+    },
+    {
+      "case": "prd-update",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "prd_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "requirements_and_acceptance_present",
+          "passed": true
+        },
+        {
+          "check": "prd_identity_and_revision_preserved",
+          "passed": true
+        },
+        {
+          "check": "requirement_ids_preserved",
+          "passed": true
+        },
+        {
+          "check": "untouched_requirement_text_preserved",
+          "passed": true
+        },
+        {
+          "check": "portal_change_recorded",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/product/skills/prd-write/evals/evals.json#2",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 40.05
+    },
+    {
+      "case": "prd-direct",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "prd_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "requirements_and_acceptance_present",
+          "passed": true
+        },
+        {
+          "check": "direct_source_cited",
+          "passed": true
+        },
+        {
+          "check": "hypothetical_maturity_retained",
+          "passed": true
+        }
+      ],
+      "scenario": "plugins/product/skills/prd-write/evals/evals.json#3",
+      "command": [
+        "codex",
+        "exec",
+        "--ignore-user-config",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--model",
+        "gpt-6-astra",
+        "-c",
+        "model_reasoning_effort=\"low\"",
+        "-c",
+        "web_search=\"disabled\"",
+        "--json",
+        "--color",
+        "never",
+        "-"
+      ],
+      "duration_seconds": 102.95
+    }
+  ],
+  "status": "passed",
+  "commit": "de68aff4579c7a12fe87c37099fa592234b57209",
+  "working_tree": " M .claude-plugin/marketplace.json\n M .github/workflows/behavioral.yml\n M README.md\n M plugins/product/.claude-plugin/plugin.json\n M plugins/product/.codex-plugin/plugin.json\n M plugins/product/CHANGELOG.md\n M plugins/product/README.md\n M plugins/product/skills/problem-frame/SKILL.md\n M scripts/behavioral/README.md\n M scripts/behavioral/cases.py\n M scripts/tests/test_behavioral.py\n?? plugins/product/references/prd-template.md\n?? plugins/product/skills/prd-write/\n",
+  "codex_version": "codex-cli 0.156.1",
+  "harness_sha256": {
+    "run.py": "e227971e170fbdaf9eb41941c81c5268b4a50388f6c4f452c2d6a8545f60233f",
+    "cases.py": "ace0644b08fff7357dd58b24233f259e53dc3303e9d1df6fa8190ccf47aa2e79"
+  },
+  "finished_at": "2026-10-04T14:25:21.501098+00:00"
+}

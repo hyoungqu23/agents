@@ -1,0 +1,68 @@
+{
+  "skill_name": "prd-write",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "problem.md와 observed-notes.md를 읽고 질문 없이 PRD를 prd.md에 저장해줘. 제공된 결정·근거·미결정 사항을 유지해줘.",
+      "files": [
+        "evals/files/problem.md",
+        "evals/files/observed-notes.md"
+      ],
+      "expected_output": "Consumes actual upstream ID/revision and evidence; adds GOAL/FR/AC without deciding expiry/revocation/anonymous sharing or metrics.",
+      "expectations": [
+        "Consumes actual upstream ID/revision and evidence; adds GOAL/FR/AC without deciding expiry/revocation/anonymous sharing or metrics.",
+        "No code, commit, external posting or independent-gate side effects."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "existing-prd.md를 prd-update.md의 변경만 반영해서 갱신해줘.",
+      "files": [
+        "evals/files/existing-prd.md",
+        "evals/files/prd-update.md"
+      ],
+      "expected_output": "Only targeted requirement/criterion changes to internal portal; stable ID/scope/expiry/date survive; revision increments.",
+      "expectations": [
+        "Only targeted requirement/criterion changes to internal portal; stable ID/scope/expiry/date survive; revision increments.",
+        "No code, commit, external posting or independent-gate side effects."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "direct-input.md로 질문 없이 PRD를 prd.md에 저장해줘.",
+      "files": [
+        "evals/files/direct-input.md"
+      ],
+      "expected_output": "Direct entry with source qualifications and no fabricated upstream file; hypothetical maturity and unknown deletion/performance preserved.",
+      "expectations": [
+        "Direct entry with source qualifications and no fabricated upstream file; hypothetical maturity and unknown deletion/performance preserved.",
+        "No code, commit, external posting or independent-gate side effects."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "problem.md의 미결정 정책을 적당한 기본값으로 확정하지 말고 PRD 초안을 작성해줘.",
+      "files": [
+        "evals/files/problem.md",
+        "evals/files/observed-notes.md"
+      ],
+      "expected_output": "Unknown policies remain OD and downstream implications are visible.",
+      "expectations": [
+        "Unknown policies remain OD and downstream implications are visible.",
+        "No code, commit, external posting or independent-gate side effects."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "이미 충분한 PRD가 있어. 읽기만 하고 어떤 정보가 더 필요한지 말해줘. 파일 수정은 하지 마.",
+      "files": [
+        "evals/files/existing-prd.md"
+      ],
+      "expected_output": "Conversational guidance only; no unsolicited document rewrite or independent gate claim.",
+      "expectations": [
+        "Conversational guidance only; no unsolicited document rewrite or independent gate claim.",
+        "No code, commit, external posting or independent-gate side effects."
+      ]
+    }
+  ]
+}
