@@ -1,0 +1,4 @@
+interface:
+  display_name: "Problem Frame"
+  short_description: "Define product problems with traceable evidence"
+  default_prompt: "Use $problem-frame to define the problem behind this idea, separating evidence, assumptions, decisions, and unanswered questions."

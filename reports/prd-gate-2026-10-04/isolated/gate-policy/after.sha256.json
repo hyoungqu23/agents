@@ -1,0 +1,21 @@
+{
+  ".eval-plugins/product/.claude-plugin/plugin.json": "3ec9bdfb9ba266d7e4239d594f0571ac10820785d2f86dd6ef92cd3c44e9a52e",
+  ".eval-plugins/product/.codex-plugin/plugin.json": "7fc1db79c1869cfec50bc15f03027a0375a15e8e455e6f9d7942540e8c4d49e4",
+  ".eval-plugins/product/CHANGELOG.md": "522c620118ac976307ac0c812e32399a50e43a6c99693d7589a479fc5aa15c6c",
+  ".eval-plugins/product/README.md": "7e985d2e28130e022558f7859ed4721e13c404225677d88889c35f85ea4a9689",
+  ".eval-plugins/product/references/artifact-contract.md": "61bce2dcb4858c866b74e524f4ea08e5518005203d75b0130cab3baf46dfa02d",
+  ".eval-plugins/product/references/prd-review-contract.md": "f7c24797c0adc4d1bcd468063e9041882880273b3bec3151ae3b2bcb3f574946",
+  ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+  ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+  ".eval-plugins/product/skills/prd-gate/SKILL.md": "e0e8efdd84275e3346661b4b306b6475305ed76a6166e0fa69fb30e136e22afe",
+  ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+  ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+  ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+  ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+  ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78",
+  "observed-notes.md": "2ed4ddb83d7d38c181f8d790acb6a3e1983b68615dda2ec4e70945fc7798ce02",
+  "policy-prd.md": "c77893fe885aa02b6639b2254a09b0820b68c5d0e2de20736e7730f10a544138",
+  "problem.md": "107a7542d132d717e8336564255a06e5c0296c4b04a8bf60d0c4c3fe95abc03a",
+  "report.json": "74db9a73285cc4a18f8c19bdd22affc1a28a42705066db53b58dfb30d01905e5",
+  "report.md": "9aa1020f6fb9ce1970a23649995c21282e8706314800df3016dcff6345934211"
+}

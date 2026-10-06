@@ -1,0 +1,132 @@
+{
+  "target": {
+    "path": "broken-prd.md",
+    "id": "prd:personal-tag-finder",
+    "revision": 2,
+    "sha256": "9bb4c6a75b761a44bdfb2d0d924f2e81aa6940e9f47e77103e4937d708015244"
+  },
+  "sources": [
+    {
+      "path": "clean-source.md",
+      "identity": "SRC-001; PRD 기재 supplied snapshot 1; 원문 자체 ID/revision은 unknown",
+      "sha256": "34e48200e92d3502e8e33f109af7ac6bb57c0652af761d8232b7e2320f1fce57",
+      "read": true
+    },
+    {
+      "path": "prior-review.json",
+      "identity": "과거 검토; 보고서 자체 ID/revision 및 검토 시점 unknown",
+      "sha256": "844a65f244a0d1cf7b9e649710c16bb1e18bc8b3e4d566d14bd3066258de6b20",
+      "read": true
+    }
+  ],
+  "verdict": "revise",
+  "coverage": [
+    {
+      "lens": "R1",
+      "status": "assessed",
+      "note": "원문은 개인 소유자의 워크플로 요청이다. EV-001의 정확한 태그 검색 근거를 확인했다. 시장 수요나 실측 성과를 입증한 자료로 해석하지 않았다."
+    },
+    {
+      "lens": "R2",
+      "status": "assessed",
+      "note": "개인 사용자와 찾기·열기 결과를 대조했다. 열기 결과 누락(F-004)과 외부 사용자 확대(F-001)를 확인했다."
+    },
+    {
+      "lens": "R3",
+      "status": "assessed",
+      "note": "요구와 AC 전체를 확인했다. 관찰 불가능한 AC(F-002), 빈 결과·조회 실패 구분 누락(F-003)을 확인했다."
+    },
+    {
+      "lens": "R4",
+      "status": "assessed",
+      "note": "공유 제외와 공개 열람의 충돌(F-001)을 확인했다. 태그 편집·새 인증 제외는 원문의 제약으로 유지한다. UI·저장소 결정과 속도 수치는 전제하지 않는다."
+    },
+    {
+      "lens": "R5",
+      "status": "assessed",
+      "note": "대상 ID/revision, 실제 바이트 해시와 과거 해시를 비교했다. 동일 revision에서 해시가 달라 과거 판정은 stale이다. 과거 원문 의존성 해시는 제공되지 않았다."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-001",
+      "lens": "R4",
+      "disposition": "confirmed",
+      "location": "broken-prd.md:17–18 / FR-003, AC-003",
+      "evidence": [
+        "FR-003: Anonymous external users can read every stored note by a public link.",
+        "broken-prd.md:13 / DEC-001: Personal use only; sharing and new authentication are excluded.",
+        "clean-source.md:3–4: Personal use only; exclude tag editing, sharing and new authentication."
+      ],
+      "impact": "개인용 탐색 범위에 외부 익명 열람 흐름이 섞인다. 모든 요구사항의 흐름 설계(19행)를 그대로 진행할 수 없다.",
+      "action": "공개 링크 요구사항을 명시된 개인용·공유 제외 결정과 일치시키도록 수정한다. 공유를 새 결정으로 채택하지 않는다."
+    },
+    {
+      "id": "F-002",
+      "lens": "R3",
+      "disposition": "confirmed",
+      "location": "broken-prd.md:16 / AC-001",
+      "evidence": [
+        "AC-001: Search feels good.",
+        "clean-source.md:2: find and open existing reading notes using their exact existing tags."
+      ],
+      "impact": "검색 결과가 요구를 충족하는지 관찰하여 판단할 수 없어 성공 흐름의 완료 조건을 정할 수 없다.",
+      "action": "기존 태그의 정확한 일치로 해당 노트를 찾는 등 원문에 근거한 관찰 가능한 수용 기준을 기록한다. 합의되지 않은 속도 수치는 추가하지 않는다."
+    },
+    {
+      "id": "F-003",
+      "lens": "R3",
+      "disposition": "confirmed",
+      "location": "broken-prd.md:14–18 / GOAL-001, FR-001 및 전체 AC",
+      "evidence": [
+        "GOAL-001: Find notes by selected tag. / FR-001: Search selected tags.",
+        "broken-prd.md:16–18의 AC는 주관적 검색 평가와 공개 링크 열람만 다룬다.",
+        "clean-source.md:4: Empty lookup and failed lookup must be distinguishable."
+      ],
+      "impact": "결과 없음과 조회 실패가 구분되지 않아 빈 상태와 실패 상태의 사용자 흐름을 요구사항에 근거해 분기할 수 없다.",
+      "action": "빈 조회 결과와 조회 실패를 사용자가 구별할 수 있다는 요구 및 관찰 가능한 수용 기준을 복원한다. 화면 배치나 구현 방식을 정하지 않는다."
+    },
+    {
+      "id": "F-004",
+      "lens": "R2",
+      "disposition": "confirmed",
+      "location": "broken-prd.md:12,14–18 / EV-001, GOAL-001, FR-001",
+      "evidence": [
+        "EV-001: The owner requests finding existing reading notes by exact tags.",
+        "GOAL-001과 FR-001은 찾기/검색까지만 명시한다.",
+        "clean-source.md:2: find and open existing reading notes using their exact existing tags.",
+        "broken-prd.md:17–18의 열람은 제외된 외부 공개 링크에 한정된다."
+      ],
+      "impact": "개인 사용자가 찾은 기존 노트를 여는 핵심 결과가 빠져 검색 후 열람까지의 정상 흐름이 완결되지 않는다.",
+      "action": "개인 사용자가 검색한 기존 노트를 여는 요구와 완료 조건을 원문에 맞게 명시한다."
+    }
+  ],
+  "open_decisions": [],
+  "claims": [],
+  "prior_review": {
+    "status": "stale",
+    "reason": "ID와 revision 2는 같지만 현재 대상 SHA-256이 과거 기록과 다르다. 과거 ready_for_flow를 현재 판본에 재사용할 수 없다. 과거 보고서에는 원문/의존성 식별 정보가 없어 원문의 과거 대비 변경 여부도 검증할 수 없다. 현재 입력은 새로 검토했다.",
+    "recorded_target": {
+      "path": "broken-prd.md",
+      "id": "prd:personal-tag-finder",
+      "revision": 2,
+      "sha256": "5c52a29994694dd36dcd9a013c438628993e9ccb49f84b3d7e7362539f7b76dd"
+    },
+    "recorded_verdict": "ready_for_flow",
+    "reusable": false
+  },
+  "independence": "unverified — 저자 및 검토 호출 이력이 제공되지 않아 독립성을 확인할 수 없다.",
+  "limitations": [
+    "제공된 로컬 문서만 검토했다. 실제 제품 동작, 시장 수요 및 성능은 평가하지 않았다.",
+    "과거 대상의 실제 바이트와 과거 원문 해시가 없어 변경 내역 전체와 의존성 신선도를 재구성할 수 없다. 현재 검토를 막는 필수 입력 누락은 없다.",
+    "UI 배치, API, 데이터 저장소 및 구현 설계는 검토 범위 밖이다."
+  ],
+  "dependencies": [],
+  "review_boundary": "broken-prd.md 전체 요구사항의 사용자 흐름 설계 준비도; clean-source.md를 요청과 제외 범위의 근거로 검토",
+  "next_step": "정확한 기존 태그로 개인 노트를 찾는 흐름의 범위는 파악할 수 있다. 전체 흐름 확정은 F-001~F-004 수정 및 재검토 후 진행해야 한다. 빌드/배포 승인이 아니다.",
+  "criteria": [
+    ".eval-plugins/product/skills/prd-gate/SKILL.md",
+    ".eval-plugins/product/references/artifact-contract.md",
+    ".eval-plugins/product/references/prd-review-contract.md"
+  ]
+}

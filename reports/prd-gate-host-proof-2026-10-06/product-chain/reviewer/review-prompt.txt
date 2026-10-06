@@ -1,0 +1,6 @@
+이 호출은 문서 작성 호출과 분리된 제품 요구사항 검토 요청이다.
+.eval-plugins/product/skills/prd-gate/SKILL.md를 읽고 적용하며, 해당 스킬에서 요구하는 참조를 모두 읽어라.
+실제 problem.md, prd.md, chain-notes.md를 읽어 PRD와 문제/원자료의 관계를 검토하라. 사용자 질문 없이 제공된 근거로 검토하고 불확실성은 명시하라.
+검토 범위는 원자료에 명시된 다음 사용자 흐름 설계 단계에 대한 준비도다. 판정은 스킬의 기준과 실제 문서에서 독립적으로 도출하라.
+report.md와 report.json을 작성하라. JSON은 prd-review-contract.md의 저장 보고서 규약을 따른다. 실제 대상 및 의존성의 식별자, revision, 직접 계산한 SHA-256, 읽은 자료, R1–R5 검토 범위, 근거가 확인된 발견사항, 미해결 결정, 한계, 전체 판정과 검토 독립성의 실제 근거를 포함하라.
+원본 problem.md, prd.md, chain-notes.md, authored.sha256.json 및 .eval-plugins를 수정하지 마라. 보고서 두 파일 이외에는 파일을 생성하거나 수정하지 마라. 코드 구현, commit, 외부 게시, 외부 조회, 추가 검토자 실행을 하지 마라. 기존 보고서가 있다면 그 결론을 재사용하지 말고 실제 입력을 검토하라.

@@ -1,0 +1,59 @@
+{
+  "target": {
+    "path": "clean-prd.md",
+    "id": "prd:personal-tag-finder",
+    "revision": 1,
+    "sha256": "b231647a9431f958b549ddd96a672c83baad0e9ecf2460a3e40679213a373334"
+  },
+  "sources": [
+    {
+      "path": "clean-source.md",
+      "identity": "SRC-001; PRD가 선언한 supplied snapshot 1; 원문 자체 ID/revision 및 커밋 unknown",
+      "sha256": "34e48200e92d3502e8e33f109af7ac6bb57c0652af761d8232b7e2320f1fce57",
+      "read": true
+    }
+  ],
+  "verdict": "ready_for_flow",
+  "coverage": [
+    {
+      "lens": "R1",
+      "status": "assessed",
+      "note": "clean-prd.md EV-001은 clean-source.md의 기존 정확한 태그로 독서 노트를 찾고 열고 싶다는 개인 요청에 근거한다. 시장 수요나 실측 성과로 확대하지 않았다."
+    },
+    {
+      "lens": "R2",
+      "status": "assessed",
+      "note": "개인 사용자와 GOAL-001의 기존 노트 찾기·열기 결과가 원문 요청과 일치한다."
+    },
+    {
+      "lens": "R3",
+      "status": "assessed",
+      "note": "FR-001/AC-001은 정확한 태그 일치, 비일치 노트 제외, 저장된 내용 열기를 관찰 가능하게 정의한다. FR-002/AC-002/AC-003은 빈 결과와 조회 실패를 구별한다."
+    },
+    {
+      "lens": "R4",
+      "status": "assessed",
+      "note": "DEC-001은 태그 편집·공유·새 인증 제외와 UI 배치·저장 설계 미결정 경계를 보존한다. 합의되지 않은 수치 목표를 요구하지 않는다."
+    },
+    {
+      "lens": "R5",
+      "status": "assessed",
+      "note": "SRC-001 원문을 직접 확인하고 두 입력의 SHA-256을 기록했다. depends_on은 비어 있고 이전 보고서는 제공되지 않았다. AS-001은 통합 시 확인할 비차단 가정이며 흐름을 바꾸는 미결정 정책은 발견되지 않았다."
+    }
+  ],
+  "findings": [],
+  "open_decisions": [],
+  "claims": [],
+  "prior_review": {
+    "status": "none",
+    "reason": "이전 검토 보고서가 제공되지 않았다."
+  },
+  "independence": "unverified — 작성자 호출 이력이 제공되지 않아 자기 검토 또는 별도 호출 여부를 확인할 수 없다.",
+  "limitations": [
+    "로컬에 제공된 두 입력과 지정 스킬·참조 계약만 검토했다. 외부 조회나 시장 수요 검증은 수행하지 않았다.",
+    "AS-001의 실제 노트·태그 읽기 가능성은 실행 검증하지 않았다. 통합 단계에서 확인하며, 불성립해 흐름 요구사항이 달라지면 재검토한다.",
+    "UI 배치, 아키텍처, 저장 설계, 구현 및 성능은 이번 검토 범위 밖이다.",
+    "작성자 호출 이력이 없어 검토 독립성은 unverified이다. 별도 독립 검토 요건은 제공되지 않았다.",
+    "원문의 자체 ID·revision 및 커밋은 알려지지 않았다. PRD가 명시한 supplied snapshot 1과 실제 파일 해시를 기록하며, 과거 버전과의 비교는 수행하지 않았다."
+  ]
+}

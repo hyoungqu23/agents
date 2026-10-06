@@ -1,0 +1,56 @@
+{
+  "case": "gate-clean",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "only_requested_output_changed",
+      "passed": true
+    },
+    {
+      "check": "actual_target_identity_and_digest",
+      "passed": true
+    },
+    {
+      "check": "all_lenses_recorded",
+      "passed": true
+    },
+    {
+      "check": "findings_have_evidence_gate",
+      "passed": true
+    },
+    {
+      "check": "fixture_disposition",
+      "passed": true
+    },
+    {
+      "check": "human_report_present",
+      "passed": true
+    },
+    {
+      "check": "no_forced_findings_or_blocking_choices",
+      "passed": true
+    }
+  ],
+  "scenario": "plugins/product/skills/prd-gate/evals/evals.json#1",
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "workspace-write",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"low\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "--json",
+    "--color",
+    "never",
+    "-"
+  ],
+  "timeout_seconds": 300,
+  "duration_seconds": 70.71
+}

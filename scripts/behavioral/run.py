@@ -12,6 +12,7 @@ import sys
 import time
 
 from cases import CASES, prepare, snapshot, grade
+from reviewer import ReviewerBridge
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -24,10 +25,14 @@ def hashes(files):
     return {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}
 
 
-def execute(command, prompt, cwd, directory, timeout):
+def execute(command, prompt, cwd, directory, timeout, model=None, review_bridge=False, skill_snapshot=None):
     with (directory / "events.jsonl").open("w") as out, (directory / "stderr.log").open("w") as err:
         process = subprocess.Popen(command, cwd=cwd, stdin=subprocess.PIPE, stdout=out,
-                                   stderr=err, text=True, start_new_session=True)
+                                   stderr=err, text=True, start_new_session=True,
+                                   env={**os.environ, "PRODUCT_EVAL_MODEL": model or ""})
+        bridge = ReviewerBridge(command, cwd, directory, time.monotonic()+timeout, model, skill_snapshot) if review_bridge else None
+        if bridge:
+            bridge.start()
         try:
             process.communicate(prompt, timeout=timeout)
         except subprocess.TimeoutExpired:
@@ -35,6 +40,9 @@ def execute(command, prompt, cwd, directory, timeout):
             os.killpg(process.pid, signal.SIGKILL)
             process.communicate()
             raise TimeoutError(f"executor exceeded {timeout}s")
+        finally:
+            if bridge:
+                bridge.stop()
     if process.returncode:
         raise RuntimeError(f"executor exited {process.returncode}; see stderr.log")
     events = [json.loads(line) for line in (directory / "events.jsonl").read_text().splitlines() if line.strip()]
@@ -42,6 +50,7 @@ def execute(command, prompt, cwd, directory, timeout):
         raise RuntimeError("executor emitted malformed events")
     if not any(e.get("type") == "turn.completed" for e in events) or any(e.get("type") in ("turn.failed", "error") for e in events):
         raise RuntimeError("executor did not complete a successful turn")
+    return bridge.result if bridge else None
 
 
 def main():
@@ -49,12 +58,13 @@ def main():
     parser.add_argument("--model", required=True, help="Explicit model ID, recorded in evidence")
     parser.add_argument("--output", type=Path, required=True, help="New directory outside the repository")
     parser.add_argument("--case", choices=CASES, action="append", dest="cases")
-    parser.add_argument("--timeout", type=int, default=300, help="Seconds per scenario")
+    parser.add_argument("--timeout", type=int, default=300, help="Seconds per isolated scenario")
+    parser.add_argument("--chain-timeout", type=int, default=900, help="Seconds for the nested product chain")
     args = parser.parse_args()
     output = args.output.resolve()
     if output == REPO or REPO in output.parents:
         parser.error("use an output directory outside the repository")
-    if args.timeout < 1:
+    if args.timeout < 1 or args.chain_timeout < 1:
         parser.error("timeout must be positive")
     output.mkdir(parents=True, exist_ok=False)
     selected = list(dict.fromkeys(args.cases or CASES))
@@ -90,11 +100,18 @@ def main():
                            "--sandbox", "workspace-write", "--model", args.model,
                            "-c", 'model_reasoning_effort="low"', "-c", 'web_search="disabled"',
                            "--json", "--color", "never", "-"]
+                if case == "product-chain":
+                    command[-1:-1] = ["-c", "sandbox_workspace_write.exclude_slash_tmp=true",
+                                      "-c", "sandbox_workspace_write.exclude_tmpdir_env_var=true"]
                 result["command"] = command
-                execute(command, prompt, workspace, directory, args.timeout)
+                case_timeout = args.chain_timeout if case == "product-chain" else args.timeout
+                result["timeout_seconds"] = case_timeout
+                reviewer_result = execute(command, prompt, workspace, directory, case_timeout, args.model,
+                    case == "product-chain",
+                    {name: data for name, data in before.items() if name.startswith(".eval-plugins/")})
                 after = snapshot(workspace)
                 write_json(directory / "after.sha256.json", hashes(after))
-                result["checks"] = grade(case, before, after)
+                result["checks"] = grade(case, before, after, reviewer_result)
                 result["status"] = "passed" if all(c["passed"] for c in result["checks"]) else "failed"
             except (OSError, ValueError, RuntimeError, TimeoutError, subprocess.SubprocessError) as error:
                 result["error"] = str(error)

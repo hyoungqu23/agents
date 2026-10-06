@@ -1,0 +1,131 @@
+{
+  "target": {
+    "path": "prd.md",
+    "id": "prd:personal-tag-lookup",
+    "revision": 1,
+    "sha256": "d0abcd2f4362980933aaa06f170abe82d30360cd7467b7dc9326b0da18f9a87b"
+  },
+  "sources": [
+    {
+      "path": "problem.md",
+      "id": "problem:personal-tag-lookup",
+      "revision": 1,
+      "identity": "SRC-002; 직접 의존성, 실제 frontmatter revision 1",
+      "sha256": "8114c218f484be38a37ecf4de2a25c879553dcd94447d3cc7c936b935fe75aa7",
+      "read": true
+    },
+    {
+      "path": "chain-notes.md",
+      "id": null,
+      "revision": null,
+      "identity": "SRC-001; supplied snapshot; revision unknown. 고유 문서 ID 미제공",
+      "sha256": "9e447b45b313241b2ef36b025ced1afb8c5283f6aa64b2252117072602f4d952",
+      "read": true
+    },
+    {
+      "path": "authored.sha256.json",
+      "id": null,
+      "revision": null,
+      "identity": "작성 시 해시 목록; 고유 ID/revision 미제공",
+      "sha256": "4fbe7ba14fdfaec293f77c19b4134e1a90e4592baf7869e41671876120c7a01a",
+      "read": true
+    },
+    {
+      "path": ".eval-plugins/product/skills/prd-gate/SKILL.md",
+      "id": "prd-gate",
+      "revision": null,
+      "identity": "검토 스킬; name은 prd-gate, revision 미제공",
+      "sha256": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+      "read": true
+    },
+    {
+      "path": ".eval-plugins/product/references/artifact-contract.md",
+      "id": null,
+      "revision": null,
+      "identity": "Product artifact contract v1; 제목의 계약 버전 v1, 문서 ID/revision 미제공",
+      "sha256": "61bce2dcb4858c866b74e524f4ea08e5518005203d75b0130cab3baf46dfa02d",
+      "read": true
+    },
+    {
+      "path": ".eval-plugins/product/references/prd-review-contract.md",
+      "id": null,
+      "revision": null,
+      "identity": "PRD review contract; 문서 ID/revision 미제공",
+      "sha256": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+      "read": true
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "problem.md",
+      "id": "problem:personal-tag-lookup",
+      "revision": 1,
+      "sha256": "8114c218f484be38a37ecf4de2a25c879553dcd94447d3cc7c936b935fe75aa7",
+      "declared_revision": 1,
+      "revision_match": true
+    }
+  ],
+  "review_boundary": "기존 정확한 태그를 사용하는 개인의 select/open/empty/failure 사용자 흐름 설계 준비도",
+  "verdict": "ready_for_flow",
+  "verdict_reason": "필수 입력과 R1–R5 모두 평가했다. 정확한 결과·저장 내용 열기·빈 결과와 실패 구분의 관찰 가능한 수용 조건이 원자료/문제와 일치하고, 확정 결함이나 다음 흐름을 바꾸는 미해결 제품 결정이 없다. AS-001은 한정된 비차단 통합 가정이다. 문서 상태나 원자료의 준비도 주장만으로 판정하지 않았다.",
+  "coverage": [
+    {
+      "lens": "R1",
+      "status": "assessed",
+      "note": "prd.md:21–23,33 및 problem.md:16–28을 chain-notes.md:2–6과 대조했다. 합성 사례와 보고된 마찰을 보존하고 실제 조사·측정으로 바꾸지 않았다. 실증 수요·효과는 평가하지 않았다."
+    },
+    {
+      "lens": "R2",
+      "status": "assessed",
+      "note": "prd.md:27–31의 개인 사용자 및 GOAL-001–003은 chain-notes.md:3–8, problem.md DEC-001/003과 일치한다. 정확한 결과 집합, 선택한 저장 내용, 빈 결과/실패 구분이 관찰 가능하다."
+    },
+    {
+      "lens": "R3",
+      "status": "assessed",
+      "note": "prd.md:37–67의 FR-001–003/AC-001–006을 전부 검토했다. 태그 선택·변경, 정확한 결과, 내용 열기, 내용 열기 실패, 빈 결과, 조회 실패가 일관되게 정의된다. AC-004는 요청된 열기/실패 흐름의 구체화이고 새 정책 결정으로 가장하지 않는다. 동작 실행 검증은 하지 않았다."
+    },
+    {
+      "lens": "R4",
+      "status": "assessed",
+      "note": "prd.md:44,60,69,73–75를 chain-notes.md:7–12 및 problem.md DEC-002/004/005와 대조했다. 태그 편집·팀 공유·새 인증·정량 속도 목표 제외와 레이아웃·아키텍처·저장 방식 미결정을 보존한다. 재시도 방식·오류별 정책을 현재 설계 준비도의 필수 선행 결정으로 요구할 근거는 없다."
+    },
+    {
+      "lens": "R5",
+      "status": "assessed",
+      "note": "prd.md:5–14의 원자료/직접 의존성과 실제 problem.md id/revision 1이 일치한다. EV-001/002, DEC-001–005, AS-001을 원문에 대조했다. 직접 계산한 PRD/문제 해시는 authored.sha256.json과 일치한다. 원자료 revision은 미상이나 현재 바이트 해시를 기록했다. 기존 보고서는 없다."
+    }
+  ],
+  "findings": [],
+  "open_decisions": [],
+  "claims": [],
+  "assumptions": [
+    {
+      "id": "AS-001",
+      "blocking": false,
+      "location": "prd.md:73–75; problem.md:36; chain-notes.md:10–12",
+      "claim": "기존 노트·태그 관계·저장된 내용을 읽을 수 있다.",
+      "verification": "통합 검토에서 실제 태그 관계와 저장된 내용 읽기를 확인한다.",
+      "revisit_condition": "실제 접근 제약이 사용자 동작이나 새로운 제품 정책 선택을 요구하면 영향 범위와 흐름 준비도를 재검토한다."
+    }
+  ],
+  "prior_review": {
+    "status": "none",
+    "reason": "report.md/report.json은 작성 전 존재하지 않았고 다른 이전 검토 보고서도 제공되지 않았다. authored.sha256.json은 내용 식별 목록으로만 사용했다."
+  },
+  "independence": "separate_invocation — 사용자가 이번 호출을 문서 작성 호출과 분리된 검토 요청이라고 명시했다. 이 호출에서는 기존 실제 입력을 읽고 기준과 대조했으며 원본 작성·수정, 기존 결론 재사용, 추가 검토자 실행을 하지 않았다. 이는 사용자 제공 호출 분리 근거이며 작성 호출 로그나 작성자/모델의 분리까지 독립 검증한 것은 아니다.",
+  "limitations": [
+    "원자료는 합성 평가 입력이다. 실제 고객 조사, 시장 검증, 사용성·속도 측정 및 통합 테스트는 수행하지 않았다.",
+    "AS-001의 실제 데이터 접근, 데이터 형식·변경 특성은 검증하지 않았다. 현재 네 흐름 정의에는 비차단이며 구현 가능성을 보증하지 않는다.",
+    "chain-notes.md의 고유 문서 ID와 revision은 제공되지 않았다. SRC-001은 참조 ID이며 현재 SHA-256으로 읽은 내용을 식별한다.",
+    "작성 호출 로그와 작성자/모델 동일성은 확인할 수 없다. 호출 분리는 사용자의 명시적 설명에 근거한다.",
+    "판정은 기록한 입력 바이트와 선택/열기/결과 없음/실패 흐름 설계 범위에만 적용된다. 구현·배포 승인이나 다음 단계 실행을 뜻하지 않는다."
+  ],
+  "freshness": {
+    "method": "Python hashlib.sha256으로 실제 파일 바이트를 직접 계산; 작성 목록과 별도로 비교",
+    "authored_hashes_match": {
+      "problem.md": true,
+      "prd.md": true
+    },
+    "reuse_condition": "대상 또는 근거/의존성 내용 변경 시 명목 revision이 같아도 재검토 필요"
+  }
+}
