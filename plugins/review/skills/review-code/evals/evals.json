@@ -176,6 +176,53 @@
         "The same plain-language gloss is not repeated after the first occurrence, and already-shared code vocabulary is not unnecessarily explained.",
         "The un-ai wording pass removes filler without deleting the technical term, its needed first-use explanation, the trigger, or the requested smallest fix."
       ]
+    },
+    {
+      "id": 14,
+      "prompt": "첨부된 변경사항을 review-code로 리뷰해줘. 코드는 수정하지 마.",
+      "expected_output": "Applies the default quality bar without a separate quality request. Finds the duplicated invoice rule with wrong ownership and a worker-to-UI dependency, plus the incorrect seconds name for a millisecond value, despite correct current outputs. Proposes reuse and an internal rename without semantic edits.",
+      "files": [
+        "evals/files/quality-without-runtime-failure.md"
+      ],
+      "expectations": [
+        "A P2 finding cites src/ui/InvoiceSummary.tsx:3 or :4, src/invoices/total.ts, and the worker import at src/workers/toInvoiceRow.ts:2; it explains the shared invoice invariant and current need to maintain it in two places.",
+        "The review identifies the invoice domain as owner and the worker-to-UI dependency as a documented layering violation; one root-cause finding can cover cohesion, coupling, duplication, and repository fit.",
+        "The minimal fix reuses calculateInvoiceTotalCents from the invoice domain in both consumers, rather than creating a new generic calculation framework or a third implementation.",
+        "A separate finding anchors src/retry/delay.ts:3, explains that the function returns milliseconds, and proposes getRetryDelayMs with its caller updated; it does not claim the existing delay is wrong or demand a numeric conversion.",
+        "Passing author-supplied checks do not suppress the concrete quality findings or get reported as reviewer-executed commands; no unsupported P1 severity or claim of perfect code is emitted.",
+        "The verification summary accounts for all five quality criteria and the existing implementation evidence, with the snapshot's search/execution limits disclosed.",
+        "No semantic refactor or public-contract rename is autofixed."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "첨부 변경을 review-code로 리뷰해줘. 완벽한 코드 퀄리티를 추구하고 동일 로직 중복도 엄격히 봐줘. 수정은 하지 마.",
+      "expected_output": "Distinguishes independently owned trial and refund policies from duplicate implementations of one invariant; emits no unsupported abstraction, naming, or severity finding and records the ownership evidence for retaining separate policies.",
+      "files": [
+        "evals/files/independent-similar-policies.md"
+      ],
+      "expectations": [
+        "No finding is invented solely because both functions currently compare against the same 14-day limit.",
+        "The review uses separate domain ownership, separate inputs, and independent approval/release authority as evidence that the rules need not evolve together.",
+        "The review does not propose a shared eligibility helper or configuration that couples the independently owned policies merely to eliminate similar syntax.",
+        "The existing-implementation search evidence and all five quality criteria are accounted for without claiming an exhaustive live repository search or executing tests against the snapshot.",
+        "No minimum finding count or proof-of-perfection loop is inferred from the quality request."
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "첨부된 리팩터링을 review-code로 리뷰해줘. 코드는 수정하지 마.",
+      "expected_output": "Respects the authoritative API-client migration and external wire contract while reviewing repository fit and naming. Accepts the precise internal millisecond name and behavior-preserving adapter without reverting to the more common legacy pattern or demanding a breaking wire rename.",
+      "files": [
+        "evals/files/authoritative-pattern-and-contract-name.md"
+      ],
+      "expectations": [
+        "The review uses docs/api-migration.md as authority rather than counting neighboring legacyGet calls as the canonical pattern.",
+        "It does not recommend renaming the external retry_seconds field or changing its numeric unit; the documented v1 compatibility constraint and internal retryDelayMs mapping resolve the naming concern.",
+        "It does not mistake a generated provider type for a hand-maintained duplicate implementation.",
+        "No runtime bug or new client response shape is invented against the supplied contract evidence.",
+        "The report separates static/supplied evidence from reviewer-executed verification and discloses the lack of a runnable checkout."
+      ]
     }
   ]
 }

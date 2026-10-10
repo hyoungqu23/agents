@@ -30,6 +30,7 @@ Minimum fields:
 | Callers and consumers | Entry points, direct callers, downstream readers, separately deployed consumers |
 | External contract | API, schema, persistence, auth, event, file, environment, UI, or third-party boundary |
 | Requirement | Intent source and requirement identifier, or "spec unavailable" |
+| Engineering quality | Per changed behavior: cohesion, coupling, duplication, repository/BP fit, and naming dispositions; existing-implementation search terms/locations and relevant owners/counterparts, or an explicit inapplicable/unresolved reason |
 | Verification | Existing/changed tests and commands that exercise the behavior |
 | Candidates | Candidate IDs raised while reviewing this row |
 | Disposition | Reviewed with no candidate, promoted, disproved, duplicate, out of scope, or unresolved |
@@ -49,7 +50,8 @@ Run all three passes over the full inventory. Candidate discovery is intentional
 ### Standards Pass
 
 - Compare with repository instructions, architecture, naming, ownership, nearby patterns, lint/type configuration, and installed framework idioms.
-- Look for divergence that creates a concrete maintenance or correctness cost, not stylistic preference alone.
+- Apply all five engineering-quality criteria from `common-gate.md` to each changed behavior. Search the repository for existing implementations of added or changed rules and read likely matches, including unchanged owners and consumers needed to establish reuse.
+- Look for divergence that creates a concrete maintenance or correctness cost, not stylistic preference alone. Passing tests or equivalent runtime output does not disprove a quality defect.
 
 ### Spec Pass
 
@@ -68,8 +70,8 @@ Each candidate note should contain:
 
 - pass and candidate ID
 - smallest plausible anchor
-- triggering condition
-- concrete observable effect
+- triggering condition, or the current responsibility/dependency/rule/name at issue
+- concrete observable effect or demonstrated maintenance cost, with corroborating owner, counterpart, convention, or caller
 - suspected broken contract or requirement
 - smallest useful fix or verification
 - evidence for and against the hypothesis
@@ -106,7 +108,7 @@ Try to disprove every candidate before promotion:
 
 Promote only when all are true:
 
-1. The trigger is reachable or the violated contract is authoritative.
+1. The trigger is reachable, the violated contract is authoritative, or the structural defect is demonstrated by the changed code and its relevant owners/consumers.
 2. The effect is concrete and material enough for the chosen severity.
 3. The issue belongs to the reviewed target or is directly exposed by it.
 4. A smallest useful fix or verification can be stated.
@@ -130,6 +132,7 @@ Do not present the review as complete until all checks pass:
 - every file has classification, risk, changed behavior, and a terminal disposition
 - every high-risk behavior has a closed caller-to-effect trace or an explicit unresolved edge
 - every known requirement maps to implementation, test, or a promoted gap
+- all five engineering-quality criteria have a disposition per changed behavior, with existing-implementation search evidence or an explicit inapplicable/unresolved reason
 - every candidate has exactly one terminal disposition
 - relevant verification commands ran, or each skipped command has a concrete reason and residual risk
 - autofixes, if any, were re-diffed and re-entered into the ledger

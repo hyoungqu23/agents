@@ -13,6 +13,12 @@ Code review skills for Claude Code and Codex.
 
 Each skill is stored once under `skills/<skill>/` and shared by both platform manifests.
 
+`review-code` always checks cohesion, coupling, duplicate implementations of the
+same rule, repository patterns and applicable best practices, and naming. Tests
+passing does not exempt a concrete maintenance defect. Findings identify the
+existing owner or implementation and the smallest useful fix; independently
+owned policies that only look alike do not require a shared abstraction.
+
 `review-code` and `review-respond` polish PR comment text with `un-ai` from the [`content`](../content) plugin. Install both plugins for that pass; without `content`, the skills apply their comment wording rules directly and report the missing pass.
 
 ## Checking an existing review

@@ -54,13 +54,13 @@ Use this precedence for directly conflicting guidance:
 4. matching specialist skill
 5. generic built-in lens
 
-A higher source can override a specific recommendation, but it does not erase unrelated security, correctness, spec, or release-safety checks. Record meaningful conflicts and the evidence used to resolve them.
+A higher source can override a specific recommendation, but it does not erase unrelated engineering-quality, security, correctness, spec, or release-safety checks. Record meaningful conflicts and the evidence used to resolve them.
 
 ## PR Comment Wording Route
 
 For every promoted finding selected for an inline comment:
 
-1. Draft the concrete trigger, effect, and requested smallest change.
+1. Draft the concrete trigger and effect, or the demonstrated structural problem and maintenance cost, and the requested smallest change.
 2. Load `un-ai` from the `content` plugin and apply it in Edit mode. `un-ai` is the only wording skill for this route; if it is not installed, apply the constraints below directly and report the missing pass instead of substituting another writing skill.
 3. Plain-language constraints for the `un-ai` pass: use plain words, short sentences, one concern, and concrete identifiers while preserving exact technical terms, API/type names, and code identifiers.
    - If the likely reviewer may not know a term, keep the term and explain what it does on first use: `race condition(동시 요청이 같은 상태를 읽고 쓰며 생기는 충돌)`. A short following clause is also valid when it reads better than parentheses.

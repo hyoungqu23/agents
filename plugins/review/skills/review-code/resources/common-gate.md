@@ -11,6 +11,50 @@ This gate is intentionally generic. Local `AGENTS.md`, framework versions, desig
 - Do not emit PASS-by-category noise. If there are no findings, list verification performed and residual risk.
 - Prefer the repo's own labels when a local gate exists.
 
+## Engineering Quality — Required on Every Review
+
+Apply all five criteria during the Standards pass, including changes whose behavior is correct and whose tests pass. Assess each changed behavior and its directly affected owners and consumers. For non-code files, record which criteria apply instead of inventing code-structure findings.
+
+### COHESION — Responsibility and Ownership
+
+- Identify the owning domain and reasons each changed module, function, component, or hook changes. Keep a domain rule with its owner and separate unrelated responsibilities when their combination creates a concrete cost.
+- Look for business rules embedded in UI/transport glue, unrelated policies in a generic helper, or a single domain decision scattered across layers. Show which changes now require editing unrelated responsibilities or assembling one rule from multiple places.
+- Recommend the smallest move or extraction into an existing owner when possible. A long file, multiple private helpers, or an orchestration function calling several services is not itself a defect. Do not require extra layers just to make code shorter.
+
+### COUPLING — Dependencies and Change Propagation
+
+- Trace imports and calls, shared state, argument/return shapes, and dependency direction. Check whether a consumer knows another module's internals, requires an unrelated runtime to use a domain rule, or must change for reasons outside its responsibility.
+- Cite the dependency edge and affected consumer: cycles, cross-feature private imports, UI/framework dependencies in domain code, hidden global state, or broad objects passed where a stable narrow contract already exists.
+- Prefer an existing public interface, a narrower contract, or moving the responsibility to its owner. A necessary dependency or a wrapper with no hidden decision does not justify dependency injection, a new interface, or another abstraction by itself.
+
+### DUPLICATION — One Implementation per Owned Rule
+
+- For every added or materially changed rule, search beyond the diff for the same domain operation, validation, transformation, calculation, state transition, query/key builder, or UI behavior. Read likely matches and their callers; text matching alone does not establish equivalence.
+- Do not accept a second hand-maintained implementation of the same rule, even if the copies currently agree, tests pass, or only two copies exist. Cite both implementations, the shared invariant and inputs/outputs, and the sites that must be edited together. Reuse the canonical implementation or consolidate into the closest shared owner with a suitably narrow contract.
+- Distinguish independently owned rules that happen to look alike. Separate policies with different change authority, independent expected values in tests, and generated artifacts with one generator are not parallel production implementations. Do not unify them solely because the syntax matches.
+- When a real execution/deployment boundary prevents sharing executable code, verify an explicit repository contract and an existing generation or parity mechanism before accepting separate representations. Without that evidence, raise the concrete duplication/contract gap; do not demand an impossible cross-runtime import or accept an undocumented copy as a best practice.
+
+### REPOSITORY-BP — Repository Patterns and Applicable Best Practices
+
+- Establish the local authority: repository instructions, documented architecture/domain terms, public module interfaces, lint/type rules, and representative maintained implementations. Cite the source or counterpart for a claimed violation.
+- Check reuse of established clients, helpers, hooks, schemas, errors, and test patterns before proposing another implementation. If competing patterns exist, check the documented migration direction and affected area; the most common or nearest legacy example is not automatically canonical.
+- Apply language/framework best practices only when supported by the installed version, repository configuration, source, or authoritative primary documentation. Explain their concrete effect here; a slogan such as SOLID, DRY, clean code, or best practice is not evidence.
+- Follow explicit local policy over generic preferences. Do not copy a proven defect merely for consistency; state the conflict and consequence. Propose a narrow, behavior-preserving improvement rather than an unrelated repository migration.
+
+### NAMING — Meaning and Contract Accuracy
+
+- Compare names to the domain concept, actual responsibility, inputs/outputs, units, lifecycle, and side effects. Inspect callers as well as definitions, including exported types, functions, parameters, fields, files, and test names touched by the change.
+- Promote names that obscure a concrete distinction: milliseconds versus seconds, an ID versus a display value, a predicate versus a collection, a read-looking function that mutates state, or one domain concept named differently across an established boundary.
+- State the exact replacement and why it better describes the contract. For public/schema/serialized identifiers, preserve compatibility with an internal rename or mapping, or identify the coordinated change required; do not casually rename an external contract.
+- Do not flag every short name, demand synonyms, or enforce personal casing preferences unsupported by the repository. Brevity is acceptable when the local meaning is unambiguous.
+
+### Quality Evidence and Severity
+
+- A quality finding needs a changed `file:line` anchor, corroborating code or authority, a present structural cost or authoritative contract violation, and a smallest useful fix. A present cost includes maintaining one rule in multiple places or importing a UI runtime to reuse domain logic; no production incident is required.
+- Treat demonstrated semantic duplication and material responsibility, dependency, convention, or naming defects as `P2` / `FAIL` when they should be fixed before merge. Bounded clarity improvements with a concrete benefit are `P3` / `WARN`. Reserve `P1` for separately proven high-risk effects.
+- Try to refute findings with independent ownership, generated sources, compatibility constraints, documented migration/architecture exceptions, and actual callers. Record accepted exceptions with their evidence; do not silently skip a criterion.
+- Report one root cause once even if it violates several criteria. A duplicated rule embedded in a UI module may violate cohesion, coupling, and duplication, but one owner/reuse fix should usually be one finding.
+
 ## INJECTION — Injection and Unsafe Execution
 
 Principle: user-controlled or external data must not be directly inserted into SQL, shell commands, HTML, code execution, filesystem paths, redirects, or URL fetch targets.
