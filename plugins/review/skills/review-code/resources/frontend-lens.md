@@ -1,8 +1,10 @@
 # Frontend Review Lens
 
-Apply this lens when stack detection (SKILL.md Core Workflow step 2) finds a frontend web stack — e.g. `package.json` with React/Next.js/Vue/Svelte dependencies, or a diff dominated by component/UI code. Skip it entirely for backend-only or non-web changes. Local project gates override it.
+Apply this lens when stack detection (SKILL.md Core Workflow step 3) finds a frontend web stack — e.g. `package.json` with React/Next.js/Vue/Svelte dependencies, or a diff dominated by component/UI code. Skip it entirely for backend-only or non-web changes. Local project gates override it.
 
 Framework-specific checks below use Next.js/React vocabulary because that is the most common case; translate the principle to the detected framework when it differs.
+
+Every FAIL/WARN below is a candidate, not an automatic verdict. Apply the evidence and Change Restraint gates in `common-gate.md` before reporting it. A code shape, stylistic difference, or missing reviewer verification is not by itself a defect. Keep optional improvements non-blocking and leave adequate code unchanged.
 
 ## CONVENTIONS — Repository Conventions and Architecture Fit
 
@@ -13,11 +15,11 @@ Check:
 
 FAIL:
 - The diff violates a documented repo convention in changed code.
-- It introduces a second implementation style for an already-standardized pattern.
+- It introduces an implementation that conflicts with an explicit, applicable repository standard; cite the rule and the changed path.
 - It commits temporary preview/debug/playground routes or local harness pages unless explicitly scoped out.
 
 WARN:
-- The repo has a strong nearby pattern but no documented rule; recommend aligning unless there is a clear reason.
+- Divergence from a maintained local pattern causes a concrete maintenance or integration cost, and a small alignment has a clear benefit. Nearby usage alone does not establish a required convention.
 
 ## FRAMEWORK-API — Framework and Library API Correctness
 
@@ -30,11 +32,10 @@ Check:
 
 FAIL:
 - Client-only hooks, state, effects, event handlers, or browser APIs are used across a server-only boundary.
-- Deprecated or wrong-router APIs are introduced in code that should use the current app architecture.
-- A framework API claim is made without checking the installed version when the behavior is version-sensitive.
+- The installed API or router does not support the changed usage, causing a concrete failure or violating an explicit migration requirement.
 
 WARN:
-- Older API still works but conflicts with the repo's migrated pattern or creates avoidable migration debt.
+- A working older API conflicts with a documented migration direction and creates specific coordination or compatibility work. Deprecation alone does not justify a migration request.
 
 ## COMPONENT-FIT — Component Cohesion, Reuse, and Design-System Fit
 
@@ -48,7 +49,7 @@ FAIL:
 - Domain rules are duplicated in multiple UI components in a way that can diverge.
 
 WARN:
-- Similar JSX/hook/API patterns repeat enough that extraction should be considered, but the abstraction boundary is not yet obvious.
+- Related code has a demonstrated maintenance burden and a clear shared responsibility that a small change would simplify. If the shared contract or extraction boundary is unclear, do not recommend extraction solely because the code looks similar.
 
 ## RENDER-PERF — Rendering, Data Flow, and Performance
 
@@ -63,8 +64,8 @@ FAIL:
 - Rendering code can trigger request loops or hydration/runtime errors.
 
 WARN:
-- Derived state or unstable props cause avoidable extra renders without a clear runtime bug.
-- Heavy computation lacks memoization in a hot path with realistic scale.
+- Repeated rendering, remounting, computation, or requests have a demonstrated cost at the expected input size or interaction frequency, and a bounded fix reduces that cost. Cite a measurement or concrete execution trace; do not invent a performance threshold.
+- Missing memoization, an unstable reference, or an extra render alone is not a finding. Do not request memoization when it adds complexity without a demonstrated benefit.
 
 ## FAILURE-SEMANTICS — Defensive Code and Failure Semantics
 
@@ -78,7 +79,7 @@ FAIL:
 - A fallback makes invalid data look valid or persists default data back to the server.
 
 WARN:
-- Defensive checks are noisy or inconsistent but do not hide a real failure path.
+- Redundant checks create a concrete clarity or maintenance problem, and local simplification preserves required failure handling. Before proposing removal, establish the guarantee from producers, schemas, callers, and async lifetimes; static types alone are insufficient.
 
 ## NAMING-CONSISTENCY — Naming, Type Shape, and Model Consistency
 
@@ -88,12 +89,12 @@ Check:
 - API DTO versus domain/view model naming, snake_case/camelCase boundaries when relevant, file/component/hook names, boolean prefixes, event handler names, query keys, route names, and shared domain vocabulary.
 
 FAIL:
-- The same domain concept is introduced under multiple names in changed code.
+- Inconsistent names misrepresent a contract and cause a concrete caller misunderstanding or violate an explicit domain naming rule. Intentional transport/domain names are not a defect.
 - Transport fields leak into UI model code where the repo uses explicit mappers.
 - A renamed field/status is not propagated through DTOs, transformers, consumers, and tests.
 
 WARN:
-- Naming drift is local and non-breaking but likely to confuse future changes.
+- A local name obscures a specific distinction in meaning, units, or side effects, and a precise rename resolves it at low cost. Synonym preference is not a finding.
 
 ## UI-STATES-A11Y — Visual Quality and Accessibility Completeness
 
@@ -109,12 +110,13 @@ FAIL:
 - Responsive layout can overlap, hide primary actions, or make content unusable.
 
 WARN:
-- Visual states or transitions are incomplete but the control remains usable.
+- An observed missing visual state creates a concrete feedback or usability problem while the control remains usable; do not request decorative transitions merely for completeness.
 - Responsive polish issues are visible but not workflow-blocking.
 
 ## Evidence Requirements
 
 - FRAMEWORK-API / RENDER-PERF / FAILURE-SEMANTICS findings need an actual runtime path, not only a grep match.
+- If version-sensitive behavior has not been verified, record an unresolved evidence gap under verification rather than a FAIL against the code.
 - NAMING-CONSISTENCY contract findings should cite at least two points when possible: DTO plus transformer, or API response plus UI assumption.
 - CONVENTIONS findings should cite the local rule or nearby pattern.
 - UI-STATES-A11Y findings should cite the changed UI element and the missing state/interaction.

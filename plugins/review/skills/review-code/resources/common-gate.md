@@ -104,14 +104,19 @@ Principle: async flows and shared state must preserve user intent under races, r
 
 Check:
 - Request races, stale closures, effect/task cleanup, abort/cancel behavior, optimistic updates, cache/query invalidation, retry behavior, shared module state, read-check-write flows, locks/channels where the stack uses them, and concurrent form submits.
+- For an async write, trace `start -> target deleted/reset/replaced or input changed -> completion -> applied state`. Check whether the captured target identity still denotes the intended object/version at completion. Include relevant exit paths such as navigation, close button, Escape, or backdrop dismissal when they can change that target's lifetime.
+- For batches, chunks, and multi-step mutations, track what has already persisted when a later step fails. Follow each reachable outcome to the affected cache consumers, visible state, and retry behavior. Distinguish a failed write from a successful write followed by a failed refresh or callback; verify the installed library's callback flow before attributing the error.
 
 FAIL:
 - A realistic race can show stale data as current, overwrite a newer user action, double-submit a mutation, lose data, leak another tenant/user's data, or corrupt shared state.
-- A mutation succeeds but the changed queries/cache/state are not invalidated or updated, leaving consumers predictably stale.
+- A mutation succeeds in full or in part, but the affected queries/cache/state are not reconciled on that outcome, leaving consumers predictably stale or making a retry repeat completed work incorrectly.
+- A post-write failure is reported or retried as if the write never succeeded, causing a demonstrated misleading result or duplicate side effect.
 
 WARN:
 - Missing cleanup or cancellation can cause stale state or noisy errors but not data loss.
 - Cache freshness assumptions are undocumented and easy to misread.
+
+Before promotion, look for protection at the caller, store, transaction, or other owning layer. Client cancellation does not prove server rollback. Do not require a generation counter, `abort`, or unconditional invalidation in `finally` when an existing guard, disabled interaction, rollback, or reconciliation already preserves the contract. If persistence or callback behavior is unknown, record the missing evidence instead of assuming partial success or failure.
 
 ## EXHAUSTIVENESS — Variant, Status, and Exhaustiveness Completeness
 
@@ -135,6 +140,7 @@ Principle: changed behavior should be traceable to requirements and tests.
 Check:
 - User request, PRD, issue, PR body, acceptance criteria, previous behavior for refactors, and nearby test style.
 - Unit/integration/e2e coverage for core behavior, edge cases, error paths, permissions, loading/empty/error states, and regressions.
+- For a regression fix or material behavior change, follow the test input through the changed production path to the assertion that distinguishes correct from known incorrect behavior. Use the Regression Sensitivity check in `verification-matrix.md`; a green test that also accepts the demonstrated regression does not establish coverage.
 
 FAIL:
 - A clear requirement or regression-prone behavior changed with no meaningful test or explicit reason.
@@ -142,6 +148,7 @@ FAIL:
 
 WARN:
 - Tests exist but cover only happy path while the changed code adds meaningful edge/error/permission paths.
+- The claimed regression test misses its target branch or accepts a concrete incorrect result. Cite the ineffective assertion and counterexample; do not infer this merely from a test's style or size.
 
 ## Evidence Requirements
 

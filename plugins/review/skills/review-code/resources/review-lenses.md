@@ -45,6 +45,7 @@ Testing:
 - Prefer behavior tests over snapshots for business logic and UI workflows.
 - Verify edge cases, error paths, permissions, loading/empty states, and regression paths, not just happy paths.
 - For contract changes, look for schema/parser tests, DTO transformer tests, or exhaustive status/variant tests that would fail on drift.
+- Apply Regression Sensitivity in `verification-matrix.md` to relevant fixes and material changes; test presence and green output alone do not show that the assertion rejects the regression.
 - If tests are missing, name the specific behavior that should be covered and the likely test location or style.
 
 ## Frontend Stack Checks
@@ -58,7 +59,7 @@ Next.js App Router v15+:
 
 React v19+:
 - Enforce hook rules and dependency correctness; stale closures are findings only when a real path exists.
-- Avoid derived state via `useState` + `useEffect` when render-time calculation or `useMemo` is enough.
+- Investigate derived state via `useState` + `useEffect` when it creates stale state or demonstrated unnecessary work. Require a concrete benefit before proposing render-time calculation or `useMemo`; the pattern alone is not a finding.
 - Check effect cleanup for subscriptions, timers, abortable requests, observers, and external listeners.
 - Check list keys, controlled/uncontrolled inputs, memoization only where it prevents real churn, and transitions for expensive UI state changes.
 - Watch for props-to-state synchronization that loses user edits or creates double-render regressions.
