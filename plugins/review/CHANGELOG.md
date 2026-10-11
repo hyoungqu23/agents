@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.1 - 2026-10-10
+
+- Make cohesion, coupling, semantic duplication, repository patterns/best practices, and naming mandatory in every `review-code` review, with evidence recorded in the completion gate.
+- Promote concrete maintenance defects even when behavior and tests pass; require reuse of the same owned rule while distinguishing independent policies and compatible external contracts.
+- Require a change-restraint check before findings and autofixes: choose the smallest complete remedy, weigh its net benefit, and leave adequate code and valid accepted tradeoffs unchanged.
+- Add evaluation scenarios for structural defects without runtime failures, independent policies, migration/naming constraints, unnecessary refactors, and required safety fixes.
+
 ## 0.4.0 - 2026-09-20
 
 - Add `review-check` for read-only verification of supplied review claims, with separate historical validity and current fix status.

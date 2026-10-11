@@ -35,9 +35,9 @@ Runtime Contract pass escalation:
 - If the primary source is not already in context and the contract decides the finding, read that source directly when it is reachable; otherwise explicitly mark the candidate as excluded for insufficient contract evidence.
 
 Maintainability:
-- Favor high cohesion and low coupling: domain logic should live near the owning domain, not leak through UI glue or shared utilities prematurely.
-- Remove semantic duplication when two implementations must evolve together.
-- Do not request abstraction just because code repeats; require a real shared concept, cross-call-site pressure, or meaningful complexity reduction.
+- Always apply the engineering-quality criteria in `common-gate.md`; this optional lens does not replace that mandatory gate.
+- Trace rule ownership, dependency direction, existing implementations, and contract names even when tests pass. A demonstrated maintenance cost justifies investigation without a current runtime failure; promotion also requires the common gate's Change Restraint check.
+- Consolidate implementations of the same owned rule; preserve independently owned policies that merely share syntax. Use the common gate's evidence and severity rules instead of inventing a new abstraction or escalating on preference alone.
 - Flag dead code, unused files, temporary preview routes, and local-only harness pages in review scope.
 
 Testing:
@@ -93,6 +93,7 @@ Promote a finding only when all are true:
 - There is file:line evidence.
 - You can explain the user-visible, runtime, maintainability, or security consequence.
 - You can give a concrete minimal fix direction.
+- The remedy passes Change Restraint in `common-gate.md`; optional cleanup without a demonstrated net benefit does not become a finding.
 - You tried to disprove it by reading nearby code, related call sites, and tests.
 
 Suppress or move to excluded-items when:

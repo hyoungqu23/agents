@@ -7,7 +7,17 @@ description: Completion-gated hard code review workflow for PRs, branches, diffs
 
 ## Overview
 
-Run a strict, completion-gated review that catches correctness, maintainability, convention, regression, and UI/UX issues. Maintain an internal coverage ledger so evidence filtering cannot hide unreviewed files or code paths. Prefer small mechanical autofixes when they are obviously safe; report larger or semantic issues without touching code.
+Run a strict, completion-gated review that catches correctness, maintainability, convention, regression, and UI/UX issues. Maintain an internal coverage ledger so evidence filtering cannot hide unreviewed files or code paths. Apply mechanical autofixes only when they pass the change-restraint gate below; report larger or semantic issues without touching code.
+
+## Default Quality Bar
+
+Pursue high code quality through the smallest justified change that fully satisfies current requirements; the user does not need to repeat this preference. Passing tests or preserving behavior does not excuse a concrete design or maintenance defect. Always assess cohesion, coupling, semantic duplication, repository patterns and applicable best practices, and naming using the engineering-quality criteria in `resources/common-gate.md`.
+
+Do not accept independently maintained implementations of the same owned rule. Search for existing implementations before recommending new code or abstractions. A quality finding must show the affected responsibilities, dependencies, duplicate rule, convention, or misleading name and a concrete maintenance consequence; a current runtime failure is not required. Similar syntax alone is not semantic duplication.
+
+Keep fixes proportional to the changed code and its directly affected consumers. High quality does not require speculative abstractions, unrelated cleanup, a minimum finding count, or a claim of perfection. Finish when the completion gate closes, with unresolved evidence reported honestly.
+
+Before promoting a finding or autofixing, apply the **Change Restraint** gate in `resources/common-gate.md`: explain what happens if the code stays as it is, choose the smallest complete remedy, and weigh its benefit against added complexity, compatibility work, and regression risk. Leaving adequate code unchanged is a valid outcome. Preserve the validation, error handling, security, accessibility, and tests needed by the current behavior.
 
 ## Core Workflow
 
@@ -31,7 +41,7 @@ Run a strict, completion-gated review that catches correctness, maintainability,
    - For version-sensitive framework, language, accessibility, or test-framework claims, prefer installed-version evidence and official/current primary documentation over memory.
 
 4. Discover candidates broadly in three independent passes before suppressing anything.
-   - Standards pass: check repository conventions, documented patterns, framework idioms, ownership, naming, import boundaries, local domain style, and maintainability smells.
+   - Standards pass: apply all five engineering-quality criteria in `resources/common-gate.md`. Trace responsibilities and dependency direction, search for existing implementations of the same rule across the repository, compare authoritative patterns and applicable framework practices, and check names against actual behavior and domain vocabulary. Record concrete maintenance costs even when runtime behavior is currently correct.
    - Spec pass: map each requirement from the prompt, issue, PR body, PRD, or plan to implementation and tests. For refactors, check behavior preservation unless a change is explicit. Record missing requirements, partial implementation, and scope creep as candidates.
    - Runtime Contract pass: trace code that can actually run. Check API/server/client DTO drift, runtime validation, parser boundaries, discriminated unions, exhaustive handling, nullability, async ordering, stale cache/state, auth/tenant scope, errors, persistence, and data-loss paths.
    - Read changed files with the surrounding definitions, callers, consumers, tests, and configuration needed to understand them. Candidate discovery optimizes recall; the evidence gate later controls precision.
@@ -48,8 +58,9 @@ Run a strict, completion-gated review that catches correctness, maintainability,
 6. Trace and refute every candidate before promotion.
    - Follow high-risk behavior from entry point or caller through transformation and trust boundaries to the render, persistence, network, process, or other observable effect. Use `resources/review-execution.md` for the trace and candidate lifecycle.
    - Every promoted finding needs a concrete `file:line` reference and the exact code path that makes it actionable. Absence findings still need an anchor where the missing handling, test, or documentation should be introduced.
-   - State what to change, why it matters, and the expected post-fix state. Suppress speculation, preference-only notes, and issues with no concrete fix.
-   - Try to disprove each candidate using nearby code, call sites, consumers, tests, feature flags, repository conventions, history when relevant, and the rest of the diff. Record each candidate as promoted, disproved, duplicate, out of scope, or unresolved.
+   - State what to change, why it matters, and the expected post-fix state. For quality findings, cite both the changed code and the relevant owner, dependency, existing implementation, convention, or caller; explain the maintenance consequence without inventing a runtime failure. Suppress speculation, preference-only notes, and issues with no concrete fix.
+   - Try to disprove each candidate using nearby code, call sites, consumers, tests, feature flags, repository conventions, history when relevant, and the rest of the diff. Record each candidate as promoted, disproved, not worth changing, duplicate, out of scope, or unresolved.
+   - Apply the common gate's Change Restraint check to the proposed remedy. Reject cleanup with no demonstrated net benefit, and keep optional improvements non-blocking. Reading related code does not make unrelated cleanup part of the target.
    - If a contract question cannot be settled from the diff, read the primary source directly when it is reachable: the server router/schema, API specification, migration/model, generated client, or official documentation, in the order given by `resources/review-lenses.md`. Otherwise keep it unresolved rather than upgrading uncertainty into a finding.
 
 7. Verify with repository-native checks using `resources/verification-matrix.md`.
@@ -61,6 +72,7 @@ Run a strict, completion-gated review that catches correctness, maintainability,
    - Every PR, staged, unstaged, and untracked file is present and classified in the ledger.
    - Every high-risk changed behavior has its caller/consumer path and observable effect traced, or an explicit unresolved reason.
    - Every known requirement maps to implementation, test, or a promoted gap; every candidate has a final disposition.
+   - Every changed behavior has a disposition for cohesion, coupling, duplication, repository/BP fit, and naming, including the existing-implementation search. Mark inapplicable criteria with a reason; unavailable evidence is an unresolved gap.
    - Relevant verification ran, or each skipped check has a concrete reason and residual risk.
    - No file or high-risk path remains silently unreviewed. If the gate cannot close, state the exact review-scope or verification gap in `## 검증`; never imply a complete review.
 
@@ -71,7 +83,7 @@ For a PR URL/number or an explicit PR-review request, add copy-ready comment rec
 1. Map each recommendation to exactly one evidence-backed finding. Do not turn suppressed candidates, preference-only notes, or praise into comments.
 2. Anchor it to the smallest changed line that causes the problem, using the repository-relative path and the PR head/new-side line number (`RIGHT`, or the platform equivalent). For an absence finding, anchor the changed production line where the missing handling or test need becomes concrete.
 3. Verify that the proposed line is part of the PR diff. If no valid inline anchor exists, do not invent one: keep the finding in the main report and list it as not suitable for an inline comment.
-4. Make the comment stand on its own. Name the concrete failing condition and observable effect, then ask for the smallest useful change or verification. Keep one concern per comment and normally use two to four short sentences.
+4. Make the comment stand on its own. Name the concrete failing condition and observable effect, or the demonstrated structural problem and maintenance cost, then ask for the smallest useful change or verification. Keep one concern per comment and normally use two to four short sentences.
 5. Match confidence to evidence. State proven behavior directly; ask a genuine question only when the contract is unresolved. Do not hide uncertainty behind vague wording such as “consider,” “might be better,” or “best practice.”
 6. Before finalizing the comment text, load `un-ai` from the `content` plugin and apply it in Edit mode to each comment under these review-comment constraints:
    - Plain language: use plain words, one idea per sentence, and concrete identifiers and conditions. Preserve exact technical terms, API/type names, and code identifiers. When a technical term may be unfamiliar to the likely reviewer, pair its first occurrence with a short mechanism-based explanation in plain language, using parentheses or a short following clause. Use the technical term alone afterward. Do not replace it with a vague translation, explain vocabulary the reviewers already share, or repeat the same gloss.
@@ -81,13 +93,13 @@ For a PR URL/number or an explicit PR-review request, add copy-ready comment rec
 
 ## Autofix Boundary
 
-Autofix only when the issue is mechanical, low-risk, and locally obvious, unless the user explicitly requested report-only review.
+Autofix only when the issue is mechanical, low-risk, locally obvious, and passes the Change Restraint gate, unless the user explicitly requested report-only review. Do not make a cosmetic edit merely because it is safe to perform.
 
 Safe autofix examples:
 - unused imports, unused local variables, obvious dead branches introduced by the diff
 - stray debug logs, temporary comments, accidentally committed local-only preview routes or harness pages when clearly not intended
 - typo-level copy/comment fixes that do not alter product meaning
-- one-file formatting nits only when they do not cause broad formatter churn
+- formatting required by repository lint/format rules on changed code, without unrelated formatter churn
 
 Do not autofix:
 - API contract changes, data migrations, auth/permission behavior, persistence logic, caching semantics, concurrency fixes, test strategy, UX behavior, broad refactors, or ambiguous product decisions
@@ -116,7 +128,7 @@ For findings:
 
 - 문제: 구체적으로 깨지는 지점
 - 바꿀 것: 최소 수정 방향
-- 이유: 버그/유지보수/UX/회귀 위험
+- 이유: 그대로 둘 때의 구체적 비용과 제안한 수정이 그 비용을 줄이는 근거
 - 수정 후 상태: 고쳐진 뒤 보장되어야 하는 상태
 - 근거: 확인한 코드, 테스트, 문서, 명령
 
@@ -139,6 +151,8 @@ Severity:
 - `P1`: blocker or high-risk correctness/security/data-loss/regression issue.
 - `P2`: should fix before merge; meaningful maintainability, UX, test, or runtime risk.
 - `P3`: non-blocking improvement with clear value and concrete change.
+
+Semantic duplication of the same owned rule, a demonstrated ownership/dependency violation, or a misleading contract name can warrant `P2` even when tests pass. Use `P3` for bounded clarity improvements with concrete value. Quality ambition alone never raises severity to `P1`; see the common gate for evidence and exceptions.
 
 For a PR target, place this section after `## 리뷰 결과` and before the excluded-items and verification sections. Omit it for non-PR reviews unless the user asks for PR-style comments.
 
@@ -166,6 +180,7 @@ If no main findings remain, say that no evidence-backed blocking findings were f
 - 리뷰 범위: <PR/commit/diff와 staged, unstaged, untracked 분류 결과>
 - 요구사항 근거: <PR body, issue, prompt, docs 또는 접근 불가>
 - 라우팅: <프로젝트 게이트, 감지한 스택/렌즈, 사용한 전문 스킬과 누락 fallback>
+- 품질 기준: <응집도·결합도·동일 로직 중복·레포지토리/BP·네이밍 검토 범위와 기존 구현 탐색 근거, 또는 미검토 사유>
 - 실행: `<command>` — <통과/실패/차단/미실행 및 변경과의 관계>
 - 잔여 위험: <닫히지 않은 경로, 실행하지 못한 검증 또는 "없음">
 ```
@@ -174,7 +189,7 @@ Keep the full coverage ledger internal unless the user asks for it. The verifica
 
 ## References
 
-- Read `resources/common-gate.md` for every review — the stack-agnostic gate criteria and severity policy.
+- Read `resources/common-gate.md` for every review — mandatory engineering-quality criteria, stack-agnostic safety criteria, and severity policy.
 - Read `resources/review-execution.md` for every review — scope inventory, coverage ledger, discovery, runtime tracing, candidate disposition, and the completion gate.
 - Read `resources/verification-matrix.md` for every review — how to choose and report repository-native test, type, lint, build, and static checks by stack.
 - Read `resources/skill-routing.md` for every review — how to select project and stack specialists and how to continue when one is unavailable.
