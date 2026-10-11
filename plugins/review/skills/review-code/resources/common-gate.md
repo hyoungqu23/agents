@@ -139,7 +139,7 @@ Principle: changed behavior should be traceable to requirements and tests.
 
 Check:
 - User request, PRD, issue, PR body, acceptance criteria, previous behavior for refactors, and nearby test style.
-- Unit/integration/e2e coverage for core behavior, edge cases, error paths, permissions, loading/empty/error states, and regressions.
+- Unit/integration/e2e coverage for core behavior, edge cases, error paths, permissions, loading/empty/error states, and regressions. Prefer behavior assertions over snapshots for business logic and UI workflows.
 - For a regression fix or material behavior change, follow the test input through the changed production path to the assertion that distinguishes correct from known incorrect behavior. Use the Regression Sensitivity check in `verification-matrix.md`; a green test that also accepts the demonstrated regression does not establish coverage.
 
 FAIL:
@@ -149,6 +149,8 @@ FAIL:
 WARN:
 - Tests exist but cover only happy path while the changed code adds meaningful edge/error/permission paths.
 - The claimed regression test misses its target branch or accepts a concrete incorrect result. Cite the ineffective assertion and counterexample; do not infer this merely from a test's style or size.
+
+For a missing-test finding, name the specific uncovered behavior and the likely test location or repository style. Contract tests should exercise the relevant schema/parser, DTO transformation, or exhaustive consumer so drift changes the result.
 
 ## Evidence Requirements
 

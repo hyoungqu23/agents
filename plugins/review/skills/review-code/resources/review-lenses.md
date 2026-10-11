@@ -2,51 +2,16 @@
 
 Use this file when a review touches frontend behavior, framework conventions, tests, architecture, or broad maintainability.
 
-## General Axes
+## Shared Gates
 
-Internal pass discipline:
-- Run Standards, Spec, and Runtime Contract as separate investigation passes before ranking findings. Do not let a strong result on one pass suppress a failure on another pass.
-- Standards pass asks whether the change fits the repo: documented conventions, local patterns, module boundaries, naming, folder ownership, framework idioms, maintainability, and test style.
-- Spec pass asks whether the change does the requested thing: issue/PRD/PR body/user request coverage, behavior preservation for refactors, missing requirements, partial implementation, and scope creep.
-- Runtime Contract pass asks whether the code that will actually run is safe and coherent: API/server/client DTO drift, runtime validation, schema parsing, nullability, enum/status variants, exhaustive handling, async/cache/state ordering, auth/tenant scoping, persistence, and error modeling.
-- Merge the passes only after evidence collection. Final output stays finding-first; the pass labels are for analysis unless the user asks for the breakdown.
-
-Spec and scope:
-- Identify the intended behavior from the user request, PR body, issue, plan, TODOs, and commit messages.
-- Flag scope creep when unrelated refactors/features expand blast radius.
-- Flag missing requirements when the diff only partially implements the stated behavior.
-- For refactors, verify old behavior is preserved unless the request explicitly changes it.
-
-Standards and conventions:
-- Prefer existing repo patterns over generic best practices.
-- Check local naming, import boundaries, folder ownership, hooks/components/services layering, test shape, and domain vocabulary.
-- Treat a one-off implementation as suspicious when the repo already has a helper, component, hook, API client, or schema pattern for the same concept.
-
-Runtime correctness:
-- Trace data from input to persistence/rendering. Look for nullability gaps, unchecked external data, stale cache, swallowed errors, contract drift, and silent data corruption.
-- For new enum/status/type values, search all sibling usages and check exhaustive handling.
-- For API/client/server boundaries, verify runtime validation occurs before untrusted data is used, not just that TypeScript types exist.
-- For async flows, check request races, stale closures, cleanup, cancellation, optimistic updates, and concurrent mutation ordering.
-- For security/trust boundaries, check SQL/command/template injection, XSS, unsafe HTML, path construction, auth/tenant scoping, and LLM output validation.
+Use `review-execution.md` for separate discovery passes, behavior tracing, scope control, and candidate handling. Apply `common-gate.md` for safety, all five quality criteria, and Change Restraint; this optional lens supplements those authorities. Test coverage and verification follow SPEC-COVERAGE there and Regression Sensitivity in `verification-matrix.md`.
 
 Runtime Contract pass escalation:
 - Use the pass when a finding depends on what an external or server-owned contract really is. Do not infer the contract only from a client type, mock, label, or generated assumption.
 - Prefer primary sources in this order: server router/controller/schema, OpenAPI/GraphQL/protobuf/JSON schema, database migration/model, generated client source, official third-party docs, then tests/fixtures/mocks as supporting evidence.
 - If the primary source is not already in context and the contract decides the finding, read that source directly when it is reachable; otherwise explicitly mark the candidate as excluded for insufficient contract evidence.
 
-Maintainability:
-- Always apply the engineering-quality criteria in `common-gate.md`; this optional lens does not replace that mandatory gate.
-- Trace rule ownership, dependency direction, existing implementations, and contract names even when tests pass. A demonstrated maintenance cost justifies investigation without a current runtime failure; promotion also requires the common gate's Change Restraint check.
-- Consolidate implementations of the same owned rule; preserve independently owned policies that merely share syntax. Use the common gate's evidence and severity rules instead of inventing a new abstraction or escalating on preference alone.
-- Flag dead code, unused files, temporary preview routes, and local-only harness pages in review scope.
-
-Testing:
-- Map tests to changed behavior and acceptance criteria when available.
-- Prefer behavior tests over snapshots for business logic and UI workflows.
-- Verify edge cases, error paths, permissions, loading/empty states, and regression paths, not just happy paths.
-- For contract changes, look for schema/parser tests, DTO transformer tests, or exhaustive status/variant tests that would fail on drift.
-- Apply Regression Sensitivity in `verification-matrix.md` to relevant fixes and material changes; test presence and green output alone do not show that the assertion rejects the regression.
-- If tests are missing, name the specific behavior that should be covered and the likely test location or style.
+Include dead code, unused files, temporary preview routes, and local-only harness pages in the reviewed inventory.
 
 ## Frontend Stack Checks
 
@@ -87,19 +52,6 @@ UI/UX and accessibility:
 - For responsive layouts, check text overflow, content overlap, touch target size, scroll containment, modal behavior, and layout shift.
 - For destructive actions, check confirmation, undo/recovery, permission visibility, and success/error feedback.
 
-## Finding Quality Gate
+## Finding Promotion
 
-Promote a finding only when all are true:
-- The issue is inside the review scope.
-- There is file:line evidence.
-- You can explain the user-visible, runtime, maintainability, or security consequence.
-- You can give a concrete minimal fix direction.
-- The remedy passes Change Restraint in `common-gate.md`; optional cleanup without a demonstrated net benefit does not become a finding.
-- You tried to disprove it by reading nearby code, related call sites, and tests.
-
-Suppress or move to excluded-items when:
-- It is only style preference.
-- It depends on missing product intent.
-- It requires a speculative future refactor.
-- The fix cannot be described concretely.
-- The evidence is only a grep hit without reading the relevant code path.
+Use the promotion conditions and dispositions in `review-execution.md#5-refute-and-dispose-candidates`, including the common gate's evidence and Change Restraint requirements. Stack-specific prompts above do not bypass that gate.
