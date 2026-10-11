@@ -1,0 +1,1 @@
+이 작업의 review-code 지침은 `.eval-skills/review-code/SKILL.md`에 있습니다. 해당 파일과 필요한 로컬 참조를 읽어 `fixture.md`를 리뷰하세요. 작업 범위는 이 디렉토리에 제공된 파일입니다. 네트워크나 다른 저장소를 사용하지 말고, 코드를 수정하지 마세요. 최종 답변은 제공된 JSON 스키마에 맞춰 findings, excluded, verification으로 작성하세요. 각 항목은 간결하게 쓰고, 실행하지 않은 검증을 실행했다고 말하지 마세요.

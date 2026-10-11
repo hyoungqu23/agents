@@ -1,0 +1,74 @@
+{
+  "type": "object",
+  "properties": {
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "line": {
+            "type": "integer"
+          },
+          "problem": {
+            "type": "string"
+          },
+          "effect": {
+            "type": "string"
+          },
+          "fix": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "severity",
+          "title",
+          "path",
+          "line",
+          "problem",
+          "effect",
+          "fix",
+          "evidence"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "excluded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "findings",
+    "excluded",
+    "verification"
+  ],
+  "additionalProperties": false
+}

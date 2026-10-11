@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.3 - 2026-10-11
+
+- Centralize quality, restraint, and regression criteria while shortening the entrypoint and shared lens guidance.
+- Preserve scope, evidence, severity, autofix, and report requirements through explicit resource references.
+- Publish the paired PR #16/#17 evaluation and the consolidation comparison with execution evidence and limitations.
+
 ## 0.4.2 - 2026-10-11
 
 - Require concrete impact before frontend extraction, memoization, naming, or migration suggestions.

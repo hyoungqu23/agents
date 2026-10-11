@@ -1,0 +1,598 @@
+{
+  "model": "gpt-6-astra",
+  "reasoning_effort": "medium",
+  "cli_version": "codex-cli 0.156.1",
+  "executions": 18,
+  "semantic_passes": 18,
+  "execution_errors": 0,
+  "input_modifications": 0,
+  "grading": "Primary evaluator read all outputs and compared the concrete reasoning/anchors/fixes to the raw fixtures; path/count checks corroborate that assessment but are not an independent semantic judge.",
+  "repetitions_per_pair": 1,
+  "scope": "5 existing PR16 cases and 4 new PR17 cases; report-only synthetic snapshots, no runnable product checkout",
+  "per_pr": {
+    "16": {
+      "cases": 5,
+      "versions": {
+        "before16": {
+          "cases_passed": 5,
+          "expected_targets_detected": 3,
+          "false_positive_findings": 0,
+          "negative_cases_passed": 3,
+          "raw_findings": 4,
+          "median_duration_seconds": 32.52,
+          "input_tokens": 510333,
+          "cached_input_tokens": 347392,
+          "output_tokens": 3902
+        },
+        "after16": {
+          "cases_passed": 5,
+          "expected_targets_detected": 3,
+          "false_positive_findings": 0,
+          "negative_cases_passed": 3,
+          "raw_findings": 3,
+          "median_duration_seconds": 38.5,
+          "input_tokens": 585521,
+          "cached_input_tokens": 408448,
+          "output_tokens": 4382
+        }
+      }
+    },
+    "17": {
+      "cases": 4,
+      "versions": {
+        "after16": {
+          "cases_passed": 4,
+          "expected_targets_detected": 3,
+          "false_positive_findings": 0,
+          "negative_cases_passed": 2,
+          "raw_findings": 3,
+          "median_duration_seconds": 35.335,
+          "input_tokens": 440212,
+          "cached_input_tokens": 275840,
+          "output_tokens": 3808
+        },
+        "after17": {
+          "cases_passed": 4,
+          "expected_targets_detected": 3,
+          "false_positive_findings": 0,
+          "negative_cases_passed": 2,
+          "raw_findings": 3,
+          "median_duration_seconds": 38.26,
+          "input_tokens": 440299,
+          "cached_input_tokens": 288640,
+          "output_tokens": 3775
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "case": "async-partial",
+      "version": "after16",
+      "pr": 17,
+      "commit": "799882155906026befd19f8507760cd907f0057f",
+      "duration_seconds": 36.92,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [
+        "upload completion resurrects removed/reset row",
+        "later chunk failure skips reconciliation of already committed chunks"
+      ],
+      "detected_targets": 2,
+      "false_positive_findings": 0,
+      "raw_finding_count": 2,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions identify both reachable failures. After PR17 proposes a concrete row-identity guard; both bound cache reconciliation to actual successful commits.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 111804,
+          "cached_input_tokens": 82048,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1172,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "async-partial--after16"
+    },
+    {
+      "case": "async-partial",
+      "version": "after17",
+      "pr": 17,
+      "commit": "53eb262256c294f66217409747f3910e9236f599",
+      "duration_seconds": 46.32,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [
+        "upload completion resurrects removed/reset row",
+        "later chunk failure skips reconciliation of already committed chunks"
+      ],
+      "detected_targets": 2,
+      "false_positive_findings": 0,
+      "raw_finding_count": 2,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions identify both reachable failures. After PR17 proposes a concrete row-identity guard; both bound cache reconciliation to actual successful commits.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 110683,
+          "cached_input_tokens": 72192,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1173,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "async-partial--after17"
+    },
+    {
+      "case": "async-safe",
+      "version": "after16",
+      "pr": 17,
+      "commit": "799882155906026befd19f8507760cd907f0057f",
+      "duration_seconds": 33.86,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions honor the generation and atomic write checks, conditional partial-success reconciliation and explicit remaining-chunk retry.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 110273,
+          "cached_input_tokens": 72320,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 856,
+          "reasoning_output_tokens": 13
+        }
+      ],
+      "report_record_id": "async-safe--after16"
+    },
+    {
+      "case": "async-safe",
+      "version": "after17",
+      "pr": 17,
+      "commit": "53eb262256c294f66217409747f3910e9236f599",
+      "duration_seconds": 36.26,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions honor the generation and atomic write checks, conditional partial-success reconciliation and explicit remaining-chunk retry.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 110745,
+          "cached_input_tokens": 72192,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 848,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "async-safe--after17"
+    },
+    {
+      "case": "eval-14",
+      "version": "after16",
+      "pr": 16,
+      "commit": "799882155906026befd19f8507760cd907f0057f",
+      "duration_seconds": 41.3,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [
+        "same-owned invoice calculation duplicated with worker-to-UI dependency",
+        "seconds-named API returning milliseconds"
+      ],
+      "detected_targets": 2,
+      "false_positive_findings": 0,
+      "raw_finding_count": 2,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions identify both substantive concerns. Before PR16 reports the duplicated rule and its dependency as separate findings (3 reports total); after PR16 combines their common fix (2). The unit-name finding rises from P3 to P2 without claiming the current delay is wrong.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 147825,
+          "cached_input_tokens": 109440,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1241,
+          "reasoning_output_tokens": 24
+        }
+      ],
+      "report_record_id": "eval-14--after16"
+    },
+    {
+      "case": "eval-14",
+      "version": "before16",
+      "pr": 16,
+      "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+      "duration_seconds": 38.09,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [
+        "same-owned invoice calculation duplicated with worker-to-UI dependency",
+        "seconds-named API returning milliseconds"
+      ],
+      "detected_targets": 2,
+      "false_positive_findings": 0,
+      "raw_finding_count": 3,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions identify both substantive concerns. Before PR16 reports the duplicated rule and its dependency as separate findings (3 reports total); after PR16 combines their common fix (2). The unit-name finding rises from P3 to P2 without claiming the current delay is wrong.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 103501,
+          "cached_input_tokens": 69760,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1138,
+          "reasoning_output_tokens": 54
+        }
+      ],
+      "report_record_id": "eval-14--before16"
+    },
+    {
+      "case": "eval-15",
+      "version": "after16",
+      "pr": 16,
+      "commit": "799882155906026befd19f8507760cd907f0057f",
+      "duration_seconds": 40.09,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Independent ownership is respected. Similar syntax does not become a consolidation request.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 108920,
+          "cached_input_tokens": 72448,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 702,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "eval-15--after16"
+    },
+    {
+      "case": "eval-15",
+      "version": "before16",
+      "pr": 16,
+      "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+      "duration_seconds": 32.52,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Independent ownership is respected. Similar syntax does not become a consolidation request.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 101372,
+          "cached_input_tokens": 69376,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 645,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "eval-15--before16"
+    },
+    {
+      "case": "eval-16",
+      "version": "after16",
+      "pr": 16,
+      "commit": "799882155906026befd19f8507760cd907f0057f",
+      "duration_seconds": 30.21,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions preserve the authoritative client migration and historical wire key/units.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 110198,
+          "cached_input_tokens": 72192,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 765,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "eval-16--after16"
+    },
+    {
+      "case": "eval-16",
+      "version": "before16",
+      "pr": 16,
+      "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+      "duration_seconds": 27.91,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions preserve the authoritative client migration and historical wire key/units.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 101112,
+          "cached_input_tokens": 69248,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 657,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "eval-16--before16"
+    },
+    {
+      "case": "eval-17",
+      "version": "after16",
+      "pr": 16,
+      "commit": "799882155906026befd19f8507760cd907f0057f",
+      "duration_seconds": 27.78,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions keep the adequate filter and accepted decisions unchanged.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 108277,
+          "cached_input_tokens": 81920,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 694,
+          "reasoning_output_tokens": 15
+        }
+      ],
+      "report_record_id": "eval-17--after16"
+    },
+    {
+      "case": "eval-17",
+      "version": "before16",
+      "pr": 16,
+      "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+      "duration_seconds": 28.2,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions keep the adequate filter and accepted decisions unchanged.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 101411,
+          "cached_input_tokens": 69504,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 610,
+          "reasoning_output_tokens": 11
+        }
+      ],
+      "report_record_id": "eval-17--before16"
+    },
+    {
+      "case": "eval-18",
+      "version": "after16",
+      "pr": 16,
+      "commit": "799882155906026befd19f8507760cd907f0057f",
+      "duration_seconds": 38.5,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [
+        "removed integer/range validation violates preview contract"
+      ],
+      "detected_targets": 1,
+      "false_positive_findings": 0,
+      "raw_finding_count": 1,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions restore the local validation contract and preserve existing test coverage without a new framework.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 110301,
+          "cached_input_tokens": 72448,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 980,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "eval-18--after16"
+    },
+    {
+      "case": "eval-18",
+      "version": "before16",
+      "pr": 16,
+      "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+      "duration_seconds": 32.67,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [
+        "removed integer/range validation violates preview contract"
+      ],
+      "detected_targets": 1,
+      "false_positive_findings": 0,
+      "raw_finding_count": 1,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions restore the local validation contract and preserve existing test coverage without a new framework.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 102937,
+          "cached_input_tokens": 69504,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 852,
+          "reasoning_output_tokens": 10
+        }
+      ],
+      "report_record_id": "eval-18--before16"
+    },
+    {
+      "case": "frontend-adequate",
+      "version": "after16",
+      "pr": 17,
+      "commit": "799882155906026befd19f8507760cd907f0057f",
+      "duration_seconds": 32.96,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions accept the <=8-member calculation without memoization, extraction, extra validation or copy changes.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 109723,
+          "cached_input_tokens": 49280,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 779,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "frontend-adequate--after16"
+    },
+    {
+      "case": "frontend-adequate",
+      "version": "after17",
+      "pr": 17,
+      "commit": "53eb262256c294f66217409747f3910e9236f599",
+      "duration_seconds": 33.16,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [],
+      "detected_targets": 0,
+      "false_positive_findings": 0,
+      "raw_finding_count": 0,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions accept the <=8-member calculation without memoization, extraction, extra validation or copy changes.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 109967,
+          "cached_input_tokens": 72064,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 775,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "frontend-adequate--after17"
+    },
+    {
+      "case": "regression-assertion",
+      "version": "after16",
+      "pr": 17,
+      "commit": "799882155906026befd19f8507760cd907f0057f",
+      "duration_seconds": 36.81,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [
+        "assertions accept missing and non-contiguous editing columns"
+      ],
+      "detected_targets": 1,
+      "false_positive_findings": 0,
+      "raw_finding_count": 1,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions identify index -1 and non-contiguous counterexamples, anchor the assertion, and avoid inventing a producer bug.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 108412,
+          "cached_input_tokens": 72192,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1001,
+          "reasoning_output_tokens": 54
+        }
+      ],
+      "report_record_id": "regression-assertion--after16"
+    },
+    {
+      "case": "regression-assertion",
+      "version": "after17",
+      "pr": 17,
+      "commit": "53eb262256c294f66217409747f3910e9236f599",
+      "duration_seconds": 40.26,
+      "status": "completed",
+      "semantic_verdict": "pass",
+      "expected_targets": [
+        "assertions accept missing and non-contiguous editing columns"
+      ],
+      "detected_targets": 1,
+      "false_positive_findings": 0,
+      "raw_finding_count": 1,
+      "input_integrity": "unchanged",
+      "verification_honesty": "no fabricated project test execution observed",
+      "notes": "Both versions identify index -1 and non-contiguous counterexamples, anchor the assertion, and avoid inventing a producer bug.",
+      "report": "results.json",
+      "usage": [
+        {
+          "input_tokens": 108904,
+          "cached_input_tokens": 72192,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 979,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "report_record_id": "regression-assertion--after17"
+    }
+  ],
+  "limitations": [
+    "One independent invocation per version/case; no confidence interval or causal latency conclusion.",
+    "PR16 cases were authored with the implementation; PR17 cases were newly constructed. Explicit fixture contracts may make all cases easier than real repository reviews.",
+    "No automatic skill discovery, live app verification, mechanical autofix behavior, or full specialist/local-gate integration was evaluated.",
+    "Same evaluator model and medium effort across all runs; no cross-model robustness measurement.",
+    "Semantic grading was not independently blinded; assertions and expected outcomes are documented in this assessment.",
+    "Nonfatal local CLI system-skill initialization/rollout warnings occurred; all 18 invocations completed with the explicitly supplied local skill."
+  ],
+  "instruction_size": {
+    "before16": {
+      "mandatory_characters": 45504,
+      "all_instruction_characters": 75933
+    },
+    "after16": {
+      "mandatory_characters": 59410,
+      "all_instruction_characters": 90241
+    },
+    "after17": {
+      "mandatory_characters": 63514,
+      "all_instruction_characters": 96147
+    }
+  }
+}

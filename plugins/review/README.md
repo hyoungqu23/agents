@@ -27,6 +27,10 @@ Required safety checks and behavior tests remain intact. This restraint draws on
 
 `review-code` and `review-respond` polish PR comment text with `un-ai` from the [`content`](../content) plugin. Install both plugins for that pass; without `content`, the skills apply their comment wording rules directly and report the missing pass.
 
+## Behavioral evaluation
+
+[PR #16 and #17 evaluation evidence](../../reports/review-code-evaluation-2026-10-11/report.md) records the fixed commits, model, paired scenarios, outputs, and limitations. Both old and updated instructions passed the selected cases; the result does not establish a general detection improvement. The same cases are reused to check the consolidated guidance.
+
 ## Checking an existing review
 
 Use `review-check` for requests such as “Claude가 남긴 이 리뷰가 맞는지 확인해줘.”
