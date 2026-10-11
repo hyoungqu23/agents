@@ -1,0 +1,48 @@
+{
+  "eval-14": {
+    "targets": [
+      "same-owned invoice calculation duplicated with worker-to-UI dependency",
+      "seconds-named API returning milliseconds"
+    ],
+    "expected_findings": 2
+  },
+  "eval-15": {
+    "targets": [],
+    "expected_findings": 0
+  },
+  "eval-16": {
+    "targets": [],
+    "expected_findings": 0
+  },
+  "eval-17": {
+    "targets": [],
+    "expected_findings": 0
+  },
+  "eval-18": {
+    "targets": [
+      "removed integer/range validation violates preview contract"
+    ],
+    "expected_findings": 1
+  },
+  "frontend-adequate": {
+    "targets": [],
+    "expected_findings": 0
+  },
+  "regression-assertion": {
+    "targets": [
+      "assertions accept missing and non-contiguous editing columns"
+    ],
+    "expected_findings": 1
+  },
+  "async-partial": {
+    "targets": [
+      "upload completion resurrects removed/reset row",
+      "later chunk failure skips reconciliation of already committed chunks"
+    ],
+    "expected_findings": 2
+  },
+  "async-safe": {
+    "targets": [],
+    "expected_findings": 0
+  }
+}

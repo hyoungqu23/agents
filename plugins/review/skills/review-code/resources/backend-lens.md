@@ -1,6 +1,6 @@
 # Backend Review Lens
 
-Apply this lens when stack detection (SKILL.md Core Workflow step 2) finds a backend server stack — e.g. `pyproject.toml`/`requirements.txt` with FastAPI/Django/Flask, `package.json` with NestJS/Express/Fastify, or a diff dominated by API/service/persistence code. Skip it for pure frontend or non-server changes. Local project gates override it.
+Apply this lens when stack detection finds a backend server stack — e.g. `pyproject.toml`/`requirements.txt` with FastAPI/Django/Flask, `package.json` with NestJS/Express/Fastify, or a diff dominated by API/service/persistence code. Skip it for pure frontend or non-server changes. Local project gates override it.
 
 Framework-specific checks below use FastAPI (Python/Pydantic) and NestJS (TypeScript/class-validator) vocabulary because those are the most common cases; translate the principle to the detected framework when it differs.
 

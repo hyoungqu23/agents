@@ -1,6 +1,6 @@
 # Review Execution Harness
 
-Use this resource for every review. It defines the internal bookkeeping and completion conditions that prevent an evidence-first report from becoming a narrow spot check.
+Use this resource for every review. It owns scope, bookkeeping, discovery, candidate handling, and completion; criterion definitions and Change Restraint live in `common-gate.md`, and verification rules in `verification-matrix.md`.
 
 ## 1. Establish Scope and Intent
 
@@ -49,23 +49,18 @@ Run all three passes over the full inventory. Candidate discovery is intentional
 
 ### Standards Pass
 
-- Compare with repository instructions, architecture, naming, ownership, nearby patterns, lint/type configuration, and installed framework idioms.
-- Apply all five engineering-quality criteria from `common-gate.md` to each changed behavior. Search the repository for existing implementations of added or changed rules and read likely matches, including unchanged owners and consumers needed to establish reuse.
-- Look for divergence that creates a concrete maintenance or correctness cost, not stylistic preference alone. Passing tests or equivalent runtime output does not disprove a quality defect.
+- Apply all five Engineering Quality criteria from `common-gate.md` to each changed behavior using repository authority and version evidence selected through `skill-routing.md`. Record the required existing-implementation search in the ledger.
 
 ### Spec Pass
 
-- Turn every available acceptance criterion or promised behavior into a small checklist.
-- Map each item to implementation and a test, or create a candidate for the gap.
-- For regression fixes and material behavior changes, use Regression Sensitivity in `verification-matrix.md` to connect the claimed test coverage to an assertion that rejects the known incorrect behavior.
-- For refactors, identify old behavior and prove it remains unless the intent explicitly changes it.
-- Note scope added by the diff that is not explained by the intent source.
+- Map each requirement to implementation and verification, or a gap candidate, using SPEC-COVERAGE in `common-gate.md` and Regression Sensitivity in `verification-matrix.md`.
+- For refactors, establish old behavior and preserve it unless explicitly changed; record scope additions not explained by intent.
 
 ### Runtime Contract Pass
 
 - Follow data and control flow through runtime validation, narrowing, transformation, async work, state/cache updates, persistence, external calls, rendering, and recovery paths.
 - Check both success and failure states, including empty, partial, duplicate, stale, unauthorized, retried, cancelled, and concurrently changed inputs when relevant.
-- For async lifetimes and partial writes, apply ASYNC-SAFETY in `common-gate.md`: record the intervening target change, any work already persisted, and the completion/refresh/retry effect rather than reviewing only the happy-path callback.
+- Apply ASYNC-SAFETY in `common-gate.md` to async lifetimes and partial writes, recording its required trace in the behavior note.
 - Compare both sides of a boundary: writer/reader, server/client, producer/consumer, old/new deployment, parser/type, or migration/application.
 
 Each candidate note should contain:

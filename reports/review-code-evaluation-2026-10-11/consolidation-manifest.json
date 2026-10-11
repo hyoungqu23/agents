@@ -1,0 +1,140 @@
+{
+  "model": "gpt-6-astra",
+  "reasoning_effort": "medium",
+  "versions": {
+    "before18": "53eb262256c294f66217409747f3910e9236f599",
+    "after18": "f6dfdb869e25bd1a4418c08b641a15f3d3c57512"
+  },
+  "version_files": {
+    "before18": {
+      "SKILL.md": "5c83e68fef0463221e48460f79e8d0007d1d40d0194e037955ce2a53b4eb2ac6",
+      "agents/openai.yaml": "684ac2fb4e8a1f5c02ce3a297f6b2a96a3cdd8d968876f1bd73835c3da673f08",
+      "resources/backend-lens.md": "ecc71f5edd7e327809d648c7b5613449b27670c8315975d61e54b6aaa3bda7d1",
+      "resources/common-gate.md": "b677b64be8f9c6234ad56edc5ee8ba61e38358e886cedf85d49d6d98bb10851c",
+      "resources/frontend-lens.md": "cb9d6000f3d956ba84d58424b4f4e8d8be02dc64dff9790e17abc6cf3e569edd",
+      "resources/project-gate-routing.md": "a5be6e23c3901586540985c936ca91927bd6704c872f2c80eff6effdb6083504",
+      "resources/release-safety-lens.md": "185e01dc8990223fda52817e9d4b8f1b62bb6947b928f7115dfaf4af91c16b54",
+      "resources/review-execution.md": "48f5af0d8fc494e9f38b17793f6620f9d0e5efcd836db0c75bf022735453b330",
+      "resources/review-lenses.md": "15e3628acce47cd71fbf4de0762ede80dd9a064e4ad3ae252b734b594e195192",
+      "resources/skill-routing.md": "bd6fef8a60d3af3fbc3dc7d60662f9db6cde21c3dc383cea4e6132ed6806accd",
+      "resources/verification-matrix.md": "e982b65298f0e8eb515adf6344371c05c6930a617c82ba60bf27806c4057f37f"
+    },
+    "after18": {
+      "SKILL.md": "67e62b2c6a09f89394910e4f7a946bcf8adae78676394c0c48bc263f18626195",
+      "agents/openai.yaml": "684ac2fb4e8a1f5c02ce3a297f6b2a96a3cdd8d968876f1bd73835c3da673f08",
+      "resources/backend-lens.md": "ecc71f5edd7e327809d648c7b5613449b27670c8315975d61e54b6aaa3bda7d1",
+      "resources/common-gate.md": "5bd83e06b04dd71379ecb2104cad6069ce16b5ccd1996b8724693acea0558e3e",
+      "resources/frontend-lens.md": "cb9d6000f3d956ba84d58424b4f4e8d8be02dc64dff9790e17abc6cf3e569edd",
+      "resources/project-gate-routing.md": "a5be6e23c3901586540985c936ca91927bd6704c872f2c80eff6effdb6083504",
+      "resources/release-safety-lens.md": "185e01dc8990223fda52817e9d4b8f1b62bb6947b928f7115dfaf4af91c16b54",
+      "resources/review-execution.md": "08821a515b8e1c966ef5e433a10ee8adcafc616ab6d691241182fb45eb8c093f",
+      "resources/review-lenses.md": "bda32e710cc8336cb0b0ac0385ae2045478064ba09e8775ebf756ea9c930d178",
+      "resources/skill-routing.md": "bd6fef8a60d3af3fbc3dc7d60662f9db6cde21c3dc383cea4e6132ed6806accd",
+      "resources/verification-matrix.md": "e982b65298f0e8eb515adf6344371c05c6930a617c82ba60bf27806c4057f37f"
+    }
+  },
+  "runs": [
+    {
+      "case": "eval-14",
+      "version": "before18",
+      "pr": 18
+    },
+    {
+      "case": "eval-15",
+      "version": "before18",
+      "pr": 18
+    },
+    {
+      "case": "eval-16",
+      "version": "before18",
+      "pr": 18
+    },
+    {
+      "case": "eval-17",
+      "version": "before18",
+      "pr": 18
+    },
+    {
+      "case": "eval-18",
+      "version": "before18",
+      "pr": 18
+    },
+    {
+      "case": "eval-14",
+      "version": "after18",
+      "pr": 18
+    },
+    {
+      "case": "eval-15",
+      "version": "after18",
+      "pr": 18
+    },
+    {
+      "case": "eval-16",
+      "version": "after18",
+      "pr": 18
+    },
+    {
+      "case": "eval-17",
+      "version": "after18",
+      "pr": 18
+    },
+    {
+      "case": "eval-18",
+      "version": "after18",
+      "pr": 18
+    },
+    {
+      "case": "frontend-adequate",
+      "version": "after18",
+      "pr": 18
+    },
+    {
+      "case": "regression-assertion",
+      "version": "after18",
+      "pr": 18
+    },
+    {
+      "case": "async-partial",
+      "version": "after18",
+      "pr": 18
+    },
+    {
+      "case": "async-safe",
+      "version": "after18",
+      "pr": 18
+    }
+  ],
+  "reused_baselines": [
+    {
+      "case": "frontend-adequate",
+      "original_version": "after17",
+      "comparison_version": "before18",
+      "directory": "reused/frontend-adequate--after17",
+      "source_report_sha256": "e416e1777d49b39731cdf7898bc3235ee15f9295f546ac52c9d018ead64fcb9a"
+    },
+    {
+      "case": "regression-assertion",
+      "original_version": "after17",
+      "comparison_version": "before18",
+      "directory": "reused/regression-assertion--after17",
+      "source_report_sha256": "3a51be5a0420a0b51875b7cff8e713f6db12fe99c0a30fc799b9937cd4ed70d4"
+    },
+    {
+      "case": "async-partial",
+      "original_version": "after17",
+      "comparison_version": "before18",
+      "directory": "reused/async-partial--after17",
+      "source_report_sha256": "5361e2aed588ed854316a79f74b6e5101878feba0e4798d4dc1a71bff0cb6eb9"
+    },
+    {
+      "case": "async-safe",
+      "original_version": "after17",
+      "comparison_version": "before18",
+      "directory": "reused/async-safe--after17",
+      "source_report_sha256": "09f0f35a70344fe75d3e681cd9b826fa36918f3e11c39f87113d7510acc5b733"
+    }
+  ],
+  "prompt_suffix_file": "prompt-suffix.txt",
+  "output_schema_file": "output-schema.json"
+}

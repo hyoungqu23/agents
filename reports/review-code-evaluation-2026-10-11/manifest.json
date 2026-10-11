@@ -1,0 +1,144 @@
+{
+  "model": "gpt-6-astra",
+  "reasoning_effort": "medium",
+  "versions": {
+    "before16": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+    "after16": "799882155906026befd19f8507760cd907f0057f",
+    "after17": "53eb262256c294f66217409747f3910e9236f599"
+  },
+  "version_files": {
+    "before16": {
+      "SKILL.md": "fcdde1344806c210a1b132275bea29ebe60a4ab593a531ae24d188fc9c0cec20",
+      "agents/openai.yaml": "684ac2fb4e8a1f5c02ce3a297f6b2a96a3cdd8d968876f1bd73835c3da673f08",
+      "resources/backend-lens.md": "ecc71f5edd7e327809d648c7b5613449b27670c8315975d61e54b6aaa3bda7d1",
+      "resources/common-gate.md": "dbe493ccff52af522b57f88e2867230bfc04f7d7f70225273485945a1b89b16d",
+      "resources/frontend-lens.md": "da1025290348e2cf06809a059e6d55c6dac96022082a723f6c22c619950c3296",
+      "resources/project-gate-routing.md": "a5be6e23c3901586540985c936ca91927bd6704c872f2c80eff6effdb6083504",
+      "resources/release-safety-lens.md": "185e01dc8990223fda52817e9d4b8f1b62bb6947b928f7115dfaf4af91c16b54",
+      "resources/review-execution.md": "2cbf1b89e58f86019bad76075c5e8b1de6c980cb1cf31d7b79dfb91ffcf9363f",
+      "resources/review-lenses.md": "bf8e262d2713a28d9ee8990d6eaad67664aa6a9b0bfa7a8db456e5fd99b4a873",
+      "resources/skill-routing.md": "7d9f53a9ae43c2298446cced3443ca8c64419d384cf6944dac27dc6dba13ccb8",
+      "resources/verification-matrix.md": "2674aae46311c7d74395cd1edd56258c8f9f5c69b9d64137cf6ab9afa05db81e"
+    },
+    "after16": {
+      "SKILL.md": "5c83e68fef0463221e48460f79e8d0007d1d40d0194e037955ce2a53b4eb2ac6",
+      "agents/openai.yaml": "684ac2fb4e8a1f5c02ce3a297f6b2a96a3cdd8d968876f1bd73835c3da673f08",
+      "resources/backend-lens.md": "ecc71f5edd7e327809d648c7b5613449b27670c8315975d61e54b6aaa3bda7d1",
+      "resources/common-gate.md": "efecdb07e7fdfc12a4003e189543ca51ef01c62f80b165ea2ae1222d31b4a23b",
+      "resources/frontend-lens.md": "da1025290348e2cf06809a059e6d55c6dac96022082a723f6c22c619950c3296",
+      "resources/project-gate-routing.md": "a5be6e23c3901586540985c936ca91927bd6704c872f2c80eff6effdb6083504",
+      "resources/release-safety-lens.md": "185e01dc8990223fda52817e9d4b8f1b62bb6947b928f7115dfaf4af91c16b54",
+      "resources/review-execution.md": "c8079186160e321045aa3df71642f69ce35e601d7f184dea3a80606d70c5216e",
+      "resources/review-lenses.md": "1f4016374064e5a42c632e677750d47be6aadba79f38760ff7c680e4189db2f6",
+      "resources/skill-routing.md": "bd6fef8a60d3af3fbc3dc7d60662f9db6cde21c3dc383cea4e6132ed6806accd",
+      "resources/verification-matrix.md": "2674aae46311c7d74395cd1edd56258c8f9f5c69b9d64137cf6ab9afa05db81e"
+    },
+    "after17": {
+      "SKILL.md": "5c83e68fef0463221e48460f79e8d0007d1d40d0194e037955ce2a53b4eb2ac6",
+      "agents/openai.yaml": "684ac2fb4e8a1f5c02ce3a297f6b2a96a3cdd8d968876f1bd73835c3da673f08",
+      "resources/backend-lens.md": "ecc71f5edd7e327809d648c7b5613449b27670c8315975d61e54b6aaa3bda7d1",
+      "resources/common-gate.md": "b677b64be8f9c6234ad56edc5ee8ba61e38358e886cedf85d49d6d98bb10851c",
+      "resources/frontend-lens.md": "cb9d6000f3d956ba84d58424b4f4e8d8be02dc64dff9790e17abc6cf3e569edd",
+      "resources/project-gate-routing.md": "a5be6e23c3901586540985c936ca91927bd6704c872f2c80eff6effdb6083504",
+      "resources/release-safety-lens.md": "185e01dc8990223fda52817e9d4b8f1b62bb6947b928f7115dfaf4af91c16b54",
+      "resources/review-execution.md": "48f5af0d8fc494e9f38b17793f6620f9d0e5efcd836db0c75bf022735453b330",
+      "resources/review-lenses.md": "15e3628acce47cd71fbf4de0762ede80dd9a064e4ad3ae252b734b594e195192",
+      "resources/skill-routing.md": "bd6fef8a60d3af3fbc3dc7d60662f9db6cde21c3dc383cea4e6132ed6806accd",
+      "resources/verification-matrix.md": "e982b65298f0e8eb515adf6344371c05c6930a617c82ba60bf27806c4057f37f"
+    }
+  },
+  "runs": [
+    {
+      "case": "eval-14",
+      "version": "before16",
+      "pr": 16
+    },
+    {
+      "case": "eval-14",
+      "version": "after16",
+      "pr": 16
+    },
+    {
+      "case": "eval-15",
+      "version": "before16",
+      "pr": 16
+    },
+    {
+      "case": "eval-15",
+      "version": "after16",
+      "pr": 16
+    },
+    {
+      "case": "eval-16",
+      "version": "before16",
+      "pr": 16
+    },
+    {
+      "case": "eval-16",
+      "version": "after16",
+      "pr": 16
+    },
+    {
+      "case": "eval-17",
+      "version": "before16",
+      "pr": 16
+    },
+    {
+      "case": "eval-17",
+      "version": "after16",
+      "pr": 16
+    },
+    {
+      "case": "eval-18",
+      "version": "before16",
+      "pr": 16
+    },
+    {
+      "case": "eval-18",
+      "version": "after16",
+      "pr": 16
+    },
+    {
+      "case": "frontend-adequate",
+      "version": "after16",
+      "pr": 17
+    },
+    {
+      "case": "frontend-adequate",
+      "version": "after17",
+      "pr": 17
+    },
+    {
+      "case": "regression-assertion",
+      "version": "after16",
+      "pr": 17
+    },
+    {
+      "case": "regression-assertion",
+      "version": "after17",
+      "pr": 17
+    },
+    {
+      "case": "async-partial",
+      "version": "after16",
+      "pr": 17
+    },
+    {
+      "case": "async-partial",
+      "version": "after17",
+      "pr": 17
+    },
+    {
+      "case": "async-safe",
+      "version": "after16",
+      "pr": 17
+    },
+    {
+      "case": "async-safe",
+      "version": "after17",
+      "pr": 17
+    }
+  ],
+  "prompt_suffix_file": "prompt-suffix.txt",
+  "output_schema_file": "output-schema.json"
+}

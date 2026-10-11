@@ -1,0 +1,908 @@
+{
+  "runs": {
+    "async-partial--after16": {
+      "review": {
+        "findings": [
+          {
+            "severity": "P2",
+            "title": "업로드 완료 시 삭제·초기화된 행이 복원됨",
+            "path": "src/uploads/uploadRow.ts",
+            "line": 8,
+            "problem": "업로드를 기다리는 동안 removeRow 또는 resetRows가 실행되어도, 완료 후 rows.set이 저장해 둔 행을 다시 삽입합니다.",
+            "effect": "사용자가 삭제하거나 창을 닫아 초기화한 행이 되살아나 명시된 제거 계약을 위반합니다.",
+            "fix": "완료 후 현재 행이 시작 시점의 행과 같은지 확인하고 유효한 경우에만 갱신하세요. 업로드 중 삭제·초기화 후 완료되는 회귀 테스트를 추가하세요.",
+            "evidence": [
+              "fixture.md:12–18 — removeRow는 delete, resetRows는 clear이며 업로드 중에도 호출됩니다.",
+              "uploadRow.ts:5–8 — await 이전 행을 보관하고 이후 조건 없이 다시 삽입합니다."
+            ]
+          },
+          {
+            "severity": "P2",
+            "title": "부분 저장 후 실패하면 목록 캐시 무효화가 누락됨",
+            "path": "src/batches/saveBatch.ts",
+            "line": 7,
+            "problem": "앞선 청크가 저장된 뒤 후속 saveChunk가 거절되면 함수가 즉시 종료되어 invalidateBatchList에 도달하지 않습니다.",
+            "effect": "이미 커밋된 데이터가 있는데도 목록은 이전 상태로 남고 UI에는 실패 알림만 표시됩니다.",
+            "fix": "성공한 커밋 여부를 기록하고 finally에서 캐시를 무효화해 원래 오류가 UI에 전달되기 전에 반영하세요. 첫 청크 성공·다음 청크 실패 시 무효화와 오류 전파 순서를 테스트하세요.",
+            "evidence": [
+              "fixture.md:3–6,19–21 — 청크는 독립 커밋이며 실패 전달 전에 목록 캐시를 갱신해야 합니다. UI는 재시도하지 않습니다.",
+              "saveBatch.ts:4–7 — 무효화는 모든 청크가 성공한 경로에서만 실행됩니다."
+            ]
+          }
+        ],
+        "excluded": [
+          "입력 검증 누락 — 입력은 이미 검증된다는 명시적 계약이 있습니다.",
+          "배치 전체 롤백 — 앞선 청크의 커밋을 유지해야 하므로 계약에 어긋납니다.",
+          "테스트 누락의 별도 지적 — 두 결함의 수정·회귀 검증 요구에 포함했습니다."
+        ],
+        "verification": [
+          "범위: fixture.md에 포함된 신규 TypeScript 파일 2개 전체와 제공된 소유자·호출자·테스트 설명을 정적으로 검토했습니다.",
+          "지침: 지정된 review-code와 공통 게이트·실행·검증·라우팅 및 관련 렌즈를 읽었습니다. 특정 프레임워크 근거가 없어 전문 스킬은 적용하지 않았습니다.",
+          "품질: 응집도·결합도·중복·관례·네이밍을 검토하고 rg로 제공 범위의 관련 구현을 검색했습니다. 별도 구조적 결함 근거는 없었습니다.",
+          "실행: cat과 rg로 로컬 자료를 확인했습니다. 실행 가능한 체크아웃과 테스트·설정 파일이 없어 테스트, 타입 검사, 린트, 빌드는 실행하지 않았습니다.",
+          "잔여 위험: 실제 런타임 재현과 회귀 테스트 통과는 확인하지 못했습니다. 네트워크 접근이나 파일 수정은 하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "async-partial",
+        "version": "after16",
+        "pr": 17,
+        "commit": "799882155906026befd19f8507760cd907f0057f",
+        "status": "completed",
+        "duration_seconds": 36.92,
+        "usage": [
+          {
+            "input_tokens": 111804,
+            "cached_input_tokens": 82048,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1172,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "0a452b528fa3bf11fa1b03e24e73250e57d6b314abf3ae0a78bda9af144cd298",
+        "events_sha256": "a3521fa448e76117880299c691547d0e6d2a6bcc8ba6cfd1da385c1d9c267e9b",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "ebd3243cca4fa0c2ec0d825f61564298cc1a79b4ae2a7bcd11df809ecb7af504"
+      }
+    },
+    "async-partial--after17": {
+      "review": {
+        "findings": [
+          {
+            "severity": "P2",
+            "title": "업로드 완료 시 삭제·초기화한 행이 복원됩니다",
+            "path": "src/uploads/uploadRow.ts",
+            "line": 8,
+            "problem": "await 전에 읽은 row를 완료 후 무조건 rows.set으로 다시 등록합니다.",
+            "effect": "업로드 중 행을 삭제하거나 버튼·Escape·배경 클릭으로 닫아 초기화해도, 업로드가 끝나면 해당 행이 다시 생깁니다.",
+            "fix": "완료 시 rows.get(id) === row인지 확인한 뒤에만 반영하세요. 삭제·초기화 후 업로드가 완료되어도 행이 없는 상태를 유지하는 회귀 테스트를 추가하세요.",
+            "evidence": [
+              "removeRow는 rows.delete, resetRows는 rows.clear를 호출하며 업로드 중에도 실행 가능합니다.",
+              "uploadFile은 rows를 변경하지 않으므로 완료 후 8행의 쓰기가 행을 복원합니다."
+            ]
+          },
+          {
+            "severity": "P2",
+            "title": "일부 청크 저장 후 실패하면 목록 캐시가 갱신되지 않습니다",
+            "path": "src/batches/saveBatch.ts",
+            "line": 7,
+            "problem": "invalidateBatchList가 루프 정상 종료 뒤에만 있어, 후속 saveChunk가 거부되면 실행되지 않습니다.",
+            "effect": "앞선 청크는 저장되어 있지만 목록 캐시는 기존 상태로 남은 채 UI에 실패 알림이 전달됩니다. 이는 부분 저장도 캐시에 반영해야 한다는 계약을 위반합니다.",
+            "fix": "성공한 청크가 있는지 기록하고 finally에서 해당 경우 캐시를 무효화하여 오류 전파 전에 실행되게 하세요. 첫 청크 성공·다음 청크 실패 시 무효화가 UI 오류 처리보다 먼저 일어나는 테스트를 추가하세요.",
+            "evidence": [
+              "saveChunk는 청크별 독립 커밋이며 후속 실패가 이전 저장을 취소하지 않습니다.",
+              "UI는 오류를 알리고 재시도하지 않으며, invalidateBatchList 자체는 실패하지 않습니다."
+            ]
+          }
+        ],
+        "excluded": [
+          "입력 검증 추가: 입력은 이미 검증된다는 명시적 계약이 있습니다.",
+          "배치 전체 롤백·자동 재시도: 독립 커밋과 재시도 없는 UI가 계약이므로 요구하지 않았습니다.",
+          "테스트 누락의 별도 지적: 두 결함의 수정·검증 요구에 포함했습니다.",
+          "구조·명명 리팩터링: 제공된 범위에서 중복 규칙이나 구체적인 유지보수 비용이 확인되지 않았습니다."
+        ],
+        "verification": [
+          "범위: fixture.md의 신규 TypeScript 파일 2개 전체와 제공된 기존 소유자·호출자·테스트 설명을 정적으로 검토했습니다. 위치는 diff의 새 파일 기준입니다.",
+          "지침: 지정된 review-code 스킬과 공통 게이트·실행·검증·라우팅·프런트엔드·상세 리뷰 참조를 읽었습니다. 특정 프레임워크 전문 스킬은 적용하지 않았습니다.",
+          "품질: 응집도·결합도·중복·관례·명명을 검토하고 rg로 제공 파일의 관련 구현을 검색했습니다. 추가 구현이나 프로젝트 설정은 제공되지 않았습니다.",
+          "검증 한계: 실행 가능한 체크아웃과 테스트·빌드 설정이 없어 테스트, 타입 검사, 린트는 실행하지 않았습니다. 기존 테스트 범위는 fixture의 설명에 근거합니다.",
+          "네트워크·다른 저장소를 사용하지 않았으며 파일을 수정하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "async-partial",
+        "version": "after17",
+        "pr": 17,
+        "commit": "53eb262256c294f66217409747f3910e9236f599",
+        "status": "completed",
+        "duration_seconds": 46.32,
+        "usage": [
+          {
+            "input_tokens": 110683,
+            "cached_input_tokens": 72192,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1173,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "5361e2aed588ed854316a79f74b6e5101878feba0e4798d4dc1a71bff0cb6eb9",
+        "events_sha256": "863431bfc7cc09ce779f4424c2eb75e7f1cee4cbfc65830293abe81420c30714",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "4ec0f32f6f74409e38854e6b133d5955166b75555f95501ed2b16b3df0bb398e"
+      }
+    },
+    "async-safe--after16": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "오래된 업로드의 행 덮어쓰기: 존재 여부·generation 비교와 writeAttachment의 원자적 검증으로 제거·초기화·교체·편집된 행의 갱신이 차단됩니다.",
+          "부분 저장 후 목록 갱신 누락: 성공한 청크가 있으면 finally에서 reconcileBatchList가 호출됩니다. 첫 청크 실패 시에는 저장된 변경이 없어 호출하지 않습니다.",
+          "부분 실패 정보 유실·중복 재시도: BatchFailure가 완료 청크 수와 원인을 보존하며, 계약상 호출자는 남은 청크만 명시적으로 재시도합니다.",
+          "업로드 사전 검사 제거: 저장소 검사와 일부 겹치지만, 별도 규칙을 유지하면서 생기는 구체적 비용이 입증되지 않아 정리 제안은 제외했습니다."
+        ],
+        "verification": [
+          "범위: fixture.md의 신규 TypeScript 파일 2개 전체를 정적 검토했습니다. 근거 있는 수정 필요 사항은 발견하지 못했습니다.",
+          "요구사항 근거: fixture.md에 명시된 저장소 API, 청크별 커밋, 실패 보고 및 재시도 계약을 적용했습니다.",
+          "라우팅: 지정된 review-code와 필수 로컬 참조, 백엔드의 저장·실패 계약 및 TypeScript 검토 렌즈를 적용했습니다. 특정 프레임워크 전문 스킬은 해당하지 않습니다.",
+          "품질: 두 함수의 응집도·결합도·중복·계약 적합성·네이밍을 검토했습니다. 기존 구현 비교는 제공된 코드와 API 설명으로 한정했습니다.",
+          "실행: 파일 목록 확인과 지침·fixture 읽기만 수행했습니다. 실행 가능한 체크아웃과 테스트 소스가 없어 테스트·타입 검사·린트·빌드는 실행하지 않았습니다.",
+          "잔여 위험: 테스트 통과는 작성자의 보고이며 독립 검증하지 않았습니다. 실제 저장소·API·호출자 구현이 명시된 계약을 지키는지는 확인할 수 없습니다. 코드 수정이나 네트워크 접근은 하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "async-safe",
+        "version": "after16",
+        "pr": 17,
+        "commit": "799882155906026befd19f8507760cd907f0057f",
+        "status": "completed",
+        "duration_seconds": 33.86,
+        "usage": [
+          {
+            "input_tokens": 110273,
+            "cached_input_tokens": 72320,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 856,
+            "reasoning_output_tokens": 13
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "88bb336d5884b1bcc4dbdddf2ea8274ec1bd7841e4c2148a264f73261ea09155",
+        "events_sha256": "5b5a8d0f876ec28d05ca81bfa42197895c181642110b05eb0584fa1953a0713e",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "7f36340458bc6e3d89b72eccc636d807c62a9d36bc098eff96aaa50f9fae860c"
+      }
+    },
+    "async-safe--after17": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "오래된 업로드의 행 갱신: 제거·초기화 후 존재 확인과 교체·편집 후 generation 비교로 차단됩니다. writeAttachment도 원자적으로 재검사합니다.",
+          "부분 저장 후 목록 불일치·중복 재시도: 성공한 청크가 있으면 finally에서 목록을 무효화하고, BatchFailure로 완료 청크 수를 전달합니다. 계약상 자동 재시도는 없습니다.",
+          "첫 청크 실패 시 무효화 누락: 실패한 청크는 커밋되지 않으므로 목록 갱신이 필요하지 않습니다.",
+          "업로드 사전 검사 제거: 저장소 검사와 일부 겹치지만 별도로 유지되는 도메인 규칙이나 실질적 유지보수 비용이 입증되지 않아 정리 제안에서 제외했습니다."
+        ],
+        "verification": [
+          "범위: fixture.md에 포함된 신규 TypeScript 파일 uploadRow.ts와 saveBatch.ts 전체를 정적으로 검토했습니다. 근거 있는 발견은 없습니다.",
+          "요구사항: fixture.md의 저장소 원자성, 세대 변경, 청크별 커밋, 완료 수 보고 및 명시적 재시도 계약을 기준으로 경로를 추적했습니다.",
+          "라우팅: 지정된 review-code와 필수 로컬 참조, 관련 실패·영속성 및 TypeScript 검토 기준을 적용했습니다. 프레임워크 전문 스킬 적용 대상은 없습니다.",
+          "품질: 두 함수의 응집도·결합도·중복·제공된 API 관례·네이밍을 검토하고 rg로 관련 구현을 탐색했습니다. 실제 저장소와 호출자 구현은 제공되지 않았습니다.",
+          "실행: cat과 rg로 제공 파일을 읽고 검색했습니다. 실행 가능한 체크아웃과 테스트 원문이 없어 테스트·타입 검사·린트·빌드는 실행하지 않았습니다.",
+          "잔여 위험: 테스트 통과는 작성자의 보고이며 독립 검증하지 못했습니다. 실제 저장소·API·호출자의 계약 준수 여부도 확인할 수 없습니다. 코드 수정과 네트워크 접근은 하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "async-safe",
+        "version": "after17",
+        "pr": 17,
+        "commit": "53eb262256c294f66217409747f3910e9236f599",
+        "status": "completed",
+        "duration_seconds": 36.26,
+        "usage": [
+          {
+            "input_tokens": 110745,
+            "cached_input_tokens": 72192,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 848,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "09f0f35a70344fe75d3e681cd9b826fa36918f3e11c39f87113d7510acc5b733",
+        "events_sha256": "d10ef72f07a3e39a53dee87fb95530d1b797ff730f0917c6cb35629faffab70b",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "43dca6e77b294edb76ccb3605c628ca5c614e0eebd1b3c270b21ad78aa6d8ff2"
+      }
+    },
+    "eval-14--after16": {
+      "review": {
+        "findings": [
+          {
+            "severity": "P2",
+            "title": "청구서 합계 계산의 기존 구현을 재사용하세요",
+            "path": "src/ui/InvoiceSummary.tsx",
+            "line": 3,
+            "problem": "기존 calculateInvoiceTotalCents와 동일한 규칙을 UI에 복제하고, worker도 이 UI 모듈을 가져옵니다.",
+            "effect": "계산 정책을 두 곳에서 유지해야 하며, worker가 UI에 의존하여 명시된 소유권·의존성 규칙을 위반합니다.",
+            "fix": "복제 함수를 제거하고 UI와 worker 모두 src/invoices/total의 calculateInvoiceTotalCents를 사용하세요.",
+            "evidence": [
+              "src/invoices/total.ts:3의 기존 함수와 새 함수의 계산식이 같습니다.",
+              "src/workers/toInvoiceRow.ts:2가 ../ui/InvoiceSummary를 가져옵니다.",
+              "제공된 docs/architecture.md는 계산을 src/invoices/가 소유하고 worker의 UI import를 금지합니다."
+            ]
+          },
+          {
+            "severity": "P2",
+            "title": "재시도 지연 함수 이름을 실제 반환 단위에 맞추세요",
+            "path": "src/retry/delay.ts",
+            "line": 3,
+            "problem": "getRetryDelaySeconds는 이름과 달리 밀리초 값 30,000을 반환합니다.",
+            "effect": "현재 대기는 정확하지만 공개 함수의 단위 계약이 잘못되어, 호출부를 이해하거나 수정할 때 단위 변환을 잘못 적용할 수 있습니다.",
+            "fix": "함수를 getRetryDelayMs로 바꾸고 waitBeforeRetry의 import와 호출도 갱신하세요. 반환값은 유지하세요.",
+            "evidence": [
+              "src/retry/delay.ts:1의 RETRY_DELAY_MS가 그대로 반환됩니다.",
+              "src/retry/waitBeforeRetry.ts:5는 반환값을 밀리초를 받는 sleep에 전달합니다.",
+              "제공된 아키텍처 규칙은 기간 이름에 단위를 포함하도록 요구합니다."
+            ]
+          }
+        ],
+        "excluded": [
+          "재시도 시간 오류: 실제 전달값은 30,000ms이므로 요구된 30초와 일치합니다.",
+          "현재 합계 계산 오류: 기존 계산식과 같으며 정책 변경은 없습니다. 중복 구현 문제로만 보고했습니다.",
+          "검증·테스트 누락: 입력은 상위에서 검증되며, 기본·반올림·빈 목록·재시도 시간 검증이 제공된 요약에 명시되어 있습니다."
+        ],
+        "verification": [
+          "범위: fixture.md의 신규 소스 4개와 제공된 기존 구현·호출자 전체를 정적으로 검토했습니다. 추가 변경 파일은 없다는 fixture 설명을 기준으로 했습니다.",
+          "요구사항과 품질: 합계 표시·내보내기·30초 대기를 추적하고 응집도, 결합도, 규칙 중복, 저장소 규칙, 이름을 검토했습니다.",
+          "실행: cat과 rg로 지정 지침, 관련 로컬 렌즈, fixture 및 기존 구현·호출 지점을 확인했습니다. 파일 수정이나 네트워크 사용은 없었습니다.",
+          "라우팅: 공통·프런트엔드·설계 및 테스트 렌즈를 적용했습니다. 범위 내 React 전문 스킬은 없어 로컬 규칙으로 검토했으며 Next.js 지침은 적용하지 않았습니다.",
+          "미실행: vitest run, tsc --noEmit, eslint . — 실행 가능한 체크아웃이 아닌 스냅샷이므로 실행하지 않았습니다. CI 통과는 작성자 제공 요약이며 독립적으로 확인하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "eval-14",
+        "version": "after16",
+        "pr": 16,
+        "commit": "799882155906026befd19f8507760cd907f0057f",
+        "status": "completed",
+        "duration_seconds": 41.3,
+        "usage": [
+          {
+            "input_tokens": 147825,
+            "cached_input_tokens": 109440,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1241,
+            "reasoning_output_tokens": 24
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "e0624245406ede4a7eda9405e6474b8006e474fedae1287bdc55c9ad74ea4981",
+        "events_sha256": "03a6302a328fb88f95c35eca092729756d12d439e284d0574336ae2bea76e500",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "e399a653246ee6d26717811c303d7642b26c7c4a5e31a3b3df823d23a188ce7f"
+      }
+    },
+    "eval-14--before16": {
+      "review": {
+        "findings": [
+          {
+            "severity": "P2",
+            "title": "청구 금액 계산의 기존 공개 함수를 재사용하세요",
+            "path": "src/ui/InvoiceSummary.tsx",
+            "line": 3,
+            "problem": "기존 calculateInvoiceTotalCents와 동일한 계산을 UI에 다시 구현했습니다.",
+            "effect": "체크아웃과 UI·내보내기가 서로 다른 구현을 사용해 계산 정책을 두 곳에서 관리해야 합니다.",
+            "fix": "중복 함수를 제거하고 기존 calculateInvoiceTotalCents를 사용하세요.",
+            "evidence": [
+              "docs/architecture.md는 청구 계산을 src/invoices/가 소유하도록 명시합니다.",
+              "checkout은 기존 함수를 호출하지만 UI와 export는 새 복제 함수를 호출합니다."
+            ]
+          },
+          {
+            "severity": "P2",
+            "title": "워커에서 UI 모듈을 가져오지 마세요",
+            "path": "src/workers/toInvoiceRow.ts",
+            "line": 2,
+            "problem": "워커가 InvoiceSummary 모듈에서 계산 함수를 가져와 명시된 의존성 경계를 위반합니다.",
+            "effect": "내보내기 코드가 화면 컴포넌트 모듈에 결합됩니다.",
+            "fix": "src/invoices/total의 공개 계산 함수를 직접 가져오세요.",
+            "evidence": [
+              "docs/architecture.md는 워커의 src/ui/ import를 금지합니다.",
+              "toInvoiceRow는 가져온 UI 함수를 호출해 totalCents를 생성합니다."
+            ]
+          },
+          {
+            "severity": "P3",
+            "title": "지연 함수 이름을 실제 반환 단위와 맞추세요",
+            "path": "src/retry/delay.ts",
+            "line": 3,
+            "problem": "getRetryDelaySeconds가 초가 아닌 밀리초 값 30,000을 반환합니다.",
+            "effect": "현재 대기는 정확하지만 함수 이름이 실제 단위 계약을 잘못 전달합니다.",
+            "fix": "함수를 getRetryDelayMs로 바꾸고 호출부도 갱신해 현재 30초 동작을 유지하세요.",
+            "evidence": [
+              "반환 상수는 RETRY_DELAY_MS = 30_000입니다.",
+              "waitBeforeRetry는 반환값을 밀리초를 받는 sleep에 그대로 전달합니다."
+            ]
+          }
+        ],
+        "excluded": [
+          "현재 금액 계산 오류: 기존 함수와 계산식이 같고 계산 정책 변경도 없습니다.",
+          "현재 재시도 시간 오류: sleep에 30,000밀리초가 전달되므로 요구한 30초입니다.",
+          "검증·권한 처리 누락: 입력은 상위에서 검증되며 해당 경계는 변경되지 않았습니다.",
+          "테스트 누락: 금액·빈 목록·30초 대기에 대한 검증 근거가 제공되어 제외했습니다."
+        ],
+        "verification": [
+          "fixture.md의 신규 소스 4개와 제공된 기존 호출 경로 전체를 정적으로 검토했습니다. 추가 변경 파일은 없다는 스냅샷 명세를 기준으로 삼았습니다.",
+          "요구사항과 docs/architecture.md를 기준으로 공통·프런트엔드·심화 리뷰 렌즈를 적용했습니다. React 전문 스킬은 제공 범위에 없어 기본 렌즈를 사용했습니다.",
+          "vitest run, tsc --noEmit, eslint .는 실행하지 않았습니다. 실행 가능한 체크아웃이 아닌 문서 스냅샷입니다.",
+          "테스트 통과는 작성자의 제공 CI 요약이며 직접 확인하지 않았습니다. 빌드·런타임 검증은 남아 있습니다.",
+          "파일 수정이나 네트워크 접근은 하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "eval-14",
+        "version": "before16",
+        "pr": 16,
+        "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+        "status": "completed",
+        "duration_seconds": 38.09,
+        "usage": [
+          {
+            "input_tokens": 103501,
+            "cached_input_tokens": 69760,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1138,
+            "reasoning_output_tokens": 54
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "925acbf084c9b0f52983c38026dd0f98997b3185f1b65e198160d574907e719d",
+        "events_sha256": "8058a2f171b1af1adf9854f1e95edad25cf26913c79f39fd8a69e3fb123f585f",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "8f6445721f73192b59ac5dfbb375c9f8e1a1bd8e85448b43f88d3140b9f0a686"
+      }
+    },
+    "eval-15--after16": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "두 함수의 비교식과 14일 값 중복: 승인·배포 주체가 다른 독립 정책이며, 기간 일치 요구도 없다. 공통화하면 불필요한 도메인 결합이 생긴다.",
+          "함수 내부 정수·유한성 검증 누락: 기존 서비스 경계에서 검증된 입력만 받는다는 명시적 계약으로 제외했다.",
+          "테스트 구조 중복: 서로 다른 정책의 기대값을 독립적으로 검증한다. 현재 사례에서 공통화의 구체적 이익이 없다."
+        ],
+        "verification": [
+          "지정된 SKILL.md와 common-gate, review-execution, verification-matrix, skill-routing, review-lenses를 읽고 적용했다.",
+          "범위: fixture.md에 포함된 신규 정책 함수 2개와 테스트 파일 1개 전체. 추가 변경·미추적 파일이 없다는 스냅샷 설명을 기준으로 검토했다.",
+          "TypeScript/Vitest 코드에 공통 품질·테스트 렌즈를 적용했다. 응집도, 결합도, 중복, 저장소 규칙, 네이밍에서 근거 있는 결함을 찾지 못했다.",
+          "fixture.md에 제시된 도메인 소유권, 호출 경로, 전체 심볼 검색 결과를 확인했다. 기존 저장소를 직접 검색한 것은 아니다.",
+          "정적 검토: 두 함수 모두 유한 정수 입력에서 0~13만 허용한다. 각 테스트는 -1, 0, 13, 14, 15의 기대 결과와 일치한다.",
+          "테스트·타입·린트는 실행하지 않았다. 실행 가능한 체크아웃이 없어 실제 실행 및 통합 동작은 검증하지 못했다. 네트워크 접근과 파일 수정은 하지 않았다."
+        ]
+      },
+      "execution": {
+        "case": "eval-15",
+        "version": "after16",
+        "pr": 16,
+        "commit": "799882155906026befd19f8507760cd907f0057f",
+        "status": "completed",
+        "duration_seconds": 40.09,
+        "usage": [
+          {
+            "input_tokens": 108920,
+            "cached_input_tokens": 72448,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 702,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "dad7114109224ef063534e4fdd2459264caca67b589214d18374d34860568355",
+        "events_sha256": "2057d4e80fd39842bb60980563d68ec30844c5fc6055c4c348f338d4c2b14cf1",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "d67f1d4176495a327ba4b69655bf97dae018fdf44fbd7b481bea4e7a8c590a2a"
+      }
+    },
+    "eval-15--before16": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "두 함수의 동일 비교식과 상수 14: 독립적으로 승인·배포되는 별개 도메인 정책입니다. 함께 변경해야 하는 의미적 중복이 아니며, 공통화하면 명시된 도메인 소유권에 불필요한 결합을 만듭니다.",
+          "함수 내부 정수·유한성 검증 부재: 기존 서비스 경계에서 검증된 입력만 전달된다는 계약이 있으므로 결함으로 보지 않았습니다.",
+          "테스트 중복과 내부 날짜 미열거: 각 정책의 독립된 경계 테스트이며, -1·0·13·14·15의 기대값은 정확합니다. 모든 내부 날짜를 열거하지 않았다는 이유만으로 발견으로 올리지 않았습니다."
+        ],
+        "verification": [
+          "범위: fixture.md에 포함된 신규 정책 함수 2개와 테스트 파일 1개를 모두 정적으로 검토했습니다. 근거 있는 발견은 없습니다.",
+          "요구사항: fixture.md의 정책 설명, docs/domains.md 인용, 호출부 설명을 기준으로 확인했습니다. 두 비교식은 검증된 정수 입력에서 0~13만 허용합니다.",
+          "라우팅: 지정된 review-code 지침과 common-gate, review-execution, verification-matrix, skill-routing, review-lenses를 적용했습니다.",
+          "실행: pwd, rg --files, ls -la, cat으로 제공 파일과 지침만 확인했습니다. 파일 수정이나 네트워크 접근은 하지 않았습니다.",
+          "미실행: 실행 가능한 체크아웃과 도구 설정이 없는 스냅샷이므로 Vitest·타입 검사·린트는 실행하지 않았습니다. 실제 서비스 통합 동작은 검증하지 못했습니다."
+        ]
+      },
+      "execution": {
+        "case": "eval-15",
+        "version": "before16",
+        "pr": 16,
+        "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+        "status": "completed",
+        "duration_seconds": 32.52,
+        "usage": [
+          {
+            "input_tokens": 101372,
+            "cached_input_tokens": 69376,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 645,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "179f5ec81d0fceadf8a88bbc0889f490853ca9d515ed2a866f0e93e72f7b9bdb",
+        "events_sha256": "fc956484c67403eae314be92d3d1611a7860f8b9eb6cd65d106e35b60a80cca5",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "005ec11d840c81c5aa12fc9b98909904937b4746842e9e9180520b5f33172e44"
+      }
+    },
+    "eval-16--after16": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "legacyGet 유지 요구: 주변 사용 빈도보다 docs/api-migration.md의 변경 호출에 대한 apiClient 사용 지침이 우선합니다.",
+          "응답의 .data 접근 필요: 제공된 계약상 두 클라이언트 모두 파싱된 본문을 직접 반환합니다.",
+          "retry_seconds 개명·단위 변환: 외부 키는 보존해야 하며 실제 단위는 밀리초입니다. retryDelayMs를 sleep에 그대로 전달하는 것이 맞습니다.",
+          "검증 누락·타입 중복: 응답 검증은 클라이언트가 수행하고 타입은 공급자 명세에서 생성됩니다. 이 변경은 별도 구현을 추가하지 않습니다."
+        ],
+        "verification": [
+          "범위: fixture.md의 src/jobs/waitForRetry.ts 패치 전체. 다른 변경·미추적 파일이 없다는 제공 설명을 기준으로 검토했습니다.",
+          "지침: 지정된 review-code와 필수 참조, TypeScript 계약 및 API 관련 렌즈를 적용했습니다. 별도 전문 스킬 적용 대상은 없습니다.",
+          "정적 검토: 응집도·결합도·중복·저장소 규칙·네이밍을 확인했습니다. 기존 구현 탐색은 제공된 스냅샷으로 한정됩니다.",
+          "동작 추적: /retry 요청 → 클라이언트 검증 → retry_seconds → retryDelayMs → sleep 경로가 기존 지연과 wire protocol을 보존합니다.",
+          "실행: cat과 rg로 로컬 자료를 읽고 파일 목록을 확인했습니다. 코드 수정과 네트워크 접근은 하지 않았습니다.",
+          "한계: 실행 가능한 체크아웃이 없어 테스트·타입 검사·린트는 실행하지 않았습니다. 30,000ms 지연 및 필드 누락 거부 테스트는 fixture의 설명이며 직접 검증한 결과가 아닙니다."
+        ]
+      },
+      "execution": {
+        "case": "eval-16",
+        "version": "after16",
+        "pr": 16,
+        "commit": "799882155906026befd19f8507760cd907f0057f",
+        "status": "completed",
+        "duration_seconds": 30.21,
+        "usage": [
+          {
+            "input_tokens": 110198,
+            "cached_input_tokens": 72192,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 765,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "049f9ed5e37dbe01017356972614c4695cce658674cb1b82400dcd25419bbdfe",
+        "events_sha256": "b0aec5872a8b55f305bb234fc952585c347c141c8a6ede45b586d15890aa1c7b",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "b26f70fd9b42da1e24166a0489167ccaa7196811c81ad2c68c38689535320278"
+      }
+    },
+    "eval-16--before16": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "legacyGet 관례 위반: 변경된 호출은 apiClient를 사용하라는 명시적 마이그레이션 지침을 따른다.",
+          "응답의 .data 접근 누락: 제공된 계약상 두 클라이언트 모두 파싱된 본문을 직접 반환한다.",
+          "단위 변환·wire 키 변경 필요: retry_seconds의 계약상 단위는 밀리초다. 키를 유지하고 retryDelayMs를 sleep에 그대로 전달해야 한다.",
+          "검증·테스트 누락: 클라이언트의 스키마 검증과 지연 시간·필드 누락 통합 테스트가 기존에 있다는 근거가 제공됐다."
+        ],
+        "verification": [
+          "범위: fixture.md의 src/jobs/waitForRetry.ts 전체 패치. 스냅샷 명세상 다른 변경·미추적 파일은 없다.",
+          "지정된 review-code 지침과 common-gate, review-execution, verification-matrix, skill-routing, review-lenses를 읽었다.",
+          "TypeScript 계약 관점에서 규약·요구사항·런타임 경로를 검토했다. 별도 전문 스킬 적용 조건은 없다.",
+          "정적 추적: /retry 요청 → 클라이언트 검증·본문 반환 → retry_seconds → retryDelayMs → 밀리초 sleep. 제공된 계약상 동작과 wire 형식이 보존된다.",
+          "테스트·타입 검사·린트는 미실행: 실행 가능한 체크아웃이 없는 텍스트 스냅샷이다. 테스트와 클라이언트 구현에 관한 설명은 제공된 근거이며 독립 실행으로 확인하지 않았다.",
+          "코드 수정과 네트워크·다른 저장소 접근은 하지 않았다."
+        ]
+      },
+      "execution": {
+        "case": "eval-16",
+        "version": "before16",
+        "pr": 16,
+        "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+        "status": "completed",
+        "duration_seconds": 27.91,
+        "usage": [
+          {
+            "input_tokens": 101112,
+            "cached_input_tokens": 69248,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 657,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "7435e3c88e466f62e32ade9f26093e56e975720d3686d91076aabdbdec5e861d",
+        "events_sha256": "8bb0d06ad4b1a391c8e64b412daf9025222602868f8ea64cbddbc58e6d5f965b",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "17021e01ccb9f7af8db042fff14ccff68f1106548104f57612b5c8c053df18ef"
+      }
+    },
+    "eval-17--after16": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "범용 predicate·필터 레지스트리 도입: 현재 규칙은 하나이며 재사용할 기존 구현도 없어 추가 추상화의 이익이 없습니다. 이전 제외 결정의 전제도 유지됩니다.",
+          "items 이름 변경: 지역적 의미가 명확하고 명명 규칙 위반이 없습니다.",
+          "추가 입력 검증·배열 참조 보존·성능 최적화: 제공된 설명상 서비스에서 검증하며, 소비자는 배열 정체성에 의존하지 않고 목록은 최대 200개입니다."
+        ],
+        "verification": [
+          "범위: fixture.md의 visibleProjects.ts 단일 변경 전체를 정적 검토했습니다. 다른 변경은 없다는 제공 설명을 기준으로 했습니다.",
+          "요구사항: filter는 archived 항목을 제외하면서 순서와 원본 배열을 보존합니다. 함수의 입력·반환 타입은 유지됩니다.",
+          "지침: 지정된 review-code와 공통 게이트·실행·검증·라우팅·심화 렌즈를 읽었습니다. 일반 TypeScript 함수로, 프레임워크 전문 스킬 적용 대상은 없습니다.",
+          "품질: 응집도·결합도·중복·저장소 관례·명명을 검토했습니다. 기존 구현과 소비자에 관한 근거는 fixture.md에 제공된 검색 결과와 설명입니다.",
+          "실행: cat과 rg --files --hidden으로 제공 파일을 확인했습니다. 코드 수정이나 네트워크 접근은 하지 않았습니다.",
+          "한계: 실행 가능한 체크아웃과 테스트 소스가 없어 Vitest·타입 검사·린트는 실행하지 않았습니다. 빈 입력·전체 archived·혼합 목록 테스트의 통과는 작성자 보고이며 독립 검증하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "eval-17",
+        "version": "after16",
+        "pr": 16,
+        "commit": "799882155906026befd19f8507760cd907f0057f",
+        "status": "completed",
+        "duration_seconds": 27.78,
+        "usage": [
+          {
+            "input_tokens": 108277,
+            "cached_input_tokens": 81920,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 694,
+            "reasoning_output_tokens": 15
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "fbfcff1d20c72d31db8ee64c72afcf1d1468cc53c7fde7541a52604d0724a8f2",
+        "events_sha256": "be1094e6ef57e05b4a92f2c91b9803a0b44b59eb0a511c0a986fa559ff1041db",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "978da69af6f9bdba3803ab07ca164d51d7f4e3ec2c6384a1f1b9be9fad55c039"
+      }
+    },
+    "eval-17--before16": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "범용 predicate·필터 레지스트리·이름 변경: 현재 규칙 하나에 불필요하며, 기존 거절 결정을 뒤집을 근거가 없습니다.",
+          "추가 입력 검증: 서비스에서 ID와 archived를 이미 검증합니다.",
+          "배열 참조 유지·성능 최적화: 두 소비자는 배열 동일성에 의존하지 않고 목록은 최대 200개입니다.",
+          "추가 테스트 요구: 제공된 설명상 기존 테스트가 빈 입력, 전체 archived, 혼합 목록, 순서 및 원본 보존을 다룹니다."
+        ],
+        "verification": [
+          "범위: fixture.md에 제시된 visibleProjects.ts 변경 전체를 검토했습니다. 다른 변경은 없다는 제공 문맥을 기준으로 했습니다.",
+          "지침: 지정된 review-code와 필수 로컬 참조, TypeScript·유지보수 렌즈를 적용했습니다. 별도 전문 스킬 적용 대상은 없습니다.",
+          "정적 검토: filter는 archived 항목을 제외하고 순서를 유지하며 입력 배열을 변경하지 않습니다. 함수 시그니처도 유지됩니다. 근거 있는 발견은 없습니다.",
+          "실행: cat과 rg --files --hidden으로 제공 파일과 지침을 확인했습니다. 파일 수정이나 네트워크 접근은 하지 않았습니다.",
+          "한계: 실행 가능한 체크아웃과 테스트 파일이 없어 테스트·타입 검사·린트는 실행하지 않았습니다. Vitest 통과는 작성자 보고이며 직접 확인하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "eval-17",
+        "version": "before16",
+        "pr": 16,
+        "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+        "status": "completed",
+        "duration_seconds": 28.2,
+        "usage": [
+          {
+            "input_tokens": 101411,
+            "cached_input_tokens": 69504,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 610,
+            "reasoning_output_tokens": 11
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "201687a5161c9e70f9a295c65c8bceefe97c1d9f97fdb291c9b4c8c5c94e919d",
+        "events_sha256": "1785e7352c0cb34b5ce65fa6c99b635d1a399a7d395ac77eaa0718fc767b4958",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "f22d7ef53f1ce736111ef50f58f1429413328cedbfae08aa359c8a0f83858077"
+      }
+    },
+    "eval-18--after16": {
+      "review": {
+        "findings": [
+          {
+            "severity": "P2",
+            "title": "미리보기 생성 전에 정수·범위 검증을 복원하세요",
+            "path": "src/batches/parseBatchSize.ts",
+            "line": 3,
+            "problem": "Number(raw)만 반환하면 1~100 정수 이외의 입력도 거부하지 않아 명시된 계약을 위반합니다.",
+            "effect": "UI에서 \"oops\", \"0\", \"-1\"은 빈 목록으로, \"13.5\"는 13개로, \"101\"은 101개로 표시됩니다. 오류가 발생하지 않아 invalid-size 메시지도 표시되지 않습니다.",
+            "fix": "기존 Number 변환 뒤 Number.isInteger와 1~100 범위 검사 및 Error(\"Invalid batch size\")를 복원하세요. 호출부 변경이나 새 의존성은 필요하지 않습니다.",
+            "evidence": [
+              "fixture.md는 제한 변경 없이 기존 계약을 보존하도록 명시합니다.",
+              "유일한 소비자 previewBatch는 반환값을 바로 Array.from의 length로 사용하며 UI에도 별도 검증이 없습니다.",
+              "제공된 기존 테스트 설명은 다섯 잘못된 입력 모두 Invalid batch size를 던져야 한다고 명시합니다."
+            ]
+          }
+        ],
+        "excluded": [
+          "스키마 라이브러리 도입·검증 계층 추가: 기존 소유 모듈의 조건문 복원으로 충분합니다.",
+          "테스트 누락 지적: 해당 회귀를 검사하는 기존 테스트가 있다고 명시되어 있습니다.",
+          "주석·이름 변경의 별도 지적: 검증 삭제와 같은 원인이므로 독립된 발견으로 보고하지 않습니다."
+        ],
+        "verification": [
+          "범위: fixture.md의 변경 파일 1개와 제공된 소비자·UI 흐름·테스트 설명을 정적으로 검토했습니다. 추가 변경 파일은 없다는 스냅샷 설명을 따랐습니다.",
+          "지침: 지정된 review-code와 공통 게이트·실행·검증·라우팅·관련 렌즈를 읽었습니다. TypeScript 입력 검증과 UI 오류 흐름에 적용했으며 프레임워크 전문 스킬은 필요하지 않았습니다.",
+          "품질: 응집도·결합도·중복·기존 계약·네이밍을 검토했습니다. 제공 범위에서 기존 파서가 유일한 정책 소유자이며 대체 구현은 없습니다.",
+          "실행 검증: 실행 가능한 체크아웃이 아니므로 테스트·타입 검사·린트·빌드는 실행하지 않았습니다. 실행 결과는 확인되지 않았습니다.",
+          "코드 수정, 네트워크 접근, 다른 저장소 참조는 하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "eval-18",
+        "version": "after16",
+        "pr": 16,
+        "commit": "799882155906026befd19f8507760cd907f0057f",
+        "status": "completed",
+        "duration_seconds": 38.5,
+        "usage": [
+          {
+            "input_tokens": 110301,
+            "cached_input_tokens": 72448,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 980,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "bd7343c85294b9a0553971e6671154364789aa18dc6d43fedd0f8bd82d9bf788",
+        "events_sha256": "a62fe6a9b456772381f7599d4016848b6249d4397de132e32140e5cd13c7ce70",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "99d29fb2639ec6fb8e6a847cc8c99886b85569f3b3c2279e0e71a36459c4295c"
+      }
+    },
+    "eval-18--before16": {
+      "review": {
+        "findings": [
+          {
+            "severity": "P2",
+            "title": "배치 크기의 정수·범위 검증 복원",
+            "path": "src/batches/parseBatchSize.ts",
+            "line": 3,
+            "problem": "Number(raw)만 반환하면 1~100 정수 이외의 입력도 거부하지 않아 기존 계약이 깨집니다.",
+            "effect": "previewBatch에서 \"0\", \"-1\", \"oops\"는 빈 목록, \"13.5\"는 13개, \"101\"은 101개 항목이 됩니다. 오류가 발생하지 않아 UI의 invalid-size 메시지도 표시되지 않습니다.",
+            "fix": "기존처럼 변환 결과를 size에 저장하고, !Number.isInteger(size) || size < 1 || size > 100이면 Error(\"Invalid batch size\")를 던진 뒤 반환하세요.",
+            "evidence": [
+              "fixture.md는 1~100 정수만 허용하며 미리보기 생성 전에 나머지 입력을 거부하도록 명시합니다.",
+              "유일한 소비자 previewBatch는 반환값을 Array.from의 length에 바로 전달하며 별도 검증이 없습니다.",
+              "제공된 기존 테스트 설명에는 해당 비정상 입력들의 Invalid batch size 예외 검증이 포함됩니다."
+            ]
+          }
+        ],
+        "excluded": [
+          "스키마 라이브러리 도입·검증 계층 분리: 기존 모듈의 조건문 복원만으로 충분합니다.",
+          "테스트 누락 지적: 제공된 기존 테스트가 경계값과 비정상 입력을 이미 다룹니다.",
+          "shortcut 주석 문제: 검증 제거와 같은 원인이므로 별도 finding으로 중복 보고하지 않습니다."
+        ],
+        "verification": [
+          "범위: fixture.md에 제공된 parseBatchSize.ts 변경 전체와 변경 없는 소비자·UI 흐름·테스트 설명을 정적으로 검토했습니다. 추가 변경 파일은 없다고 명시되어 있습니다.",
+          "지침: 지정된 review-code와 공통 게이트, 실행·검증·라우팅 및 프런트엔드·상세 리뷰 참조를 적용했습니다. 프레임워크 전문 스킬을 요구하는 근거는 없습니다.",
+          "테스트·타입 검사·빌드 미실행: 실행 가능한 체크아웃과 실행 결과가 제공되지 않았습니다. 동작 설명은 코드 추적에 근거하며 실제 테스트 실패를 확인한 것은 아닙니다.",
+          "코드 수정 및 네트워크·다른 저장소 접근은 하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "eval-18",
+        "version": "before16",
+        "pr": 16,
+        "commit": "fb8cda1d33df8bac33a3d36fdbd2fbdfc320d4c1",
+        "status": "completed",
+        "duration_seconds": 32.67,
+        "usage": [
+          {
+            "input_tokens": 102937,
+            "cached_input_tokens": 69504,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 852,
+            "reasoning_output_tokens": 10
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "a7f312f9a78bce721b9256a880e361a75fccf4916ec4f50033631ef0ca967bf9",
+        "events_sha256": "863d0ef9db92b9822d1f95e3985adeec9a3fd41796f033762fa47b65ddd7355a",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "5d0e6fe6464fcff7fe0288c88d858c4c4d7363ea9f48f86bbdccb4cb1f23ce86"
+      }
+    },
+    "frontend-adequate--after16": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "메모이제이션·reduce 전환: 최대 8명이며 측정된 성능 문제가 없어 변경 이득이 없습니다.",
+          "계산 헬퍼 추출·이름 변경: 공유 구현이나 명명 규칙 위반, 구체적인 유지보수 비용이 확인되지 않았습니다.",
+          "추가 입력 검증: fixture에 렌더링 전 Member 검증이 명시되어 있습니다.",
+          "UI·문구 변경: 일반 문단이 허용되고 단일 언어 문구도 승인되어 있습니다.",
+          "테스트 누락: 빈 목록, 혼합 목록, 목록 변경 후 재렌더링의 표시값 테스트가 있다고 명시되어 있습니다."
+        ],
+        "verification": [
+          "범위: fixture.md에 포함된 신규 src/teams/TeamCount.tsx 1~5행 전체를 정적으로 검토했습니다. 근거 있는 결함은 발견하지 못했습니다.",
+          "요구사항: active 멤버만 집계하며, 부모가 새 목록을 전달하면 렌더링마다 다시 계산합니다. 빈 목록은 0을 표시하고 입력을 변경하지 않습니다.",
+          "라우팅: 지정된 review-code 지침과 필수 참조, frontend-lens, review-lenses를 적용했습니다. React 전문 스킬은 없어 내장 렌즈를 사용했으며 Next.js 지침은 적용하지 않았습니다.",
+          "품질: 응집도·결합도·중복·관례·명명을 검토했습니다. 제공 파일 목록과 공유 헬퍼가 없다는 fixture 설명을 근거로 판단했습니다.",
+          "실행: cat과 rg로 로컬 자료를 읽고 목록을 확인했습니다. 실행 가능한 체크아웃과 테스트 파일이 없어 테스트·타입 검사·린트·빌드는 실행하지 않았습니다.",
+          "잔여 한계: 엔드포인트 검증과 기존 테스트는 fixture의 설명에 의존하며 실제 구현·실행 결과는 확인하지 못했습니다. 네트워크 접근과 코드 수정은 하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "frontend-adequate",
+        "version": "after16",
+        "pr": 17,
+        "commit": "799882155906026befd19f8507760cd907f0057f",
+        "status": "completed",
+        "duration_seconds": 32.96,
+        "usage": [
+          {
+            "input_tokens": 109723,
+            "cached_input_tokens": 49280,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 779,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "fea972947befdf0df815e4e26d7fa1c29daa7d71af462ab46a74d04bb5134e8d",
+        "events_sha256": "a97b0fcd806c12c1af4620369686333a001bde3afea97633768bf089d3495e50",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "0a148172f60a11adeb9d0a33017d69812742feaab12fec5e87df552580b58e5d"
+      }
+    },
+    "frontend-adequate--after17": {
+      "review": {
+        "findings": [],
+        "excluded": [
+          "메모이제이션·reduce 전환: 최대 8명이며 성능 문제나 관련 규칙이 없어 변경 이득이 입증되지 않습니다.",
+          "집계 헬퍼 추출: 공유 구현이나 중복 규칙이 없으며, 현재 계산을 분리할 구체적인 유지보수 근거가 없습니다.",
+          "추가 입력 방어: 렌더링 전에 Member 검증이 완료된다는 명시된 계약이 있습니다.",
+          "마크업·문구 변경: 일반 문단과 고정 문구는 승인된 정책에 부합합니다.",
+          "테스트 누락: 제공된 설명에 빈 목록, 혼합 목록, 목록 변경 후 재렌더링의 표시값 검증이 명시되어 있습니다."
+        ],
+        "verification": [
+          "범위: fixture.md의 신규 src/teams/TeamCount.tsx 1~5행 전체를 정적 리뷰했습니다. 근거 있는 결함은 발견하지 못했습니다.",
+          "요구사항·동작: filter로 활성 회원만 집계하며, 빈 목록은 0을 표시하고 부모가 새 목록을 전달해 렌더링하면 다시 계산합니다.",
+          "품질: 응집도·결합도·중복·로컬 정책·네이밍을 검토했습니다. 기존 구현 탐색은 제공 파일 범위로 제한했으며 공유 헬퍼 부재는 fixture의 명시적 설명에 근거했습니다.",
+          "라우팅: 지정된 review-code 지침과 공통·실행·검증·라우팅·프런트엔드·심화 렌즈를 읽었습니다. React 전문 스킬은 로컬 범위에 없어 내장 렌즈를 적용했습니다.",
+          "실행: cat과 rg로 제공 파일을 읽고 목록을 확인했습니다. 파일 수정이나 네트워크 접근은 하지 않았습니다.",
+          "한계: 실행 가능한 체크아웃과 테스트 소스가 없어 테스트·타입 검사·린트·빌드·브라우저 검증은 실행하지 않았습니다. 테스트와 입력 검증의 실제 구현은 독립적으로 확인하지 못했습니다."
+        ]
+      },
+      "execution": {
+        "case": "frontend-adequate",
+        "version": "after17",
+        "pr": 17,
+        "commit": "53eb262256c294f66217409747f3910e9236f599",
+        "status": "completed",
+        "duration_seconds": 33.16,
+        "usage": [
+          {
+            "input_tokens": 109967,
+            "cached_input_tokens": 72064,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 775,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "e416e1777d49b39731cdf7898bc3235ee15f9295f546ac52c9d018ead64fcb9a",
+        "events_sha256": "c5b52efe275370b0c23b24bc065ee151a98be126355ec12484f766915c8764cc",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "6f47e2b0b715dfdd5cf2350eab780536cd0edb2fb626c2d4e546938aaa1105b0"
+      }
+    },
+    "regression-assertion--after16": {
+      "review": {
+        "findings": [
+          {
+            "severity": "P2",
+            "title": "회귀 테스트가 편집 열의 누락·분리를 검출하지 못함",
+            "path": "src/grid/columns.test.ts",
+            "line": 9,
+            "problem": "두 비교는 amount·unit·date의 상대 순서만 확인합니다. 존재 여부, 연속성, 중복 여부와 memo 및 추가 열의 위치는 검증하지 않습니다.",
+            "effect": "현재 생성자는 올바르지만, 필수 열이 누락되거나 사이에 다른 열이 들어가는 회귀도 테스트를 통과하므로 명시된 테스트 요구사항을 충족하지 못합니다.",
+            "fix": "허용된 입력 []와 [\"owner\"] 각각에 대해 반환 배열 전체를 기대 배열과 비교하여 네 편집 열의 유일성·순서·연속성과 추가 열의 위치를 검증하세요.",
+            "evidence": [
+              "fixture.md는 네 편집 열이 정확히 한 번씩 연속해서 나타나고, 누락·분리를 회귀 테스트로 검출하도록 요구합니다.",
+              "amount가 빠진 [\"select\", \"unit\", \"date\", \"memo\", \"owner\"]도 비교식 -1 < 1, 1 < 2를 만족합니다.",
+              "[\"select\", \"amount\", \"owner\", \"unit\", \"date\", \"memo\"]도 두 비교를 만족하며, memo를 제거해도 비교 결과는 바뀌지 않습니다.",
+              "fixture.md에 따르면 이 계약을 검증하는 다른 테스트는 없습니다."
+            ]
+          }
+        ],
+        "excluded": [
+          "extra의 중복 열 방어 부재: 유일한 호출자는 [] 또는 [\"owner\"]만 전달하므로 해당 실패 경로는 도달하지 않습니다.",
+          "생성자 구현 오류: 제공된 두 입력에서는 요구한 열 순서·유일성·연속성을 충족합니다."
+        ],
+        "verification": [
+          "범위: fixture.md에 포함된 신규 생성자 3줄과 테스트 11줄 전체를 정적으로 검토했습니다. 다른 변경이 없다는 fixture 설명을 범위 근거로 삼았습니다.",
+          "지정된 review-code 스킬과 common-gate, review-execution, verification-matrix, skill-routing, review-lenses를 읽고 TypeScript/Vitest 테스트 관점으로 검토했습니다.",
+          "응집도·결합도·중복·규칙 적합성·네이밍을 검토했습니다. 제공 파일 목록과 전체 변경에서 별도 구현은 확인되지 않았으며, 테스트 계약 누락을 하나의 발견으로 통합했습니다.",
+          "Vitest·타입 검사·빌드는 미실행: 실행 가능한 체크아웃과 패키지 설정이 없습니다. 반례는 비교식을 정적으로 대조했으며, 작성자의 테스트 통과 보고를 직접 재검증하지 않았습니다.",
+          "네트워크와 다른 저장소를 사용하지 않았고 파일을 수정하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "regression-assertion",
+        "version": "after16",
+        "pr": 17,
+        "commit": "799882155906026befd19f8507760cd907f0057f",
+        "status": "completed",
+        "duration_seconds": 36.81,
+        "usage": [
+          {
+            "input_tokens": 108412,
+            "cached_input_tokens": 72192,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1001,
+            "reasoning_output_tokens": 54
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "745c2727d92114bc1f250b55d7806b5ee30592cdc2f064c635efca6108e008e0",
+        "events_sha256": "5ccdfbb8e38f1274509016235368379a593c1e20871490aa65754bbd4a9277e1",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "d850092457733c23b91b64e84d4217ea941f0c5da354a1cb59828e2ef6b76d6d"
+      }
+    },
+    "regression-assertion--after17": {
+      "review": {
+        "findings": [
+          {
+            "severity": "P2",
+            "title": "회귀 테스트가 편집 열의 누락과 비연속 배치를 허용함",
+            "path": "src/grid/columns.test.ts",
+            "line": 9,
+            "problem": "인덱스의 대소 관계만 검사하므로 존재 여부와 연속성을 보장하지 않습니다. memo와 각 열의 유일성도 검사하지 않습니다.",
+            "effect": "요구사항을 위반한 출력도 테스트를 통과하여, 명시적으로 요구된 회귀 방지가 이루어지지 않습니다.",
+            "fix": "[]와 [\"owner\"] 입력에 대해 전체 기대 배열을 비교하거나, 네 편집 열의 존재·유일성·연속 순서와 추가 열의 후행 배치를 모두 단언하세요.",
+            "evidence": [
+              "fixture.md:3–6은 네 열이 정확히 한 번씩 연속으로 배치되고 누락·분리를 회귀 테스트로 검출하도록 요구합니다.",
+              "[\"select\", \"unit\", \"date\", \"memo\", \"owner\"]에서는 amount=-1, unit=1, date=2여서 두 비교가 모두 참입니다.",
+              "[\"select\", \"amount\", \"owner\", \"unit\", \"date\", \"memo\"]도 두 비교를 만족하지만 편집 열이 연속하지 않습니다.",
+              "memo를 제거하거나 date 뒤에 amount를 중복 배치해도 두 비교는 참입니다. fixture는 다른 계약 검증 테스트가 없다고 명시합니다."
+            ]
+          }
+        ],
+        "excluded": [
+          "extra의 중복 이름 방어 부재: 유일한 호출자가 [] 또는 [\"owner\"]만 전달하므로 현재 경로에서 발생하지 않습니다.",
+          "생산 함수의 배열 배치: 명시된 호출 입력에서는 요구사항을 충족합니다.",
+          "테스트 이름 변경: 단언을 보완하면 이름과 동작이 일치하므로 별도 발견으로 보고하지 않습니다."
+        ],
+        "verification": [
+          "범위: fixture.md에 포함된 신규 생산 파일과 테스트 파일 전체를 검토했습니다. 추가 변경이 없다는 fixture의 명시를 기준으로 삼았습니다.",
+          "지침: 지정된 review-code 스킬과 common-gate, review-execution, verification-matrix, skill-routing, review-lenses를 읽었습니다. TypeScript/Vitest 테스트 렌즈를 적용했습니다.",
+          "품질: 제공 범위에서 응집도·결합도·중복·관례·네이밍을 검토하고 rg로 관련 구현을 검색했습니다. 별도 구현이나 프로젝트 설정은 제공되지 않았습니다.",
+          "검증 방식: 반례의 인덱스와 비교 결과를 정적으로 추적했습니다. 테스트 통과는 작성자의 보고이며 직접 실행한 결과가 아닙니다.",
+          "미실행: 실행 가능한 체크아웃과 패키지 설정이 없어 Vitest·타입 검사·린트는 실행하지 않았습니다. 네트워크 접근과 파일 수정은 하지 않았습니다."
+        ]
+      },
+      "execution": {
+        "case": "regression-assertion",
+        "version": "after17",
+        "pr": 17,
+        "commit": "53eb262256c294f66217409747f3910e9236f599",
+        "status": "completed",
+        "duration_seconds": 40.26,
+        "usage": [
+          {
+            "input_tokens": 108904,
+            "cached_input_tokens": 72192,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 979,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "changed_inputs": [],
+        "review_sha256": "3a51be5a0420a0b51875b7cff8e713f6db12fe99c0a30fc799b9937cd4ed70d4",
+        "events_sha256": "fd74a191da5d81fbb967ae2d0ced11364327a4c2abcedbb60e35c3e371580d47",
+        "input_checksums_match": true,
+        "canonical_review_sha256": "ced3453309c2292a551d310eac761573938e49d150438ea96677c396d82b6ded"
+      }
+    }
+  }
+}

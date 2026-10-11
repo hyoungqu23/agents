@@ -1,6 +1,6 @@
 # Frontend Review Lens
 
-Apply this lens when stack detection (SKILL.md Core Workflow step 3) finds a frontend web stack — e.g. `package.json` with React/Next.js/Vue/Svelte dependencies, or a diff dominated by component/UI code. Skip it entirely for backend-only or non-web changes. Local project gates override it.
+Apply this lens when stack detection finds a frontend web stack — e.g. `package.json` with React/Next.js/Vue/Svelte dependencies, or a diff dominated by component/UI code. Skip it entirely for backend-only or non-web changes. Local project gates override it.
 
 Framework-specific checks below use Next.js/React vocabulary because that is the most common case; translate the principle to the detected framework when it differs.
 
