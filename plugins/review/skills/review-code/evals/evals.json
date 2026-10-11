@@ -46,7 +46,7 @@
         "The review identifies the available source of old and intended behavior.",
         "Standards, Spec, and Runtime Contract are investigated independently.",
         "High-risk behavior is traced from a caller or entry point to an observable effect.",
-        "Every candidate is promoted, disproved, deduplicated, scoped out, or reported as unresolved residual risk."
+        "Every candidate has a recorded final disposition: promoted, disproved, not worth changing, duplicate, out of scope, or unresolved residual risk."
       ]
     },
     {
@@ -222,6 +222,36 @@
         "It does not mistake a generated provider type for a hand-maintained duplicate implementation.",
         "No runtime bug or new client response shape is invented against the supplied contract evidence.",
         "The report separates static/supplied evidence from reviewer-executed verification and discloses the lack of a runnable checkout."
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "첨부 변경을 review-code로 리뷰해줘. 코드 퀄리티는 엄격히 보되 과도한 수정은 피하고 싶어.",
+      "expected_output": "Leaves the adequate local filter unchanged, respects the still-valid prior decision, and emits no speculative abstraction, cosmetic rename, performance, or autofix request.",
+      "files": [
+        "evals/files/adequate-local-change.md"
+      ],
+      "expectations": [
+        "The review maps the requested filtering, order preservation, and input immutability to the implementation and supplied tests without inventing a defect.",
+        "It does not demand a generic predicate, filter registry, new dependency, caching, or helper solely to shorten the one local rule.",
+        "It does not propose a cosmetic rename or formatting edit where no repository rule or contract ambiguity exists, even though mechanical autofixes are permitted.",
+        "It respects the prior rejected suggestions because the same consumers, load, and requirements still apply; it does not reopen them merely to satisfy the high-quality request.",
+        "It performs no edits and does not claim live tests or an exhaustive live repository search against the snapshot."
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "첨부 리팩터링을 review-code로 리뷰해줘. 가능한 작은 수정으로 충분했으면 해. 코드는 수정하지 마.",
+      "expected_output": "Finds the removed batch-size validation despite the smaller diff and shortcut comment, traces invalid input to a silently accepted preview, and proposes restoring the local guard and exercising the existing tests without a new framework.",
+      "files": [
+        "evals/files/smaller-patch-removes-validation.md"
+      ],
+      "expectations": [
+        "A promoted finding anchors src/batches/parseBatchSize.ts:3 and cites the required integer/range checks plus previewBatch's raw-input path.",
+        "The review gives a concrete effect, such as 13.5 producing a 13-item preview instead of rejection, or 101 producing an out-of-contract 101-item preview.",
+        "The shortcut comment does not override the explicit validation requirement or prove that the UI enforces valid inputs.",
+        "The smallest fix restores the local guard and uses the existing boundary cases; the review does not require a new parser layer, schema dependency, configuration, or unrelated refactor.",
+        "The finding is not suppressed to reduce code size, and command results are not fabricated for the snapshot."
       ]
     }
   ]

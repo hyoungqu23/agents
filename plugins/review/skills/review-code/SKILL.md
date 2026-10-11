@@ -7,15 +7,17 @@ description: Completion-gated hard code review workflow for PRs, branches, diffs
 
 ## Overview
 
-Run a strict, completion-gated review that catches correctness, maintainability, convention, regression, and UI/UX issues. Maintain an internal coverage ledger so evidence filtering cannot hide unreviewed files or code paths. Prefer small mechanical autofixes when they are obviously safe; report larger or semantic issues without touching code.
+Run a strict, completion-gated review that catches correctness, maintainability, convention, regression, and UI/UX issues. Maintain an internal coverage ledger so evidence filtering cannot hide unreviewed files or code paths. Apply mechanical autofixes only when they pass the change-restraint gate below; report larger or semantic issues without touching code.
 
 ## Default Quality Bar
 
-Pursue the highest code quality within the review scope on every invocation; the user does not need to repeat this preference. Passing tests or preserving behavior does not excuse a concrete design or maintenance defect. Always assess cohesion, coupling, semantic duplication, repository patterns and applicable best practices, and naming using the engineering-quality criteria in `resources/common-gate.md`.
+Pursue high code quality through the smallest justified change that fully satisfies current requirements; the user does not need to repeat this preference. Passing tests or preserving behavior does not excuse a concrete design or maintenance defect. Always assess cohesion, coupling, semantic duplication, repository patterns and applicable best practices, and naming using the engineering-quality criteria in `resources/common-gate.md`.
 
 Do not accept independently maintained implementations of the same owned rule. Search for existing implementations before recommending new code or abstractions. A quality finding must show the affected responsibilities, dependencies, duplicate rule, convention, or misleading name and a concrete maintenance consequence; a current runtime failure is not required. Similar syntax alone is not semantic duplication.
 
 Keep fixes proportional to the changed code and its directly affected consumers. High quality does not require speculative abstractions, unrelated cleanup, a minimum finding count, or a claim of perfection. Finish when the completion gate closes, with unresolved evidence reported honestly.
+
+Before promoting a finding or autofixing, apply the **Change Restraint** gate in `resources/common-gate.md`: explain what happens if the code stays as it is, choose the smallest complete remedy, and weigh its benefit against added complexity, compatibility work, and regression risk. Leaving adequate code unchanged is a valid outcome. Preserve the validation, error handling, security, accessibility, and tests needed by the current behavior.
 
 ## Core Workflow
 
@@ -57,7 +59,8 @@ Keep fixes proportional to the changed code and its directly affected consumers.
    - Follow high-risk behavior from entry point or caller through transformation and trust boundaries to the render, persistence, network, process, or other observable effect. Use `resources/review-execution.md` for the trace and candidate lifecycle.
    - Every promoted finding needs a concrete `file:line` reference and the exact code path that makes it actionable. Absence findings still need an anchor where the missing handling, test, or documentation should be introduced.
    - State what to change, why it matters, and the expected post-fix state. For quality findings, cite both the changed code and the relevant owner, dependency, existing implementation, convention, or caller; explain the maintenance consequence without inventing a runtime failure. Suppress speculation, preference-only notes, and issues with no concrete fix.
-   - Try to disprove each candidate using nearby code, call sites, consumers, tests, feature flags, repository conventions, history when relevant, and the rest of the diff. Record each candidate as promoted, disproved, duplicate, out of scope, or unresolved.
+   - Try to disprove each candidate using nearby code, call sites, consumers, tests, feature flags, repository conventions, history when relevant, and the rest of the diff. Record each candidate as promoted, disproved, not worth changing, duplicate, out of scope, or unresolved.
+   - Apply the common gate's Change Restraint check to the proposed remedy. Reject cleanup with no demonstrated net benefit, and keep optional improvements non-blocking. Reading related code does not make unrelated cleanup part of the target.
    - If a contract question cannot be settled from the diff, read the primary source directly when it is reachable: the server router/schema, API specification, migration/model, generated client, or official documentation, in the order given by `resources/review-lenses.md`. Otherwise keep it unresolved rather than upgrading uncertainty into a finding.
 
 7. Verify with repository-native checks using `resources/verification-matrix.md`.
@@ -90,13 +93,13 @@ For a PR URL/number or an explicit PR-review request, add copy-ready comment rec
 
 ## Autofix Boundary
 
-Autofix only when the issue is mechanical, low-risk, and locally obvious, unless the user explicitly requested report-only review.
+Autofix only when the issue is mechanical, low-risk, locally obvious, and passes the Change Restraint gate, unless the user explicitly requested report-only review. Do not make a cosmetic edit merely because it is safe to perform.
 
 Safe autofix examples:
 - unused imports, unused local variables, obvious dead branches introduced by the diff
 - stray debug logs, temporary comments, accidentally committed local-only preview routes or harness pages when clearly not intended
 - typo-level copy/comment fixes that do not alter product meaning
-- one-file formatting nits only when they do not cause broad formatter churn
+- formatting required by repository lint/format rules on changed code, without unrelated formatter churn
 
 Do not autofix:
 - API contract changes, data migrations, auth/permission behavior, persistence logic, caching semantics, concurrency fixes, test strategy, UX behavior, broad refactors, or ambiguous product decisions
@@ -125,7 +128,7 @@ For findings:
 
 - 문제: 구체적으로 깨지는 지점
 - 바꿀 것: 최소 수정 방향
-- 이유: 버그/유지보수/UX/회귀 위험
+- 이유: 그대로 둘 때의 구체적 비용과 제안한 수정이 그 비용을 줄이는 근거
 - 수정 후 상태: 고쳐진 뒤 보장되어야 하는 상태
 - 근거: 확인한 코드, 테스트, 문서, 명령
 

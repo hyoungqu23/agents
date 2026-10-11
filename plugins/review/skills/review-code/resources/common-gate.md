@@ -55,6 +55,17 @@ Apply all five criteria during the Standards pass, including changes whose behav
 - Try to refute findings with independent ownership, generated sources, compatibility constraints, documented migration/architecture exceptions, and actual callers. Record accepted exceptions with their evidence; do not silently skip a criterion.
 - Report one root cause once even if it violates several criteria. A duplicated rule embedded in a UI module may violate cohesion, coupling, and duplication, but one owner/reuse fix should usually be one finding.
 
+## Change Restraint — Before Promotion and Autofix
+
+Use this check to decide whether a proposed change earns its cost. Apply it to every finding and autofix; keep the reasoning internal unless it explains a finding or an excluded candidate.
+
+1. **Cost of leaving it:** Name the current requirement, reachable failure, or concrete maintenance burden that remains without a fix. A preferred synonym, a file-length target, imagined future consumers, or unspecified future scale is not enough. If the code is adequate for its actual contract and expected load, leave it unchanged.
+2. **Smallest complete remedy:** First check whether removing unnecessary code or reusing an existing owner solves the issue. Then consider a local correction using the repository's conventions and existing platform/library capabilities. Propose a new abstraction, dependency, layer, configuration option, or public contract only when a current requirement cannot be met cleanly through those options; name that requirement. Fix all affected callers and preserve required tests, even when that needs more than one file. Prefer clarity over line-count reduction.
+3. **Net benefit:** Compare the concrete benefit with new indirection, coordination across modules, compatibility work, diff churn, and regression risk. For maintainability-only suggestions, suppress the candidate if the benefit does not justify that cost. An optional improvement stays `P3` / `WARN`; do not make it a merge condition or an excuse for repeated polishing. A proven correctness, security, data-loss, accessibility, or explicit requirement violation still needs a finding: constrain the remedy rather than dismissing the defect as expensive.
+4. **Existing decisions:** Honor documented limits and accepted tradeoffs while their assumptions still hold. A comment or prior approval is evidence to check, not immunity for a broken contract. On re-review, reopen an accepted or excluded item only when code, requirements, or evidence materially changed; otherwise keep it closed and report remaining verification risk as appropriate.
+
+Do not weaken boundary validation, failure handling, permissions, accessibility, or behavior-focused tests to make a patch smaller. Do not use this gate to keep a new parallel implementation of the same owned rule: remove the new copy or reuse the existing implementation before considering any broader extraction. Avoid unrelated renames, helper extraction solely for shorter functions, and speculative frameworks during that fix.
+
 ## INJECTION — Injection and Unsafe Execution
 
 Principle: user-controlled or external data must not be directly inserted into SQL, shell commands, HTML, code execution, filesystem paths, redirects, or URL fetch targets.

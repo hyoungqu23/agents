@@ -19,6 +19,12 @@ passing does not exempt a concrete maintenance defect. Findings identify the
 existing owner or implementation and the smallest useful fix; independently
 owned policies that only look alike do not require a shared abstraction.
 
+Before recommending or autofixing a change, the review weighs the cost of leaving
+the code against the smallest complete remedy and its complexity and regression
+risk. Adequate code can stay unchanged; optional cleanup cannot block a merge.
+Required safety checks and behavior tests remain intact. This restraint draws on
+[Ponytail's approach](https://github.com/DietrichGebert/ponytail/blob/main/skills/ponytail/SKILL.md).
+
 `review-code` and `review-respond` polish PR comment text with `un-ai` from the [`content`](../content) plugin. Install both plugins for that pass; without `content`, the skills apply their comment wording rules directly and report the missing pass.
 
 ## Checking an existing review
