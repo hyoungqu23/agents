@@ -57,6 +57,7 @@ Run all three passes over the full inventory. Candidate discovery is intentional
 
 - Turn every available acceptance criterion or promised behavior into a small checklist.
 - Map each item to implementation and a test, or create a candidate for the gap.
+- For regression fixes and material behavior changes, use Regression Sensitivity in `verification-matrix.md` to connect the claimed test coverage to an assertion that rejects the known incorrect behavior.
 - For refactors, identify old behavior and prove it remains unless the intent explicitly changes it.
 - Note scope added by the diff that is not explained by the intent source.
 
@@ -64,6 +65,7 @@ Run all three passes over the full inventory. Candidate discovery is intentional
 
 - Follow data and control flow through runtime validation, narrowing, transformation, async work, state/cache updates, persistence, external calls, rendering, and recovery paths.
 - Check both success and failure states, including empty, partial, duplicate, stale, unauthorized, retried, cancelled, and concurrently changed inputs when relevant.
+- For async lifetimes and partial writes, apply ASYNC-SAFETY in `common-gate.md`: record the intervening target change, any work already persisted, and the completion/refresh/retry effect rather than reviewing only the happy-path callback.
 - Compare both sides of a boundary: writer/reader, server/client, producer/consumer, old/new deployment, parser/type, or migration/application.
 
 Each candidate note should contain:

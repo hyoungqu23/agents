@@ -12,6 +12,16 @@ Use this resource for every review. Verification supports code reading; a green 
 6. Do not install dependencies, download tools, start required external services, or use credentials beyond those already configured for the review without authorization.
 7. Check the working tree after commands that may generate files. Report newly generated changes; do not silently delete or overwrite them.
 
+## Regression Sensitivity
+
+For regression fixes and material behavior changes, inspect whether the relevant test can distinguish the required outcome from the specific broken behavior. This is a targeted check, not a requirement to run mutation testing or rewrite every test.
+
+- Map `requirement -> fixture/input -> production branch or event -> observable result -> assertion`. Confirm the test reaches the changed handler with the intended input; a mock must not manufacture the result the production code is supposed to produce.
+- Try a concrete counterexample while reading the assertion: a missing item returning index `-1`, ordered but non-adjacent items in a test claiming contiguity, or a rejected upload followed by an unexpected save. Check that the assertion rejects the incorrect result, not merely that a function was called.
+- Prefer existing pre-fix failure/post-fix success evidence for the same relevant assertion, or a direct trace proving that the incorrect result violates it. Do not treat unrelated setup, dependency, or compilation failure on an older revision as proof that the test detects the regression.
+- If execution would require reverting or mutating the user's code, use an authorized isolated workspace or keep the check static. Never alter the review target solely to demonstrate a failing test without authorization.
+- Report the evidence accurately: executed comparison, static assertion trace, or unverified. A demonstrably ineffective assertion is a finding candidate; inability to perform the comparison is a verification gap, not proof of a test defect. Propose the smallest missing assertion or scenario, not a new test framework or a blanket coverage target.
+
 ## JavaScript and TypeScript
 
 Detect the package manager from the committed lockfile and repository configuration. Use the matching `pnpm`, `npm`, `yarn`, or `bun` command and existing workspace filters.

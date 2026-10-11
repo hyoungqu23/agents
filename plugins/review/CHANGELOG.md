@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2 - 2026-10-11
+
+- Require concrete impact before frontend extraction, memoization, naming, or migration suggestions.
+- Check whether regression assertions reject the broken behavior.
+- Trace async target lifetimes, partial writes, and failures after a successful write.
+
 ## 0.4.1 - 2026-10-10
 
 - Make cohesion, coupling, semantic duplication, repository patterns/best practices, and naming mandatory in every `review-code` review, with evidence recorded in the completion gate.
