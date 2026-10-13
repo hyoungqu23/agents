@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flow Spec"
+  short_description: "Connect requirements to traceable user flows"
+  default_prompt: "Use $flow-spec to turn this PRD into user flows while preserving requirements and open decisions."

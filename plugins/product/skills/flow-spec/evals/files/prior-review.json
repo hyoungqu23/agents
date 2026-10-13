@@ -1,0 +1,13 @@
+{
+  "target": {
+    "path": "current-prd.md",
+    "id": "prd:personal-tag-finder",
+    "revision": 1,
+    "sha256": "b231647a9431f958b549ddd96a672c83baad0e9ecf2460a3e40679213a373334"
+  },
+  "verdict": "ready_for_flow",
+  "sources": [],
+  "limitations": [
+    "Historical report for earlier content."
+  ]
+}

@@ -36,7 +36,7 @@
       "name": "design",
       "source": "./plugins/design",
       "description": "Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references.",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "category": "Productivity",
       "keywords": [
         "design",
@@ -49,14 +49,15 @@
     {
       "name": "product",
       "source": "./plugins/product",
-      "description": "Product problem framing, traceable PRD authoring and read-only readiness review.",
-      "version": "0.3.0",
+      "description": "Product problem framing, traceable requirements, readiness review and user-flow specifications.",
+      "version": "0.4.0",
       "category": "Productivity",
       "keywords": [
         "product",
         "problem",
         "requirements",
-        "evidence"
+        "evidence",
+        "flow"
       ]
     }
   ]

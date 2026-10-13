@@ -1,0 +1,118 @@
+{
+  "method": "Node VM with minimal DOM doubles; not a real browser",
+  "checks": [
+    {
+      "name": "explore/index.html inline script parses and initializes",
+      "result": "PASS"
+    },
+    {
+      "name": "explore/index.html AC-001 exact tag result set and exclusion",
+      "result": "PASS"
+    },
+    {
+      "name": "explore/index.html AC-002 switches result membership",
+      "result": "PASS"
+    },
+    {
+      "name": "explore/index.html AC-003 each selected note uses its own stored body",
+      "result": "PASS"
+    },
+    {
+      "name": "explore/index.html AC-004 content failure identifies selected note and hides stored content",
+      "result": "PASS"
+    },
+    {
+      "name": "explore/index.html AC-005 successful empty result",
+      "result": "PASS"
+    },
+    {
+      "name": "explore/index.html AC-006 failed lookup does not assert empty result",
+      "result": "PASS"
+    },
+    {
+      "name": "explore/index.html demo reset clears selection, errors and opened note",
+      "result": "PASS"
+    },
+    {
+      "name": "explore/index.html no external or local-load asset dependency",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype/index.html inline script parses and initializes",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype/index.html AC-001 exact tag result set and exclusion",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype/index.html AC-002 switches result membership",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype/index.html AC-003 each selected note uses its own stored body",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype/index.html AC-004 content failure identifies selected note and hides stored content",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype/index.html AC-005 successful empty result",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype/index.html AC-006 failed lookup does not assert empty result",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype/index.html demo reset clears selection, errors and opened note",
+      "result": "PASS"
+    },
+    {
+      "name": "prototype/index.html no external or local-load asset dependency",
+      "result": "PASS"
+    },
+    {
+      "name": "variant A/B and fallback routing logic",
+      "result": "PASS"
+    },
+    {
+      "name": "next/previous wrap with URL and preserve state",
+      "result": "PASS"
+    },
+    {
+      "name": "popstate handler reads current URL",
+      "result": "PASS"
+    },
+    {
+      "name": "arrow handler leaves editable/widget-owned events alone",
+      "result": "PASS"
+    },
+    {
+      "name": "arrow handler switches outside controls",
+      "result": "PASS"
+    },
+    {
+      "name": "promoted B has no A layout, variant routing, switcher or global shortcuts",
+      "result": "PASS"
+    },
+    {
+      "name": "promoted B preserves entire shared state/render/interaction code",
+      "result": "PASS"
+    },
+    {
+      "name": "promoted B initial markup identical to selected exploration B",
+      "result": "PASS"
+    }
+  ],
+  "passed": 26,
+  "unrun": [
+    "file:// browser runtime",
+    "375/768/1440 viewport visual checks and screenshots",
+    "real focus order and native keyboard behavior",
+    "actual browser reload/back/forward",
+    "console/resource errors in browser",
+    "real data integration"
+  ]
+}

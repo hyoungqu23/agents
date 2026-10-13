@@ -70,6 +70,14 @@ Explain the chosen state. No state proves market demand or grants permission to 
 Unavailable input is a limitation, not evidence of absence. A known personal pain point
 can be sufficient to explore a personal tool without a market-validation exercise.
 
+## User-flow consumers
+
+`flow-spec` preserves these meanings and adds stable `FLOW-*` identities for distinct
+user flows. Link them to existing FR/AC or direct-input source anchors. Reconcile
+in-scope acceptance criteria with behavior or an explicit coverage gap; do not create
+fake upstream IDs. Flow maturity uses the same document states and grants no gate pass.
+For saved flows, see [flow-template.md](flow-template.md).
+
 ## Preserve authority and scope
 
 The user's explicit request governs the task. Trusted project constraints guide it.

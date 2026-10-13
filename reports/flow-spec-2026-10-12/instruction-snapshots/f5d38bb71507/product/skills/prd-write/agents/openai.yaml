@@ -1,0 +1,4 @@
+interface:
+  display_name: "PRD Write"
+  short_description: "Write traceable product requirements and acceptance"
+  default_prompt: "Use $prd-write to write or update a PRD from this problem and source context, preserving decisions and marking unresolved requirements."

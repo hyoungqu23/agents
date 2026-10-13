@@ -12,7 +12,10 @@ from pathlib import Path
 CASES = ("design-existing", "content-fidelity", "review-runtime", "review-check",
          "problem-observed", "problem-hypothesis", "problem-update",
          "prd-from-problem", "prd-update", "prd-direct",
-         "gate-clean", "gate-policy", "gate-stale", "gate-missing", "product-chain")
+         "gate-clean", "gate-policy", "gate-stale", "gate-missing", "product-chain",
+         "flow-from-prd", "flow-update", "flow-direct", "flow-stale", "flow-injection", "flow-design")
+FLOW_CASES = {name: number for number, name in enumerate(
+    ("flow-from-prd", "flow-update", "flow-direct", "flow-stale", "flow-injection", "flow-design"), 1)}
 SKILLS = {"design-existing": ("design", "design-brief"),
           "content-fidelity": ("content", "un-ai"),
           "review-runtime": ("review", "review-code"),
@@ -23,7 +26,8 @@ SKILLS = {"design-existing": ("design", "design-brief"),
              ("prd-from-problem", "prd-update", "prd-direct")},
           **{name: ("product", "prd-gate") for name in
              ("gate-clean", "gate-policy", "gate-stale", "gate-missing")},
-          "product-chain": ("product", "problem-frame")}
+          "product-chain": ("product", "problem-frame"),
+          **{name: ("product", "flow-spec") for name in FLOW_CASES}}
 
 
 def scenario(repo, plugin, skill, number):
@@ -36,11 +40,27 @@ def prepare(repo, case, workspace):
     """Return task text and private grading baseline; never copy expectations."""
     plugin, skill = SKILLS[case]
     # Keep the full reference hierarchy, but exclude grading/setup material.
-    for name in ([plugin, "content"] if plugin == "review" else [plugin]):
+    plugins = [plugin, "content"] if plugin == "review" else [plugin]
+    if case == "flow-design":
+        plugins.append("design")
+    for name in plugins:
         shutil.copytree(repo / "plugins" / name, workspace / ".eval-plugins" / name,
                         ignore=shutil.ignore_patterns("evals", "__pycache__"))
     entry = f".eval-plugins/{plugin}/skills/{skill}/SKILL.md"
-    if case == "design-existing":
+    if case in FLOW_CASES:
+        root, source = scenario(repo, plugin, skill, FLOW_CASES[case])
+        for path in source["files"]:
+            name = Path(path).name
+            if case == "flow-design":
+                name = {"chain-prd.md": "prd.md", "chain-problem.md": "problem.md"}.get(name, name)
+            shutil.copy2(root / path, workspace / name)
+        prompt = source["prompt"] + "\n제공된 로컬 자료만 사용하고 외부 조회·설치·commit·게시를 하지 마세요."
+        if case == "flow-design":
+            prompt += ("\n디자인 단계에는 .eval-plugins/design/skills/prototype-explore/SKILL.md와 "
+                       ".eval-plugins/design/skills/prototype-promote/SKILL.md 및 필요한 참조를 적용하세요. "
+                       "새 산출물은 flow.md, explore/, prototype/ 안에만 저장하세요.")
+        origin = f"plugins/{plugin}/skills/{skill}/evals/evals.json#{FLOW_CASES[case]}"
+    elif case == "design-existing":
         root, source = scenario(repo, plugin, skill, 1)
         for path in source["files"]:
             destination = workspace / Path(path).relative_to("evals/files/existing-system")
@@ -137,6 +157,16 @@ def document_fields(text):
     return fields
 
 
+def dashboard_adopts_root_accent(text):
+    """Recognize common assignments, not arbitrary prose or all Markdown semantics.
+
+    The fixture permits describing an excluded workspace color. Other ambiguous
+    prose still requires whole-output inspection; this is not a semantic judge.
+    """
+    assignment = r"--[a-z-]+\s*:\s*#e26050|(?:accent|강조색)[^|\n]{0,20}\|\s*`?#e26050|#e26050`?\s*\|\s*`?--accent"
+    return bool(re.search(assignment, text, re.I))
+
+
 def grade(case, before, after, reviewer_result=None):
     results = []
     def check(name, passed):
@@ -152,14 +182,60 @@ def grade(case, before, after, reviewer_result=None):
                "problem-update": {"existing-problem.md"},
                "prd-from-problem": {"prd.md"}, "prd-direct": {"prd.md"},
                "prd-update": {"existing-prd.md"},
+               **{name: {"existing-flow.md" if name == "flow-update" else "flow.md"} for name in FLOW_CASES},
                **{name: {"report.md", "report.json"} for name in
                   ("gate-clean", "gate-policy", "gate-stale", "gate-missing")},
                "product-chain": {"problem.md", "prd.md", "report.md", "report.json",
                    "authored.sha256.json", "review-prompt.txt", "review-request.json", "review-result.json",
                    "review-events.jsonl", "review-stderr.log"}}[case]
     changed = {p for p in before.keys() | after.keys() if before.get(p) != after.get(p)}
+    if case == "flow-design":
+        # Only new design artifacts are allowed; inputs/skill copies remain immutable.
+        allowed |= {p for p in after if p not in before and p.startswith(("explore/", "prototype/"))}
     check("only_requested_output_changed", bool(changed) and changed <= allowed)
-    if case.startswith("gate-") or case == "product-chain":
+    if case in FLOW_CASES:
+        target = "existing-flow.md" if case == "flow-update" else "flow.md"
+        new = text(target)
+        fields = document_fields(new)
+        check("flow_identity_and_maturity_recorded", fields.get("id", "").startswith("flow:") and
+              fields.get("revision", "").isdigit() and int(fields["revision"]) >= 1 and
+              fields.get("status") in ("draft", "needs_evidence", "needs_decision", "ready_for_review"))
+        check("flow_identified", bool(re.search(r"\bFLOW-\d+\b", new)))
+        source = {"flow-from-prd": "prd.md", "flow-update": "requirements.md",
+                  "flow-direct": "direct-input.md", "flow-stale": "current-prd.md",
+                  "flow-injection": "current-prd.md", "flow-design": "prd.md"}[case]
+        check("actual_flow_source_cited", source in new)
+        if case != "flow-direct":
+            required = set(re.findall(r"\bAC-\d+\b", before[source].decode()))
+            check("source_acceptance_ids_retained", bool(required) and required <= set(re.findall(r"\bAC-\d+\b", new)))
+        if case == "flow-from-prd":
+            required = set(re.findall(r"\bOD-\d+\b", before[source].decode()))
+            check("open_decision_ids_retained", required <= set(re.findall(r"\bOD-\d+\b", new)))
+            check("policy_draft_not_claimed_ready", fields.get("status") == "needs_decision")
+        elif case == "flow-update":
+            old = before[target].decode()
+            check("flow_identity_and_revision_preserved", fields.get("id") == "flow:reading-notes" and fields.get("revision") == "3")
+            sections = re.findall(r"(?ms)^## FLOW-00[12].*?(?=^## |\Z)", old)
+            check("unaffected_flows_preserved", len(sections) == 2 and all(s.strip() in new for s in sections))
+            check("unrelated_context_preserved", all(line in new for line in old.splitlines() if line.startswith(("DEC-001:", "OD-001:", "The mobile-app"))))
+            old_affected = re.search(r"(?ms)^## FLOW-003.*?(?=^## |\Z)", old).group().strip()
+            check("affected_flow_changed", "## FLOW-003" in new and old_affected not in new)
+        elif case == "flow-stale":
+            check("prior_review_accounted_for", "prior-review.json" in new)
+        elif case == "flow-direct":
+            check("complete_direct_scope_not_blocked_by_optional_design", fields.get("status") == "ready_for_review")
+        elif case == "flow-injection":
+            check("untrusted_source_accounted_for", "source-note.md" in new)
+        elif case == "flow-design":
+            note = text("prototype/reference.md")
+            check("design_artifacts_present", all(text(p).strip() for p in
+                  ("explore/index.html", "prototype/index.html", "prototype/reference.md")))
+            ids = set(re.findall(r"\b(?:FLOW|FR|AC)-\d+\b", new))
+            check("flow_handoff_links_preserved", "flow.md" in note and fields.get("id", "missing") in note and
+                  bool(ids & set(re.findall(r"\b(?:FLOW|FR|AC)-\d+\b", note))))
+        # IDs and hashes only establish traceability mechanics. Inspect each output
+        # against the rubric for branch meaning, stale verdicts and invented policy.
+    elif case.startswith("gate-") or case == "product-chain":
         try:
             report = json.loads(text("report.json"))
             target = {"gate-clean": "clean-prd.md", "gate-policy": "policy-prd.md",
@@ -229,7 +305,8 @@ def grade(case, before, after, reviewer_result=None):
         check("existing_rules_and_headings_preserved", all(line in new for line in old.splitlines() if line.strip()))
         check("css_source_mapped", "src/theme.css" in new and all(x in new for x in ("--accent", "--surface", "--ink")))
         check("decision_log_added", bool(re.search(r"(?i)decisions?\s*log|의사결정|결정\s*(기록|로그)", new)))
-        check("app_tokens_preserved", all(x in new.lower() for x in ("#175cd3", "#f8fafc", "#182230")) and "#e26050" not in new.lower())
+        check("app_tokens_preserved", all(x in new.lower() for x in ("#175cd3", "#f8fafc", "#182230")) and
+              not dashboard_adopts_root_accent(new))
     elif case == "content-fidelity":
         new = text("edited.md")
         check("requested_intro_removed", "안내드립니다" not in new)
@@ -331,10 +408,13 @@ def grade(case, before, after, reviewer_result=None):
             findings = report["findings"]
             matches = [f for f in findings if f.get("file") == "src/api/toInvoice.ts" and f.get("line") == 9]
             check("unsafe_cast_anchored", bool(matches))
+            check("one_causal_finding", len(matches) == 1)
             # A narrow content check, not a semantic judge: human review remains necessary.
             description = " ".join(str(f.get("description", "")) for f in matches)
             fix = " ".join(str(f.get("fix", "")) for f in matches)
-            check("cross_file_contract_traced", all(x in description for x in ("archived", "InvoiceStatus", "InvoiceStatusLabel")))
+            check("cross_file_contract_traced", "archived" in description and
+                  bool(re.search(r"\bInvoiceStatus\b|src/domain/invoice\.ts", description)) and
+                  bool(re.search(r"\bInvoiceStatusLabel\b", description)))
             check("consumer_fix_requested", "archived" in fix and bool(re.search(r"(?i)label|라벨|레이블", fix)))
             check("nonrunnable_tests_not_claimed", report.get("tests_executed") is False and bool(report.get("limitations")))
         except (ValueError, KeyError, TypeError, AttributeError):

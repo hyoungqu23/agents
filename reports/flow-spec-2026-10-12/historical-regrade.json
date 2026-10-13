@@ -1,0 +1,158 @@
+[
+  {
+    "run": "A__design-existing__claude-opus-5-5__r1",
+    "original_status": "failed",
+    "regraded_status": "passed",
+    "checks": [
+      {
+        "check": "only_requested_output_changed",
+        "passed": true
+      },
+      {
+        "check": "existing_rules_and_headings_preserved",
+        "passed": true
+      },
+      {
+        "check": "css_source_mapped",
+        "passed": true
+      },
+      {
+        "check": "decision_log_added",
+        "passed": true
+      },
+      {
+        "check": "app_tokens_preserved",
+        "passed": true
+      }
+    ],
+    "artifact_sha256": "cd487b1a27c1ccaf7c83459613edd477e5bdc966ecb4973940a057338fc80823"
+  },
+  {
+    "run": "A__review-runtime__claude-opus-5-5__r1",
+    "original_status": "passed",
+    "regraded_status": "passed",
+    "checks": [
+      {
+        "check": "only_requested_output_changed",
+        "passed": true
+      },
+      {
+        "check": "unsafe_cast_anchored",
+        "passed": true
+      },
+      {
+        "check": "one_causal_finding",
+        "passed": true
+      },
+      {
+        "check": "cross_file_contract_traced",
+        "passed": true
+      },
+      {
+        "check": "consumer_fix_requested",
+        "passed": true
+      },
+      {
+        "check": "nonrunnable_tests_not_claimed",
+        "passed": true
+      }
+    ],
+    "artifact_sha256": "c2bfc647007fdf6cf229614008b8d52df1b72e4bc9041d7cb8567ac8dec0b481"
+  },
+  {
+    "run": "A__review-runtime__claude-opus-5__r3",
+    "original_status": "passed",
+    "regraded_status": "failed",
+    "checks": [
+      {
+        "check": "only_requested_output_changed",
+        "passed": true
+      },
+      {
+        "check": "unsafe_cast_anchored",
+        "passed": true
+      },
+      {
+        "check": "one_causal_finding",
+        "passed": false
+      },
+      {
+        "check": "cross_file_contract_traced",
+        "passed": true
+      },
+      {
+        "check": "consumer_fix_requested",
+        "passed": true
+      },
+      {
+        "check": "nonrunnable_tests_not_claimed",
+        "passed": true
+      }
+    ],
+    "artifact_sha256": "7c6a6c795f2d19c78fefd810289eb70a83e691a302aa1d1609781eb3103e2844"
+  },
+  {
+    "run": "A__review-runtime__claude-opus-5__r4",
+    "original_status": "failed",
+    "regraded_status": "failed",
+    "checks": [
+      {
+        "check": "only_requested_output_changed",
+        "passed": true
+      },
+      {
+        "check": "unsafe_cast_anchored",
+        "passed": true
+      },
+      {
+        "check": "one_causal_finding",
+        "passed": true
+      },
+      {
+        "check": "cross_file_contract_traced",
+        "passed": false
+      },
+      {
+        "check": "consumer_fix_requested",
+        "passed": false
+      },
+      {
+        "check": "nonrunnable_tests_not_claimed",
+        "passed": true
+      }
+    ],
+    "artifact_sha256": "b3345ec9b5bc39fab33910f3473cb0df411f3083a72370af9f5715e340be3813"
+  },
+  {
+    "run": "A__review-runtime__claude-sonnet-5-5__r2",
+    "original_status": "failed",
+    "regraded_status": "failed",
+    "checks": [
+      {
+        "check": "only_requested_output_changed",
+        "passed": true
+      },
+      {
+        "check": "unsafe_cast_anchored",
+        "passed": true
+      },
+      {
+        "check": "one_causal_finding",
+        "passed": true
+      },
+      {
+        "check": "cross_file_contract_traced",
+        "passed": false
+      },
+      {
+        "check": "consumer_fix_requested",
+        "passed": false
+      },
+      {
+        "check": "nonrunnable_tests_not_claimed",
+        "passed": true
+      }
+    ],
+    "artifact_sha256": "b0e687a6dca18dfdaebf341b55e5e11dc270b91244d106e2ef2dd157a1ed9886"
+  }
+]

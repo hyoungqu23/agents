@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[탐색용] 태그로 노트 찾기 — 변형 A/B</title>
+<!-- Exploration artifact (not a production entrypoint). Direct-file compatible: classic inline script, no fetch/import, no external assets.
+     Question: for flow:personal-tag-lookup (FLOW-001..004), which structure keeps select / open / empty / failure distinguishable?
+     A = 3-pane split (tags | results | content). B = single column drill-down (tags on top, results replaced by a reader).
+     Open: explore/index.html?variant=A or ?variant=B -->
+<style>
+:root{--bg:#f6f4ef;--surface:#fff;--ink:#1f2328;--muted:#5b6470;--line:#d5d0c4;--accent:#1f5f8b;--empty-bg:#f1efe8;--empty-line:#8a8577;--fail-bg:#fdecea;--fail-line:#b3261e;--fail-ink:#7a1510;--sel:#e3eef6;--r:8px;--gap:16px;--font:system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--font)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{margin:0}
+.note-banner{background:#1f2328;color:#fff;font-size:13px;padding:6px 16px}
+.tagbtn,.notebtn,.ghost{border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:8px 12px;min-height:44px;text-align:left}
+.tagbtn[aria-pressed=true],.notebtn[aria-current=true]{background:var(--sel);border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.state{border-radius:var(--r);padding:16px}
+.state h3{font-size:17px}
+.state p{margin:4px 0 0}
+.state.empty{background:var(--empty-bg);border:2px dashed var(--empty-line)}
+.state.fail{background:var(--fail-bg);border:2px solid var(--fail-line);color:var(--fail-ink)}
+.state.hint{border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+.note-body{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;white-space:pre-wrap}
+.meta{color:var(--muted);font-size:14px}
+.cnt{font-size:14px;color:var(--muted)}
+ul.plain{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ghost{text-align:center}
+/* Variant A */
+.a-shell{display:grid;grid-template-columns:200px minmax(220px,320px) 1fr;gap:var(--gap);padding:16px 16px 96px;min-height:70vh}
+.a-col{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:grid;gap:8px;align-content:start;min-width:0}
+.a-col h2{font-size:15px;color:var(--muted)}
+.a-col .tagbtn,.a-col .notebtn{width:100%}
+@media (max-width:820px){.a-shell{grid-template-columns:1fr}}
+/* Variant B */
+.b-wrap{max-width:720px;margin:0 auto;padding:16px 16px 96px}
+.b-wrap header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.b-tags{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 20px}
+.b-tags .tagbtn{flex:1 1 140px}
+.b-card{display:block;width:100%}
+.b-reader{display:grid;gap:12px}
+/* Switcher */
+.sw{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;align-items:center;gap:12px;background:#1f2328;color:#fff;padding:10px 12px;z-index:10}
+.sw button{background:#fff;color:#1f2328;border:0;border-radius:6px;min-height:44px;min-width:44px;padding:0 14px}
+.sw span{font-size:14px;text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="sw" role="group" aria-label="변형 전환">
+  <button id="prev" aria-label="이전 변형">←</button>
+  <span id="lbl" aria-live="polite"></span>
+  <button id="next" aria-label="다음 변형">→</button>
+</div>
+<script>
+(function(){
+// Sample data only (labeled). Simulated locally; no network, no mutation.
+var NOTES=[
+{id:'n1',title:'소크라테스의 변론 메모',tags:['철학'],text:'(샘플 내용) 무지의 자각과 대화법에 대한 독서 메모.'},
+{id:'n2',title:'니코마코스 윤리학 1권',tags:['철학'],text:'(샘플 내용) 행복을 활동으로 보는 관점을 정리한 메모.'},
+{id:'n3',title:'로마 공화정의 몰락',tags:['역사'],text:'(샘플 내용) 그라쿠스 형제 개혁과 내전의 연결을 정리한 메모.'},
+{id:'n4',title:'스토아 철학과 로마',tags:['철학','역사'],text:'(샘플 내용) 철학과 역사 두 태그가 함께 달린 노트.'},
+{id:'n5',title:'과학혁명의 구조',tags:['과학'],text:'(샘플 내용) 패러다임 전환에 대한 메모.'},
+{id:'n6',title:'우주의 크기 (읽기 실패 시연)',tags:['과학'],readFails:true,text:''}
+];
+var TAGS=[
+{name:'철학',note:''},{name:'역사',note:''},{name:'과학',note:''},
+{name:'보관함',note:'시연: 노트 없음'},{name:'조회오류',note:'시연: 조회 실패'}
+];
+var FAIL_TAGS={'조회오류':1};
+var S={tag:null,noteId:null};
+function lookup(t){if(FAIL_TAGS[t])return{ok:false};return{ok:true,notes:NOTES.filter(function(n){return n.tags.indexOf(t)>-1})}}
+function readNote(id){var n=NOTES.filter(function(x){return x.id===id})[0];return{ok:!!n&&!n.readFails,note:n}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':'&quot;'})}
+function tagBtns(k){return TAGS.map(function(t){return '<button class="tagbtn" data-act="tag" data-v="'+esc(t.name)+'" data-k="'+k+'-t-'+esc(t.name)+'" aria-pressed="'+(S.tag===t.name)+'"><strong>#'+esc(t.name)+'</strong>'+(t.note?'<br><span class="meta">'+esc(t.note)+'</span>':'')+'</button>'}).join('')}
+function lookupState(r,tag){
+ if(!r.ok)return '<div class="state fail" role="alert"><h3>⚠ 조회 실패</h3><p>#'+esc(tag)+' 태그를 조회하지 못했습니다. 노트가 없다는 뜻이 아닙니다.</p></div>';
+ if(!r.notes.length)return '<div class="state empty" role="status"><h3>∅ 결과 없음</h3><p>조회는 성공했고 #'+esc(tag)+' 태그가 달린 노트가 없습니다.</p></div>';
+ return '';
+}
+function noteState(r){
+ if(!r.ok)return '<div class="state fail" role="alert"><h3>⚠ 노트 내용 열기 실패</h3><p>「'+esc(r.note?r.note.title:'')+'」의 저장된 내용을 읽지 못했습니다. 태그 조회 결과와는 별개의 실패입니다.</p></div>';
+ return '<h3>'+esc(r.note.title)+'</h3><p class="meta">태그: '+r.note.tags.map(function(t){return '#'+esc(t)}).join(' ')+'</p><div class="note-body">'+esc(r.note.text)+'</div>';
+}
+function pick(act,v){
+ if(act==='tag'){S.tag=v;S.noteId=null}
+ else if(act==='open'){S.noteId=v}
+ else if(act==='close'){S.noteId=null}
+ else if(act==='reset'){S.tag=null;S.noteId=null}
+}
+function viewA(){
+ var res,det;
+ if(!S.tag)res='<div class="state hint">왼쪽에서 태그를 선택하세요.</div>';
+ else{var r=lookup(S.tag),st=lookupState(r,S.tag);
+  res=st||('<ul class="plain">'+r.notes.map(function(n){return '<li><button class="notebtn" data-act="open" data-v="'+n.id+'" data-k="a-n-'+n.id+'" aria-current="'+(S.noteId===n.id)+'"><strong>'+esc(n.title)+'</strong></button></li>'}).join('')+'</ul>');}
+ det=S.noteId?noteState(readNote(S.noteId)):'<div class="state hint">결과에서 노트를 선택하면 저장된 내용이 여기에 열립니다.</div>';
+ return '<div class="note-banner">탐색용 시안 A · 3단 분할 · 샘플 노트 시연</div><div class="a-shell">'
+ +'<nav class="a-col" aria-label="태그"><h2>기존 태그</h2>'+tagBtns('a')+'<button class="ghost" data-act="reset" data-k="a-reset">처음으로</button></nav>'
+ +'<section class="a-col" aria-label="조회 결과" aria-live="polite"><h2>결과'+(S.tag?' · #'+esc(S.tag):'')+'</h2>'+res+'</section>'
+ +'<article class="a-col" aria-label="노트 내용"><h2>노트 내용</h2>'+det+'</article></div>';
+}
+function viewB(){
+ var h='<div class="note-banner">탐색용 시안 B · 단일 열 드릴다운 · 샘플 노트 시연</div><div class="b-wrap"><header><h1>태그로 노트 찾기</h1><button class="ghost" data-act="reset" data-k="b-reset">처음으로</button></header>'
+ +'<p class="meta">샘플 노트로 만든 시연입니다. 실제 데이터를 읽지 않습니다.</p>'
+ +'<h2 class="cnt" id="b-tag-h">1. 기존 태그 선택</h2><div class="b-tags" role="group" aria-labelledby="b-tag-h">'+tagBtns('b')+'</div>';
+ if(S.noteId){
+  h+='<section class="b-reader" aria-label="노트 내용"><button class="ghost" data-act="close" data-k="b-back" data-focus>← #'+esc(S.tag)+' 결과로</button>'+noteState(readNote(S.noteId))+'</section>';
+ }else if(!S.tag){
+  h+='<div class="state hint">태그를 선택하면 해당 태그가 달린 노트가 여기에 표시됩니다.</div>';
+ }else{
+  var r2=lookup(S.tag),st=lookupState(r2,S.tag);
+  h+='<section aria-label="조회 결과" aria-live="polite"><h2 class="cnt">2. #'+esc(S.tag)+' 결과'+(r2.ok?' · '+r2.notes.length+'개':'')+'</h2>';
+  h+=st||('<ul class="plain">'+r2.notes.map(function(n){return '<li><button class="notebtn b-card" data-act="open" data-v="'+n.id+'" data-k="b-n-'+n.id+'"><strong>'+esc(n.title)+'</strong><br><span class="meta">'+n.tags.map(function(t){return '#'+esc(t)}).join(' ')+'</span></button></li>'}).join('')+'</ul>');
+  h+='</section>';
+ }
+ return h+'</div>';
+}
+var VARIANTS=[
+ {key:'A',label:'A · 3단 분할 (태그 | 결과 | 내용)',view:viewA},
+ {key:'B',label:'B · 단일 열 드릴다운 (태그 → 결과 → 내용)',view:viewB}
+];
+var root=document.getElementById('app'),lbl=document.getElementById('lbl'),cur=0;
+function idx(k){for(var i=0;i<VARIANTS.length;i++)if(VARIANTS[i].key===String(k).toUpperCase())return i;return 0}
+function draw(){
+ var a=document.activeElement,k=a&&a.getAttribute&&a.getAttribute('data-k');
+ root.innerHTML=VARIANTS[cur].view();
+ lbl.textContent=VARIANTS[cur].label;
+ document.title='[탐색용] 변형 '+VARIANTS[cur].key+' — 태그로 노트 찾기';
+ if(k){var e=root.querySelector('[data-k="'+k+'"]');if(e)e.focus()}
+}
+function url(){return location.pathname+'?variant='+VARIANTS[cur].key}
+function go(i,push){
+ cur=(i+VARIANTS.length)%VARIANTS.length;
+ if(push){try{history.pushState({v:cur},'',url())}catch(e){}}
+ draw();
+}
+root.addEventListener('click',function(ev){
+ var b=ev.target.closest('[data-act]');if(!b)return;
+ pick(b.getAttribute('data-act'),b.getAttribute('data-v'));draw();
+ if(b.getAttribute('data-act')==='close'||b.getAttribute('data-act')==='open'){var f=root.querySelector('[data-focus]')||root.querySelector('[data-k^="b-n-"],[data-k^="a-n-"]');if(f&&b.getAttribute('data-act')==='open'&&root.querySelector('[data-focus]'))f.focus()}
+});
+document.getElementById('prev').addEventListener('click',function(){go(cur-1,true)});
+document.getElementById('next').addEventListener('click',function(){go(cur+1,true)});
+document.addEventListener('keydown',function(e){
+ if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+ if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;
+ var t=e.target;
+ if(t&&t.closest&&t.closest('input,textarea,select,[contenteditable],[role=radiogroup],[role=tablist],[role=slider]'))return;
+ go(cur+(e.key==='ArrowRight'?1:-1),true);
+});
+window.addEventListener('popstate',function(){cur=idx(new URLSearchParams(location.search).get('variant'));draw()});
+cur=idx(new URLSearchParams(location.search).get('variant'));
+try{history.replaceState({v:cur},'',url())}catch(e){}
+draw();
+})();
+</script>
+</body>
+</html>

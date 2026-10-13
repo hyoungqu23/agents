@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4 — 2026-10-12
+
+- Preserve supplied flow provenance, requirement links and open policy choices through prototype exploration and promotion.
+- Keep compact standalone flow authoring available without a product-plugin prerequisite.
+
 ## 0.1.3 - 2026-09-18
 
 - State in each skill's description what it is not for, so a request reaches one skill rather than the nearest of three: `design-brief` points layout comparison at `prototype-explore` and mockup preservation at `prototype-promote`, `prototype-explore` states its exclusion directly instead of implying it, and `prototype-promote` excludes unchosen alternatives and production code.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 — 2026-10-12
+
+- Add flow-spec for traceable user actions, branches, open decisions and scoped flow updates.
+- Preserve requirement and source links through the existing design handoff.
+- Add actual-PRD, direct-entry, update, stale-review, untrusted-input and design-chain evaluations.
+
 ## 0.3.0 — 2026-10-04
 
 - Enforce host proof of reviewer completion and report ownership in chain evaluation; isolate reviewer inputs/reports and reject copied or replaced results (2026-10-06).

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prototype Promote"
+  short_description: "Preserve a chosen prototype as a design reference"
+  default_prompt: "Use $prototype-promote to preserve my selected prototype as reference HTML with tokens, interactions, and a handoff note."

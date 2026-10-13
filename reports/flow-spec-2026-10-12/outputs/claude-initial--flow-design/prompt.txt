@@ -1,0 +1,3 @@
+/product:flow-spec prd.md와 원자료로 flow.md를 만들고 그 흐름의 화면 탐색을 explore/index.html에 두 변형 A/B로 만들어줘. 이번 합성 평가에서는 사용자가 B를 선택한 것으로 명시한다. prototype/index.html과 prototype/reference.md로 B를 보존하는 단계까지 실행해줘. 단계별 실제 산출물과 필요한 스킬을 적용해줘. 외부 의존성 없이 직접 열 수 있는 HTML로 만들고 실제 검증과 미실행을 구분해줘.
+제공된 로컬 자료만 사용하고 외부 조회·설치·commit·게시를 하지 마세요.
+디자인 단계에는 .eval-plugins/design/skills/prototype-explore/SKILL.md와 .eval-plugins/design/skills/prototype-promote/SKILL.md 및 필요한 참조를 적용하세요. 새 산출물은 flow.md, explore/, prototype/ 안에만 저장하세요.

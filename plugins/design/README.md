@@ -33,3 +33,7 @@ For detailed behavior, see [design authority](references/design-authority.md),
 ## Validation
 
 Run `./scripts/validate.sh` from the repository root. Behavioral scenarios and raw fixtures are in each skill's `evals/` directory; see [the evaluation guide](evals/README.md) for exercising them in a disposable workspace.
+
+When a supplied flow includes requirement IDs and source revisions, keep that basis
+and any open policy choices in the design handoff. A flow from the product plugin is
+accepted without making that plugin mandatory for standalone design work.
