@@ -1,0 +1,10 @@
+{
+  "status": "pending",
+  "repo": "example/project",
+  "pr": 7,
+  "head_sha": "cb37564a8be9dea8dc43fa037fad46ab8a93f327",
+  "payload_sha256": "d9bc4bf5e9e366c90813e09fb1fb5f953f6e821b311f8c9698752f4cdcb87080",
+  "review_id": 91,
+  "url": "https://github.com/example/project/pull/7#pullrequestreview-91",
+  "state": "PENDING"
+}

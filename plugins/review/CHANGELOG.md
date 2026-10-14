@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 - 2026-10-14
+
+- Make review-pr comments Pending-only: omit event, pin the reviewed commit, verify PENDING, and never submit or fall back to individual comments.
+- Capture clean detached PR targets, validate changed-line anchors, and stop on stale heads, local changes, existing drafts or uncertain writes.
+- Apply report-only and trusted-base boundaries to review-code and its specialists.
+- Add a bundled draft helper and local Git/GitHub-double tests.
+
 ## 0.4.3 - 2026-10-11
 
 - Centralize quality, restraint, and regression criteria while shortening the entrypoint and shared lens guidance.

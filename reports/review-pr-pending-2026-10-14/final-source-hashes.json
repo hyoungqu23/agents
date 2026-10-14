@@ -1,0 +1,19 @@
+{
+  ".claude-plugin/marketplace.json": "62551a3e3e7a8479514a11ec47befbd28dae58eb585056c37cc48a618665750f",
+  "README.md": "54036aab2f1aec1ae77868fbcbb517b71023201499a4c7b9f70617228277ba05",
+  "plugins/review/.claude-plugin/plugin.json": "166a3909b27ce33e21dcb220495872bbe0f82c0de4a1166e76d29f040d69bdf0",
+  "plugins/review/.codex-plugin/plugin.json": "45cb88c842caf404d9510be8aa396362bf6708b12ab4c31f2ea367148c49b4bb",
+  "plugins/review/CHANGELOG.md": "605512ce655e1da00cffad3610c87b5d278403fe76ba06304e05b2466fe3ae67",
+  "plugins/review/README.md": "4eb5f93fc98172acb6936507adfb91239c244da9b236688a8c391cff6cdf8cf9",
+  "plugins/review/skills/review-code/SKILL.md": "e613cc77fb5dfbc75c34ab4977e23c0943f220b2f0fc8bfc8b8e1afb54b90e3c",
+  "plugins/review/skills/review-code/resources/skill-routing.md": "e57ed6b77aec65007451965471ac3647203471ac9cb379b7e65da02d91df718a",
+  "plugins/review/skills/review-pr/SKILL.md": "10409d41824d39f4ca0b57da80a9ef7e74cb673fb4b861fdfb190ba820786902",
+  "plugins/review/skills/review-pr/agents/openai.yaml": "bccb036fdae0109297f6de1570ada1ae5d5b8d25570cced777c1188bb3bedb47",
+  "plugins/review/skills/review-respond/SKILL.md": "31e674f592e717f5074b7a071b827e94f1a58ab3dfa8593b621517826fcef096",
+  "plugins/review/references/pr-review-boundary.md": "40b7f0cc75551c98df891037c2a863104461485bba282ddc29bbafa842cdef70",
+  "plugins/review/skills/review-pr/evals/SETUP.md": "aee8dedb3204a3d3fd11ebebba1639c6293415aa7305b46f2a616df3b2423764",
+  "plugins/review/skills/review-pr/evals/evals.json": "3b3eb4479660024798533c8ec753732004811bd5878e3b3f3801a17de29b46cc",
+  "plugins/review/skills/review-pr/evals/files/request.md": "a48c94ebfdbf6d4651f3a204305d627eafd4ab283cd223f7bad2a4bf8f1ca592",
+  "plugins/review/skills/review-pr/scripts/pending_review.py": "4cbdf6dd0d67216c25b6ef8b2584c8f881d4c55d440d304608dcd00c796df790",
+  "scripts/tests/test_pending_review.py": "49177877676795a41c3af8b5da919bd834e56443d080bf3a8c97d046cbbfa9a5"
+}

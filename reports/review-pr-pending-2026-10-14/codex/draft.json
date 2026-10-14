@@ -1,0 +1,11 @@
+{
+  "body": "[P2] 빈 목록 처리 회귀 1건. 정적 검토를 수행했으며 런타임 테스트는 실행하지 않았습니다.",
+  "comments": [
+    {
+      "path": "app.py",
+      "line": 3,
+      "side": "RIGHT",
+      "body": "`first_name([])`가 이제 `rows[0]`에서 `IndexError`를 발생시킵니다. base의 API 계약과 기존 구현은 빈 목록에 `None`을 반환하므로, 빈 목록 검사를 복원해 주세요."
+    }
+  ]
+}
