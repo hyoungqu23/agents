@@ -151,3 +151,27 @@ Chain author/reviewer invocations explicitly exclude `/tmp` and `$TMPDIR` from t
 extra writable roots, so a temporary output directory does not grant the author write
 access to the host evidence or reviewer workspace. This is a per-invocation setting,
 not a change to the user's Codex configuration.
+
+## Flow and design continuation
+
+Six `flow-*` cases exercise flow-spec: an actual authored PRD, a scoped update,
+direct input, a stale review with unchanged revision, embedded source instructions,
+and an explicitly requested flow → exploration → promotion chain. The chain copies
+both plugins without evals, preserves all original inputs, and permits only flow.md
+and new files below explore/ and prototype/. Selection B is supplied by the synthetic
+request, not inferred from the visible default. Use --timeout 600 for the chain.
+
+Flow graders check IDs, provenance references, original-file preservation and retained
+unaffected content. Whole-output inspection is required for branch correctness and
+open policy fidelity; HTML presence is not browser verification.
+
+The design-existing grader now permits scope notes mentioning the root accent while
+rejecting common CSS/table assignments of it. Ambiguous prose needs human inspection.
+The review-runtime grader distinguishes the domain type from its longer consumer
+name and separately requires one causal finding at the changed line. Historical
+results retain their original grade; regrading is not another model execution.
+
+A service-level usage/rate/spend-limit error stops the remaining Codex cases and
+returns nonzero with `status: blocked`, the reason, and an accurate `not_run` list.
+Quoted limit text in an agent's ordinary output does not trigger this stop. Resume
+only when service capacity is available, using a new evidence directory.

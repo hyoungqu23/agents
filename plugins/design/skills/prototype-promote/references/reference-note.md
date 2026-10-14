@@ -12,6 +12,7 @@ Artifact: <relative path to HTML>
 Source: <source path or URL, variant/combination and available commit or digest>
 Input revisions: <source HTML, relevant transitive dependencies and design-authority revisions/digests>
 Selection: <what the user selected and where that decision was recorded>
+Flow basis: <actual flow path and identity/revision or digest, relevant FLOW/FR/AC links and open decisions, when supplied>
 Design authority: <applicable document or inline rules; otherwise derived local tokens>
 Verification: <verified scope, or source-only with browser checks not run>
 

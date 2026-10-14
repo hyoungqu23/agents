@@ -1,0 +1,2 @@
+/product:flow-spec direct-input.md의 흐름을 질문 없이 flow.md로 정리해줘.
+제공된 로컬 자료만 사용하고 외부 조회·설치·commit·게시를 하지 마세요.

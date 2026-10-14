@@ -1,0 +1,186 @@
+{
+  "source": "/private/tmp/hm2-flow-spec-20261012-claude-1/flow-design/workspace",
+  "before": {
+    "flow.md": "fb6ba8fe9083c3a5d7b68ccee7d84cbe565a306ca17cda1090442aa08e718c24",
+    "explore/index.html": "3a5854348cd4b23c14d3d111e09e4b3de083b6979d6a3f0683986abff835b3bd",
+    "prototype/index.html": "ed3aa2168dcb74343465548b9b9370dd5d19529c513d83ddb85188b100e962f4",
+    "prototype/reference.md": "603a610e355b47a2f74ecfc1696c43c73c276ce75acc7f4caf98e90f81d7fa09"
+  },
+  "checks": [
+    {
+      "variant": "A",
+      "name": "exact-tag results",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "stored note content",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "tag change clears old results and note",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "note read failure differs from lookup failure",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "successful empty result",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "failed lookup is not empty success",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "reset clears selection",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "variant navigation updates URL and history",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "no horizontal overflow at 375",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "no horizontal overflow at 768",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "no horizontal overflow at 1440",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "exact-tag results",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "stored note content",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "tag change clears old results and note",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "note read failure differs from lookup failure",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "successful empty result",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "failed lookup is not empty success",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "reset clears selection",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "variant navigation updates URL and history",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "no horizontal overflow at 375",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "no horizontal overflow at 768",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "no horizontal overflow at 1440",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "exact-tag results",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "stored note content",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "tag change clears old results and note",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "note read failure differs from lookup failure",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "successful empty result",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "failed lookup is not empty success",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "reset clears selection",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "comparison controls removed",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "no horizontal overflow at 375",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "no horizontal overflow at 768",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "no horizontal overflow at 1440",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "status": "passed",
+  "after": {
+    "flow.md": "fb6ba8fe9083c3a5d7b68ccee7d84cbe565a306ca17cda1090442aa08e718c24",
+    "explore/index.html": "3a5854348cd4b23c14d3d111e09e4b3de083b6979d6a3f0683986abff835b3bd",
+    "prototype/index.html": "ed3aa2168dcb74343465548b9b9370dd5d19529c513d83ddb85188b100e962f4",
+    "prototype/reference.md": "603a610e355b47a2f74ecfc1696c43c73c276ce75acc7f4caf98e90f81d7fa09"
+  },
+  "sourcesPreserved": true
+}

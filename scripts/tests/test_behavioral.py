@@ -243,7 +243,7 @@ class BehavioralGraderTests(unittest.TestCase):
 
 class RunnerFailureTests(unittest.TestCase):
     """Command doubles test harness failure propagation, NOT agent quality."""
-    def run_double(self, body, timeout=5, case="content-fidelity"):
+    def run_double(self, body, timeout=5, case="content-fidelity", extra_cases=()):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             binary = root / "bin"
@@ -255,7 +255,8 @@ class RunnerFailureTests(unittest.TestCase):
             output = root / "evidence"
             result = subprocess.run([sys.executable, str(ROOT / "scripts/behavioral/run.py"),
                                      "--model", "test-double", "--output", str(output),
-                                     "--case", case, "--timeout", str(timeout), "--chain-timeout", str(timeout)],
+                                     "--case", case, "--timeout", str(timeout), "--chain-timeout", str(timeout),
+                                     *[arg for extra in extra_cases for arg in ("--case", extra)]],
                                     env={**os.environ, "PATH": f"{binary}{os.pathsep}{os.environ['PATH']}"},
                                     text=True, capture_output=True, timeout=15)
             report = json.loads((output / "summary.json").read_text())
@@ -303,6 +304,21 @@ class RunnerFailureTests(unittest.TestCase):
         result, report = self.run_double("time.sleep(10)\n", timeout=1)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("exceeded", report["cases"][0]["error"])
+
+    def test_service_usage_limit_stops_remaining_cases(self):
+        body = 'print(\'{"type":"turn.failed","error":{"message":"You have hit your usage limit."}}\')\nsys.exit(1)\n'
+        result, report = self.run_double(body, extra_cases=("flow-direct",))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(report["status"], "blocked")
+        self.assertEqual(len(report["cases"]), 1)
+        self.assertEqual(report["cases"][0]["error_kind"], "model_usage_limit")
+        self.assertIn("flow-direct", report["not_run"])
+
+    def test_quoted_usage_limit_is_not_a_service_stop(self):
+        body = 'print(\'{"type":"item.completed","item":{"type":"agent_message","text":"usage limit"}}\')\nprint(\'{"type":"turn.completed"}\')\n'
+        _, report = self.run_double(body, extra_cases=("flow-direct",))
+        self.assertEqual(len(report["cases"]), 2)
+        self.assertNotIn("blocked_reason", report)
 
 
 if __name__ == "__main__":

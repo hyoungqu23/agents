@@ -1,0 +1,29 @@
+{
+  "name": "product",
+  "version": "0.4.0",
+  "description": "Product problem framing, traceable requirements, readiness review and user-flow specifications.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "product",
+    "problem",
+    "requirements",
+    "evidence",
+    "flow"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Product",
+    "shortDescription": "Frame requirements and trace user flows",
+    "longDescription": "Frame problems, draft or review PRDs, and connect requirements to user actions, alternate states and open decisions for design handoff.",
+    "developerName": "HM2",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": "Define the problem behind this product idea."
+  }
+}

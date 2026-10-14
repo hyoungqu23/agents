@@ -1,0 +1,3 @@
+Read and apply .eval-plugins/product/skills/flow-spec/SKILL.md and the references it calls for. Only edit the task's output files; .eval-plugins contains the skill source, not output targets.
+prd.md와 원자료로 질문 없이 사용자 흐름을 flow.md에 작성해줘.
+제공된 로컬 자료만 사용하고 외부 조회·설치·commit·게시를 하지 마세요.

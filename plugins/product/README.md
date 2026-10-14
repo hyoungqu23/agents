@@ -1,13 +1,14 @@
 # Product
 
-Product planning skills for Claude Code and Codex. The three foundation skills provide problem framing, PRD drafting and read-only
-readiness review for user-flow design.
+Product planning skills for Claude Code and Codex: problem framing, PRD drafting,
+readiness review and traceable user-flow specifications.
 
 | Skill | Description |
 | --- | --- |
 | [problem-frame](skills/problem-frame) | 문제 정의: frame a product problem while preserving evidence, assumptions, user decisions, and unanswered questions. |
 | [prd-write](skills/prd-write) | 제품 요구사항 작성: consume a problem frame or direct input, preserve source/decisions, and write observable requirements and acceptance criteria. |
 | [prd-gate](skills/prd-gate) | 제품 요구사항 검토: verify evidence, acceptance, boundaries, open decisions and target freshness before user-flow design. |
+| [flow-spec](skills/flow-spec) | 사용자 흐름 명세: connect requirements to actions, conditions and observable outcomes; preserve open decisions and update affected flows. |
 
 Use problem-frame for an idea, observed friction, or an update to an existing problem brief.
 Brief advice stays in chat. Requested documents use the existing project convention
@@ -87,3 +88,26 @@ Chain author/reviewer invocations explicitly exclude `/tmp` and `$TMPDIR` from t
 extra writable roots, so a temporary output directory does not grant the author write
 access to the host evidence or reviewer workspace. This is a per-invocation setting,
 not a change to the user's Codex configuration.
+
+## User-flow specifications
+
+Use `flow-spec` after a PRD or with sufficient direct requirements. It writes or
+updates `flow.md`, linking actions, conditions and visible results to FR/AC while
+retaining unresolved policies. Existing formats and unaffected flows are preserved.
+A prior gate is optional; a stale report cannot approve changed content.
+
+The [flow guide](references/flow-template.md) covers the saved artifact. The design
+plugin can consume it, but ordinary flow authoring needs no installed design plugin.
+Simple standalone prototypes can still establish their own compact flows.
+
+```sh
+python3 scripts/behavioral/run.py --model <model-id> --case flow-from-prd --case flow-update --case flow-direct --case flow-stale --case flow-injection --case flow-design --timeout 600 --output /tmp/new-flow-run
+```
+
+The first case consumes a preserved, actually authored PRD. The design case consumes
+a second actual PRD and explicitly supplies variant B selection as synthetic user
+input. Graders check source preservation and traceability mechanics; humans must
+inspect branch meaning, policy fidelity, stale-review handling and generated behavior.
+
+Recorded checks, real model outputs and limitations are in
+[the flow-spec evaluation report](../../reports/flow-spec-2026-10-12/README.md).

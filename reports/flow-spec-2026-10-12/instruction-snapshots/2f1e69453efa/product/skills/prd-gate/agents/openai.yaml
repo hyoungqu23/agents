@@ -1,0 +1,4 @@
+interface:
+  display_name: "PRD Gate"
+  short_description: "Review PRD evidence and readiness for user flows"
+  default_prompt: "Use $prd-gate to review this PRD and its sources, preserve the inputs, and report verified issues and readiness for user-flow design."

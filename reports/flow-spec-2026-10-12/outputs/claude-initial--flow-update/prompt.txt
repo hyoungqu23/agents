@@ -1,0 +1,2 @@
+/product:flow-spec change.md를 반영해 existing-flow.md를 갱신해줘.
+제공된 로컬 자료만 사용하고 외부 조회·설치·commit·게시를 하지 마세요.

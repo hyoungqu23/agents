@@ -1,0 +1,22 @@
+[
+  {
+    "pair": "ink/surface",
+    "ratio": 11.66
+  },
+  {
+    "pair": "muted/background",
+    "ratio": 5.43
+  },
+  {
+    "pair": "button text/accent",
+    "ratio": 6.97
+  },
+  {
+    "pair": "error text/error bg",
+    "ratio": 6.65
+  },
+  {
+    "pair": "focus/surface",
+    "ratio": 5.4
+  }
+]

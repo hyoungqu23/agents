@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import signal
 import subprocess
 import sys
@@ -15,6 +16,23 @@ from cases import CASES, prepare, snapshot, grade
 from reviewer import ReviewerBridge
 
 REPO = Path(__file__).resolve().parents[2]
+
+
+class ModelUsageLimit(RuntimeError):
+    """A service limit stops subsequent invocations; it is not a skill failure."""
+
+
+def usage_limit(events):
+    # Only service-level error events count. A fixture/tool result quoting these
+    # words must not be able to abort the suite.
+    for event in events:
+        message = event.get("message", "") if event.get("type") == "error" else ""
+        if event.get("type") == "turn.failed":
+            error = event.get("error")
+            message = error.get("message", "") if isinstance(error, dict) else ""
+        if isinstance(message, str) and re.search(r"usage limit|rate[ _-]?limit|spend limit|quota exceeded", message, re.I):
+            return message
+    return None
 
 
 def write_json(path, data):
@@ -43,11 +61,14 @@ def execute(command, prompt, cwd, directory, timeout, model=None, review_bridge=
         finally:
             if bridge:
                 bridge.stop()
-    if process.returncode:
-        raise RuntimeError(f"executor exited {process.returncode}; see stderr.log")
     events = [json.loads(line) for line in (directory / "events.jsonl").read_text().splitlines() if line.strip()]
     if not all(isinstance(e, dict) for e in events):
         raise RuntimeError("executor emitted malformed events")
+    limited = usage_limit(events)
+    if limited:
+        raise ModelUsageLimit(limited)
+    if process.returncode:
+        raise RuntimeError(f"executor exited {process.returncode}; see stderr.log")
     if not any(e.get("type") == "turn.completed" for e in events) or any(e.get("type") in ("turn.failed", "error") for e in events):
         raise RuntimeError("executor did not complete a successful turn")
     return bridge.result if bridge else None
@@ -113,16 +134,25 @@ def main():
                 write_json(directory / "after.sha256.json", hashes(after))
                 result["checks"] = grade(case, before, after, reviewer_result)
                 result["status"] = "passed" if all(c["passed"] for c in result["checks"]) else "failed"
+            except ModelUsageLimit as error:
+                result["error"] = str(error)
+                result["error_kind"] = "model_usage_limit"
+                summary["blocked_reason"] = str(error)
             except (OSError, ValueError, RuntimeError, TimeoutError, subprocess.SubprocessError) as error:
                 result["error"] = str(error)
             result["duration_seconds"] = round(time.monotonic() - start, 2)
             write_json(directory / "result.json", result)
             write_json(output / "summary.json", summary)
             print(f"{case}: {result['status']}", flush=True)
-        summary["status"] = "passed" if all(r["status"] == "passed" for r in summary["cases"]) else "failed"
+            if summary.get("blocked_reason"):
+                break
+        summary["status"] = ("blocked" if summary.get("blocked_reason") else
+                             "passed" if all(r["status"] == "passed" for r in summary["cases"]) else "failed")
     except (OSError, subprocess.SubprocessError) as error:
         summary["error"] = str(error)
     summary["finished_at"] = datetime.now(timezone.utc).isoformat()
+    attempted = {r["case"] for r in summary["cases"]}
+    summary["not_run"] = [case for case in CASES if case not in attempted]
     write_json(output / "summary.json", summary)
     print(f"Evidence: {output}", flush=True)
     return 0 if summary["status"] == "passed" else 1

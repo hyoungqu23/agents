@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prototype Explore"
+  short_description: "Compare interactive HTML layout alternatives"
+  default_prompt: "Use $prototype-explore to compare three structurally different layouts for this screen."

@@ -1,0 +1,191 @@
+{
+  "before": {
+    "explore/index.html": "ddbec803c9150e5a79bf1937f515cc84d3a45f21f341e9cd53bbe8a3dc6062d4",
+    "prototype/index.html": "1fd9255b8030c24cef373acd3a5827eb5a0855d6b99b82f98ae8debfb91a445c"
+  },
+  "checks": [
+    {
+      "variant": "A",
+      "name": "exact tag results",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "opens stored note",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "changed tag removes prior results",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "content failure distinct",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "empty successful lookup",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "lookup failure is not empty",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "reset clears selection",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "URL and history follow variant",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "select arrow key does not switch variant",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "no horizontal overflow 375",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "no horizontal overflow 768",
+      "passed": true
+    },
+    {
+      "variant": "A",
+      "name": "no horizontal overflow 1440",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "exact tag results",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "opens stored note",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "changed tag removes prior results",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "content failure distinct",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "empty successful lookup",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "lookup failure is not empty",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "reset clears selection",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "URL and history follow variant",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "select arrow key does not switch variant",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "no horizontal overflow 375",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "no horizontal overflow 768",
+      "passed": true
+    },
+    {
+      "variant": "B",
+      "name": "no horizontal overflow 1440",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "exact tag results",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "opens stored note",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "changed tag removes prior results",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "content failure distinct",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "empty successful lookup",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "lookup failure is not empty",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "reset clears selection",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "comparison removed",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "no horizontal overflow 375",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "no horizontal overflow 768",
+      "passed": true
+    },
+    {
+      "variant": "promoted",
+      "name": "no horizontal overflow 1440",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "status": "passed",
+  "after": {
+    "explore/index.html": "ddbec803c9150e5a79bf1937f515cc84d3a45f21f341e9cd53bbe8a3dc6062d4",
+    "prototype/index.html": "1fd9255b8030c24cef373acd3a5827eb5a0855d6b99b82f98ae8debfb91a445c"
+  },
+  "sourcesPreserved": true
+}

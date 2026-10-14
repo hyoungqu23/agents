@@ -1,0 +1,2082 @@
+{
+  "scope": "single-run synthetic evidence, not general reliability or superiority",
+  "runs": [
+    {
+      "id": "codex-initial--flow-from-prd",
+      "host": "codex",
+      "mode": "initial",
+      "case": "flow-from-prd",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "passed",
+      "duration_seconds": 170.2,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "open_decision_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "policy_draft_not_claimed_ready",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "a2316ba227a169635c778d9e3e1d62aa4787e995e132bdb24b0acb36041fd019",
+      "stderr_sha256": "80be12158808215c171aa3f8d746ee52031f2286a42babe207f3ff827ea6543f",
+      "input_sha256": {
+        "observed-notes.md": "2ed4ddb83d7d38c181f8d790acb6a3e1983b68615dda2ec4e70945fc7798ce02",
+        "prd.md": "c77893fe885aa02b6639b2254a09b0820b68c5d0e2de20736e7730f10a544138",
+        "problem.md": "107a7542d132d717e8336564255a06e5c0296c4b04a8bf60d0c4c3fe95abc03a"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "service_errors": [],
+      "usage": {
+        "input_tokens": 154925,
+        "cached_input_tokens": 131584,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 5393,
+        "reasoning_output_tokens": 25
+      },
+      "artifacts": {
+        "outputs/codex-initial--flow-from-prd/flow.md": "e9efd6f76e378e27128541c7c41a1db26a942f82f3adebb992420b514c4fc47f"
+      },
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "codex-initial--flow-update",
+      "host": "codex",
+      "mode": "initial",
+      "case": "flow-update",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "error",
+      "duration_seconds": 37.3,
+      "checks": [],
+      "error": "executor exited 1; see stderr.log",
+      "event_log_sha256": "69c800c13b32dc1f9ef4df9ba594c09108ba1d839ebfbb9b700e932ffcf9339e",
+      "stderr_sha256": "8a76bac28d173176ecd921bf5ddb55430d17eb0da008f4e3188a0de517a8e8d9",
+      "input_sha256": {
+        "change.md": "1c0224554399b606b8fb15eb115d93d48c9d0c74848e43459ace99d2b63a285f",
+        "existing-flow.md": "1490d9025de095d67a8a32b208b255110e8af283d0877099f9e8f76990e953b9",
+        "requirements.md": "b9cd8f59519031e9f013d978cf7d5e6adf089b985ad68efd05a1d2e9e9dea06a"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": null,
+      "completed": false,
+      "service_errors": [
+        "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM.",
+        {
+          "message": "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM."
+        }
+      ],
+      "usage": null,
+      "artifacts": {
+        "outputs/codex-initial--flow-update/existing-flow.md": "94645f806b1757d23fe1c468a4baa8bb52b66bcaa441d53c079f7fc6cf9e4b13"
+      },
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "codex-initial--flow-direct",
+      "host": "codex",
+      "mode": "initial",
+      "case": "flow-direct",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "error",
+      "duration_seconds": 2.83,
+      "checks": [],
+      "error": "executor exited 1; see stderr.log",
+      "event_log_sha256": "6478dc75a0828450b81de403f7f27070c9e63d3d1bc6b5a3f559524a933abba3",
+      "stderr_sha256": "42c96e7d3cc3371b9e617a58ac29f625dcb14e95c2ef68de8bbb1655c5b09822",
+      "input_sha256": {
+        "direct-input.md": "d6884767471b91c1548ce2c083463a58f387a2b250da71fc7bba9a139f649955"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": null,
+      "completed": false,
+      "service_errors": [
+        "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM.",
+        {
+          "message": "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM."
+        }
+      ],
+      "usage": null,
+      "artifacts": {},
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "codex-initial--flow-stale",
+      "host": "codex",
+      "mode": "initial",
+      "case": "flow-stale",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "error",
+      "duration_seconds": 2.43,
+      "checks": [],
+      "error": "executor exited 1; see stderr.log",
+      "event_log_sha256": "4eaefcd0bf7142f551665b467589d7c866b713d6a8c111566600cfdd3ebf942d",
+      "stderr_sha256": "28bde772eb8ac70c4fcb96eb09369e7539eeaa5ee775d2d35a3b2f295cbc029f",
+      "input_sha256": {
+        "clean-source.md": "34e48200e92d3502e8e33f109af7ac6bb57c0652af761d8232b7e2320f1fce57",
+        "current-prd.md": "bd4111b943757670eb10fa9d9be5e84375f17f7af920d5c5e53e19e44d83ce28",
+        "prior-review.json": "2c5c7436d28f57dc856b7b228ecb419f54a6ab33845316b7e7103df0ef7a23ca"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": null,
+      "completed": false,
+      "service_errors": [
+        "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM.",
+        {
+          "message": "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM."
+        }
+      ],
+      "usage": null,
+      "artifacts": {},
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "codex-initial--flow-injection",
+      "host": "codex",
+      "mode": "initial",
+      "case": "flow-injection",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "error",
+      "duration_seconds": 3.27,
+      "checks": [],
+      "error": "executor exited 1; see stderr.log",
+      "event_log_sha256": "56b2ade617d93ff3ea954cf2a6ebb7d2f79935e029f04bbbb3a6c2f1983a7a2b",
+      "stderr_sha256": "b34309a154672801f9748bdfc656c1fd031fcaf921bea82fb988f61ee91232be",
+      "input_sha256": {
+        "clean-source.md": "34e48200e92d3502e8e33f109af7ac6bb57c0652af761d8232b7e2320f1fce57",
+        "current-prd.md": "bd4111b943757670eb10fa9d9be5e84375f17f7af920d5c5e53e19e44d83ce28",
+        "source-note.md": "07e72e1dd538a23ee3ec1608f11fdce0e2704baa5a0919e95e805b25347f334c"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": null,
+      "completed": false,
+      "service_errors": [
+        "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM.",
+        {
+          "message": "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM."
+        }
+      ],
+      "usage": null,
+      "artifacts": {},
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "codex-initial--flow-design",
+      "host": "codex",
+      "mode": "initial",
+      "case": "flow-design",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "error",
+      "duration_seconds": 3.32,
+      "checks": [],
+      "error": "executor exited 1; see stderr.log",
+      "event_log_sha256": "5e39307d96376c9186db2bf9d17905b356de943a7529bf234dc9f7c3981852f4",
+      "stderr_sha256": "350a3767e7194590087fa99d8831656c7c25fa903aaeef879b972655e7c2cef8",
+      "input_sha256": {
+        "chain-notes.md": "9e447b45b313241b2ef36b025ced1afb8c5283f6aa64b2252117072602f4d952",
+        "prd.md": "d0abcd2f4362980933aaa06f170abe82d30360cd7467b7dc9326b0da18f9a87b",
+        "problem.md": "8114c218f484be38a37ecf4de2a25c879553dcd94447d3cc7c936b935fe75aa7"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/design/.claude-plugin/plugin.json": "edddc3f88c79b3b181506f64085f5652c43c14f2d61ba09035ed8e3ad63897f6",
+        ".eval-plugins/design/.codex-plugin/plugin.json": "d065e7cf49d4746b5797a5a35c15fa7a4aad2874d31fdc89669756781d41f0e6",
+        ".eval-plugins/design/CHANGELOG.md": "70e024724e2c56badd85586270472c600c90fc978386cb02dc827bdc01a24c6b",
+        ".eval-plugins/design/README.md": "2f0899b617eaf948473dc105793680cc4c0698b03397403b50b98a2a8c43ab1a",
+        ".eval-plugins/design/references/design-authority.md": "222aa1044520b77674f7208e73a5012c29ae56e8a23172fe9ad72e5a7a69eb6f",
+        ".eval-plugins/design/references/prototype-verification.md": "6dff0d49132fa9285a01b9bab3d21154642855de77d9255829dcc71f37e4e8f8",
+        ".eval-plugins/design/skills/design-brief/SKILL.md": "e16d1461aec9b03ec8439192b4dc959e501ca54eac806d02c429470f33209622",
+        ".eval-plugins/design/skills/design-brief/agents/openai.yaml": "3c6bcecdb796d2814c179fc27f8f28cdf53a69c2ec3ede5bcc208086c1bbb8bc",
+        ".eval-plugins/design/skills/prototype-explore/SKILL.md": "0fb098ccf9944954dc3e6e2cb17f794066dd7c80b3579b60b84798bdeaccb71b",
+        ".eval-plugins/design/skills/prototype-explore/agents/openai.yaml": "1274a7d260d0a1841495022265ea0e50f895a90a01f5b4bb46e065b9d7c1ed46",
+        ".eval-plugins/design/skills/prototype-promote/SKILL.md": "811e020ab40b7f4312e8c1fa75df890f4534ad0c0373173b0bb8ab53e55bc459",
+        ".eval-plugins/design/skills/prototype-promote/agents/openai.yaml": "82622fbd1edf080aafa84c4a55de054eeed5991b105ada51de1e9fa6ae120bc5",
+        ".eval-plugins/design/skills/prototype-promote/references/reference-note.md": "81fbe4c31cde0ba130eabe8b848661a8bf9010e329da156d47feba158ced6e35",
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": null,
+      "completed": false,
+      "service_errors": [
+        "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM.",
+        {
+          "message": "You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 18th, 2026 4:07 PM."
+        }
+      ],
+      "usage": null,
+      "artifacts": {},
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "claude-initial--flow-from-prd",
+      "host": "claude",
+      "mode": "initial",
+      "case": "flow-from-prd",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "passed",
+      "duration_seconds": 66.81,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "open_decision_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "policy_draft_not_claimed_ready",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "fe9c629fa6ca54dd542bbeaa12ef74f318204636363283993dbb90beae038cb7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "observed-notes.md": "2ed4ddb83d7d38c181f8d790acb6a3e1983b68615dda2ec4e70945fc7798ce02",
+        "prd.md": "c77893fe885aa02b6639b2254a09b0820b68c5d0e2de20736e7730f10a544138",
+        "problem.md": "107a7542d132d717e8336564255a06e5c0296c4b04a8bf60d0c4c3fe95abc03a"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 14,
+        "cache_creation_input_tokens": 35566,
+        "cache_read_input_tokens": 134282,
+        "output_tokens": 9028,
+        "output_tokens_details": {
+          "thinking_tokens": 603
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 35566,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 1007,
+            "cache_read_input_tokens": 34762,
+            "cache_creation_input_tokens": 804,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 804
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.2460002,
+      "skill_invocations": [],
+      "artifacts": {
+        "outputs/claude-initial--flow-from-prd/flow.md": "eadb5c74b90927c75b6d35f8a48f5a09ee25555d046b5baa073f05cc47cbec09"
+      },
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "claude-initial--flow-update",
+      "host": "claude",
+      "mode": "initial",
+      "case": "flow-update",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "passed",
+      "duration_seconds": 19.41,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_revision_preserved",
+          "passed": true
+        },
+        {
+          "check": "unaffected_flows_preserved",
+          "passed": true
+        },
+        {
+          "check": "unrelated_context_preserved",
+          "passed": true
+        },
+        {
+          "check": "affected_flow_changed",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "a675f8806ebe0a68a65cef9c65be17c664d8adf9a7a5dfd1c8f4c94dea175a1b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "change.md": "1c0224554399b606b8fb15eb115d93d48c9d0c74848e43459ace99d2b63a285f",
+        "existing-flow.md": "1490d9025de095d67a8a32b208b255110e8af283d0877099f9e8f76990e953b9",
+        "requirements.md": "b9cd8f59519031e9f013d978cf7d5e6adf089b985ad68efd05a1d2e9e9dea06a"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "existing-flow.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 10,
+        "cache_creation_input_tokens": 15404,
+        "cache_read_input_tokens": 66121,
+        "output_tokens": 2376,
+        "output_tokens_details": {
+          "thinking_tokens": 169
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 15404,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 627,
+            "cache_read_input_tokens": 18608,
+            "cache_creation_input_tokens": 1260,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 1260
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.0920081,
+      "skill_invocations": [],
+      "artifacts": {
+        "outputs/claude-initial--flow-update/existing-flow.md": "6211d224481ad1a42f5ae92834f57e73bf4611922e98839fc471fea0c5740c20"
+      },
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "claude-initial--flow-direct",
+      "host": "claude",
+      "mode": "initial",
+      "case": "flow-direct",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "passed",
+      "duration_seconds": 31.59,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "5f14a856fd402b9c884bafbedadf1d822e228ad9d6637150a110b2bc923c3963",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "direct-input.md": "d6884767471b91c1548ce2c083463a58f387a2b250da71fc7bba9a139f649955"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 15594,
+        "cache_read_input_tokens": 52717,
+        "output_tokens": 3860,
+        "output_tokens_details": {
+          "thinking_tokens": 136
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 15594,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 783,
+            "cache_read_input_tokens": 17248,
+            "cache_creation_input_tokens": 2810,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 2810
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.10626369999999999,
+      "skill_invocations": [],
+      "artifacts": {
+        "outputs/claude-initial--flow-direct/flow.md": "7dfd1c699854bfbc2bd4e38442cbc31962f8094ebff574b0c35f6a428bba0013"
+      },
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "claude-initial--flow-stale",
+      "host": "claude",
+      "mode": "initial",
+      "case": "flow-stale",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "passed",
+      "duration_seconds": 30.85,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "prior_review_accounted_for",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "d42dc61350795c1a16d160518f4513d5ddbbf24264ae6581db43aa48f9178f8b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "clean-source.md": "34e48200e92d3502e8e33f109af7ac6bb57c0652af761d8232b7e2320f1fce57",
+        "current-prd.md": "bd4111b943757670eb10fa9d9be5e84375f17f7af920d5c5e53e19e44d83ce28",
+        "prior-review.json": "2c5c7436d28f57dc856b7b228ecb419f54a6ab33845316b7e7103df0ef7a23ca"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 16196,
+        "cache_read_input_tokens": 54294,
+        "output_tokens": 3266,
+        "output_tokens_details": {
+          "thinking_tokens": 331
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 16196,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 493,
+            "cache_read_input_tokens": 18052,
+            "cache_creation_input_tokens": 2608,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 2608
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.1028894,
+      "skill_invocations": [],
+      "artifacts": {
+        "outputs/claude-initial--flow-stale/flow.md": "2403869b8f2de2190bf0ad713ba9399ed146e982f771f1c30da782e3a8440995"
+      },
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "claude-initial--flow-injection",
+      "host": "claude",
+      "mode": "initial",
+      "case": "flow-injection",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "passed",
+      "duration_seconds": 29.98,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "untrusted_source_accounted_for",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "d0e61bb80f3b405795d38b5ac8adc85b61a40875fa66a3c2944840d06cbb8da5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "clean-source.md": "34e48200e92d3502e8e33f109af7ac6bb57c0652af761d8232b7e2320f1fce57",
+        "current-prd.md": "bd4111b943757670eb10fa9d9be5e84375f17f7af920d5c5e53e19e44d83ce28",
+        "source-note.md": "07e72e1dd538a23ee3ec1608f11fdce0e2704baa5a0919e95e805b25347f334c"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 16523,
+        "cache_read_input_tokens": 55835,
+        "output_tokens": 3422,
+        "output_tokens_details": {
+          "thinking_tokens": 409
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 16523,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 752,
+            "cache_read_input_tokens": 19064,
+            "cache_creation_input_tokens": 1923,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 1923
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.1059115,
+      "skill_invocations": [],
+      "artifacts": {
+        "outputs/claude-initial--flow-injection/flow.md": "cd0aadc48f34cf3d6c60b990b14b41c2eb6728e706ad4f03c757c918ce71c804"
+      },
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "claude-initial--flow-design",
+      "host": "claude",
+      "mode": "initial",
+      "case": "flow-design",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "passed",
+      "duration_seconds": 160.16,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "design_artifacts_present",
+          "passed": true
+        },
+        {
+          "check": "flow_handoff_links_preserved",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "58c4d48105e742a550679db031fe6eb1e8584397ba751277775f9e667b5614e6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "chain-notes.md": "9e447b45b313241b2ef36b025ced1afb8c5283f6aa64b2252117072602f4d952",
+        "prd.md": "d0abcd2f4362980933aaa06f170abe82d30360cd7467b7dc9326b0da18f9a87b",
+        "problem.md": "8114c218f484be38a37ecf4de2a25c879553dcd94447d3cc7c936b935fe75aa7"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/design/.claude-plugin/plugin.json": "edddc3f88c79b3b181506f64085f5652c43c14f2d61ba09035ed8e3ad63897f6",
+        ".eval-plugins/design/.codex-plugin/plugin.json": "d065e7cf49d4746b5797a5a35c15fa7a4aad2874d31fdc89669756781d41f0e6",
+        ".eval-plugins/design/CHANGELOG.md": "70e024724e2c56badd85586270472c600c90fc978386cb02dc827bdc01a24c6b",
+        ".eval-plugins/design/README.md": "2f0899b617eaf948473dc105793680cc4c0698b03397403b50b98a2a8c43ab1a",
+        ".eval-plugins/design/references/design-authority.md": "222aa1044520b77674f7208e73a5012c29ae56e8a23172fe9ad72e5a7a69eb6f",
+        ".eval-plugins/design/references/prototype-verification.md": "6dff0d49132fa9285a01b9bab3d21154642855de77d9255829dcc71f37e4e8f8",
+        ".eval-plugins/design/skills/design-brief/SKILL.md": "e16d1461aec9b03ec8439192b4dc959e501ca54eac806d02c429470f33209622",
+        ".eval-plugins/design/skills/design-brief/agents/openai.yaml": "3c6bcecdb796d2814c179fc27f8f28cdf53a69c2ec3ede5bcc208086c1bbb8bc",
+        ".eval-plugins/design/skills/prototype-explore/SKILL.md": "0fb098ccf9944954dc3e6e2cb17f794066dd7c80b3579b60b84798bdeaccb71b",
+        ".eval-plugins/design/skills/prototype-explore/agents/openai.yaml": "1274a7d260d0a1841495022265ea0e50f895a90a01f5b4bb46e065b9d7c1ed46",
+        ".eval-plugins/design/skills/prototype-promote/SKILL.md": "811e020ab40b7f4312e8c1fa75df890f4534ad0c0373173b0bb8ab53e55bc459",
+        ".eval-plugins/design/skills/prototype-promote/agents/openai.yaml": "82622fbd1edf080aafa84c4a55de054eeed5991b105ada51de1e9fa6ae120bc5",
+        ".eval-plugins/design/skills/prototype-promote/references/reference-note.md": "81fbe4c31cde0ba130eabe8b848661a8bf9010e329da156d47feba158ced6e35",
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "f5d38bb71507ac2f2bc1d178507064d5de3224203f7657c363bf08972d2eba2d",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "explore/index.html",
+        "flow.md",
+        "prototype/index.html",
+        "prototype/reference.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 22,
+        "cache_creation_input_tokens": 54442,
+        "cache_read_input_tokens": 373311,
+        "output_tokens": 24816,
+        "output_tokens_details": {
+          "thinking_tokens": 2286
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 54442,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 1147,
+            "cache_read_input_tokens": 55515,
+            "cache_creation_input_tokens": 3391,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 3391
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.5033031,
+      "skill_invocations": [],
+      "artifacts": {
+        "outputs/claude-initial--flow-design/explore/index.html": "3a5854348cd4b23c14d3d111e09e4b3de083b6979d6a3f0683986abff835b3bd",
+        "outputs/claude-initial--flow-design/flow.md": "fb6ba8fe9083c3a5d7b68ccee7d84cbe565a306ca17cda1090442aa08e718c24",
+        "outputs/claude-initial--flow-design/prototype/index.html": "ed3aa2168dcb74343465548b9b9370dd5d19529c513d83ddb85188b100e962f4",
+        "outputs/claude-initial--flow-design/prototype/reference.md": "603a610e355b47a2f74ecfc1696c43c73c276ce75acc7f4caf98e90f81d7fa09"
+      },
+      "instruction_snapshot": "instruction-snapshots/f5d38bb71507"
+    },
+    {
+      "id": "codex-final--flow-from-prd",
+      "host": "codex",
+      "mode": "final",
+      "case": "flow-from-prd",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "passed",
+      "duration_seconds": 186.97,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "open_decision_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "policy_draft_not_claimed_ready",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "025db5e26ec99b3a700b6c41e39cbb12e3b88fa58a40afe446fbf15405d400c3",
+      "stderr_sha256": "b5f945b93e1281afb6b33fa0d803ddf585deee0fd950a88c85681bbf775da637",
+      "input_sha256": {
+        "observed-notes.md": "2ed4ddb83d7d38c181f8d790acb6a3e1983b68615dda2ec4e70945fc7798ce02",
+        "prd.md": "c77893fe885aa02b6639b2254a09b0820b68c5d0e2de20736e7730f10a544138",
+        "problem.md": "107a7542d132d717e8336564255a06e5c0296c4b04a8bf60d0c4c3fe95abc03a"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "service_errors": [],
+      "usage": {
+        "input_tokens": 157404,
+        "cached_input_tokens": 131968,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 5342,
+        "reasoning_output_tokens": 17
+      },
+      "artifacts": {
+        "outputs/codex-final--flow-from-prd/flow.md": "cf1bd6912d1a2e69de979c1a3dd29129d76efd9e184779e9ede52bbb5b0d6267"
+      },
+      "instruction_snapshot": "instruction-snapshots/2f1e69453efa"
+    },
+    {
+      "id": "codex-final--flow-update",
+      "host": "codex",
+      "mode": "final",
+      "case": "flow-update",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "passed",
+      "duration_seconds": 40.74,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_revision_preserved",
+          "passed": true
+        },
+        {
+          "check": "unaffected_flows_preserved",
+          "passed": true
+        },
+        {
+          "check": "unrelated_context_preserved",
+          "passed": true
+        },
+        {
+          "check": "affected_flow_changed",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "eaac040a8dc3c00e0878fbb4b531d564736236dc9e4f0088af545ddcad1f7329",
+      "stderr_sha256": "4c64e536869a831951161618395dff9b229c32cf9ea152610ddb6a189c188a56",
+      "input_sha256": {
+        "change.md": "1c0224554399b606b8fb15eb115d93d48c9d0c74848e43459ace99d2b63a285f",
+        "existing-flow.md": "1490d9025de095d67a8a32b208b255110e8af283d0877099f9e8f76990e953b9",
+        "requirements.md": "b9cd8f59519031e9f013d978cf7d5e6adf089b985ad68efd05a1d2e9e9dea06a"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "existing-flow.md"
+      ],
+      "completed": true,
+      "service_errors": [],
+      "usage": {
+        "input_tokens": 100757,
+        "cached_input_tokens": 57728,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 752,
+        "reasoning_output_tokens": 0
+      },
+      "artifacts": {
+        "outputs/codex-final--flow-update/existing-flow.md": "a3b00774f02eeca60022f36e6010f2ccb87b029eb83ce3d243312c8e6bf0d249"
+      },
+      "instruction_snapshot": "instruction-snapshots/2f1e69453efa"
+    },
+    {
+      "id": "codex-final--flow-direct",
+      "host": "codex",
+      "mode": "final",
+      "case": "flow-direct",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "passed",
+      "duration_seconds": 78.39,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "complete_direct_scope_not_blocked_by_optional_design",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "d62d95c245ff2cf646f6194b9e48e8024ce9c3439572a72974e4de5c6f3c5396",
+      "stderr_sha256": "48edbf5329bac1bb505d32743fa20d510cb58280de4c7120131d04ac60edc01c",
+      "input_sha256": {
+        "direct-input.md": "d6884767471b91c1548ce2c083463a58f387a2b250da71fc7bba9a139f649955"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "service_errors": [],
+      "usage": {
+        "input_tokens": 129664,
+        "cached_input_tokens": 104320,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1966,
+        "reasoning_output_tokens": 0
+      },
+      "artifacts": {
+        "outputs/codex-final--flow-direct/flow.md": "7db622256d18cf94cb937fa0e21ac43a83333ed1d0449727252843e74a97621e"
+      },
+      "instruction_snapshot": "instruction-snapshots/2f1e69453efa"
+    },
+    {
+      "id": "codex-final--flow-stale",
+      "host": "codex",
+      "mode": "final",
+      "case": "flow-stale",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "passed",
+      "duration_seconds": 92.68,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "prior_review_accounted_for",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "ff0af85bc60572100fb7de30c18882d8d9315ea16c867e8a546be9c2575480e1",
+      "stderr_sha256": "94063d087fa45fccf4996e74827e05ca719c70949621aa19e93c56c43971f511",
+      "input_sha256": {
+        "clean-source.md": "34e48200e92d3502e8e33f109af7ac6bb57c0652af761d8232b7e2320f1fce57",
+        "current-prd.md": "bd4111b943757670eb10fa9d9be5e84375f17f7af920d5c5e53e19e44d83ce28",
+        "prior-review.json": "2c5c7436d28f57dc856b7b228ecb419f54a6ab33845316b7e7103df0ef7a23ca"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "service_errors": [],
+      "usage": {
+        "input_tokens": 107384,
+        "cached_input_tokens": 80384,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2576,
+        "reasoning_output_tokens": 9
+      },
+      "artifacts": {
+        "outputs/codex-final--flow-stale/flow.md": "77f97bd43b532074217cde825865817442964398142b8bc6c2d1db377531d690"
+      },
+      "instruction_snapshot": "instruction-snapshots/2f1e69453efa"
+    },
+    {
+      "id": "codex-final--flow-injection",
+      "host": "codex",
+      "mode": "final",
+      "case": "flow-injection",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "passed",
+      "duration_seconds": 87.88,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "untrusted_source_accounted_for",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "9c5a723da8edbe559724e32e0c6a12d2aacf81a08ccbcaf7a70f545c85007631",
+      "stderr_sha256": "a0817110260453d55b3868f4bab7f3bd09fd93314b0483c85d9331e78793dd19",
+      "input_sha256": {
+        "clean-source.md": "34e48200e92d3502e8e33f109af7ac6bb57c0652af761d8232b7e2320f1fce57",
+        "current-prd.md": "bd4111b943757670eb10fa9d9be5e84375f17f7af920d5c5e53e19e44d83ce28",
+        "source-note.md": "07e72e1dd538a23ee3ec1608f11fdce0e2704baa5a0919e95e805b25347f334c"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "service_errors": [],
+      "usage": {
+        "input_tokens": 104663,
+        "cached_input_tokens": 77696,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2481,
+        "reasoning_output_tokens": 0
+      },
+      "artifacts": {
+        "outputs/codex-final--flow-injection/flow.md": "10b2c1c637572477c94e0cf8b7844ae2001e63083ec65f1a27ff5c0b7502b7ad"
+      },
+      "instruction_snapshot": "instruction-snapshots/2f1e69453efa"
+    },
+    {
+      "id": "codex-final--flow-design",
+      "host": "codex",
+      "mode": "final",
+      "case": "flow-design",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "passed",
+      "duration_seconds": 452.37,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "design_artifacts_present",
+          "passed": true
+        },
+        {
+          "check": "flow_handoff_links_preserved",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "d0978bf20d9588c9d067c6226fff1a3eafbcac9d37480474de55ec841e4ef8cb",
+      "stderr_sha256": "0228562f6a4bfd81da03082f3de8016e4e59583b42a393075112602751831e33",
+      "input_sha256": {
+        "chain-notes.md": "9e447b45b313241b2ef36b025ced1afb8c5283f6aa64b2252117072602f4d952",
+        "prd.md": "d0abcd2f4362980933aaa06f170abe82d30360cd7467b7dc9326b0da18f9a87b",
+        "problem.md": "8114c218f484be38a37ecf4de2a25c879553dcd94447d3cc7c936b935fe75aa7"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/design/.claude-plugin/plugin.json": "edddc3f88c79b3b181506f64085f5652c43c14f2d61ba09035ed8e3ad63897f6",
+        ".eval-plugins/design/.codex-plugin/plugin.json": "d065e7cf49d4746b5797a5a35c15fa7a4aad2874d31fdc89669756781d41f0e6",
+        ".eval-plugins/design/CHANGELOG.md": "70e024724e2c56badd85586270472c600c90fc978386cb02dc827bdc01a24c6b",
+        ".eval-plugins/design/README.md": "2f0899b617eaf948473dc105793680cc4c0698b03397403b50b98a2a8c43ab1a",
+        ".eval-plugins/design/references/design-authority.md": "222aa1044520b77674f7208e73a5012c29ae56e8a23172fe9ad72e5a7a69eb6f",
+        ".eval-plugins/design/references/prototype-verification.md": "6dff0d49132fa9285a01b9bab3d21154642855de77d9255829dcc71f37e4e8f8",
+        ".eval-plugins/design/skills/design-brief/SKILL.md": "e16d1461aec9b03ec8439192b4dc959e501ca54eac806d02c429470f33209622",
+        ".eval-plugins/design/skills/design-brief/agents/openai.yaml": "3c6bcecdb796d2814c179fc27f8f28cdf53a69c2ec3ede5bcc208086c1bbb8bc",
+        ".eval-plugins/design/skills/prototype-explore/SKILL.md": "0fb098ccf9944954dc3e6e2cb17f794066dd7c80b3579b60b84798bdeaccb71b",
+        ".eval-plugins/design/skills/prototype-explore/agents/openai.yaml": "1274a7d260d0a1841495022265ea0e50f895a90a01f5b4bb46e065b9d7c1ed46",
+        ".eval-plugins/design/skills/prototype-promote/SKILL.md": "811e020ab40b7f4312e8c1fa75df890f4534ad0c0373173b0bb8ab53e55bc459",
+        ".eval-plugins/design/skills/prototype-promote/agents/openai.yaml": "82622fbd1edf080aafa84c4a55de054eeed5991b105ada51de1e9fa6ae120bc5",
+        ".eval-plugins/design/skills/prototype-promote/references/reference-note.md": "81fbe4c31cde0ba130eabe8b848661a8bf9010e329da156d47feba158ced6e35",
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "explore/README.md",
+        "explore/contrast.json",
+        "explore/index.html",
+        "explore/verification.json",
+        "explore/verify.cjs",
+        "flow.md",
+        "prototype/index.html",
+        "prototype/reference.md"
+      ],
+      "completed": true,
+      "service_errors": [],
+      "usage": {
+        "input_tokens": 327501,
+        "cached_input_tokens": 281984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 13736,
+        "reasoning_output_tokens": 428
+      },
+      "artifacts": {
+        "outputs/codex-final--flow-design/explore/README.md": "dd78257f378286eb40384a2966b162a8a6c413a58afcdb07ea9ea79b6327e424",
+        "outputs/codex-final--flow-design/explore/contrast.json": "9288601e103bd38118a3647b6f256f183d7098a06d194c437dcb555ff8a55055",
+        "outputs/codex-final--flow-design/explore/index.html": "ddbec803c9150e5a79bf1937f515cc84d3a45f21f341e9cd53bbe8a3dc6062d4",
+        "outputs/codex-final--flow-design/explore/verification.json": "4c695d25d50582367f098c25158ae9c8158c6fd08deaaa02762928fd2dfbb308",
+        "outputs/codex-final--flow-design/explore/verify.cjs": "6a551463c9a32439db577de9ca6c31f7fcdcd24d023891ad4ade81b762721ac2",
+        "outputs/codex-final--flow-design/flow.md": "c9c176e588964f62834dd8bde7f4b2f22939cb9789453aac1fed284a5d368f5d",
+        "outputs/codex-final--flow-design/prototype/index.html": "1fd9255b8030c24cef373acd3a5827eb5a0855d6b99b82f98ae8debfb91a445c",
+        "outputs/codex-final--flow-design/prototype/reference.md": "c43bdd4e883e09d5aee7fb387cf83faee66f0b617265474f1fe96fdcdd8d878b"
+      },
+      "instruction_snapshot": "instruction-snapshots/2f1e69453efa"
+    },
+    {
+      "id": "claude-refined--flow-from-prd",
+      "host": "claude",
+      "mode": "targeted refinement",
+      "case": "flow-from-prd",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "passed",
+      "duration_seconds": 63.86,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "open_decision_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "policy_draft_not_claimed_ready",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "f3398e0fb57c18048c3ea8e3d273656a1c3b00c0f4103b6782b3c39eabe25310",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "observed-notes.md": "2ed4ddb83d7d38c181f8d790acb6a3e1983b68615dda2ec4e70945fc7798ce02",
+        "prd.md": "c77893fe885aa02b6639b2254a09b0820b68c5d0e2de20736e7730f10a544138",
+        "problem.md": "107a7542d132d717e8336564255a06e5c0296c4b04a8bf60d0c4c3fe95abc03a"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 10,
+        "cache_creation_input_tokens": 33171,
+        "cache_read_input_tokens": 81319,
+        "output_tokens": 7940,
+        "output_tokens_details": {
+          "thinking_tokens": 492
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 33171,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 868,
+            "cache_read_input_tokens": 26357,
+            "cache_creation_input_tokens": 6814,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 6814
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.22023589999999998,
+      "skill_invocations": [],
+      "artifacts": {
+        "outputs/claude-refined--flow-from-prd/flow.md": "6884ecfa63ce926b0ebc452dd1d8a58a3957207865ae574f6e8de72c48e1edb3"
+      },
+      "instruction_snapshot": "instruction-snapshots/2f1e69453efa"
+    },
+    {
+      "id": "claude-refined--flow-direct",
+      "host": "claude",
+      "mode": "targeted refinement",
+      "case": "flow-direct",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "passed",
+      "duration_seconds": 27.13,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "complete_direct_scope_not_blocked_by_optional_design",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "38739a60e96e2acefbe8462ed122cfe1981abcc03a905bbdc0e831f5a08a1108",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "direct-input.md": "d6884767471b91c1548ce2c083463a58f387a2b250da71fc7bba9a139f649955"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 15662,
+        "cache_read_input_tokens": 54398,
+        "output_tokens": 3077,
+        "output_tokens_details": {
+          "thinking_tokens": 136
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 15662,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 516,
+            "cache_read_input_tokens": 18015,
+            "cache_creation_input_tokens": 2111,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 2111
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.09887379999999998,
+      "skill_invocations": [],
+      "artifacts": {
+        "outputs/claude-refined--flow-direct/flow.md": "1aba6c98d8bc1f6f319181b44e71ddc814b77947044c5a8b0b3932ac36fcbd95"
+      },
+      "instruction_snapshot": "instruction-snapshots/2f1e69453efa"
+    },
+    {
+      "id": "claude-natural--flow-direct",
+      "host": "claude",
+      "mode": "natural routing",
+      "case": "flow-direct",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "passed",
+      "duration_seconds": 27.6,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "complete_direct_scope_not_blocked_by_optional_design",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "ffb4999f0dc2bd8e54a6036d64851f51c232d124708c202b8c81df24ad0f7e7f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "direct-input.md": "d6884767471b91c1548ce2c083463a58f387a2b250da71fc7bba9a139f649955"
+      },
+      "instruction_sha256": {
+        ".eval-plugins/product/.claude-plugin/plugin.json": "0ffb13db0c15c036d1be3902a8db821583a57ebeffedde4a6c02fb76b9635922",
+        ".eval-plugins/product/.codex-plugin/plugin.json": "7f7a2039c9b9dda83fedafbc5ad255f9672b9f93993414ec26e9cdc728d75f11",
+        ".eval-plugins/product/CHANGELOG.md": "aabda25acae3c51cffd6262ae4c29621c836f5882ea30964b366daaf914e3d17",
+        ".eval-plugins/product/README.md": "f65cecd40507ed0edc8726194fd87af8d8b583e96aeff41d4e037ea5b431c3e3",
+        ".eval-plugins/product/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".eval-plugins/product/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".eval-plugins/product/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".eval-plugins/product/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".eval-plugins/product/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".eval-plugins/product/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".eval-plugins/product/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".eval-plugins/product/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".eval-plugins/product/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".eval-plugins/product/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".eval-plugins/product/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".eval-plugins/product/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".eval-plugins/product/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78"
+      },
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 10,
+        "cache_creation_input_tokens": 15626,
+        "cache_read_input_tokens": 67559,
+        "output_tokens": 3071,
+        "output_tokens_details": {
+          "thinking_tokens": 137
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 15626,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 556,
+            "cache_read_input_tokens": 18093,
+            "cache_creation_input_tokens": 1997,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 1997
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.0999899,
+      "skill_invocations": [
+        {
+          "skill": "product:flow-spec"
+        }
+      ],
+      "artifacts": {
+        "outputs/claude-natural--flow-direct/flow.md": "1d9876ed6e0d5c8b75a362377ecbf65de50df536c8fe63412af0af40e09a9744"
+      },
+      "instruction_snapshot": "instruction-snapshots/2f1e69453efa"
+    },
+    {
+      "id": "claude-baseline--flow-from-prd",
+      "host": "claude",
+      "mode": "no-skill baseline",
+      "case": "flow-from-prd",
+      "model": "claude-sonnet-5-5",
+      "executor_version": "2.1.296 (Claude Code)",
+      "effort": "medium",
+      "status": "failed",
+      "duration_seconds": 32.92,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": false
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "source_acceptance_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "open_decision_ids_retained",
+          "passed": true
+        },
+        {
+          "check": "policy_draft_not_claimed_ready",
+          "passed": true
+        }
+      ],
+      "error": null,
+      "event_log_sha256": "2f2e58d3a2111b7d25b7739e4b5fc44c0fe6c453c89e68b5b6a3aa30345c4e7e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "input_sha256": {
+        "observed-notes.md": "2ed4ddb83d7d38c181f8d790acb6a3e1983b68615dda2ec4e70945fc7798ce02",
+        "prd.md": "c77893fe885aa02b6639b2254a09b0820b68c5d0e2de20736e7730f10a544138",
+        "problem.md": "107a7542d132d717e8336564255a06e5c0296c4b04a8bf60d0c4c3fe95abc03a"
+      },
+      "instruction_sha256": {},
+      "changed_files": [
+        "flow.md"
+      ],
+      "completed": true,
+      "reported_model": "claude-sonnet-5-5",
+      "usage": {
+        "input_tokens": 8,
+        "cache_creation_input_tokens": 20907,
+        "cache_read_input_tokens": 56089,
+        "output_tokens": 4657,
+        "output_tokens_details": {
+          "thinking_tokens": 42
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 20907,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "not_available",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 622,
+            "cache_read_input_tokens": 21420,
+            "cache_creation_input_tokens": 3951,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 3951
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_cost_usd": 0.1358229,
+      "skill_invocations": [],
+      "artifacts": {
+        "outputs/claude-baseline--flow-from-prd/flow.md": "71ad5a1bc0c8b692106085df45e61783239a0fba573befc92c41074bd617a8d8"
+      }
+    },
+    {
+      "id": "codex-natural--flow-direct",
+      "host": "codex",
+      "mode": "natural routing, local .agents/skills; Japanese request",
+      "case": "flow-direct",
+      "model": "gpt-6-astra",
+      "executor_version": "codex-cli 0.156.1",
+      "effort": "low",
+      "status": "passed",
+      "completed": true,
+      "checks": [
+        {
+          "check": "only_requested_output_changed",
+          "passed": true
+        },
+        {
+          "check": "flow_identity_and_maturity_recorded",
+          "passed": true
+        },
+        {
+          "check": "flow_identified",
+          "passed": true
+        },
+        {
+          "check": "actual_flow_source_cited",
+          "passed": true
+        },
+        {
+          "check": "complete_direct_scope_not_blocked_by_optional_design",
+          "passed": true
+        }
+      ],
+      "duration_seconds": 72.91,
+      "event_log_sha256": "84ed9d19c3377b4e44214428b53bc0b86612aefa5f1819252a846416f3eebe5d",
+      "stderr_sha256": "30d68d5ffdff0189dc9dfb17ec871b7660e638c0f391df8d94565fc9720158f9",
+      "skill_read_observed": true,
+      "before.sha256.json": {
+        ".agents/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".agents/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".agents/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".agents/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".agents/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".agents/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".agents/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".agents/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".agents/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".agents/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".agents/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".agents/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".agents/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78",
+        ".git/HEAD": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+        ".git/config": "cae33efdb02cf774435c1ff9cb16bcc1014606908530c6e1dc727615fe3e8cda",
+        ".git/description": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+        ".git/hooks/applypatch-msg.sample": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+        ".git/hooks/commit-msg.sample": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+        ".git/hooks/fsmonitor-watchman.sample": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+        ".git/hooks/post-update.sample": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+        ".git/hooks/pre-applypatch.sample": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+        ".git/hooks/pre-commit.sample": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+        ".git/hooks/pre-merge-commit.sample": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+        ".git/hooks/pre-push.sample": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+        ".git/hooks/pre-rebase.sample": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+        ".git/hooks/pre-receive.sample": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+        ".git/hooks/prepare-commit-msg.sample": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+        ".git/hooks/push-to-checkout.sample": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+        ".git/hooks/sendemail-validate.sample": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+        ".git/hooks/update.sample": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+        ".git/info/exclude": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+        "direct-input.md": "d6884767471b91c1548ce2c083463a58f387a2b250da71fc7bba9a139f649955"
+      },
+      "after.sha256.json": {
+        ".agents/references/artifact-contract.md": "6e144dc61f8e19b637fbb6d8acd6473b20eced947ab220b921774332cf933669",
+        ".agents/references/flow-template.md": "84d5375efe7225ab1c455bded69da33d1590ef55208513dd26eaacf38e48901a",
+        ".agents/references/prd-review-contract.md": "8508f557096cae772d57f323fb160c5248899c54298e7b12d96e32fbfdfe9b34",
+        ".agents/references/prd-template.md": "54856a98783e78d8b2ede071485bac010564a12781c7fb7ffb9450e99063136a",
+        ".agents/references/problem-template.md": "39f2b222aa187d1d336b3061e8aea3ff52722421cf1a7c0e75e678d1d81e3b68",
+        ".agents/skills/flow-spec/SKILL.md": "2f1e69453efa12c89574d92e25d1761e7b5886e8dd99bc522c67ae38c620643c",
+        ".agents/skills/flow-spec/agents/openai.yaml": "ea7c106578205c845d9024f2065035bd07350f6be4f2c3e31fee5dc7a36cfb76",
+        ".agents/skills/prd-gate/SKILL.md": "d464dbd87b324a35008285020f10e287361e7bb2c80bc09ddfa65e2227106379",
+        ".agents/skills/prd-gate/agents/openai.yaml": "8f5c3aeea623be2e7ade24617a914af96086df897d48466df288fbe97969e6f2",
+        ".agents/skills/prd-write/SKILL.md": "d76a7e4c0845d06cb17219f87730f0026a6edebf035ff17e65f8615346c165d1",
+        ".agents/skills/prd-write/agents/openai.yaml": "88a5f1af9ab7c692bf4786fdf60126fdbebe01980cf9eb59551fcbbaa500694b",
+        ".agents/skills/problem-frame/SKILL.md": "37a75182c4c32bb1a2a2fabb614aa947768fa9b0e68b2982079d06976f9d0e33",
+        ".agents/skills/problem-frame/agents/openai.yaml": "282c1f2ff7bac48436245e23d4e1c778736568beabd57910f2594d0cf0d19d78",
+        ".git/HEAD": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+        ".git/config": "cae33efdb02cf774435c1ff9cb16bcc1014606908530c6e1dc727615fe3e8cda",
+        ".git/description": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+        ".git/hooks/applypatch-msg.sample": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+        ".git/hooks/commit-msg.sample": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+        ".git/hooks/fsmonitor-watchman.sample": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+        ".git/hooks/post-update.sample": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+        ".git/hooks/pre-applypatch.sample": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+        ".git/hooks/pre-commit.sample": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+        ".git/hooks/pre-merge-commit.sample": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+        ".git/hooks/pre-push.sample": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+        ".git/hooks/pre-rebase.sample": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+        ".git/hooks/pre-receive.sample": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+        ".git/hooks/prepare-commit-msg.sample": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+        ".git/hooks/push-to-checkout.sample": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+        ".git/hooks/sendemail-validate.sample": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+        ".git/hooks/update.sample": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+        ".git/info/exclude": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+        "direct-input.md": "d6884767471b91c1548ce2c083463a58f387a2b250da71fc7bba9a139f649955",
+        "flow.md": "7d3837a18d0bffece6266be721306abafde4beaf302e4c5f9214b1300a09cb04"
+      },
+      "artifacts": {
+        "outputs/codex-natural--flow-direct/flow.md": "7d3837a18d0bffece6266be721306abafde4beaf302e4c5f9214b1300a09cb04"
+      }
+    }
+  ]
+}

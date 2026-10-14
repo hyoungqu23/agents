@@ -35,6 +35,15 @@ Report absent areas as unknown or not assessed. Do not turn missing headings int
 
 Find the applicable `flow.md` or equivalent user-flow description. Reuse it and any recorded planning review instead of restarting the planning process.
 
+When the flow carries requirement links or source/dependency identities, read the
+linked requirements needed for the target and compare available revisions/content.
+A stale review or flow cannot establish current behavior. Preserve FLOW/FR/AC links,
+required alternate states and open policy decisions in the prototype's handoff note.
+Do not silently settle an open policy for a convenient demo: label any bounded demo
+assumption and explain which branch remains unresolved. Ask only if that choice is
+needed for the requested design. No particular planning skill or document schema is
+required; retain the compact standalone path below for simple explorations.
+
 If none exists, establish the screen's entry, primary action, outcome, and relevant alternate/error paths in a compact `flow.md` beside the working prototype before building variants. Infer obvious paths from the request and existing product; ask only about choices that materially change the screen. Check that actions have destinations and required states are accounted for. This local flow check makes standalone design work possible; it does not claim that a formal planning gate ran. If the project explicitly requires a separate planning gate, honor that requirement before visual exploration.
 
 Keep the chosen concept tied to observable states or actions. For a metaphor or motion-heavy screen, record what the metaphor communicates, when animation occurs, which data remains readable, and the reduced-motion/static alternative. Do not decorate every action with the strongest animation if the concept reserves it for a particular milestone.
