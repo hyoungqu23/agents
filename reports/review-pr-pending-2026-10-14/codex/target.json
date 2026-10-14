@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "hostname": "github.com",
+  "repo": "example/project",
+  "pr": 7,
+  "worktree": "/private/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmp8kw0387p/reviewer",
+  "head_sha": "cb37564a8be9dea8dc43fa037fad46ab8a93f327",
+  "base_sha": "0e406bce5483160604aca8f3babe40ec435ba74a",
+  "diff_sha256": "048a7d48143b6ecd4f53c36933eb5dd09dcf5e41bab37431d4640c9bb73e8ee4"
+}

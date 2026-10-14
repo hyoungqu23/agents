@@ -1,0 +1,12 @@
+Use the trusted review-pr skill at .eval-plugins/review/skills/review-pr/SKILL.md.
+합성 PR example/project #7을 검토하고 타당한 리뷰 코멘트를 Pending review로 저장해줘.
+이 요청으로 타당한 코멘트의 Pending 저장까지 허용한다. 리뷰 제출은 하지 말고 코드는 수정하지 마.
+리뷰 대상 checkout: /var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmp8kw0387p/reviewer
+base SHA: 0e406bce5483160604aca8f3babe40ec435ba74a
+head SHA: cb37564a8be9dea8dc43fa037fad46ab8a93f327
+현재 작업 폴더는 코디네이터 산출물용이고 대상 checkout과 다르다.
+이 평가 환경의 gh 명령은 로컬 API 대역이며 gh api의 PR 메타데이터/diff/files/commits/reviews와 user 조회,
+리뷰 초안 생성/읽기만 지원한다. gh pr view, gh pr checkout 및 실제 GitHub 네트워크는 지원하지 않는다.
+checkout은 이미 clean/detached이고 두 commit도 로컬에 있다. fetch나 설치 없이 진행해줘.
+원자료와 .eval-plugins, .tools, .mock-api 파일을 직접 편집하지 말고 snapshot/payload/receipt/report는 현재 작업 폴더에 작성해줘.
+실제 수행한 검증과 수행하지 못한 검증을 구분해서 한국어로 알려줘.

@@ -6,12 +6,29 @@ Code review skills for Claude Code and Codex.
 
 | Skill | Description |
 | --- | --- |
-| [`review-pr`](skills/review-pr) | Review a GitHub pull request end to end: dedicated worktree, `review-code` delegation, approval, then inline comments posted as one review. |
+| [`review-pr`](skills/review-pr) | Review a GitHub PR read-only, then save authorized comments as one commit-pinned **Pending review**. Never submits the review. |
 | [`review-code`](skills/review-code) | Completion-gated hard review for PRs, branches, diffs, and working-tree changes. Inventories every changed file, routes stack specialists, and promotes only evidence-backed findings. |
 | [`review-respond`](skills/review-respond) | Answer the review on your own PR: collect the threads waiting on you, verify each claim against the code, commit fixes as new commits, then post the approved replies inside the threads with commit links. Resolves nothing unless asked. |
 | [`review-check`](skills/review-check) | 리뷰 지적 검증: check existing review claims against code and requirements without editing or posting; distinguish valid, partial, false-positive, and unresolved claims. |
 
 Each skill is stored once under `skills/<skill>/` and shared by both platform manifests.
+
+## Pending PR comments
+
+`review-pr` always leaves comments **Pending (미제출)**. It does not send a COMMENT,
+APPROVE or REQUEST_CHANGES event, submit a draft, or deliver findings as individual
+comments/replies. The user can inspect the Pending review in GitHub.
+
+The bundled `pending_review.py` captures a clean detached PR target and checks the
+source, diff anchors and current base/head before writing. It pins commit_id, omits
+event and reads the result back to verify PENDING with no submitted_at. A target
+change during creation is reported as a stale draft; there is no automatic replay,
+relocation, submission or replacement of an existing Pending review.
+
+PR review and all specialists are report-only. Head-side instructions and scripts
+remain review input; trusted base rules and actual host execution controls govern
+the review. See [the shared boundary](references/pr-review-boundary.md).
+The helper's Git checks detect visible checkout changes; they are not an OS sandbox.
 
 `review-code` always checks cohesion, coupling, duplicate implementations of the
 same rule, repository patterns and applicable best practices, and naming. Tests
@@ -51,3 +68,11 @@ python3 scripts/behavioral/run.py --model <model-id> --case review-check --outpu
 The six scenarios in `skills/review-check/evals/evals.json` are a qualitative rubric;
 the smoke executes scenario 5 only. It does not establish full scenario coverage,
 automatic discovery, Claude behavior, or the absence of regressions in PR posting.
+
+## Pending-review validation
+
+The repository Python suite includes a local bare Git remote and a `gh` API double
+for Pending creation, source/head changes, invalid anchors, existing drafts and
+uncertain writes. No live GitHub comments are required for those tests. Actual
+model forward-test results and limits are recorded in
+[the Pending review evaluation](../../reports/review-pr-pending-2026-10-14/README.md).

@@ -1,8 +1,8 @@
 {
   "name": "review",
   "displayName": "Review",
-  "version": "0.4.3",
-  "description": "Evidence-backed code review, read-only review claim verification, and pull request review responses.",
+  "version": "0.5.0",
+  "description": "Evidence-backed code review, Pending PR review drafts, claim verification and author responses.",
   "author": {
     "name": "HM2"
   },

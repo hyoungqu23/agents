@@ -1,7 +1,7 @@
 {
   "name": "review",
-  "version": "0.4.3",
-  "description": "Evidence-backed code review, read-only review claim verification, and pull request review responses.",
+  "version": "0.5.0",
+  "description": "Evidence-backed code review, Pending PR review drafts, claim verification and author responses.",
   "author": {
     "name": "HM2"
   },
@@ -15,11 +15,13 @@
   "interface": {
     "displayName": "Review",
     "shortDescription": "Evidence-backed code review",
-    "longDescription": "Completion-gated code review that inventories every changed file, routes stack specialists, and promotes only evidence-backed findings with exact file:line placement. Also answers reviews on your own pull requests with verified fixes and in-thread replies. Checks existing review claims without editing code or posting replies with review-check.",
+    "longDescription": "Review code with evidence, leave authorized PR comments as unsubmitted Pending drafts, verify existing claims, and handle author-side review responses. PR review preserves source and pins draft comments to the reviewed commit.",
     "developerName": "HM2",
     "category": "Productivity",
     "capabilities": [
-      "Read"
+      "Read",
+      "Write",
+      "Interactive"
     ],
     "defaultPrompt": "Review the current changes and report evidence-backed findings."
   }

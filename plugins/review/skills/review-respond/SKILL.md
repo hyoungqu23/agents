@@ -27,7 +27,7 @@ cd ../<repo>-pr-<number>-respond && gh pr checkout <number>
 
 `gh pr checkout` fails when the branch is already checked out elsewhere; go to that checkout instead of forcing a second one.
 
-- Never work in `../<repo>-pr-<number>-review`. `review-pr` creates it detached for the reviewer, so commits made there cannot be pushed to the PR branch. The `-respond` suffix also keeps this worktree out of `review-pr`'s reclaim scan.
+- Never work in `../<repo>-pr-<number>-review`. `review-pr` keeps its reviewer checkout detached and read-only. The `-respond` suffix separates the author's writable checkout from that reviewer-only checkout.
 
 ## 2. Collect what is waiting on you
 
@@ -161,7 +161,7 @@ Write `review-respond/<number>.json` inside the git directory of the checkout yo
 }
 ```
 
-`thread` holds the GraphQL thread node ID, the same type `review-pr` records in `answeredThreads`, so the two skills' state never needs translating. `lastComment` is the node ID of the last comment you replied to.
+`thread` holds the GraphQL thread node ID. `lastComment` is the node ID of the last comment you replied to. These author-response records are separate from review-pr Pending-review receipts.
 
 ## Re-running
 
