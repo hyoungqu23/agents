@@ -1,0 +1,36 @@
+[
+  {
+    "id": "toolu_01UajA3v3h4jcg6bScAisSoz",
+    "name": "Bash",
+    "input": {
+      "command": "cd /var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmpp3dafi8v/workspace && ls -la . && cat .eval-plugins/review/references/pr-review-boundary.md && cat .eval-plugins/review/skills/review-pr/references/resume.md"
+    }
+  },
+  {
+    "tool_use_id": "toolu_01UajA3v3h4jcg6bScAisSoz",
+    "is_error": false
+  },
+  {
+    "id": "toolu_01AbKHgVcFXXLiUbnRWq2hd6",
+    "name": "Bash",
+    "input": {
+      "command": "cd /var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmpp3dafi8v/workspace && export PATH=$PWD/.tools:$PATH && python3 .eval-plugins/review/skills/review-pr/scripts/pending_review.py inspect --repo example/project --pr 7 --receipt $PWD/receipt.json"
+    }
+  },
+  {
+    "tool_use_id": "toolu_01AbKHgVcFXXLiUbnRWq2hd6",
+    "is_error": true
+  },
+  {
+    "id": "toolu_01AugK1iVPDG44gUFEoFZCDP",
+    "name": "Bash",
+    "input": {
+      "command": "PATH=/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmpp3dafi8v/workspace/.tools:$PATH python3 /var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmpp3dafi8v/workspace/.eval-plugins/review/skills/review-pr/scripts/pending_review.py inspect --repo example/project --pr 7 --receipt /var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmpp3dafi8v/workspace/receipt.json",
+      "description": "Inspect existing Pending review"
+    }
+  },
+  {
+    "tool_use_id": "toolu_01AugK1iVPDG44gUFEoFZCDP",
+    "is_error": true
+  }
+]

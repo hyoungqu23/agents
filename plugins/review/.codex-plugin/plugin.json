@@ -1,6 +1,6 @@
 {
   "name": "review",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Evidence-backed code review, Pending PR review drafts, claim verification and author responses.",
   "author": {
     "name": "HM2"
@@ -15,7 +15,7 @@
   "interface": {
     "displayName": "Review",
     "shortDescription": "Evidence-backed code review",
-    "longDescription": "Review code with evidence, leave authorized PR comments as unsubmitted Pending drafts, verify existing claims, and handle author-side review responses. PR review preserves source and pins draft comments to the reviewed commit.",
+    "longDescription": "Review code with evidence, save or resume unsubmitted Pending drafts while preserving manual edits, verify existing claims, and handle author-side review responses. PR review preserves source and pins draft comments to the reviewed commit.",
     "developerName": "HM2",
     "category": "Productivity",
     "capabilities": [

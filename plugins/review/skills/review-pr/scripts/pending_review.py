@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Capture a clean PR target and save one unsubmitted, commit-pinned review.
+"""Capture, inspect and resume an unsubmitted, commit-pinned review.
 
-The only remote mutation is POST /pulls/N/reviews, without an event. The caller
-must have authorization for the supplied comment text. Git checks are change
-guards, not an OS sandbox or proof of the findings' correctness.
+Writes are limited to creating a review without event and adding a thread to an
+existing Pending review. Existing text is never edited, deleted or submitted.
+Git checks are change guards, not a sandbox or proof of findings' correctness.
 """
 import argparse
+from contextlib import contextmanager
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import sys
+import tempfile
 
 
 class ReviewError(RuntimeError):
@@ -61,6 +64,50 @@ def write_new(path, data):
     with path.open('x') as stream:
         json.dump(data, stream, ensure_ascii=False, indent=2)
         stream.write('\n')
+
+
+def digest(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
+
+
+def persist(path, data):
+    """Publish a complete journal before any possible remote write."""
+    fd, name = tempfile.mkstemp(prefix=path.name + '.', dir=path.parent)
+    try:
+        with os.fdopen(fd, 'w') as stream:
+            json.dump(data, stream, ensure_ascii=False, indent=2)
+            stream.write('\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(name, path)
+        directory = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+    finally:
+        if os.path.exists(name):
+            os.unlink(name)
+
+
+@contextmanager
+def locked(receipt):
+    # Advisory lock on a separate inode: replacing the journal cannot release it.
+    # macOS/Linux CLI hosts; fail closed on a host without flock.
+    try:
+        import fcntl
+    except ImportError as error:
+        raise ReviewError('Resuming requires a host with fcntl.flock (macOS/Linux)') from error
+    receipt.parent.mkdir(parents=True, exist_ok=True)
+    with receipt.with_name(receipt.name + '.lock').open('a') as stream:
+        try:
+            fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise ReviewError('Another process is using this receipt; wait for it to finish') from error
+        try:
+            yield
+        finally:
+            fcntl.flock(stream, fcntl.LOCK_UN)
 
 
 def clean_head(worktree):
@@ -134,11 +181,20 @@ def review_payload(value, target, anchors):
     if not isinstance(value, dict) or set(value) - {'body', 'comments'}:
         raise ReviewError('Draft accepts only body/comments; event and caller-supplied commit_id are forbidden')
     body, comments = value.get('body', ''), value.get('comments', [])
-    if not isinstance(body, str) or not isinstance(comments, list) or (not body.strip() and not comments):
-        raise ReviewError('Provide nonempty draft content')
+    if not isinstance(body, str) or not isinstance(comments, list):
+        raise ReviewError('Draft body must be a string and comments an array')
+    keys = set()
+    normalized = []
     for comment in comments:
-        if not isinstance(comment, dict) or set(comment) != {'path', 'line', 'side', 'body'}:
-            raise ReviewError('Only single-line path/line/side/body comments are supported')
+        if (not isinstance(comment, dict) or set(comment) - {'path', 'line', 'side', 'body', 'key'}
+                or not {'path', 'line', 'side', 'body'} <= set(comment)):
+            raise ReviewError('Comments accept path/line/side/body and an optional stable finding key')
+        if 'key' in comment and (not isinstance(comment['key'], str) or not re.fullmatch(r'[A-Za-z0-9_.:-]{1,100}', comment['key'])):
+            raise ReviewError('Finding key must contain 1-100 ASCII letters, digits, _, ., :, or -')
+        key = finding_key(comment)
+        if key in keys:
+            raise ReviewError('Duplicate finding key in draft')
+        keys.add(key)
         path = comment['path']
         if not isinstance(path, str) or not path or PurePosixPath(path).is_absolute() or '..' in PurePosixPath(path).parts:
             raise ReviewError('Invalid repository-relative comment path')
@@ -147,24 +203,114 @@ def review_payload(value, target, anchors):
             raise ReviewError('Comment must anchor an added RIGHT-side line of the reviewed diff')
         if not isinstance(comment['body'], str) or not comment['body'].strip():
             raise ReviewError('Comment body must be nonempty')
+        normalized.append(comment_draft(comment))
+    if len({digest(c) for c in normalized}) != len(normalized):
+        raise ReviewError('Duplicate comment in draft')
     # event is intentionally absent; there is no submit option.
-    return {'commit_id': target['head_sha'], 'body': body, 'comments': comments}
+    return {'commit_id': target['head_sha'], 'body': body, 'comments': normalized}
 
 
-def own_pending(host, repo, number, login):
+def pages(host, endpoint):
+    result = []
     for page in range(1, 101):
-        rows = api(host, f'repos/{repo}/pulls/{number}/reviews?per_page=100&page={page}')
+        rows = api(host, f'{endpoint}?per_page=100&page={page}')
         if not isinstance(rows, list):
-            raise ReviewError('Unexpected reviews response')
-        for row in rows:
-            if row.get('state') == 'PENDING' and row.get('user', {}).get('login', '').lower() == login.lower():
-                return row['id']
+            raise ReviewError('Unexpected paginated response')
+        result.extend(rows)
         if len(rows) < 100:
-            return None
-    raise ReviewError('Review listing incomplete; no draft created')
+            return result
+    raise ReviewError('Remote listing incomplete; no writes allowed')
 
 
-def save(args):
+def positive_id(value):
+    return type(value) is int and value > 0
+
+
+def comment_draft(comment):
+    return {key: comment.get(key) for key in ('path', 'line', 'side', 'body')}
+
+
+def finding_key(comment):
+    return comment.get('key', 'auto:' + digest(comment_draft(comment)))
+
+
+def anchor(comment):
+    return tuple(comment.get(key) for key in ('path', 'line', 'side'))
+
+
+def own_pending(host, endpoint, login):
+    rows = [row for row in pages(host, endpoint + '/reviews')
+            if row.get('state') == 'PENDING' and row.get('user', {}).get('login', '').lower() == login.lower()]
+    if len(rows) > 1:
+        raise ReviewError('Multiple own Pending reviews; reconcile manually without writing')
+    return rows[0]['id'] if rows else None
+
+
+def read_review(host, endpoint, review_id, login):
+    if not positive_id(review_id):
+        raise ReviewError('Invalid review ID')
+    review = api(host, endpoint + f'/reviews/{review_id}')
+    if (review.get('id') != review_id or review.get('state') != 'PENDING'
+            or review.get('submitted_at') is not None
+            or review.get('user', {}).get('login', '').lower() != login.lower()
+            or not re.fullmatch(r'[0-9a-f]{40}', review.get('commit_id', ''))
+            or not isinstance(review.get('body'), str)):
+        raise ReviewError('Review is not verified own PENDING; do not modify or replace it')
+    rows = pages(host, endpoint + f'/reviews/{review_id}/comments')
+    comments = []
+    ids = set()
+    for comment in rows:
+        if not positive_id(comment.get('id')):
+            raise ReviewError('Invalid review comment ID')
+        if 'line' not in comment or 'side' not in comment:
+            # The review-comments listing also has a legacy position-based
+            # response shape. Resolve its ID through the modern detail contract;
+            # never treat diff position as a file line number.
+            comment_id = comment['id']
+            comment = api(host, endpoint.rsplit('/pulls/', 1)[0] + f'/pulls/comments/{comment_id}')
+            if comment.get('id') != comment_id:
+                raise ReviewError('Comment detail identity differs from the listing')
+        if (not positive_id(comment.get('id')) or comment['id'] in ids
+                or comment.get('pull_request_review_id') != review_id
+                or comment.get('user', {}).get('login', '').lower() != login.lower()
+                or not isinstance(comment.get('body'), str)):
+            raise ReviewError('Comments have ambiguous ownership or identity; no writes allowed')
+        ids.add(comment['id'])
+        comments.append(comment)
+    return review, comments
+
+
+def load_record(receipt, args, login):
+    identity = {'hostname': args.hostname.lower(), 'repo': args.repo.lower(), 'pr': args.pr, 'login': login.lower()}
+    record = {'schema_version': 2, **identity, 'managed': {}, 'operation': None}
+    if not receipt.exists():
+        return record
+    previous = json.loads(receipt.read_text())
+    if previous.get('schema_version') == 2:
+        if any(previous.get(key) != value for key, value in identity.items()):
+            raise ReviewError('Receipt belongs to another host/repository/PR/account')
+        if not isinstance(previous.get('managed'), dict) or not isinstance(previous.get('operation'), (dict, type(None))):
+            raise ReviewError('Invalid receipt structure; preserve it for recovery')
+        if previous.get('review_id') is not None and not positive_id(previous['review_id']):
+            raise ReviewError('Invalid receipt review ID')
+        for entry in previous['managed'].values():
+            if not isinstance(entry, dict) or not positive_id(entry.get('comment_id')) or not isinstance(entry.get('draft'), dict):
+                raise ReviewError('Invalid managed finding in receipt')
+        return previous
+    # v0.5 receipts lack host/account/content. They can only be migrated after
+    # matching the supplied original payload hash and a live own Pending review.
+    if (previous.get('schema_version') is not None or previous.get('repo', '').lower() != args.repo.lower()
+            or previous.get('pr') != args.pr or previous.get('status') not in ('pending', 'pending_stale', 'create_unconfirmed')
+            or not re.fullmatch(r'[0-9a-f]{40}', previous.get('head_sha', ''))
+            or not re.fullmatch(r'[0-9a-f]{64}', previous.get('payload_sha256', ''))):
+        raise ReviewError('Unrecognized receipt; do not replace or replay it')
+    record['legacy'] = previous
+    if previous.get('review_id') is not None:
+        record['review_id'] = previous['review_id']
+    return record
+
+
+def load_target(args):
     target = json.loads(Path(args.snapshot).read_text())
     if (target.get('schema_version'), target.get('hostname'), target.get('repo'), target.get('pr')) != (1, args.hostname, args.repo, args.pr):
         raise ReviewError('Snapshot does not match the requested host/repository/PR')
@@ -172,72 +318,264 @@ def save(args):
         raise ReviewError('Snapshot commit identities must be full SHAs')
     worktree = review_root(target['worktree'])
     outside(args.snapshot, worktree)
-    payload_file = outside(args.payload, worktree)
-    receipt = outside(args.receipt, worktree)
-    if receipt.exists():
-        raise ReviewError('Receipt already exists; inspect it and remote pending state instead of retrying')
     if clean_head(worktree) != target['head_sha']:
         raise ReviewError('Checkout moved since review')
     diff = diff_for(worktree, target['base_sha'], target['head_sha'])
     if hashlib.sha256(diff.encode()).hexdigest() != target['diff_sha256']:
         raise ReviewError('Diff differs from the reviewed snapshot')
-    payload = review_payload(json.loads(payload_file.read_text()), target, changed_lines(diff))
-    login = api(args.hostname, 'user')['login']
-    existing = own_pending(args.hostname, args.repo, args.pr, login)
-    if existing is not None:
-        raise ReviewError(f'Pending review {existing} already exists; leave it untouched and inspect it before proceeding')
-    endpoint = f'repos/{args.repo}/pulls/{args.pr}'
+    return target, worktree, diff
+
+
+def guard(args, target, worktree):
     if not same_target(pr_state(args.hostname, args.repo, args.pr), target):
         raise ReviewError('PR head/base changed since review; reassess affected findings before saving')
     if clean_head(worktree) != target['head_sha']:
         raise ReviewError('Checkout changed while preparing the draft')
-    record = {'status': 'create_unconfirmed', 'repo': args.repo, 'pr': args.pr,
-              'head_sha': target['head_sha'], 'payload_sha256': hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()}
-    # Persist the attempt before the write: a timeout cannot justify blind replay.
-    write_new(receipt, record)
-    review = api(args.hostname, endpoint + '/reviews', payload=payload)
-    record['review_id'] = review.get('id')
-    record['url'] = review.get('html_url')
-    receipt.write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n')
-    if type(review.get('id')) is not int:
-        raise ReviewError('Created review ID unavailable; inspect pending state, do not replay')
-    review = api(args.hostname, endpoint + f'/reviews/{review["id"]}')
-    if (review.get('state') != 'PENDING' or review.get('submitted_at') is not None
-            or review.get('commit_id') != target['head_sha']
-            or review.get('user', {}).get('login', '').lower() != login.lower()):
-        raise ReviewError('Created review is not verified PENDING on the reviewed commit; inspect it without submitting')
-    fresh = same_target(pr_state(args.hostname, args.repo, args.pr), target)
+
+
+def stamp(record, review, comments):
+    record.update(review_id=review['id'], review_head_sha=review['commit_id'],
+                  url=review.get('html_url'), state='PENDING')
+    record['observed'] = {'body': review['body'], 'comments': comments}
+
+
+def matches(comments, draft, head):
+    return [c for c in comments if comment_draft(c) == draft and c.get('commit_id') == head]
+
+
+def recover(record, review, comments):
+    """Positive readback can confirm a write. Absence can never justify replay."""
+    operation = record.get('operation')
+    if not operation:
+        return True
+    if operation.get('kind') not in ('create', 'append'):
+        raise ReviewError('Unknown journal operation; no replay allowed')
+    if operation['head_sha'] != review['commit_id']:
+        return False
+    if operation['kind'] == 'create' and operation['body'] != review['body']:
+        return False
+    found = {}
+    for key, draft in operation['findings'].items():
+        candidates = matches(comments, draft, operation['head_sha'])
+        if len(candidates) != 1:
+            return False
+        found[key] = {'draft': draft, 'comment_id': candidates[0]['id']}
+    record['managed'].update(found)
+    if operation['kind'] == 'create':
+        record['review_target'] = operation['target']
+        record['initial_body'] = operation['body']
+    record['operation'] = None
+    return True
+
+
+def reconcile(record, review, comments, target, value):
+    """Produce a local plan; never replace existing content, even our own text."""
+    plan = {'add': [], 'unchanged': [], 'preserved': [], 'conflicts': []}
+    candidates = {finding_key(c): comment_draft(c) for c in value.get('comments', [])}
+    by_id = {c['id']: c for c in comments}
+    used = set()
+    for key, draft in candidates.items():
+        entry = record['managed'].get(key)
+        if entry:
+            remote = by_id.get(entry['comment_id'])
+            used.add(entry['comment_id'])
+            if remote is None:
+                reason = 'deleted_remote'
+            elif comment_draft(remote) != entry['draft']:
+                reason = 'edited_remote'
+            elif draft != entry['draft']:
+                reason = 'proposed_change'
+            else:
+                plan['unchanged'].append(key)
+                continue
+            plan['conflicts'].append({'key': key, 'reason': reason, 'proposed': draft,
+                                      'remote': remote, 'comment_id': entry['comment_id']})
+            continue
+        exact = matches(comments, draft, target['head_sha'])
+        previous = [entry for entry in record['managed'].values() if anchor(entry['draft']) == anchor(draft)]
+        if any(entry['comment_id'] not in by_id for entry in previous):
+            plan['conflicts'].append({'key': key, 'reason': 'deleted_remote', 'proposed': draft})
+        elif len(exact) == 1:
+            record['managed'][key] = {'draft': draft, 'comment_id': exact[0]['id']}
+            used.add(exact[0]['id'])
+            plan['unchanged'].append(key)
+        elif exact or any(anchor(c) == anchor(draft) for c in comments):
+            plan['conflicts'].append({'key': key, 'reason': 'occupied_anchor', 'proposed': draft})
+        else:
+            plan['add'].append({'key': key, 'draft': draft})
+    for key, entry in record['managed'].items():
+        if key not in candidates and entry['comment_id'] in by_id:
+            plan['conflicts'].append({'key': key, 'reason': 'omitted_existing', 'comment_id': entry['comment_id']})
+    plan['preserved'] = [c['id'] for c in comments if c['id'] not in used]
+    if 'body' in value and value['body'] != review['body']:
+        plan['conflicts'].append({'reason': 'summary_preserved', 'proposed': value['body'], 'remote': review['body']})
+    previous = record.get('review_target')
+    plan['needs_reassessment'] = (review['commit_id'] != target['head_sha'] or
+        (previous is not None and any(previous.get(k) != target[k] for k in ('base_sha', 'head_sha', 'diff_sha256'))))
+    plan['target'] = {k: target[k] for k in ('base_sha', 'head_sha', 'diff_sha256')}
+    return plan
+
+
+def plan_status(plan):
+    if plan['needs_reassessment']:
+        return 'pending_stale'
+    return 'pending_conflicts' if plan['conflicts'] else 'pending'
+
+
+def add_thread(host, review, draft):
+    if not isinstance(review.get('node_id'), str) or not review['node_id']:
+        raise ReviewError('Pending review node ID unavailable; cannot add a draft thread')
+    # This operation is specifically for a PENDING review. Never supply
+    # pullRequestId (which could start another review), or use a comment endpoint.
+    result = api(host, 'graphql', payload={
+        'query': 'mutation($input:AddPullRequestReviewThreadInput!){addPullRequestReviewThread(input:$input){thread{id}}}',
+        'variables': {'input': {'pullRequestReviewId': review['node_id'], **draft}}})
+    if result.get('errors') or not result.get('data', {}).get('addPullRequestReviewThread', {}).get('thread', {}).get('id'):
+        raise ReviewError('Thread write unconfirmed; inspect the receipt and remote review, do not replay')
+
+
+def final_check(args, record, receipt, target, worktree):
     try:
-        fresh = clean_head(worktree) == target['head_sha'] and fresh
+        guard(args, target, worktree)
     except ReviewError:
-        fresh = False
-    record['status'] = 'pending' if fresh else 'pending_stale'
-    record['state'] = 'PENDING'
-    receipt.write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n')
-    if not fresh:
-        raise ReviewError('Review target changed during creation; draft remains PENDING on the reviewed head, reassess before further action')
+        record['status'] = 'pending_stale'
+        persist(receipt, record)
+        raise ReviewError('Target changed during save; draft remains on its original commit; reassess before further action')
+
+
+def run_session(args):
+    target = worktree = value = payload = None
+    receipt = Path(args.receipt).resolve()
+    if args.action == 'save':
+        target, worktree, diff = load_target(args)
+        paths = [outside(p, worktree) for p in (args.snapshot, args.payload, args.receipt,
+                 str(receipt.with_name(receipt.name + '.lock')))]
+        if len(set(paths)) != len(paths):
+            raise ReviewError('Snapshot, payload, receipt and lock must be distinct paths')
+        value = json.loads(paths[1].read_text())
+        payload = review_payload(value, target, changed_lines(diff))
+    with locked(receipt):
+        login = api(args.hostname, 'user')['login']
+        if not isinstance(login, str) or not login:
+            raise ReviewError('Authenticated login unavailable')
+        record = load_record(receipt, args, login)
+        endpoint = f'repos/{args.repo}/pulls/{args.pr}'
+        review_id = record.get('review_id') or own_pending(args.hostname, endpoint, login)
+        if review_id is None:
+            if record.get('operation') or record.get('legacy'):
+                record['status'] = 'write_unconfirmed'
+                persist(receipt, record)
+                return record
+            if args.action == 'inspect':
+                return {'status': 'no_pending', 'repo': args.repo, 'pr': args.pr}
+            guard(args, target, worktree)
+            if not payload['body'].strip() and not payload['comments']:
+                return {'status': 'no_findings', 'repo': args.repo, 'pr': args.pr}
+            findings = {finding_key(c): comment_draft(c) for c in value.get('comments', [])}
+            record.update(status='create_unconfirmed', operation={'kind': 'create', 'head_sha': target['head_sha'],
+                          'target': {k: target[k] for k in ('head_sha', 'base_sha', 'diff_sha256')},
+                          'body': payload['body'], 'findings': findings})
+            persist(receipt, record)
+            result = api(args.hostname, endpoint + '/reviews', payload=payload)
+            review_id = result.get('id')
+            if not positive_id(review_id):
+                raise ReviewError('Created review ID unavailable; inspect remote state without replaying')
+            record['review_id'] = review_id
+            persist(receipt, record)
+        review, comments = read_review(args.hostname, endpoint, review_id, login)
+        if record.get('review_head_sha') and record['review_head_sha'] != review['commit_id']:
+            raise ReviewError('Review commit differs from saved identity')
+        stamp(record, review, comments)
+        if record.get('legacy'):
+            legacy = record['legacy']
+            if (payload is None or digest(payload) != legacy['payload_sha256']
+                    or review['commit_id'] != legacy['head_sha']):
+                record['status'] = 'legacy_needs_original_payload'
+                persist(receipt, record)
+                return record
+            record['operation'] = {'kind': 'create', 'head_sha': legacy['head_sha'],
+                'target': {k: target[k] for k in ('head_sha', 'base_sha', 'diff_sha256')},
+                'body': payload['body'], 'findings': {finding_key(c): comment_draft(c) for c in value.get('comments', [])}}
+            record['legacy_receipt'] = record.pop('legacy')
+        if not recover(record, review, comments):
+            record['status'] = 'write_unconfirmed'
+            persist(receipt, record)
+            return record
+        if args.action == 'inspect':
+            pr = pr_state(args.hostname, args.repo, args.pr)
+            record.update(status='inspected', current_head_sha=pr['head']['sha'], current_base_sha=pr['base']['sha'])
+            record['needs_reassessment'] = (review['commit_id'] != pr['head']['sha'] or
+                record.get('review_target', {}).get('base_sha') != pr['base']['sha'])
+            persist(receipt, record)
+            return record
+        final_check(args, record, receipt, target, worktree)
+        plan = reconcile(record, review, comments, target, value)
+        record['plan'] = plan
+        record['status'] = plan_status(plan)
+        persist(receipt, record)
+        if record['status'] != 'pending':
+            return record
+        # Each addition has its own journal entry and fresh readback. An
+        # interrupted batch resumes only after positive reconciliation.
+        while record['plan']['add']:
+            item = record['plan']['add'][0]
+            guard(args, target, worktree)
+            latest_review, latest_comments = read_review(args.hostname, endpoint, review_id, login)
+            if (latest_review != review or latest_comments != comments):
+                record['status'] = 'remote_changed'
+                persist(receipt, record)
+                return record
+            record.update(status='append_unconfirmed', operation={'kind': 'append', 'head_sha': target['head_sha'],
+                          'findings': {item['key']: item['draft']}})
+            persist(receipt, record)
+            add_thread(args.hostname, review, item['draft'])
+            review, comments = read_review(args.hostname, endpoint, review_id, login)
+            stamp(record, review, comments)
+            if not recover(record, review, comments):
+                record['status'] = 'write_unconfirmed'
+                persist(receipt, record)
+                return record
+            record['status'] = 'pending'
+            persist(receipt, record)
+            final_check(args, record, receipt, target, worktree)
+            record['plan'] = reconcile(record, review, comments, target, value)
+            record['status'] = plan_status(record['plan'])
+            if record['status'] != 'pending':
+                persist(receipt, record)
+                return record
+        review, comments = read_review(args.hostname, endpoint, review_id, login)
+        stamp(record, review, comments)
+        final_check(args, record, receipt, target, worktree)
+        record['plan'] = reconcile(record, review, comments, target, value)
+        record['status'] = plan_status(record['plan'])
+        persist(receipt, record)
     return record
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('capture', 'save'))
+    parser.add_argument('action', choices=('capture', 'inspect', 'save'))
     parser.add_argument('--hostname', default='github.com')
     parser.add_argument('--repo', required=True)
     parser.add_argument('--pr', required=True, type=int)
-    parser.add_argument('--snapshot', required=True)
+    parser.add_argument('--snapshot')
     parser.add_argument('--worktree')
     parser.add_argument('--payload')
     parser.add_argument('--receipt')
     args = parser.parse_args()
     if not re.fullmatch(r'[A-Za-z0-9.-]+', args.hostname) or not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', args.repo) or args.pr < 1:
         parser.error('Use an explicit hostname, owner/repo and positive PR number')
-    if args.action == 'capture' and not args.worktree:
-        parser.error('capture requires --worktree')
-    if args.action == 'save' and not (args.payload and args.receipt):
-        parser.error('save requires --payload and --receipt')
+    if args.action == 'capture' and not (args.worktree and args.snapshot):
+        parser.error('capture requires --worktree and --snapshot')
+    if args.action == 'save' and not (args.snapshot and args.payload and args.receipt):
+        parser.error('save requires --snapshot, --payload and --receipt')
+    if args.action == 'inspect' and not args.receipt:
+        parser.error('inspect requires --receipt')
     try:
-        print(json.dumps(capture(args) if args.action == 'capture' else save(args), ensure_ascii=False, indent=2))
+        result = capture(args) if args.action == 'capture' else run_session(args)
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        if result.get('status') not in (None, 'pending', 'inspected', 'no_pending', 'no_findings'):
+            return 2
     except (ReviewError, OSError, ValueError, KeyError, TypeError) as error:
         print(str(error), file=sys.stderr)
         return 1

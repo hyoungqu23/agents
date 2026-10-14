@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 - 2026-10-15
+
+- Resume existing Pending reviews: deduplicate unchanged findings and append new threads on the same reviewed commit without submitting.
+- Reconcile interrupted writes with a durable, account-bound journal; keep state across worktree replacement and guard concurrent local saves.
+- Preserve manual edits, deletions and summaries. Return changed or withdrawn findings as local conflicts instead of replacing drafts.
+- Reassess new revisions while retaining the older Pending; do not repin existing reviews or add anchors from a different commit.
+
 ## 0.5.0 - 2026-10-14
 
 - Make review-pr comments Pending-only: omit event, pin the reviewed commit, verify PENDING, and never submit or fall back to individual comments.

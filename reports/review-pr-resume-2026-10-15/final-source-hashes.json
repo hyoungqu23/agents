@@ -1,0 +1,6 @@
+{
+  "plugins/review/skills/review-pr/SKILL.md": "ea03b7e5b3a60601579866287de1b384575083565c9d62a042be41e806a08899",
+  "plugins/review/skills/review-pr/references/resume.md": "134681ab4d8b83e3c2ee4ca5abf01383d81cc4f5e53fbc8d7cb18cdf433bbb25",
+  "plugins/review/skills/review-pr/scripts/pending_review.py": "c5ff7681addde74c64e16b6af3e14fc1a5285311ca98fdc26043b55b71ecdd6a",
+  "scripts/tests/test_pending_review.py": "919fe594ce12f43ff7a6930005c28edb0c7ed502d80ac3541c6bb2dd99191381"
+}

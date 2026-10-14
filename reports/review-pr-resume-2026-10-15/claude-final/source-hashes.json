@@ -1,0 +1,12 @@
+{
+  "before": {
+    "app.py": "829af73a347fefe9cb1980e8f41ba27d521ea512f826c64c74ea92c14ef421b4",
+    "permissions.py": "d0af2494bd3ed64cbdc4a5c4e39bdee875b0e862114feaa22a5f4350ed224484",
+    "AGENTS.md": "4795a7e813c4a24ce792a7b4ad16f2827d88cb79dbb87a9882e57797fb039ff4"
+  },
+  "after": {
+    "app.py": "829af73a347fefe9cb1980e8f41ba27d521ea512f826c64c74ea92c14ef421b4",
+    "permissions.py": "d0af2494bd3ed64cbdc4a5c4e39bdee875b0e862114feaa22a5f4350ed224484",
+    "AGENTS.md": "4795a7e813c4a24ce792a7b4ad16f2827d88cb79dbb87a9882e57797fb039ff4"
+  }
+}

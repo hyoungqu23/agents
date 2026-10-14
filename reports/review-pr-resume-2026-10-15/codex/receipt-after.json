@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "hostname": "github.com",
+  "repo": "example/project",
+  "pr": 7,
+  "login": "reviewer",
+  "managed": {
+    "empty-input": {
+      "draft": {
+        "path": "app.py",
+        "line": 2,
+        "side": "RIGHT",
+        "body": "[P1] Empty input now raises IndexError. Preserve the documented None result for first_name([])."
+      },
+      "comment_id": 101
+    },
+    "can-edit-role-check": {
+      "draft": {
+        "path": "permissions.py",
+        "line": 2,
+        "side": "RIGHT",
+        "body": "[P1] `can_edit(\"viewer\")`는 `False` 대신 문자열 `\"editor\"`를 반환합니다. Python의 `or`는 피연산자를 반환하므로 admin 이외의 역할도 조건문에서 참으로 평가되어, admin/editor만 허용한다는 계약을 위반합니다. 기존의 `role in (\"admin\", \"editor\")` 비교를 복원해 모든 역할에 올바른 boolean을 반환해 주세요."
+      },
+      "comment_id": 102
+    }
+  },
+  "operation": null,
+  "status": "pending",
+  "review_id": 91,
+  "review_head_sha": "7eabf5f58d693f4a4dd198d64b8c9487ad761171",
+  "url": "https://github.com/example/project/pull/7#pullrequestreview-91",
+  "state": "PENDING",
+  "observed": {
+    "body": "내가 직접 정리한 초안 요약. 이 문장은 그대로 남겨주세요.",
+    "comments": [
+      {
+        "path": "app.py",
+        "line": 2,
+        "side": "RIGHT",
+        "body": "[P1] Empty input now raises IndexError. Preserve the documented None result for first_name([]).",
+        "id": 101,
+        "pull_request_review_id": 91,
+        "commit_id": "7eabf5f58d693f4a4dd198d64b8c9487ad761171",
+        "user": {
+          "login": "reviewer"
+        }
+      },
+      {
+        "path": "permissions.py",
+        "line": 2,
+        "side": "RIGHT",
+        "body": "[P1] `can_edit(\"viewer\")`는 `False` 대신 문자열 `\"editor\"`를 반환합니다. Python의 `or`는 피연산자를 반환하므로 admin 이외의 역할도 조건문에서 참으로 평가되어, admin/editor만 허용한다는 계약을 위반합니다. 기존의 `role in (\"admin\", \"editor\")` 비교를 복원해 모든 역할에 올바른 boolean을 반환해 주세요.",
+        "id": 102,
+        "pull_request_review_id": 91,
+        "commit_id": "7eabf5f58d693f4a4dd198d64b8c9487ad761171",
+        "user": {
+          "login": "reviewer"
+        }
+      }
+    ]
+  },
+  "review_target": {
+    "head_sha": "7eabf5f58d693f4a4dd198d64b8c9487ad761171",
+    "base_sha": "4dc9614d25fd0314bff8108bd39b0e5a476f3b94",
+    "diff_sha256": "774ffdc4f9aa3478c655eea783800dc022a829f1a7f665a29501e01ed04c6c6c"
+  },
+  "initial_body": "Previous draft summary",
+  "plan": {
+    "add": [],
+    "unchanged": [
+      "empty-input",
+      "can-edit-role-check"
+    ],
+    "preserved": [],
+    "conflicts": [],
+    "needs_reassessment": false,
+    "target": {
+      "base_sha": "4dc9614d25fd0314bff8108bd39b0e5a476f3b94",
+      "head_sha": "7eabf5f58d693f4a4dd198d64b8c9487ad761171",
+      "diff_sha256": "774ffdc4f9aa3478c655eea783800dc022a829f1a7f665a29501e01ed04c6c6c"
+    }
+  },
+  "current_head_sha": "7eabf5f58d693f4a4dd198d64b8c9487ad761171",
+  "current_base_sha": "4dc9614d25fd0314bff8108bd39b0e5a476f3b94",
+  "needs_reassessment": false
+}

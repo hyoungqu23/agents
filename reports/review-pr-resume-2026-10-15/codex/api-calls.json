@@ -1,0 +1,158 @@
+[
+  {
+    "method": "GET",
+    "endpoint": "user",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "user",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "endpoint": "graphql",
+    "payload": {
+      "query": "mutation($input:AddPullRequestReviewThreadInput!){addPullRequestReviewThread(input:$input){thread{id}}}",
+      "variables": {
+        "input": {
+          "pullRequestReviewId": "PRR_91",
+          "path": "permissions.py",
+          "line": 2,
+          "side": "RIGHT",
+          "body": "[P1] `can_edit(\"viewer\")`는 `False` 대신 문자열 `\"editor\"`를 반환합니다. Python의 `or`는 피연산자를 반환하므로 admin 이외의 역할도 조건문에서 참으로 평가되어, admin/editor만 허용한다는 계약을 위반합니다. 기존의 `role in (\"admin\", \"editor\")` 비교를 복원해 모든 역할에 올바른 boolean을 반환해 주세요."
+        }
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/102",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/102",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  }
+]

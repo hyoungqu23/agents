@@ -6,7 +6,7 @@ Code review skills for Claude Code and Codex.
 
 | Skill | Description |
 | --- | --- |
-| [`review-pr`](skills/review-pr) | Review a GitHub PR read-only, then save authorized comments as one commit-pinned **Pending review**. Never submits the review. |
+| [`review-pr`](skills/review-pr) | Review a GitHub PR read-only, then save or resume a commit-pinned **Pending review**, preserving existing drafts. Never submits. |
 | [`review-code`](skills/review-code) | Completion-gated hard review for PRs, branches, diffs, and working-tree changes. Inventories every changed file, routes stack specialists, and promotes only evidence-backed findings. |
 | [`review-respond`](skills/review-respond) | Answer the review on your own PR: collect the threads waiting on you, verify each claim against the code, commit fixes as new commits, then post the approved replies inside the threads with commit links. Resolves nothing unless asked. |
 | [`review-check`](skills/review-check) | 리뷰 지적 검증: check existing review claims against code and requirements without editing or posting; distinguish valid, partial, false-positive, and unresolved claims. |
@@ -24,6 +24,14 @@ source, diff anchors and current base/head before writing. It pins commit_id, om
 event and reads the result back to verify PENDING with no submitted_at. A target
 change during creation is reported as a stale draft; there is no automatic replay,
 relocation, submission or replacement of an existing Pending review.
+
+On continuation, it reconciles a durable receipt with all remote comments. Same-head
+reruns deduplicate; new findings append to the existing Pending review. Manual edits,
+deletions, changed findings and summaries are preserved and returned as conflicts.
+Interrupted writes require positive readback before continuing. A new head gets a
+local reassessment plan while the older Pending stays intact: this version does not
+repin reviews or move draft anchors. See [resume and recovery](skills/review-pr/references/resume.md)
+for supported behavior, migration from v0.5, and macOS/Linux journal requirements.
 
 PR review and all specialists are report-only. Head-side instructions and scripts
 remain review input; trusted base rules and actual host execution controls govern
@@ -76,3 +84,5 @@ for Pending creation, source/head changes, invalid anchors, existing drafts and
 uncertain writes. No live GitHub comments are required for those tests. Actual
 model forward-test results and limits are recorded in
 [the Pending review evaluation](../../reports/review-pr-pending-2026-10-14/README.md).
+Continuation tests and model-run limits are recorded in
+[the A3 evaluation](../../reports/review-pr-resume-2026-10-15/README.md).

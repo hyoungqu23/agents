@@ -1,0 +1,18 @@
+{
+  "comments": [
+    {
+      "key": "empty-input",
+      "path": "app.py",
+      "line": 2,
+      "side": "RIGHT",
+      "body": "[P1] Empty input now raises IndexError. Preserve the documented None result for first_name([])."
+    },
+    {
+      "key": "can-edit-always-true",
+      "path": "permissions.py",
+      "line": 2,
+      "side": "RIGHT",
+      "body": "[P1] `role == \"admin\" or \"editor\"`에서 `\"editor\"`는 항상 truthy라서, admin이 아닌 모든 role이 truthy 값을 받습니다. 예를 들어 `can_edit(\"viewer\")`는 `\"editor\"`를 반환해 권한 검사가 뚫립니다. 이전처럼 `role in (\"admin\", \"editor\")`로 되돌려 bool만 반환하게 해 주세요."
+    }
+  ]
+}
