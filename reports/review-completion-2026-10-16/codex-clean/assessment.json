@@ -1,0 +1,19 @@
+{
+  "status": "complete",
+  "target": {
+    "mode": "commits",
+    "base_sha": "f817b95a50b23c1d9fd4fe4585c59208e58fecbd",
+    "head_sha": "754961f7b370151d79ba0bc726c88dbbc7045f26",
+    "diff_sha256": "fa7ee90dcc28f042da6b432963b9efa383b76e1cc6c59266a8d1069e50e402c2"
+  },
+  "gaps": [],
+  "eligible_findings": [
+    "role-unhashable"
+  ],
+  "rejected_findings": [],
+  "limitations": [
+    "대상 코드/테스트는 사용자 제한으로 실행하지 않음. 테스트 및 검증 설정 없음.",
+    "외부 호출자가 저장소에 없어 서비스 영향/발생 빈도는 확인 불가. finding은 명시된 공개 함수 계약 위반에 한정."
+  ],
+  "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+}

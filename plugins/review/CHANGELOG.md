@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0 - 2026-10-16
+
+- Record Git-backed reviews as structured results and compute complete/partial/invalid from the current scope, recorded checks and source quotations.
+- Include staged, unstaged, untracked, renamed/deleted files, binary content and file modes in scope checks; stale targets cannot validate.
+- Require `--review-result` when saving Pending drafts. Match each comment to an eligible finding and retain partial review status independently of save success. Inspection remains compatible with older receipts.
+- Add Codex/Claude semantic evaluation cases for known defects, false positives and deferred scope; loading a skill alone is not a quality pass.
+- Preserve Pending-only writes, existing draft recovery and manual-edit protection. Structural validation does not certify reasoning or command execution claims.
+
 ## 0.6.0 - 2026-10-15
 
 - Resume existing Pending reviews: deduplicate unchanged findings and append new threads on the same reviewed commit without submitting.

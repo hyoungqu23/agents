@@ -78,6 +78,10 @@ Report the actual method; do not claim an independent reviewer ran when it did n
 Review-code acquires the remaining context and returns its findings and inline
 recommendations. Reconcile them with the pinned diff. Keep findings without a valid
 added RIGHT-side line in the draft review body; do not invent a nearby anchor.
+Require its structured `review-result.json` and the computed assessment described in
+[the result contract](../review-code/resources/review-result.md). Missing files or
+unfinished checks remain partial; an invalid/stale result permits no save. A partial
+review may still contain supported findings, but never describe it as complete.
 On continuation, supply the prior findings and remote drafts as context, retaining
 their stable keys. Revalidate affected findings and dependencies against new commits;
 a changed base, rewritten history or unavailable old objects requires a fresh review.
@@ -105,6 +109,9 @@ Save the authorized content outside the checkout using this shape:
 
 Use a stable `key` for the same finding across runs; it is local metadata and never
 added to GitHub text. Older keyless payloads still work, using an exact-content key.
+Use the supported finding's `id` as this key and its exact `comment` text. A legacy
+keyless payload requires the equivalent `auto:<sha256>` finding ID. Put any authorized
+summary in the result's `review_body` as well as the payload's `body`.
 Include the complete authorized finding set for this pass. Keep unchanged text
 verbatim. On resume, omit `body` to preserve the current summary. Changed summaries,
 withdrawn findings and manual edits are reported as local conflicts, never overwritten.
@@ -118,7 +125,8 @@ commit_id from the captured target and rejects any event, including COMMENT or P
 ```sh
 python3 /absolute/installed/review-pr/scripts/pending_review.py save \
   --repo owner/repo --pr 123 --snapshot /absolute/persistent-state/run-2-target.json \
-  --payload /absolute/persistent-state/run-2-draft.json --receipt /absolute/persistent-state/receipt.json
+  --payload /absolute/persistent-state/run-2-draft.json --receipt /absolute/persistent-state/receipt.json \
+  --review-result /absolute/persistent-state/review-result.json
 ```
 
 The helper rechecks source/diff and remote base/head. The first save creates a draft
@@ -126,6 +134,11 @@ The helper rechecks source/diff and remote base/head. The first save creates a d
 findings use `addPullRequestReviewThread` with the existing Pending review's node ID.
 It verifies ownership, PENDING, no submitted_at, commit identity and saved comments.
 It journals each attempted write before sending and locks the shared receipt locally.
+Before any save it checks the review result against current Git scope and source
+quotations, then requires each draft comment to match an eligible finding's ID,
+anchor and text. `review_completion` in the receipt records complete/partial status
+separately from whether the Pending save succeeded. Quote matching does not prove
+that a finding is true; review-code's reasoning and refutation still apply.
 
 Existing comments and summary are never edited or deleted. If the review is on an
 older commit, save produces a local reassessment plan and preserves the original
@@ -146,6 +159,7 @@ Exit 2 returns a saved conflict/stale/unconfirmed plan; exit 1 reports an execut
 or validation failure. Neither permits a fallback write or a claim of completion.
 
 Return the draft review URL/ID, `PENDING (미제출)`, reviewed SHA and verification gaps.
+Also report the computed review completion status and any unreviewed scope.
 Do not record a pending draft as submitted or mark unreviewed commits complete.
 This workflow does not answer published reply threads; review-respond remains the
 author's workflow. Reviewer-side replies require separate authorization and tooling.

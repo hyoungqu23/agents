@@ -1,0 +1,41 @@
+{
+  "status": "partial",
+  "target": {
+    "mode": "commits",
+    "base_sha": "8676ea2b4b64ae097f8b4987f2f48089e319070c",
+    "head_sha": "bc6d0ae39d99d5066b8961374518e0d5724f0bb7",
+    "diff_sha256": "fb0ce77bc13df926446699f275029905bd9ca9229418fc4de666992f64b19d80"
+  },
+  "gaps": [
+    {
+      "code": "unreviewed_file",
+      "detail": "lookup.py: 요청에 따라 이번 범위에서 내용 검토를 미뤘다. M 변경(+3/-1)이 있다는 사실만 기록했고 diff 내용은 판단하지 않았다."
+    },
+    {
+      "code": "unreviewed_file",
+      "detail": "notes.md: 요청에 따라 이번 범위에서 내용 검토를 미뤘다. 신규 파일(A, +1)이라는 사실만 기록했고 내용은 판단하지 않았다."
+    },
+    {
+      "code": "incomplete_check",
+      "detail": "passes.standards"
+    },
+    {
+      "code": "incomplete_check",
+      "detail": "passes.spec"
+    },
+    {
+      "code": "incomplete_check",
+      "detail": "passes.runtime"
+    }
+  ],
+  "eligible_findings": [
+    "can-edit-always-truthy"
+  ],
+  "rejected_findings": [],
+  "limitations": [
+    "lookup.py와 notes.md는 요청에 따라 내용 검토를 하지 않았다. 변경 목록에는 유지했고 unreviewed로 기록했다.",
+    "대상 코드와 테스트는 실행하지 않았다.",
+    "저장소 내 can_edit 호출자가 없어 실제 소비자의 사용 방식은 확인하지 못했다."
+  ],
+  "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+}

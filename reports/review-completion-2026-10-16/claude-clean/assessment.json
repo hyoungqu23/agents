@@ -1,0 +1,19 @@
+{
+  "status": "complete",
+  "target": {
+    "mode": "commits",
+    "base_sha": "ed503157fbd38ed48b1e624ce4161ff56d5bdf9e",
+    "head_sha": "e73cce15681b2b4ae2b507a69393c2b39da5f9d8",
+    "diff_sha256": "fa7ee90dcc28f042da6b432963b9efa383b76e1cc6c59266a8d1069e50e402c2"
+  },
+  "gaps": [],
+  "eligible_findings": [
+    "can-edit-unhashable-role"
+  ],
+  "rejected_findings": [],
+  "limitations": [
+    "No callers exist in the checkout, so real role types for can_edit are unverified.",
+    "Target code was not executed per instruction."
+  ],
+  "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+}

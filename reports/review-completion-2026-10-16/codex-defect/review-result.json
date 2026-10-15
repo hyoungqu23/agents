@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "target": {
+    "mode": "commits",
+    "base_sha": "189483803f2b1ec6b55772864243cc6a9991ef62",
+    "head_sha": "f4e907a369636675d423057b5cfef589678ce1dd",
+    "diff_sha256": "fb0ce77bc13df926446699f275029905bd9ca9229418fc4de666992f64b19d80"
+  },
+  "files": [
+    {
+      "path": "lookup.py",
+      "classification": "source",
+      "risk": "medium",
+      "status": "reviewed",
+      "note": "1–4행 전체 검토. 빈 목록 None 및 첫 name 반환은 base와 동등. 호출자/테스트 없음."
+    },
+    {
+      "path": "notes.md",
+      "classification": "docs",
+      "risk": "low",
+      "status": "reviewed",
+      "note": "1행 계약 보존 요구는 base AGENTS.md와 일치. permissions 위반을 finding으로 기록."
+    },
+    {
+      "path": "permissions.py",
+      "classification": "source",
+      "risk": "high",
+      "status": "reviewed",
+      "note": "2행 bool/허용 역할 계약 위반. permissions-bool로 통합.",
+      "trace": "공개 can_edit(role) -> admin이면 True, 그 외에는 문자열 editor 반환 -> bool 및 미허용 역할 False 계약 위반. 전체 트리와 grep상 내부 호출자나 guard 없음. 공개 함수 반환까지 추적 완료. 실제 운영 권한 우회는 주장하지 않음."
+    }
+  ],
+  "passes": {
+    "standards": {
+      "status": "complete",
+      "note": "전체 3파일, base 계약, 기존 구현 검색 및 다섯 품질 기준 확인."
+    },
+    "spec": {
+      "status": "complete",
+      "note": "base AGENTS.md:1, notes.md:1, simplify helpers 커밋의 계약 보존 요구 확인. lookup 보존, permissions 위반."
+    },
+    "runtime": {
+      "status": "complete",
+      "note": "두 함수의 전체 분기를 정적으로 추적. 정의 외 호출자/소비자/테스트 없음. 실행하지 않음."
+    }
+  },
+  "quality": {
+    "cohesion": {
+      "status": "checked",
+      "note": "조회/권한 규칙은 각 helper 소유. 문서는 의도만 기록. 책임 분산 없음."
+    },
+    "coupling": {
+      "status": "checked",
+      "note": "두 helper에 import/공유 상태/내부 호출자 없음. 반환 계약 결함만 존재."
+    },
+    "duplication": {
+      "status": "checked",
+      "note": "전체 트리 및 git grep can_edit/first_name/role/editor로 기존 구현 검색. 규칙별 구현 하나이며 중복 없음."
+    },
+    "repository_fit": {
+      "status": "checked",
+      "note": "base AGENTS.md 계약 적용. permissions 위반, lookup 준수. manifest/CI/검사 설정 없음."
+    },
+    "naming": {
+      "status": "checked",
+      "note": "두 함수 이름은 책임과 일치. can_edit의 비-bool 반환은 이름 변경 대신 permissions-bool 수정으로 해결. 문서 명칭 문제 없음."
+    }
+  },
+  "verification": [
+    {
+      "kind": "command",
+      "status": "passed",
+      "detail": "git -C /private/tmp/hm2-review-completion-codex-20261015/defect/source diff 189483803f2b1ec6b55772864243cc6a9991ef62 f4e907a369636675d423057b5cfef589678ce1dd — 전체 변경 확인"
+    },
+    {
+      "kind": "command",
+      "status": "passed",
+      "detail": "git -C /private/tmp/hm2-review-completion-codex-20261015/defect/source grep -n -e can_edit -e first_name -e role -e editor f4e907a369636675d423057b5cfef589678ce1dd — 계약/정의 외 호출자 없음"
+    },
+    {
+      "kind": "static",
+      "status": "passed",
+      "detail": "base/head 전체 소스 대조. or는 선택한 피연산자를 반환하므로 admin 외에는 문자열 editor. lookup의 빈 목록은 양쪽 모두 None. 테스트 파일 없음."
+    },
+    {
+      "kind": "command",
+      "status": "not_run",
+      "detail": "대상 코드/테스트 실행, 타입·린트·빌드 및 base/head 실행 비교",
+      "reason": "사용자가 실행 금지. 저장소에도 테스트/manifest/검사 설정 없음.",
+      "risk": "실행 환경과 외부 소비자 동작은 미검증. 정적 추론만 수행."
+    }
+  ],
+  "findings": [
+    {
+      "id": "permissions-bool",
+      "status": "supported",
+      "severity": "P2",
+      "path": "permissions.py",
+      "line": 2,
+      "revision": "head",
+      "trigger": "editor 또는 viewer 등 admin 이외의 역할로 can_edit 호출.",
+      "effect": "bool 대신 truthy 문자열 editor 반환. 미허용 역할 False 계약도 위반. 실제 서비스 권한 우회는 확인되지 않음.",
+      "fix": "base의 role in (\"admin\", \"editor\") 복원.",
+      "refutation": "base는 다른 모든 역할을 False로 반환하도록 명시. 내부 호출자/guard 없음. editor도 bool 계약을 위반하므로 외부 소비자를 가정할 필요 없이 성립.",
+      "evidence": [
+        {
+          "revision": "head",
+          "path": "permissions.py",
+          "line": 2,
+          "quote": "    return role == \"admin\" or \"editor\""
+        },
+        {
+          "revision": "base",
+          "path": "permissions.py",
+          "line": 2,
+          "quote": "    return role in (\"admin\", \"editor\")"
+        },
+        {
+          "revision": "base",
+          "path": "AGENTS.md",
+          "line": 1,
+          "quote": "API contracts: can_edit returns bool and permits only admin/editor; any other role returns False. first_name returns None for an empty list and otherwise the first row name. Preserve both contracts."
+        }
+      ],
+      "comment": "admin 이외에는 문자열 editor가 반환되어 bool 계약을 위반합니다. viewer 등 미허용 역할도 참으로 평가됩니다. 기존 멤버십 판정을 복원해 주세요."
+    },
+    {
+      "id": "empty-lookup",
+      "status": "disproved",
+      "reason": "head 2–3행 not rows guard는 base else None과 동등. 빈 목록은 rows[0]에 도달하지 않음."
+    },
+    {
+      "id": "lookup-invalid-row",
+      "status": "out_of_scope",
+      "reason": "name 누락 시 KeyError는 base에서도 동일하며 문서 계약 밖 입력. 신규 회귀 아님."
+    },
+    {
+      "id": "permissions-type-separate",
+      "status": "duplicate",
+      "reason": "editor의 비-bool과 미허용 역할 truthy는 같은 원인. permissions-bool로 통합."
+    }
+  ],
+  "limitations": [
+    "정적 검토만 수행. 코드/테스트 실행하지 않음.",
+    "내부 호출자 및 외부 서비스 연결이 없어 실제 운영 권한 우회는 확인하지 못함.",
+    "요구사항 근거는 base AGENTS.md, notes.md, 커밋 메시지로 한정. 네트워크/다른 저장소 조회 없음."
+  ]
+}

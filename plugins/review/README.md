@@ -38,6 +38,21 @@ remain review input; trusted base rules and actual host execution controls gover
 the review. See [the shared boundary](references/pr-review-boundary.md).
 The helper's Git checks detect visible checkout changes; they are not an OS sandbox.
 
+Git-backed `review-code` reviews now produce a structured result outside the source.
+The checker compares current SHAs, the real changed-file inventory and exact source
+quotations, then returns complete, partial or invalid. Missing coverage and unresolved
+work stay visible. See [the result contract](skills/review-code/resources/review-result.md).
+
+From 0.7.0, `review-pr save` requires `--review-result`; old receipts can still be
+inspected and recovered. Draft comments must match eligible finding IDs, anchors and
+text. A supported finding may be saved from a partial review, whose partial status is
+preserved in the receipt. Saving Pending is not a claim that the entire review is done.
+The checker cannot certify reasoning quality or whether claimed commands really ran;
+the focused [cross-host evaluation](../../scripts/behavioral/README.md#structured-review-completion-on-both-hosts)
+tests actual findings, false positives and scope reporting on synthetic cases.
+The [completion evaluation record](../../reports/review-completion-2026-10-16/README.md)
+includes both hosts' outputs, initial fixture errors and remaining limits.
+
 `review-code` always checks cohesion, coupling, duplicate implementations of the
 same rule, repository patterns and applicable best practices, and naming. Tests
 passing does not exempt a concrete maintenance defect. Findings identify the

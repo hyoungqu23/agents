@@ -4,6 +4,33 @@ This runner executes real skills with `codex exec` rather than checking that a
 fixture or prompt contains the expected words. It is a small regression gate, not
 a score for overall skill quality or a replacement for the full scenario rubrics.
 
+## Structured review completion on both hosts
+
+The focused `review_completion.py` runner exercises three real Git scenarios on
+Codex or Claude: a known permission defect alongside a guarded non-defect, an
+equivalent refactor with no expected finding, and an explicitly deferred portion of
+the diff that must remain partial. Run it separately with prior model-service
+authorization; it does not run in ordinary CI or write GitHub comments.
+
+```sh
+python3 scripts/behavioral/review_completion.py --host codex --model <model-id> --output /tmp/completion-codex-new
+python3 scripts/behavioral/review_completion.py --host claude --model <model-id> --output /tmp/completion-claude-new
+```
+
+The parent recomputes SHA/diff/coverage/evidence assessment from actual source and
+checks finding location, severity, cause/effect, false-positive absence and deferred
+scope. A complete JSON with no detection of the planted defect fails; a real quote
+supporting a false accusation also fails. Merely loading review-code is not a pass.
+Grader sensitivity tests demonstrate those negative cases. Inspect full reasoning
+and command traces before accepting semantic quality; bounded fixture assertions
+cannot certify arbitrary reviews or every completion-gate criterion.
+
+Source and plugin hashes must remain unchanged. Each case retains prompts, raw
+stream events, result artifacts, the host-computed assessment and failures. Partial
+scope is an expected success only in its designated case. Usage-limit errors stop
+subsequent model calls and are not converted to successful checks. Use a fresh output
+directory for retries; never overwrite the first result.
+
 ## Run
 
 Use Codex CLI 0.153.4 (the CI-pinned version), with an existing Codex login or

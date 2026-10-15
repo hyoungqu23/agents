@@ -1,0 +1,18 @@
+{
+  "status": "complete",
+  "target": {
+    "mode": "commits",
+    "base_sha": "e6b3342242b28303034e68355ca83d645664e4b7",
+    "head_sha": "192473cbdd1642f5027efe52b721aa347b2e4f96",
+    "diff_sha256": "94ae8ea8e23ea716e7ef84f6b390ba283ad89f5188e545df5d932bfb41e20405"
+  },
+  "gaps": [],
+  "eligible_findings": [],
+  "rejected_findings": [],
+  "limitations": [
+    "대상 코드/테스트 실행 없음. 정적 검토 완료는 런타임 검증 통과를 뜻하지 않음.",
+    "저장소 내부 호출부/테스트/manifest/CI가 없어 외부 소비자의 실제 입력 조건은 확인하지 못함.",
+    "요구사항 근거는 base AGENTS.md, 커밋 메시지와 notes.md. 외부 명세 조회 없음."
+  ],
+  "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+}
