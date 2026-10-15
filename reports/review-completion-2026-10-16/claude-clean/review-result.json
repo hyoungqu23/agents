@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "target": {
+    "mode": "commits",
+    "base_sha": "ed503157fbd38ed48b1e624ce4161ff56d5bdf9e",
+    "head_sha": "e73cce15681b2b4ae2b507a69393c2b39da5f9d8",
+    "diff_sha256": "fa7ee90dcc28f042da6b432963b9efa383b76e1cc6c59266a8d1069e50e402c2"
+  },
+  "files": [
+    {"path": "lookup.py", "classification": "source", "risk": "low", "status": "reviewed",
+     "note": "first_name: ternary rewritten as early-return guard. `if not rows` is the exact negation of the old `if rows`, so empty/None -> None and otherwise rows[0][\"name\"] are unchanged. No other callers in the repo."},
+    {"path": "notes.md", "classification": "docs", "risk": "low", "status": "reviewed",
+     "note": "New one-line note stating the refactor must not change documented contracts; consistent with AGENTS.md. It is the standard for judging permissions.py."},
+    {"path": "permissions.py", "classification": "source", "risk": "medium", "status": "reviewed",
+     "note": "can_edit: tuple membership replaced by set-literal membership. Tuple `in` uses ==; set `in` requires hashing, so an unhashable role (list/dict) now raises TypeError instead of returning False, contradicting the AGENTS.md contract that any other role returns False. No callers exist in the repo, so real role types are unknown."}
+  ],
+  "passes": {
+    "standards": {"status": "complete", "note": "Checked 3 changed files against AGENTS.md; git grep at base found no other implementations or callers of these helpers."},
+    "spec": {"status": "complete", "note": "Intent from AGENTS.md contracts, notes.md and commit message 'simplify helpers' (behavior-preserving refactor). first_name preserved; can_edit preserved for hashable roles only."},
+    "runtime": {"status": "complete", "note": "Traced empty/None/falsy rows for first_name and str/None/unhashable inputs for can_edit. Caller side is not traceable because the repo has no callers."}
+  },
+  "quality": {
+    "cohesion": {"status": "checked", "note": "Both helpers remain single-purpose."},
+    "coupling": {"status": "not_applicable", "note": "No new dependencies; no callers in repo (git grep can_edit|first_name)."},
+    "duplication": {"status": "checked", "note": "Searched repo for other role checks or first-row lookups; none."},
+    "repository_fit": {"status": "checked", "note": "Repo has only these files; AGENTS.md contract is the sole convention and is affected by the can_edit change."},
+    "naming": {"status": "checked", "note": "Names unchanged."}
+  },
+  "verification": [
+    {"kind": "static", "status": "passed", "detail": "git diff base..head read in full; git grep for can_edit/first_name at base found only definitions and AGENTS.md."},
+    {"kind": "command", "status": "not_run", "detail": "Target code/tests not executed per instruction.", "reason": "User prohibited running repository code; repo also has no tests.", "risk": "TypeError on unhashable role follows from Python semantics and was not reproduced at runtime."}
+  ],
+  "findings": [
+    {
+      "id": "can-edit-unhashable-role",
+      "status": "supported",
+      "severity": "P3",
+      "path": "permissions.py",
+      "line": 2,
+      "revision": "head",
+      "trigger": "can_edit is called with an unhashable role value such as a list or dict (e.g. a list of roles).",
+      "effect": "Set membership hashes the operand, so it raises TypeError instead of returning False as the AGENTS.md contract requires for any other role. The base tuple used == comparison and returned False.",
+      "fix": "Restore the tuple (or otherwise keep a non-hashing comparison); a two-element membership gains nothing from a set.",
+      "refutation": "No callers in the repo, so unhashable inputs are not shown to occur; roles are probably strings. Severity is kept at P3 for that reason. The contract says 'any other role' and the change is declared behavior-preserving, so the regression is attributable to the target.",
+      "evidence": [
+        {"revision": "head", "path": "permissions.py", "line": 2, "quote": "    return role in {\"admin\", \"editor\"}"},
+        {"revision": "base", "path": "permissions.py", "line": 2, "quote": "    return role in (\"admin\", \"editor\")"}
+      ],
+      "comment": "role이 list나 dict처럼 해시할 수 없는 값이면 set 멤버십 검사에서 TypeError가 납니다. 기존 튜플은 False를 반환했고 AGENTS.md도 그 외 role은 False라고 정의합니다. 두 값 비교라 set의 이점이 없으니 튜플로 되돌려 주세요."
+    },
+    {"id": "first-name-guard", "status": "disproved", "reason": "`if not rows: return None` is the exact negation of the old conditional expression; all inputs map to the same result."},
+    {"id": "notes-md-scope", "status": "not_worth_changing", "reason": "One-line docs addition with no behavioral effect; it states the refactor constraint rather than contradicting anything."}
+  ],
+  "limitations": ["No callers exist in the checkout, so real role types for can_edit are unverified.", "Target code was not executed per instruction."]
+}

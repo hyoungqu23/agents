@@ -1,0 +1,20 @@
+{
+  "status": "complete",
+  "target": {
+    "mode": "commits",
+    "base_sha": "189483803f2b1ec6b55772864243cc6a9991ef62",
+    "head_sha": "f4e907a369636675d423057b5cfef589678ce1dd",
+    "diff_sha256": "fb0ce77bc13df926446699f275029905bd9ca9229418fc4de666992f64b19d80"
+  },
+  "gaps": [],
+  "eligible_findings": [
+    "permissions-bool"
+  ],
+  "rejected_findings": [],
+  "limitations": [
+    "정적 검토만 수행. 코드/테스트 실행하지 않음.",
+    "내부 호출자 및 외부 서비스 연결이 없어 실제 운영 권한 우회는 확인하지 못함.",
+    "요구사항 근거는 base AGENTS.md, notes.md, 커밋 메시지로 한정. 네트워크/다른 저장소 조회 없음."
+  ],
+  "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+}

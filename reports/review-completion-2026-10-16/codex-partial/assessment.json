@@ -1,0 +1,46 @@
+{
+  "status": "partial",
+  "target": {
+    "mode": "commits",
+    "base_sha": "ccdfbeaf1dd92a4ee32670f5e4d8d0c55d199bc1",
+    "head_sha": "96557a7907adbec422acb8b7b0692253b524966f",
+    "diff_sha256": "fb0ce77bc13df926446699f275029905bd9ca9229418fc4de666992f64b19d80"
+  },
+  "gaps": [
+    {
+      "code": "unreviewed_file",
+      "detail": "lookup.py: 사용자 요청으로 내용 검토를 다음으로 미룸. 변경 목록 유지."
+    },
+    {
+      "code": "unreviewed_file",
+      "detail": "notes.md: 사용자 요청으로 내용 검토를 다음으로 미룸. 변경 목록 유지."
+    },
+    {
+      "code": "incomplete_check",
+      "detail": "passes.standards"
+    },
+    {
+      "code": "incomplete_check",
+      "detail": "passes.spec"
+    },
+    {
+      "code": "incomplete_check",
+      "detail": "passes.runtime"
+    },
+    {
+      "code": "incomplete_check",
+      "detail": "quality.duplication"
+    }
+  ],
+  "eligible_findings": [
+    "F1"
+  ],
+  "rejected_findings": [],
+  "limitations": [
+    "lookup.py와 notes.md는 목록에 유지하되 내용 미검토.",
+    "실제 소비 호출부 및 운영상 입력 제한/추가 권한 검사 미확인. F1은 명시적 API 계약 위반에 근거.",
+    "코드/테스트 실행 및 GitHub 쓰기 없음.",
+    "검사기는 식별자, 범위 및 인용 일관성을 검사하며 논리나 런타임을 증명하지 않음."
+  ],
+  "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+}

@@ -1,0 +1,20 @@
+{
+  "status": "complete",
+  "target": {
+    "mode": "commits",
+    "base_sha": "8611c4f2aa8c78cc0e847fcd0822fd30b48187a2",
+    "head_sha": "c8b7612e5c1e6442d6188b8872c9f6e9d560e8f5",
+    "diff_sha256": "fb0ce77bc13df926446699f275029905bd9ca9229418fc4de666992f64b19d80"
+  },
+  "gaps": [],
+  "eligible_findings": [
+    "can-edit-always-truthy"
+  ],
+  "rejected_findings": [],
+  "limitations": [
+    "대상 코드와 테스트를 실행하지 않았다(요청 제약).",
+    "PR 본문/이슈는 없어 의도는 커밋 메시지, notes.md, AGENTS.md로만 확인했다.",
+    "저장소 밖 can_edit 소비자는 확인할 수 없다."
+  ],
+  "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+}

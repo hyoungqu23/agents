@@ -14,6 +14,9 @@ SCRIPT = ROOT / 'plugins/review/skills/review-pr/scripts/pending_review.py'
 spec = importlib.util.spec_from_file_location('pending_review', SCRIPT)
 pending = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pending)
+fixture_spec = importlib.util.spec_from_file_location('result_fixtures', Path(__file__).with_name('review_result_fixtures.py'))
+result_fixtures = importlib.util.module_from_spec(fixture_spec)
+fixture_spec.loader.exec_module(result_fixtures)
 
 GH_DOUBLE = r'''import json, os, sys, time
 from pathlib import Path
@@ -125,6 +128,8 @@ class PendingReviewTests(unittest.TestCase):
         self.env.update(PATH=f"{binary}{os.pathsep}{self.env['PATH']}",
                         PENDING_MOCK_STATE=str(self.state),PENDING_MOCK_CALLS=str(self.calls))
         self.snapshot,self.payload,self.receipt=(self.root/n for n in ('target.json','payload.json','receipt.json'))
+        self.review_result = self.root/'review-result.json'
+        self.auto_review_result = True
         self.payload.write_text(json.dumps({'body':'Reviewed draft','comments':[
             {'path':'app.py','line':2,'side':'RIGHT','body':'Empty rows raise IndexError; retain the guard.'}]}))
         self.assertEqual(self.invoke('capture','--worktree',str(self.worktree)).returncode,0)
@@ -135,9 +140,24 @@ class PendingReviewTests(unittest.TestCase):
 
     def invoke(self,action,*extra):
         args=[sys.executable,str(SCRIPT),action,'--repo','example/project','--pr','7','--snapshot',str(self.snapshot)]
-        if action=='save':args+=['--payload',str(self.payload)]
+        if action=='save':
+            if self.auto_review_result:self.prepare_result()
+            args+=['--payload',str(self.payload),'--review-result',str(self.review_result)]
         if action in ('save','inspect'):args+=['--receipt',str(self.receipt)]
-        return subprocess.run([*args,*extra],env=self.env,text=True,capture_output=True,timeout=20)
+        result = subprocess.run([*args,*extra],env=self.env,text=True,capture_output=True,timeout=30)
+        if action=='capture' and result.returncode==0:
+            target=json.loads(result.stdout)
+            self.review_scope=result_fixtures.gate.capture_scope(target['worktree'],target['base_sha'],target['head_sha'])
+        return result
+
+    def prepare_result(self):
+        report=result_fixtures.report_for(self.review_scope)
+        value=json.loads(self.payload.read_text())
+        report['review_body']=value.get('body','')
+        for comment in value.get('comments',[]):
+            report['findings'].append(result_fixtures.finding_for(self.review_scope,comment.get('path'),
+                comment.get('line'),comment.get('body'),pending.finding_key(comment)))
+        self.review_result.write_text(json.dumps(report))
 
     def remote(self,**changes):
         d=json.loads(self.state.read_text());d.update(changes);self.state.write_text(json.dumps(d))
@@ -548,8 +568,10 @@ class PendingReviewTests(unittest.TestCase):
 
     def test_concurrent_saves_share_a_lock_and_create_once(self):
         self.remote(pause_create=1.5)
+        self.prepare_result()
         args=[sys.executable,str(SCRIPT),'save','--repo','example/project','--pr','7',
-              '--snapshot',str(self.snapshot),'--payload',str(self.payload),'--receipt',str(self.receipt)]
+              '--snapshot',str(self.snapshot),'--payload',str(self.payload),'--receipt',str(self.receipt),
+              '--review-result',str(self.review_result)]
         first=subprocess.Popen(args,env=self.env,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         self.addCleanup(lambda: first.kill() if first.poll() is None else None)
         for _ in range(100):
@@ -560,6 +582,36 @@ class PendingReviewTests(unittest.TestCase):
         stdout,stderr=first.communicate(timeout=15)
         self.assertEqual(first.returncode,0,stderr+stdout)
         self.assertEqual(len(self.mutations()),1)
+
+    def test_stale_or_unsupported_result_blocks_remote_writes(self):
+        self.prepare_result();original=json.loads(self.review_result.read_text());self.auto_review_result=False
+        stale=json.loads(json.dumps(original));stale['target']['head_sha']='f'*40
+        unresolved=json.loads(json.dumps(original));unresolved['findings'][0].update(status='unresolved',reason='Missing evidence')
+        quote=json.loads(json.dumps(original));quote['findings'][0]['evidence'][0]['quote']='fabricated source'
+        for report in (stale,unresolved,quote):
+            self.review_result.write_text(json.dumps(report))
+            self.assertNotEqual(self.invoke('save').returncode,0)
+            self.assertEqual(self.mutations(),[])
+
+    def test_save_without_review_result_cannot_mutate_remote(self):
+        args=[sys.executable,str(SCRIPT),'save','--repo','example/project','--pr','7',
+              '--snapshot',str(self.snapshot),'--payload',str(self.payload),'--receipt',str(self.receipt)]
+        result=subprocess.run(args,env=self.env,text=True,capture_output=True)
+        self.assertNotEqual(result.returncode,0);self.assertEqual(self.mutations(),[])
+
+    def test_partial_scope_can_save_supported_finding_without_claiming_complete(self):
+        self.prepare_result();report=json.loads(self.review_result.read_text());self.auto_review_result=False
+        report['files']=[row for row in report['files'] if row['path']=='app.py']
+        self.review_result.write_text(json.dumps(report))
+        record=self.save_ok()
+        self.assertEqual(record['status'],'pending')
+        self.assertEqual(record['review_completion']['status'],'partial')
+        self.assertIn('missing_file',[g['code'] for g in record['review_completion']['gaps']])
+
+    def test_comment_text_cannot_drift_from_supported_result(self):
+        self.prepare_result();self.auto_review_result=False
+        value=self.draft();value['comments'][0]['body']='An unrelated accusation';self.update_draft(value)
+        self.assertNotEqual(self.invoke('save').returncode,0);self.assertEqual(self.mutations(),[])
 
 
 if __name__=='__main__':unittest.main()
