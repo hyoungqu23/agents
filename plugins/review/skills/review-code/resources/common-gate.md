@@ -158,6 +158,33 @@ For a missing-test finding, name the specific uncovered behavior and the likely 
 - EXHAUSTIVENESS contract findings should cite at least two points when possible: variant plus missing handler, source type/schema plus consumer.
 - SPEC-COVERAGE findings should cite the requirement source and the uncovered behavior.
 
+## Finding Basis
+
+For each promoted finding, distinguish the basis for judging the code from the
+observed evidence. Name the actual requirement, documented repository rule,
+observed local pattern, version-matched library/framework guidance, user decision,
+or reviewer recommendation; cite its source and explain why it applies here.
+These can support the same finding together; no single category is mandatory.
+
+Memory, a past review comment, an external gate, and a specialist skill retain their
+actual origin. Check whether the user or project adopted the advice and whether
+its scope still applies; do not relabel it as a repository rule or team standard.
+For a local pattern, inspect relevant implementations and counterexamples. Expand
+the search or inspect history when authority or migration direction is unclear;
+neither the nearest example nor a majority establishes a mandatory rule.
+
+Use inspected or explicitly supplied evidence for the citation. Library claims need
+the applicable version and supporting source/type definitions or primary docs,
+including relevant conditions and exceptions. Mark an unavailable source unverified
+and keep an unproven violation unresolved. A reproducible failure or closed static
+trace can establish a defect without an external best-practice document.
+
+Explain whether the change is required to fix a demonstrated defect or contract
+violation, or is a bounded optional improvement. Set severity from the demonstrated
+effect, maintenance cost and applicable requirements, not the source category:
+official guidance alone does not make a suggestion blocking. Apply Change Restraint
+to optional advice rather than promoting unsupported claims with a lower severity.
+
 ## Sources to Prefer When Verifying
 
 - Local repo authority: `AGENTS.md`, conventions, package versions, lint/test config, nearby patterns, API schemas, generated clients, tests.
