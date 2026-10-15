@@ -253,6 +253,39 @@
         "The smallest fix restores the local guard and uses the existing boundary cases; the review does not require a new parser layer, schema dependency, configuration, or unrelated refactor.",
         "The finding is not suppressed to reduce code size, and command results are not fabricated for the snapshot."
       ]
+    },
+    {
+      "id": 19,
+      "prompt": "첨부된 프로젝트별 인보이스 조회 변경을 review-code로 리뷰해줘. 수정하지 마. 최종 리뷰에는 실제로 달 만한 인라인 코멘트도 추천해줘.",
+      "expected_output": "Finds the project cache-key defect and explains the separate request, repository policy and version-matched TanStack Query source. Does not promote an unadopted options-factory suggestion or invent source retrieval. Preserves the decisive basis in an inline recommendation.",
+      "files": [
+        "evals/files/finding-basis-query-key.md"
+      ],
+      "expectations": [
+        "A finding anchors src/queries/useInvoices.ts:6 and traces a successful A fetch followed by mounting B with the same fresh key to A data being reused instead of an independent B query.",
+        "The finding identifies docs/query-policy.md:1 as repository authority and distinguishes it from the supplied official TanStack Query 5.62.7 Query Keys section; it explains why changing projectId makes that section applicable.",
+        "The review may use both sources for the same root cause; it does not disguise library guidance as a repository convention or treat source authority alone as a reason for P1.",
+        "The smallest fix reuses invoiceKeys.list(projectId). The review does not require an options factory based on the unadopted previous-comment.md suggestion or invent additional validation requirements.",
+        "The inline recommendation retains the decisive source and project-cache applicability after wording edits, without requiring all report fields inside the short comment.",
+        "The reviewer distinguishes supplied primary-source context and static tracing from live web retrieval or executed product tests; no fabricated links, command results or exhaustive searches appear."
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "첨부된 변경사항을 review-code로 리뷰해줘. 코드는 수정하지 마. 이어서 ‘그럼 더 고칠 부분은 없어?’라는 후속 질문에 대한 짧은 답변도 덧붙여줘.",
+      "expected_output": "Retains the reachable empty-list regression using the user contract and static caller trace without demanding official documentation. Respects the current user decision and keeps old reviewer advice distinct from repository or team policy, including in the short follow-up.",
+      "files": [
+        "evals/files/finding-basis-advice-and-bug.md"
+      ],
+      "expectations": [
+        "A finding anchors src/invoices/firstInvoiceLabel.ts:3 and shows that [] reaches rows[0].label through previewLabel.ts, throwing before the null fallback can display No invoices.",
+        "The finding names the current empty-input requirement and supplied caller evidence as its basis, states why correction is required, and proposes restoring the local empty-list guard without an external BP citation.",
+        "The old-comment.md suggestion and its memory summary are attributed to past reviewer advice, not a repository rule, team standard, official recommendation or current user instruction.",
+        "The valid current user decision is not automatically downgraded because it is absent from repository documents. The review leaves the adequate local filter and independent calculations separate.",
+        "No unsupported reduce migration, helper extraction, naming cleanup or same-root-cause duplicate finding is promoted. Optional advice is suppressed when no concrete benefit is established.",
+        "The shortened follow-up keeps any new or materially changed judgment attributed and applicable, or says that no additional supported change is needed; it does not resurrect old advice as a requirement.",
+        "Product tests and web checks are not claimed as executed against the snapshot."
+      ]
     }
   ]
 }

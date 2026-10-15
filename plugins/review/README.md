@@ -13,6 +13,11 @@ Code review skills for Claude Code and Codex.
 
 Each skill is stored once under `skills/<skill>/` and shared by both platform manifests.
 
+`review-code` identifies each finding's basis, actual source and applicability, and
+explains whether the change is required or optional. Repository rules, observed
+patterns, library guidance and past advice remain distinct in follow-ups and inline
+recommendations. Severity follows demonstrated impact rather than the source label.
+
 ## Pending PR comments
 
 `review-pr` always leaves comments **Pending (미제출)**. It does not send a COMMENT,

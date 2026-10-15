@@ -94,6 +94,6 @@ WARN:
 ## Evidence Requirements
 
 - AUTHZ-SCOPE / DB-SAFETY findings need the actual route/query path (route decorator → handler → query) — not just a grep match.
-- API-CONTRACT findings should cite the sibling endpoint or convention being diverged from.
+- API-CONTRACT findings should cite the actual contract; distinguish a documented rule from a sibling endpoint's observed pattern under `common-gate.md#finding-basis`.
 - INPUT-VALIDATION findings should cite the unvalidated surface and the sink it reaches.
 - FAILURE-CONTRACT external-call findings should cite the call site and the missing control (timeout/retry/error mapping).

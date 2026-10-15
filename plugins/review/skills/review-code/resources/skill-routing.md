@@ -72,7 +72,7 @@ For every promoted finding selected for an inline comment:
    - Explain the mechanism, not merely a translated label. `race condition(경쟁 상태)` repeats the name without making the failure easier to understand.
    - After the first explanation, use the technical term alone. Do not annotate shared vocabulary or repeat the same parenthetical gloss throughout the comment.
    - Keep code identifiers exact and formatted as code, such as `cache`, `InvoiceStatus`, or `sync.RWMutex`; a plain explanation supplements them instead of replacing them.
-4. Generic-pattern constraints for the same pass: remove filler, praise sandwiches, vague hedging, inflated significance, canned transitions, and unnecessary formatting without changing the technical claim. This may tighten the explanation but must preserve the exact term and enough plain-language context to understand the mechanism.
+4. Generic-pattern constraints for the same pass: remove filler, praise sandwiches, vague hedging, inflated significance, canned transitions, and unnecessary formatting without changing the technical claim. This may tighten the explanation but must preserve the exact term and enough plain-language context to understand the mechanism. Preserve the decisive basis, source and applicability from `common-gate.md#finding-basis`; these are not filler. Identify an optional recommendation as such, and do not turn it into a required change while shortening the comment.
 5. Recheck the comment against the finding evidence and exact diff anchor.
 
 The wording pass changes presentation only. It must never add a new finding, increase severity, invent a runtime effect, or turn an invalid line into a valid PR anchor.

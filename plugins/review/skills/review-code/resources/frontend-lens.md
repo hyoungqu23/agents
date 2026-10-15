@@ -118,5 +118,5 @@ WARN:
 - FRAMEWORK-API / RENDER-PERF / FAILURE-SEMANTICS findings need an actual runtime path, not only a grep match.
 - If version-sensitive behavior has not been verified, record an unresolved evidence gap under verification rather than a FAIL against the code.
 - NAMING-CONSISTENCY contract findings should cite at least two points when possible: DTO plus transformer, or API response plus UI assumption.
-- CONVENTIONS findings should cite the local rule or nearby pattern.
+- CONVENTIONS findings should distinguish a documented local rule from an observed pattern; cite its source and applicability under `common-gate.md#finding-basis`.
 - UI-STATES-A11Y findings should cite the changed UI element and the missing state/interaction.

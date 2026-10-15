@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1 - 2026-10-16
+
+- Explain each finding's basis, source and applicability in the report, follow-up judgments and inline recommendations.
+- Distinguish repository rules, observed patterns, library guidance and past advice without assigning severity from the source category.
+- Add focused evaluation cases for version-matched query guidance, unadopted advice and a reachable defect without external documentation.
+
 ## 0.6.0 - 2026-10-15
 
 - Resume existing Pending reviews: deduplicate unchanged findings and append new threads on the same reviewed commit without submitting.
