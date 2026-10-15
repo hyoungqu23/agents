@@ -11,7 +11,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | Plugin | Skills | Description |
 | --- | --- | --- |
 | [`content`](plugins/content) | `un-ai` | Content writing skills for drafting, editing, rewriting, and auditing English or Korean prose. |
-| [`review`](plugins/review) | `review-pr`, `review-code`, `review-respond`, `review-check` | Read-only PR review with Pending drafts, code review, claim verification, and author responses. |
+| [`review`](plugins/review) | `review-pr`, `review-code`, `review-respond`, `review-check` | Read-only PR review with resumable Pending drafts, code review, claim verification, and author responses. |
 | [`design`](plugins/design) | `design-brief`, `prototype-explore`, `prototype-promote` | Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references. |
 | [`product`](plugins/product) | `problem-frame`, `prd-write`, `prd-gate`, `flow-spec` | Problem framing, traceable requirements, readiness review and user-flow specifications. |
 

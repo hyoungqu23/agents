@@ -56,3 +56,9 @@ defines omitted event as PENDING and accepts commit_id to pin the reviewed revis
 Its creation endpoint does not provide an atomic compare-and-create against PR head.
 Recheck before and after creation. A race may leave a draft on the old head; report
 it as stale, keep it unsubmitted, and do not move anchors or replay the write.
+
+Continuations may add a new thread only through `addPullRequestReviewThread` with
+the verified existing Pending review ID on the same reviewed commit. Reconcile the
+durable journal and all remote comment pages first. Preserve edits and deletions;
+never replace an older Pending to make room for a new revision. See review-pr's
+[resume rules](../skills/review-pr/references/resume.md) for conflict and recovery handling.

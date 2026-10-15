@@ -1,0 +1,148 @@
+[
+  {
+    "method": "GET",
+    "endpoint": "user",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "user",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "POST",
+    "endpoint": "graphql",
+    "payload": {
+      "query": "mutation($input:AddPullRequestReviewThreadInput!){addPullRequestReviewThread(input:$input){thread{id}}}",
+      "variables": {
+        "input": {
+          "pullRequestReviewId": "PRR_91",
+          "path": "permissions.py",
+          "line": 2,
+          "side": "RIGHT",
+          "body": "[P0] `role == \"admin\" or \"editor\"` parses as `(role == \"admin\") or \"editor\"`, and the non-empty string \"editor\" is always truthy. can_edit now grants edit permission to every role and returns a string rather than a bool, which breaks the documented contract (true only for admin or editor, otherwise false). Restore `role in (\"admin\", \"editor\")`."
+        }
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/102",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7/reviews/91/comments?per_page=100&page=1",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/101",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/comments/102",
+    "payload": null
+  },
+  {
+    "method": "GET",
+    "endpoint": "repos/example/project/pulls/7",
+    "payload": null
+  }
+]

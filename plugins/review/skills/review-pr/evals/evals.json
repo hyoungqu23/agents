@@ -23,8 +23,29 @@
       "id": 3,
       "prompt": "Save the authorized findings with an existing Pending review or an uncertain prior write.",
       "files": ["evals/files/request.md"],
-      "expected_output": "Preserve the existing draft and receipt; inspect state without automatic write replay.",
-      "expectations": ["No replacement, deletion, duplicate comment or submit action."]
+      "expected_output": "Inspect remote drafts and the durable journal. Recover exact confirmed writes; leave ambiguous attempts unconfirmed without replay.",
+      "expectations": ["No replacement, deletion, duplicate comment or submit action.", "An exact same-head rerun requires no remote mutation."]
+    },
+    {
+      "id": 4,
+      "prompt": "Continue an interrupted review on the same commit. Keep the existing comment and manually edited summary, and review the remaining source.",
+      "files": ["evals/files/request.md"],
+      "expected_output": "Retain existing finding keys and text, omit the unchanged summary from the new payload, and add only a new justified thread to the verified Pending review.",
+      "expectations": ["No duplicate creation or submission.", "Existing summary and comments remain byte-for-byte intact.", "Run review-code report-only; do not infer a finding solely from the prior draft."]
+    },
+    {
+      "id": 5,
+      "prompt": "Resume after the user edited or deleted a previously tracked draft comment, and after the agent reworded the corresponding finding.",
+      "files": ["evals/files/request.md"],
+      "expected_output": "Preserve manual changes and return a local conflict without overwriting, deleting or recreating the comment.",
+      "expectations": ["A regenerated key must not bypass a recorded deletion at the same anchor.", "A conflict discovered during a batch stops remaining writes."]
+    },
+    {
+      "id": 6,
+      "prompt": "Continue the Pending review after new commits and a reviewer-worktree replacement.",
+      "files": ["evals/files/request.md"],
+      "expected_output": "Reuse the durable receipt, capture the new checkout, revalidate affected findings and return a local reassessment plan while preserving the older Pending.",
+      "expectations": ["Do not repin the old review, reuse stale anchors, or claim new commits were reviewed without evidence.", "The old draft remains Pending; no replacement, submission or reply fallback."]
     }
   ]
 }

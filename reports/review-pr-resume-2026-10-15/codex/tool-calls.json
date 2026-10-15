@@ -1,0 +1,54 @@
+[
+  {
+    "command": "/bin/zsh -c 'cat .eval-plugins/review/skills/review-pr/SKILL.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'cat .eval-plugins/review/references/pr-review-boundary.md .eval-plugins/review/skills/review-pr/references/resume.md .eval-plugins/review/skills/review-code/SKILL.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'cat previous-draft.json previous-target.json receipt.json'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'PATH=/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmp4x2wutf_/workspace/.tools:$PATH python3 .eval-plugins/review/skills/review-pr/scripts/pending_review.py inspect --repo example/project --pr 7 --receipt \"$PWD/receipt.json\"'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'cat .eval-plugins/review/skills/review-code/resources/{common-gate,review-execution,verification-matrix,skill-routing}.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'git status --short; git rev-parse HEAD; git diff --no-ext-diff 4dc9614d25fd0314bff8108bd39b0e5a476f3b94...7eabf5f58d693f4a4dd198d64b8c9487ad761171; git ls-tree -r --name-only 4dc9614d25fd0314bff8108bd39b0e5a476f3b94'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'git show 4dc9614d25fd0314bff8108bd39b0e5a476f3b94:AGENTS.md; rg -n .; git log --oneline 4dc9614d25fd0314bff8108bd39b0e5a476f3b94..7eabf5f58d693f4a4dd198d64b8c9487ad761171'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'PATH=/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmp4x2wutf_/workspace/.tools:$PATH python3 .eval-plugins/review/skills/review-pr/scripts/pending_review.py capture --repo example/project --pr 7 --worktree /private/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmp4x2wutf_/reviewer --snapshot \"$PWD/run-2-target.json\"'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'cat .eval-plugins/review/skills/review-code/resources/review-execution.md; cat .eval-plugins/review/skills/review-code/resources/backend-lens.md; rg --files .eval-plugins'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'cat .eval-plugins/content/skills/un-ai/SKILL.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'PATH=/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmp4x2wutf_/workspace/.tools:$PATH gh api repos/example/project/pulls/7'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'cat .eval-plugins/content/skills/un-ai/references/korean.md; PATH=/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmp4x2wutf_/workspace/.tools:$PATH gh api repos/example/project/pulls/7 --header '\"'Accept: application/vnd.github.v3.diff'\"",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -c 'PATH=/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmp4x2wutf_/workspace/.tools:$PATH python3 .eval-plugins/review/skills/review-pr/scripts/pending_review.py save --repo example/project --pr 7 --snapshot \"$PWD/run-2-target.json\" --payload \"$PWD/run-2-draft.json\" --receipt \"$PWD/receipt.json\"'",
+    "exit_code": 0
+  }
+]

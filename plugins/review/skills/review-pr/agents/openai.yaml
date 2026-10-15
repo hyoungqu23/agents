@@ -1,4 +1,4 @@
 interface:
   display_name: "Review PR"
-  short_description: "Read-only PR review with Pending comments"
-  default_prompt: "Use $review-pr to review this pull request and leave authorized comments in a Pending review without submitting it."
+  short_description: "Review PRs and resume Pending drafts safely"
+  default_prompt: "Use $review-pr to review or continue this pull request, preserve existing drafts, and leave authorized comments Pending without submitting."

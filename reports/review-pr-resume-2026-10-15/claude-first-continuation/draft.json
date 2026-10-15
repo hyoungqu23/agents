@@ -1,0 +1,6 @@
+{
+  "comments": [
+    {"key": "empty-input", "path": "app.py", "line": 2, "side": "RIGHT", "body": "[P1] Empty input now raises IndexError. Preserve the documented None result for first_name([])."},
+    {"key": "can-edit-always-true", "path": "permissions.py", "line": 2, "side": "RIGHT", "body": "[P0] `role == \"admin\" or \"editor\"` parses as `(role == \"admin\") or \"editor\"`, and the non-empty string \"editor\" is always truthy. can_edit now grants edit permission to every role and returns a string rather than a bool, which breaks the documented contract (true only for admin or editor, otherwise false). Restore `role in (\"admin\", \"editor\")`."}
+  ]
+}
