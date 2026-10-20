@@ -17,7 +17,10 @@ Do not equate "not hand-written production code" with "out of scope." Classify e
 
 ## 2. Maintain the Coverage Ledger
 
-Keep the ledger internal unless the user asks to see it. Use one row per changed file and link rows that implement the same changed behavior.
+Keep the ledger out of the concise user-facing answer unless requested. For Git-backed
+reviews, persist it with [the structured result contract](review-result.md) outside
+the reviewed checkout and run its checker. Use one row per changed file and link rows
+that implement the same changed behavior.
 
 Minimum fields:
 
@@ -141,3 +144,9 @@ Do not present the review as complete until all checks pass:
 For large diffs, review in batches and track batch completion in the same ledger. Time or context pressure is a reason to report an incomplete scope, not a reason to imply that unreviewed files passed.
 
 If spec evidence is unavailable, the completion gate can still close for scope and runtime review, but the final verification section must say that spec conformance was not established.
+
+Use the checker's computed result for Git-backed scope and evidence consistency.
+Missing files or incomplete recorded checks remain partial even when a supported
+finding is saved as Pending. Do not substitute a skill-read event or a successful
+GitHub write for completed review work. Semantic quality still requires evidence-based
+judgment; a mechanically valid JSON ledger is not proof of that judgment.

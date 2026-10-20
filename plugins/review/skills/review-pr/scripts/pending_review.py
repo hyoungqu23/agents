@@ -8,6 +8,7 @@ Git checks are change guards, not a sandbox or proof of findings' correctness.
 import argparse
 from contextlib import contextmanager
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -113,7 +114,7 @@ def locked(receipt):
 def clean_head(worktree):
     if git(worktree, 'symbolic-ref', '-q', 'HEAD', ok=(0, 1)).returncode != 1:
         raise ReviewError('Use a detached reviewer checkout')
-    if git(worktree, 'status', '--porcelain=v1', '--untracked-files=all').stdout.strip():
+    if git(worktree, 'status', '--ignore-submodules=none', '--porcelain=v1', '--untracked-files=all').stdout.strip():
         raise ReviewError('Reviewed checkout has local changes; do not save comments')
     return git(worktree, 'rev-parse', 'HEAD').stdout.strip()
 
@@ -136,7 +137,7 @@ def same_target(pr, target):
 def diff_for(worktree, base, head):
     # Never execute configured external diff/textconv drivers from review context.
     return git(worktree, '-c', 'core.quotePath=false', 'diff', '--no-ext-diff',
-               '--no-textconv', '--no-color', '--unified=3', f'{base}...{head}', '--').stdout
+               '--no-textconv', '--ignore-submodules=none', '--no-color', '--unified=3', f'{base}...{head}', '--').stdout
 
 
 def changed_lines(diff):
@@ -422,6 +423,28 @@ def plan_status(plan):
     return 'pending_conflicts' if plan['conflicts'] else 'pending'
 
 
+def check_review_result(path, target, worktree, value):
+    # Resolve only the trusted sibling in this installed plugin, never PR code.
+    script = Path(__file__).resolve().parents[2] / 'review-code/scripts/review_result.py'
+    spec = importlib.util.spec_from_file_location('review_result_gate', script)
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    report = json.loads(path.read_text())
+    scope = gate.capture_scope(worktree, target['base_sha'], target['head_sha'])
+    verdict = gate.assess(scope, report)
+    if verdict['status'] == 'invalid':
+        raise ReviewError('Review result is invalid/stale: ' + json.dumps(verdict['gaps']))
+    eligible = {f['id']: f for f in report['findings'] if isinstance(f, dict) and f.get('id') in verdict['eligible_findings']}
+    for comment in value.get('comments', []):
+        finding = eligible.get(finding_key(comment))
+        if (finding is None or finding.get('path') != comment['path'] or finding.get('line') != comment['line']
+                or finding.get('revision', 'head') != 'head' or finding.get('comment') != comment['body']):
+            raise ReviewError('Draft comment must exactly match an eligible finding in the current review result')
+    if 'body' in value and value['body'] != report.get('review_body', ''):
+        raise ReviewError('Draft summary must match review_body in the review result')
+    return {**verdict, 'result_sha256': digest(report)}
+
+
 def add_thread(host, review, draft):
     if not isinstance(review.get('node_id'), str) or not review['node_id']:
         raise ReviewError('Pending review node ID unavailable; cannot add a draft thread')
@@ -444,21 +467,24 @@ def final_check(args, record, receipt, target, worktree):
 
 
 def run_session(args):
-    target = worktree = value = payload = None
+    target = worktree = value = payload = completion = None
     receipt = Path(args.receipt).resolve()
     if args.action == 'save':
         target, worktree, diff = load_target(args)
-        paths = [outside(p, worktree) for p in (args.snapshot, args.payload, args.receipt,
+        paths = [outside(p, worktree) for p in (args.snapshot, args.payload, args.receipt, args.review_result,
                  str(receipt.with_name(receipt.name + '.lock')))]
         if len(set(paths)) != len(paths):
-            raise ReviewError('Snapshot, payload, receipt and lock must be distinct paths')
+            raise ReviewError('Snapshot, payload, receipt, review result and lock must be distinct paths')
         value = json.loads(paths[1].read_text())
         payload = review_payload(value, target, changed_lines(diff))
+        completion = check_review_result(paths[3], target, worktree, value)
     with locked(receipt):
         login = api(args.hostname, 'user')['login']
         if not isinstance(login, str) or not login:
             raise ReviewError('Authenticated login unavailable')
         record = load_record(receipt, args, login)
+        if completion is not None:
+            record['review_completion'] = completion
         endpoint = f'repos/{args.repo}/pulls/{args.pr}'
         review_id = record.get('review_id') or own_pending(args.hostname, endpoint, login)
         if review_id is None:
@@ -470,7 +496,7 @@ def run_session(args):
                 return {'status': 'no_pending', 'repo': args.repo, 'pr': args.pr}
             guard(args, target, worktree)
             if not payload['body'].strip() and not payload['comments']:
-                return {'status': 'no_findings', 'repo': args.repo, 'pr': args.pr}
+                return {'status': 'no_findings', 'repo': args.repo, 'pr': args.pr, 'review_completion': completion}
             findings = {finding_key(c): comment_draft(c) for c in value.get('comments', [])}
             record.update(status='create_unconfirmed', operation={'kind': 'create', 'head_sha': target['head_sha'],
                           'target': {k: target[k] for k in ('head_sha', 'base_sha', 'diff_sha256')},
@@ -562,13 +588,14 @@ def main():
     parser.add_argument('--worktree')
     parser.add_argument('--payload')
     parser.add_argument('--receipt')
+    parser.add_argument('--review-result')
     args = parser.parse_args()
     if not re.fullmatch(r'[A-Za-z0-9.-]+', args.hostname) or not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', args.repo) or args.pr < 1:
         parser.error('Use an explicit hostname, owner/repo and positive PR number')
     if args.action == 'capture' and not (args.worktree and args.snapshot):
         parser.error('capture requires --worktree and --snapshot')
-    if args.action == 'save' and not (args.snapshot and args.payload and args.receipt):
-        parser.error('save requires --snapshot, --payload and --receipt')
+    if args.action == 'save' and not (args.snapshot and args.payload and args.receipt and args.review_result):
+        parser.error('save requires --snapshot, --payload, --receipt and --review-result')
     if args.action == 'inspect' and not args.receipt:
         parser.error('inspect requires --receipt')
     try:

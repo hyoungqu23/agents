@@ -96,6 +96,13 @@ invocations separately, using a logged-in CLI or `CODEX_API_KEY`:
 python3 scripts/behavioral/run.py --model <model-id> --output /tmp/hm2-behavioral-unique-run
 ```
 
+Git-backed code reviews also produce a structured result checked against the current
+SHA, full changed-file inventory and source quotations. Pending saves require this
+result and retain partial scope explicitly. The focused Codex/Claude
+[review completion evaluation](scripts/behavioral/README.md#structured-review-completion-on-both-hosts)
+checks actual defect detection, false-positive exclusion and deferred scope; skill
+loading or successful Pending persistence alone cannot pass those cases.
+
 This uses model capacity and sends the selected plugin instructions, references and
 synthetic fixtures to OpenAI. It runs twenty-one scenarios in disposable workspaces and
 checks real artifacts for design-rule preservation, editing fidelity, cross-file review defects, product source preservation, PRD

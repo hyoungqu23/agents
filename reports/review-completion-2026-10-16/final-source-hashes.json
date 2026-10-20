@@ -1,0 +1,7 @@
+{
+  "plugins/review/skills/review-code/SKILL.md": "ba8f8863dbb28812f290ff0581a5724590a57b87332823ebcfbdd8fd5b206c6e",
+  "plugins/review/skills/review-code/resources/review-result.md": "e332ad506fb54afbd31f78651a141f2dad31679e59061c03e56700ce51f73523",
+  "plugins/review/skills/review-code/scripts/review_result.py": "093568a1a8d034834d48d64301228b37a48a3b80432db20364da2f5c25118abb",
+  "plugins/review/skills/review-pr/scripts/pending_review.py": "eb93e5f7f0fbf3a8d9b8c3e1ea61dcfcae0c502771bc22694581731ba796cd00",
+  "scripts/behavioral/review_completion.py": "d1c1befd1db056498ecf4f3a7aaa3fb244a8c5e2faab74c32bcb9f5ecd367f33"
+}
