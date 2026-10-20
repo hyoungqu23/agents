@@ -1,0 +1,38 @@
+[
+  {
+    "command": "/bin/zsh -lc 'cat .eval-plugins/review/skills/review-code/SKILL.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat .eval-plugins/review/skills/review-code/resources/{common-gate,review-execution,verification-matrix,skill-routing,review-result}.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'git -C /private/tmp/hm2-review-completion-codex-clean-20261016/clean/source diff --stat e6b3342242b28303034e68355ca83d645664e4b7 192473cbdd1642f5027efe52b721aa347b2e4f96'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat .eval-plugins/review/skills/review-code/resources/review-execution.md .eval-plugins/review/skills/review-code/resources/verification-matrix.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'git -C /private/tmp/hm2-review-completion-codex-clean-20261016/clean/source diff e6b3342242b28303034e68355ca83d645664e4b7 192473cbdd1642f5027efe52b721aa347b2e4f96\n git -C /private/tmp/hm2-review-completion-codex-clean-20261016/clean/source ls-tree -r --name-only e6b3342242b28303034e68355ca83d645664e4b7'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'python3 .eval-plugins/review/skills/review-code/scripts/review_result.py capture --worktree /private/tmp/hm2-review-completion-codex-clean-20261016/clean/source --base e6b3342242b28303034e68355ca83d645664e4b7 --head 192473cbdd1642f5027efe52b721aa347b2e4f96 --output scope.json'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'git -C /private/tmp/hm2-review-completion-codex-clean-20261016/clean/source show e6b3342242b28303034e68355ca83d645664e4b7:AGENTS.md\n git -C /private/tmp/hm2-review-completion-codex-clean-20261016/clean/source ls-tree -r --name-only 192473cbdd1642f5027efe52b721aa347b2e4f96\n git -C /private/tmp/hm2-review-completion-codex-clean-20261016/clean/source log --format=fuller e6b3342242b28303034e68355ca83d645664e4b7..192473cbdd1642f5027efe52b721aa347b2e4f96\n git -C /private/tmp/hm2-review-completion-codex-clean-20261016/clean/source grep -n -e first_name -e can_edit -e admin -e editor 192473cbdd1642f5027efe52b721aa347b2e4f96'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat .eval-plugins/review/skills/review-code/resources/backend-lens.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'python3 .eval-plugins/review/skills/review-code/scripts/review_result.py validate --worktree /private/tmp/hm2-review-completion-codex-clean-20261016/clean/source --base e6b3342242b28303034e68355ca83d645664e4b7 --head 192473cbdd1642f5027efe52b721aa347b2e4f96 --result review-result.json --output assessment.json'",
+    "exit_code": 0
+  }
+]

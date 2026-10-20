@@ -1,0 +1,17 @@
+{
+  "status": "complete",
+  "target": {
+    "mode": "commits",
+    "base_sha": "2ecfe7c04d1e77850a617b7bcfce9943959f07b4",
+    "head_sha": "b102c80f148fce95c1f8a6f57dfbf6f994d162a1",
+    "diff_sha256": "94ae8ea8e23ea716e7ef84f6b390ba283ad89f5188e545df5d932bfb41e20405"
+  },
+  "gaps": [],
+  "eligible_findings": [],
+  "rejected_findings": [],
+  "limitations": [
+    "대상 코드 실행 없음(요청에 따라 정적 검토만 수행)",
+    "저장소에 호출자와 테스트가 없어 외부 호출 조건은 AGENTS.md 계약으로만 확인"
+  ],
+  "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+}

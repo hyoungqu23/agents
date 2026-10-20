@@ -50,10 +50,19 @@ report the gap and leave the existing draft alone. Do not discard the receipt to
 make a new write possible.
 
 `inspect` only reads GitHub and updates local recovery state. `save` revalidates the
-current snapshot, builds a plan and may create or append. It stops on conflicts or
+current snapshot and required `--review-result`, builds a plan and may create or append.
+The result contract is [defined by review-code](../../review-code/resources/review-result.md).
+Use fresh supported findings for each save, including v0.5/v0.6 receipt continuation;
+old receipts remain inspectable without a result. It stops on conflicts or
 uncertainty. A crash after one successful addition can be recovered by its exact
 remote content and original commit; subsequent additions are individually journaled.
 Neither a timeout nor `clientMutationId` is a server idempotency guarantee.
+
+Pending persistence and review completeness are independent. A partial review may
+save its supported findings while missing coverage stays visible in `review_completion`.
+An invalid/stale result, an excluded/unresolved finding, mismatched anchor or changed
+comment text blocks the save. Neither result validation nor a saved receipt is proof
+that the model's reasoning was correct.
 
 ## API limits and Pending-only contract
 

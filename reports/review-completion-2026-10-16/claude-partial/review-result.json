@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "target": {
+    "mode": "commits",
+    "base_sha": "8676ea2b4b64ae097f8b4987f2f48089e319070c",
+    "head_sha": "bc6d0ae39d99d5066b8961374518e0d5724f0bb7",
+    "diff_sha256": "fb0ce77bc13df926446699f275029905bd9ca9229418fc4de666992f64b19d80"
+  },
+  "files": [
+    {
+      "path": "permissions.py",
+      "classification": "source",
+      "risk": "high",
+      "status": "reviewed",
+      "note": "can_edit 권한 판정이 `role in (\"admin\", \"editor\")`에서 `role == \"admin\" or \"editor\"`로 바뀌어 admin이 아닌 모든 role이 truthy 문자열 \"editor\"를 반환한다.",
+      "trace": "호출자(저장소 내 호출 없음, AGENTS.md가 공개 계약으로 명시) -> can_edit(role) -> `role == \"admin\"`이 거짓이면 `or` 오른쪽 상수 \"editor\" 반환 -> 호출자가 truthiness로 편집 허용을 판단하면 모든 role 허용. 저장소 안에 실제 호출자가 없어 downstream 사용처는 확인 불가(열린 경로). 계약 위반은 호출자와 무관하게 성립한다."
+    },
+    {
+      "path": "lookup.py",
+      "classification": "source",
+      "risk": "medium",
+      "status": "unreviewed",
+      "note": "요청에 따라 이번 범위에서 내용 검토를 미뤘다. M 변경(+3/-1)이 있다는 사실만 기록했고 diff 내용은 판단하지 않았다."
+    },
+    {
+      "path": "notes.md",
+      "classification": "docs",
+      "risk": "low",
+      "status": "unreviewed",
+      "note": "요청에 따라 이번 범위에서 내용 검토를 미뤘다. 신규 파일(A, +1)이라는 사실만 기록했고 내용은 판단하지 않았다."
+    }
+  ],
+  "passes": {
+    "standards": {"status": "partial", "note": "permissions.py에만 적용했다. lookup.py와 notes.md는 요청에 따라 미검토."},
+    "spec": {"status": "partial", "note": "AGENTS.md의 can_edit 계약(bool 반환, admin/editor만 허용)과 permissions.py를 대조했다. first_name 계약은 lookup.py 검토 보류로 대조하지 않았다."},
+    "runtime": {"status": "partial", "note": "permissions.py의 or 단락 평가와 반환값을 정적으로 추적했다. lookup.py는 미검토."}
+  },
+  "quality": {
+    "cohesion": {"status": "checked", "note": "permissions.py의 can_edit 단일 규칙 변경만 확인했다. 책임 혼재 없음."},
+    "coupling": {"status": "checked", "note": "git grep으로 can_edit 호출자를 찾았으나 저장소 내 호출은 없다. 새 의존성 없음."},
+    "duplication": {"status": "checked", "note": "git grep으로 can_edit/permissions를 검색했고 다른 구현은 없다. 중복 규칙 없음."},
+    "repository_fit": {"status": "checked", "note": "AGENTS.md의 can_edit 계약(bool, admin/editor만 허용) 위반을 finding으로 승격했다."},
+    "naming": {"status": "checked", "note": "can_edit은 bool 술어 이름이지만 head 구현은 문자열을 반환한다. 이름은 바꿀 필요가 없고, 같은 근본 원인으로 한 finding에 포함했다."}
+  },
+  "verification": [
+    {"kind": "static", "status": "passed", "detail": "git diff, base/head 파일, AGENTS.md, git grep으로 permissions.py 변경과 계약을 정적으로 대조했다."},
+    {"kind": "command", "status": "not_run", "detail": "대상 코드와 테스트 실행", "reason": "요청이 대상 저장소의 코드·테스트 실행을 금지했고, 저장소에 테스트도 없다.", "risk": "실행으로 확인한 동작은 없다. 다만 Python `or` 의미론으로 정적 판단이 가능하다."}
+  ],
+  "findings": [
+    {
+      "id": "can-edit-always-truthy",
+      "status": "supported",
+      "severity": "P1",
+      "path": "permissions.py",
+      "line": 2,
+      "revision": "head",
+      "trigger": "admin이 아닌 role(\"viewer\", \"guest\", 빈 문자열, None 등)로 can_edit을 호출한다.",
+      "effect": "`role == \"admin\" or \"editor\"`는 admin이 아니면 문자열 \"editor\"를 반환한다. 이 값은 truthy라서 모든 role이 편집 권한을 얻고, 반환 타입도 bool이 아니게 된다. 인가 우회에 해당한다.",
+      "fix": "`return role in (\"admin\", \"editor\")`로 되돌리거나 `role == \"admin\" or role == \"editor\"`로 쓴다.",
+      "refutation": "의도된 변경인지 확인했다. AGENTS.md가 can_edit은 bool을 반환하고 admin/editor만 허용한다고 명시하며, 이 커밋에는 계약을 바꾼다는 근거가 없다. 저장소 내 호출자가 없다는 점은 반박 후보였으나, AGENTS.md가 공개 계약으로 보존을 요구하므로 계약 위반은 성립한다.",
+      "evidence": [
+        {"revision": "head", "path": "permissions.py", "line": 2, "quote": "    return role == \"admin\" or \"editor\""},
+        {"revision": "base", "path": "permissions.py", "line": 2, "quote": "    return role in (\"admin\", \"editor\")"},
+        {"revision": "head", "path": "AGENTS.md", "line": 1, "quote": "API contracts: can_edit returns bool and permits only admin/editor; any other role returns False. first_name returns None for an empty list and otherwise the first row name. Preserve both contracts."}
+      ],
+      "comment": "`role == \"admin\" or \"editor\"`는 admin이 아니면 항상 \"editor\"를 반환합니다. 이 값은 truthy라서 모든 role이 편집 가능해지고 bool도 아니게 됩니다. `role in (\"admin\", \"editor\")`로 되돌려 주세요."
+    },
+    {
+      "id": "no-in-repo-caller",
+      "status": "disproved",
+      "reason": "저장소 안에 can_edit 호출자가 없으므로 영향이 없다는 반박 후보는 성립하지 않는다. AGENTS.md가 공개 API 계약으로 명시하고 외부 호출자가 있을 수 있으며, 계약 위반은 변경 시점에 성립한다."
+    }
+  ],
+  "limitations": [
+    "lookup.py와 notes.md는 요청에 따라 내용 검토를 하지 않았다. 변경 목록에는 유지했고 unreviewed로 기록했다.",
+    "대상 코드와 테스트는 실행하지 않았다.",
+    "저장소 내 can_edit 호출자가 없어 실제 소비자의 사용 방식은 확인하지 못했다."
+  ]
+}
