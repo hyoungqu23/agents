@@ -22,6 +22,9 @@ If the gate points to additional criteria/resources, load the relevant files as 
 
 Use the gate's required FAIL/WARN style when it exists:
 
+Keep the basis, source, applicability and required versus optional change from
+`common-gate.md#finding-basis` visible within the gate's requested fields.
+
 ```markdown
 ## 코드 리뷰 게이트 결과
 

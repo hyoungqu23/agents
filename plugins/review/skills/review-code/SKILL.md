@@ -44,7 +44,7 @@ Do not autofix API contracts, migrations, auth, persistence, caching, concurrenc
 
 ## Output Contract
 
-Use the user's language. Lead with findings; omit praise and category-by-category PASS output. Local project gates can replace this report shape and severity vocabulary.
+Use the user's language. Lead with findings; omit praise and category-by-category PASS output. Local project gates can replace this report shape and severity vocabulary; retain each finding's basis, source and applicability within the required format.
 
 Severity:
 - `P1`: blocker or high-risk correctness/security/data-loss/regression issue.
@@ -69,13 +69,18 @@ For each finding, use this structure:
 ### [P2] 제목 — path:line
 
 - 문제: 구체적인 결함
+- 기준·출처: 적용한 기준의 성격, 실제 출처와 이 코드에 적용되는 이유
 - 바꿀 것: 최소 수정 방향
-- 이유: 그대로 둘 때의 구체적 비용과 제안한 수정의 이익
+- 이유: 그대로 둘 때의 구체적 비용, 제안한 수정의 이익과 수정 필요성
 - 수정 후 상태: 수정 뒤 보장할 상태
 - 근거: 확인한 코드, 테스트, 문서, 명령
 ```
 
 Use one `###` heading per finding, severity first and `— path:line` last; do not add horizontal rules or repeated blank-line separators. Each field is a top-level bullet. Put any multi-paragraph details or code blocks inside that field's bullet, separated by one blank line and indented to its content column. Excluded items and verification use compact one-line bullets.
+
+Apply the finding-basis rules in `resources/common-gate.md#finding-basis` to new or
+materially changed findings in follow-up answers and re-reviews as well. Keep the
+basis and applicability visible when shortening a finding into an inline comment.
 
 For PR targets, place this section after findings and before excluded items/verification:
 

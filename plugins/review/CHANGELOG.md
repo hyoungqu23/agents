@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1 - 2026-10-20
+
+- Explain each finding's basis, source and applicability in the report, follow-up judgments and inline recommendations.
+- Distinguish repository rules, observed patterns, library guidance and past advice without assigning severity from the source category.
+- Add focused evaluation cases for version-matched query guidance, unadopted advice and a reachable defect without external documentation.
+
 ## 0.7.0 - 2026-10-16
 
 - Record Git-backed reviews as structured results and compute complete/partial/invalid from the current scope, recorded checks and source quotations.

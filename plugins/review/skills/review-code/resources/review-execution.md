@@ -72,7 +72,7 @@ Each candidate note should contain:
 - smallest plausible anchor
 - triggering condition, or the current responsibility/dependency/rule/name at issue
 - concrete observable effect or demonstrated maintenance cost, with corroborating owner, counterpart, convention, or caller
-- suspected broken contract or requirement
+- basis and actual source of the suspected broken contract, requirement or recommendation, and why its scope applies
 - smallest useful fix or verification
 - change restraint: cost of leaving the code, smallest complete remedy, and benefit versus complexity/compatibility/regression cost; relevant prior decision if any
 - evidence for and against the hypothesis
@@ -137,6 +137,7 @@ Do not present the review as complete until all checks pass:
 - every known requirement maps to implementation, test, or a promoted gap
 - all five engineering-quality criteria have a disposition per changed behavior, with existing-implementation search evidence or an explicit inapplicable/unresolved reason
 - every candidate has exactly one terminal disposition
+- every promoted finding exposes its basis, inspected or supplied source, applicability and required versus optional change under `common-gate.md#finding-basis`
 - relevant verification commands ran, or each skipped command has a concrete reason and residual risk
 - autofixes, if any, were re-diffed and re-entered into the ledger
 - no generated, deleted, renamed, test, config, migration, or documentation file was silently ignored
