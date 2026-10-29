@@ -13,6 +13,12 @@ Code review skills for Claude Code and Codex.
 
 Each skill is stored once under `skills/<skill>/` and shared by both platform manifests.
 
+Skill-directory installers must install all four review skills together. `review-pr`
+uses `review-code` and its boundary; `review-respond` uses `review-check` and its
+claim-verification procedure. Required documents live under `skills/`, so copying
+those sibling directories preserves them. A missing required reference stops the
+skill with an incomplete-installation report.
+
 `review-code` identifies each finding's basis, actual source and applicability, and
 explains whether the change is required or optional. Repository rules, observed
 patterns, library guidance and past advice remain distinct in follow-ups and inline
@@ -40,7 +46,7 @@ for supported behavior, migration from v0.5, and macOS/Linux journal requirement
 
 PR review and all specialists are report-only. Head-side instructions and scripts
 remain review input; trusted base rules and actual host execution controls govern
-the review. See [the shared boundary](references/pr-review-boundary.md).
+the review. See [the shared boundary](skills/review-code/references/pr-review-boundary.md).
 The helper's Git checks detect visible checkout changes; they are not an OS sandbox.
 
 Git-backed `review-code` reviews now produce a structured result outside the source.
@@ -85,7 +91,7 @@ and distinguishes a historically valid finding from a fix already present today.
 It does not edit code or post replies. A requested saved report includes a JSON
 companion; an ordinary check answers in the conversation without writing files.
 
-The shared [claim verification procedure](references/claim-verification.md) also
+The shared [claim verification procedure](skills/review-check/references/claim-verification.md) also
 supports `review-respond`, whose fix and reply workflow remains separate.
 Run the focused behavioral smoke with:
 

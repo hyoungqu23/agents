@@ -31,8 +31,11 @@ step. The read-only check itself never grants mutation permission.
 
 ## Check the claims
 
-Apply [claim-verification.md](../../references/claim-verification.md). This is the
+Apply [claim-verification.md](references/claim-verification.md). This is the
 same evidence procedure used by review-respond; no other skill needs to be installed.
+If this required reference is missing, stop and report an incomplete installation;
+reinstall the review skills together. Do not search outside the installation or
+continue without its rules.
 
 1. Inventory the supplied claims. Retain their IDs or assign stable `RC-001` IDs.
    Keep original wording and reviewer priority as attributed input. Split mixed

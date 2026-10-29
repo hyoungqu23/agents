@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.2 - 2026-10-29
+
+- Preserve required review boundaries and claim-verification rules in skill-directory installations. Install all four review skills together.
+- Stop on missing required references and check installed relative links, including links inside referenced documents.
+
 ## 0.7.1 - 2026-10-20
 
 - Explain each finding's basis, source and applicability in the report, follow-up judgments and inline recommendations.

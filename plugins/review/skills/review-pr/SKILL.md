@@ -10,7 +10,10 @@ Review the specified PR and, when authorized, leave comments **Pending** for the
 The only source of findings is review-code, including on continuation. Load
 [the review-code entrypoint](../review-code/SKILL.md) before analyzing new source or
 drafting findings on every resumed pass. Read
-[the PR review boundary](../../references/pr-review-boundary.md) before setup or delegation.
+[the PR review boundary](../review-code/references/pr-review-boundary.md) before setup or delegation.
+If this required reference is missing, stop and report an incomplete installation;
+reinstall the review skills together. Do not search outside the installation or
+continue without its rules.
 
 ## Inspect an existing review first
 
