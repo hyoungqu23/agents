@@ -1,0 +1,30 @@
+{
+  "command": [
+    "node",
+    "--input-type=module",
+    "-e",
+    "const url='http://127.0.0.1:62230/__fixture__/mode'; const response=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({fail:true})}); console.log(JSON.stringify({url,method:'PUT',body:{fail:true},status:response.status,response:await response.text()})); if(!response.ok)process.exitCode=1;"
+  ],
+  "cwd": "/private/tmp/hm2-implement-forward-codex-20261030-a"
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+[TypeError: fetch failed] {
+  [cause]: Error: connect EPERM 127.0.0.1:62230 - Local (0.0.0.0:0)
+      at internalConnect (node:net:1402:16)
+      at defaultTriggerAsyncIdScope (node:internal/async_hooks:474:12)
+      at node:net:1725:9
+      at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+    errno: -1,
+    code: 'EPERM',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 62230
+  }
+}
+
+Node.js v26.7.0
+
+exit_code=1

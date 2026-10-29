@@ -1,0 +1,18 @@
+
+> test
+> node --test tests/*.test.mjs
+
+✔ API client forwards status and rejects a failed response (0.723916ms)
+✔ filter passes the status to the loader and shows matching rows (0.678875ms)
+✔ selection survives a filter that hides it and an empty success (0.1035ms)
+✔ failure is an error phase; retry uses the current filter and keeps the selection (0.471834ms)
+✔ only the latest filter response renders (0.124625ms)
+✔ API client reads filtered projects and the failure mode from the fixture server (306.666792ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 353.410125

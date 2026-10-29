@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implement"
+  short_description: "Implement product behavior and verify the actual app"
+  default_prompt: "Use $implement to implement these requirements and the selected design in the existing app, preserving its UX patterns and verifying the result."

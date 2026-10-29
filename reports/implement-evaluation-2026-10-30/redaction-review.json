@@ -1,0 +1,329 @@
+{
+  "high_findings": 0,
+  "reviewed_synthetic_false_positives": [
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 5,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 7,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 7,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 58,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 60,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 60,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 111,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 113,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 113,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 154,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 156,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 156,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 191,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 193,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 193,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 239,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 241,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 241,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 282,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 284,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 284,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 319,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 321,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 321,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 356,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 358,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 358,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 393,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 395,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 395,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 441,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 443,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 443,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 489,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 491,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/browser-trace.json",
+      "line": 491,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/fixture-fail-on-retry.txt",
+      "line": 6,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/fixture-fail-on-retry.txt",
+      "line": 10,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/fixture-fail-on.txt",
+      "line": 6,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/fixture-restored-live-contract.txt",
+      "line": 10,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/fixture-restored-live-contract.txt",
+      "line": 11,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/fixture-restored-live-contract.txt",
+      "line": 12,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/fixture-restored-live-contract.txt",
+      "line": 13,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/fixture-restored-live-contract.txt",
+      "line": 14,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/loading-observation.json",
+      "line": 3,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/wide-layout.json",
+      "line": 7,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/wide-layout.json",
+      "line": 13,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/evidence/wide-layout.json",
+      "line": 14,
+      "detector": "pii.phone.e164",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/result.json",
+      "line": 211,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/result.json",
+      "line": 238,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/result.json",
+      "line": 269,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/result.json",
+      "line": 296,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/result.json",
+      "line": 355,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    },
+    {
+      "file": "codex-full/state/result.json",
+      "line": 369,
+      "detector": "internal.url_private",
+      "disposition": "synthetic fixture localhost URL, recorded timestamp or DOM pixel geometry; no customer/contact data"
+    }
+  ]
+}

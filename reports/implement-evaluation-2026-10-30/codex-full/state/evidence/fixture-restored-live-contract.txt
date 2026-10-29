@@ -1,0 +1,16 @@
+{
+  "command": [
+    "node",
+    "--input-type=module",
+    "-e",
+    "import assert from 'node:assert/strict';\nconst base='http://127.0.0.1:62230';\nconst mode=await fetch(base+'/__fixture__/mode',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({fail:false})});\nconsole.log(JSON.stringify({url:base+'/__fixture__/mode',method:'PUT',body:{fail:false},status:mode.status,response:await mode.text()}));\nassert.equal(mode.status,200);\nfor(const [status,count] of [['all',3],['active',2],['archived',1],['paused',0]]){\n const url=base+'/api/projects?status='+status;\n const response=await fetch(url);const rows=await response.json();\n assert.equal(response.status,200);assert.equal(rows.length,count);\n assert.ok(status==='all'||rows.every(row=>row.status===status));\n console.log(JSON.stringify({url,status:response.status,count:rows.length,rows}));\n}\n"
+  ],
+  "cwd": "/private/tmp/hm2-implement-forward-codex-20261030-a"
+}
+{"url":"http://127.0.0.1:62230/__fixture__/mode","method":"PUT","body":{"fail":false},"status":200,"response":"{}"}
+{"url":"http://127.0.0.1:62230/api/projects?status=all","status":200,"count":3,"rows":[{"id":"tide","name":"Tide","status":"active"},{"id":"forest","name":"Forest","status":"archived"},{"id":"north","name":"North","status":"active"}]}
+{"url":"http://127.0.0.1:62230/api/projects?status=active","status":200,"count":2,"rows":[{"id":"tide","name":"Tide","status":"active"},{"id":"north","name":"North","status":"active"}]}
+{"url":"http://127.0.0.1:62230/api/projects?status=archived","status":200,"count":1,"rows":[{"id":"forest","name":"Forest","status":"archived"}]}
+{"url":"http://127.0.0.1:62230/api/projects?status=paused","status":200,"count":0,"rows":[]}
+
+exit_code=0

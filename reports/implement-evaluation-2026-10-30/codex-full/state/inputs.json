@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "task": "Implement project list AC-1, AC-2, AC-3 using selected prototype and existing UI/API owners",
+  "surface": "ui",
+  "scope": [
+    "src",
+    "tests"
+  ],
+  "preserve": [
+    "AGENTS.md",
+    "spec.md",
+    "DESIGN.md",
+    "ux.md",
+    "prototype.html",
+    "server.mjs",
+    "index.html",
+    "package.json",
+    "user-draft.md"
+  ],
+  "source_roots": [
+    "/private/tmp/hm2-implement-forward-codex-20261030-a"
+  ],
+  "sources": [
+    {
+      "id": "request",
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/prompt.txt"
+    },
+    {
+      "id": "instructions",
+      "path": "AGENTS.md"
+    },
+    {
+      "id": "spec",
+      "path": "spec.md"
+    },
+    {
+      "id": "design",
+      "path": "DESIGN.md"
+    },
+    {
+      "id": "ux",
+      "path": "ux.md"
+    },
+    {
+      "id": "prototype",
+      "path": "prototype.html"
+    },
+    {
+      "id": "server-contract",
+      "path": "server.mjs"
+    },
+    {
+      "id": "entrypoint",
+      "path": "index.html"
+    },
+    {
+      "id": "commands",
+      "path": "package.json"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "AC-1",
+      "source": "spec",
+      "description": "Labelled All/Active/Archived/Paused selector above rows fetches through existing API and shows matching results/count using selected reference structure.",
+      "disposition": "required",
+      "checks": [
+        "native-tests",
+        "browser-filter"
+      ]
+    },
+    {
+      "id": "AC-2",
+      "source": "spec",
+      "description": "Selecting shows project name; selected project survives hidden/empty result and regains selected appearance on return; successful empty result is visible.",
+      "disposition": "required",
+      "checks": [
+        "native-tests",
+        "browser-selection"
+      ]
+    },
+    {
+      "id": "AC-3",
+      "source": "spec",
+      "description": "Failed request uses existing showProblem and Retry, distinct from empty; Retry uses current filter and preserves selected project.",
+      "disposition": "required",
+      "checks": [
+        "native-tests",
+        "browser-retry"
+      ]
+    },
+    {
+      "id": "ux:latest-loading",
+      "source": "ux",
+      "description": "Loading is distinct from empty/error; selection panel survives request/error; only latest filter response may render.",
+      "disposition": "required",
+      "checks": [
+        "native-tests",
+        "browser-race"
+      ]
+    },
+    {
+      "id": "design:responsive-focus",
+      "source": "design",
+      "description": "Use existing blue/system tokens and UI helpers; wide split and narrow stacked layout; visible selector label and keyboard focus.",
+      "disposition": "required",
+      "checks": [
+        "design-trace",
+        "browser-layout"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "native-tests",
+      "kind": "command",
+      "required": true,
+      "description": "Run npm test including API forwarding, selection persistence, distinct loading/empty/error, retry current filter, stale success/failure suppression."
+    },
+    {
+      "id": "browser-filter",
+      "kind": "browser",
+      "required": true,
+      "description": "Actual app All 3, Active 2, Archived 1, Paused 0 and labelled selector; inspect real request URLs."
+    },
+    {
+      "id": "browser-selection",
+      "kind": "browser",
+      "required": true,
+      "description": "Actual app Tide selected panel persists across hidden Archived and empty Paused; Active restores pressed Tide."
+    },
+    {
+      "id": "browser-retry",
+      "kind": "browser",
+      "required": true,
+      "description": "Synthetic fail true shows existing error and Retry at current Archived/Paused filter; restoring mode and Retry yields correct filtered data with selection intact."
+    },
+    {
+      "id": "browser-race",
+      "kind": "browser",
+      "required": true,
+      "description": "Actual app rapid slow Active then faster Archived retains latest Archived result; loading leaves selected panel intact."
+    },
+    {
+      "id": "design-trace",
+      "kind": "static",
+      "required": true,
+      "description": "Trace use of existing UI helpers and API owner, reference toolbar structure, system accent/focus/spacing and responsive rules; preserve documents/server/draft."
+    },
+    {
+      "id": "browser-layout",
+      "kind": "browser",
+      "required": true,
+      "description": "Actual app wide side-by-side, narrow stacked with no overflow, visible keyboard focus and blue selected row."
+    }
+  ],
+  "handoff": {
+    "planned_change_paths": [
+      "src/app.js",
+      "src/project-list.js",
+      "src/theme.css",
+      "tests/project-list.test.mjs"
+    ],
+    "initial_dirty": "Only user-draft.md is initially untracked and is preserved."
+  }
+}

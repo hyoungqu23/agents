@@ -1,0 +1,21 @@
+$ npm test
+cwd=/private/tmp/hm2-implement-forward-codex-20261030-a/source
+
+> test
+> node --test tests/*.test.mjs
+
+✔ API client forwards status and rejects a failed response (0.729ms)
+✔ filters fetch matching results and selection survives hidden and empty results (0.7145ms)
+✔ loading and errors keep the selection; retry fetches the current filter (0.169583ms)
+✔ stale success cannot replace the latest filter result (0.492167ms)
+✔ stale failure cannot replace the latest filter result (0.08225ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 40.621209
+
+exit_code=0
