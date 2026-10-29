@@ -23,12 +23,17 @@ class ReviewError(RuntimeError):
 
 
 def command(args, *, data=None, ok=(0,)):
+    context = ''
+    if args[:2] == ['gh', 'api']:
+        method = args[args.index('--method') + 1]
+        endpoint = next(arg for arg in args if arg == 'graphql' or arg == 'user' or arg.startswith('repos/'))
+        context = f' [{method} {endpoint}]'
     try:
         result = subprocess.run(args, input=data, text=True, capture_output=True, timeout=60)
     except (OSError, subprocess.TimeoutExpired) as error:
-        raise ReviewError(f"Command did not complete; do not replay a possible write: {error}") from error
+        raise ReviewError(f"Command{context} did not complete; do not replay a possible write: {error}") from error
     if result.returncode not in ok:
-        raise ReviewError(f"Command failed ({result.returncode}); inspect state before retrying: {result.stderr.strip()}")
+        raise ReviewError(f"Command{context} failed ({result.returncode}); inspect state before retrying: {result.stderr.strip()}")
     return result
 
 
@@ -247,6 +252,71 @@ def own_pending(host, endpoint, login):
     return rows[0]['id'] if rows else None
 
 
+REVIEW_FIELDS = 'id databaseId state submittedAt body author{login} commit{oid}'
+PAGE_FIELDS = 'totalCount pageInfo{hasNextPage endCursor}'
+COMMENT_FIELDS = '''id databaseId path line originalLine body author{login}
+commit{oid} pullRequestReview{databaseId}'''
+THREAD_COMMENT_FIELDS = 'id databaseId pullRequestReview{databaseId}'
+REVIEW_COMMENTS = ('query ReviewComments($id:ID!,$after:String){node(id:$id){... on PullRequestReview{'
+                   + REVIEW_FIELDS + ' comments(first:100,after:$after){nodes{' + COMMENT_FIELDS + '}'
+                   + PAGE_FIELDS + '}}}}')
+REVIEW_THREADS = ('query ReviewThreads($id:ID!,$after:String){node(id:$id){... on PullRequestReview{'
+                  + REVIEW_FIELDS + ' pullRequest{reviewThreads(first:100,after:$after){nodes{'
+                  'id path line originalLine diffSide subjectType isOutdated comments(first:100){nodes{'
+                  + THREAD_COMMENT_FIELDS + '}' + PAGE_FIELDS + '}}' + PAGE_FIELDS + '}}}}}')
+THREAD_COMMENTS = ('query ThreadComments($id:ID!,$after:String){node(id:$id){... on PullRequestReviewThread{'
+                   'id comments(first:100,after:$after){nodes{' + THREAD_COMMENT_FIELDS + '}' + PAGE_FIELDS + '}}}}')
+
+
+def graphql_nodes(host, query, node_id, path, *, review=None, initial=None):
+    """Read a complete connection or block writes; never guess past a partial read."""
+    result, identities, cursors = [], set(), set()
+    after = total = None
+    for _ in range(100):
+        if initial is not None:
+            connection, initial = initial, None
+        else:
+            response = api(host, 'graphql', payload={'query': query, 'variables': {'id': node_id, 'after': after}})
+            if not isinstance(response, dict) or response.get('errors'):
+                raise ReviewError('GraphQL read incomplete; no writes allowed')
+            data = response.get('data')
+            node = data.get('node') if isinstance(data, dict) else None
+            if not isinstance(node, dict) or node.get('id') != node_id:
+                raise ReviewError('GraphQL node unavailable or identity changed; no writes allowed')
+            if review is not None and (
+                    node.get('databaseId') != review['id'] or node.get('state') != 'PENDING'
+                    or node.get('submittedAt') is not None or node.get('body') != review['body']
+                    or (node.get('author') or {}).get('login', '').lower() != review['user']['login'].lower()
+                    or node.get('commit') != {'oid': review['commit_id']}):
+                raise ReviewError('Review changed during GraphQL read; no writes allowed')
+            connection = node
+            for key in path:
+                connection = connection.get(key) if isinstance(connection, dict) else None
+        if not isinstance(connection, dict) or not isinstance(connection.get('nodes'), list):
+            raise ReviewError('GraphQL connection incomplete; no writes allowed')
+        count, info = connection.get('totalCount'), connection.get('pageInfo')
+        if type(count) is not int or count < 0 or (total is not None and count != total):
+            raise ReviewError('GraphQL count unavailable or changed; no writes allowed')
+        total = count
+        for row in connection['nodes']:
+            if (not isinstance(row, dict) or not isinstance(row.get('id'), str)
+                    or not row['id'] or row['id'] in identities):
+                raise ReviewError('GraphQL node missing or duplicated; no writes allowed')
+            identities.add(row['id'])
+            result.append(row)
+        if not isinstance(info, dict) or type(info.get('hasNextPage')) is not bool:
+            raise ReviewError('GraphQL pagination incomplete; no writes allowed')
+        if not info['hasNextPage']:
+            if len(result) != total:
+                raise ReviewError('GraphQL listing incomplete; no writes allowed')
+            return result
+        after = info.get('endCursor')
+        if not connection['nodes'] or not isinstance(after, str) or not after or after in cursors:
+            raise ReviewError('GraphQL pagination did not advance; no writes allowed')
+        cursors.add(after)
+    raise ReviewError('GraphQL listing limit reached; no writes allowed')
+
+
 def read_review(host, endpoint, review_id, login):
     if not positive_id(review_id):
         raise ReviewError('Invalid review ID')
@@ -257,27 +327,47 @@ def read_review(host, endpoint, review_id, login):
             or not re.fullmatch(r'[0-9a-f]{40}', review.get('commit_id', ''))
             or not isinstance(review.get('body'), str)):
         raise ReviewError('Review is not verified own PENDING; do not modify or replace it')
-    rows = pages(host, endpoint + f'/reviews/{review_id}/comments')
+    node_id = review.get('node_id')
+    if not isinstance(node_id, str) or not node_id:
+        raise ReviewError('Pending review node ID unavailable; no writes allowed')
+    # Pending comments cannot be fetched through REST's comment detail endpoint.
+    # GraphQL comments supply file lines; their threads supply the diff side.
+    rows = graphql_nodes(host, REVIEW_COMMENTS, node_id, ('comments',), review=review)
+    threads = graphql_nodes(host, REVIEW_THREADS, node_id, ('pullRequest', 'reviewThreads'), review=review) if rows else []
+    locations = {}
+    for thread in threads:
+        members = graphql_nodes(host, THREAD_COMMENTS, thread['id'], ('comments',), initial=thread.get('comments'))
+        for member in members:
+            if (member.get('pullRequestReview') or {}).get('databaseId') != review_id:
+                continue
+            comment_id = member.get('databaseId')
+            if not positive_id(comment_id) or comment_id in locations:
+                raise ReviewError('Thread comment identity ambiguous; no writes allowed')
+            locations[comment_id] = thread
     comments = []
     ids = set()
     for comment in rows:
-        if not positive_id(comment.get('id')):
-            raise ReviewError('Invalid review comment ID')
-        if 'line' not in comment or 'side' not in comment:
-            # The review-comments listing also has a legacy position-based
-            # response shape. Resolve its ID through the modern detail contract;
-            # never treat diff position as a file line number.
-            comment_id = comment['id']
-            comment = api(host, endpoint.rsplit('/pulls/', 1)[0] + f'/pulls/comments/{comment_id}')
-            if comment.get('id') != comment_id:
-                raise ReviewError('Comment detail identity differs from the listing')
-        if (not positive_id(comment.get('id')) or comment['id'] in ids
-                or comment.get('pull_request_review_id') != review_id
-                or comment.get('user', {}).get('login', '').lower() != login.lower()
+        comment_id = comment.get('databaseId')
+        thread = locations.get(comment_id)
+        if (not positive_id(comment_id) or comment_id in ids
+                or (comment.get('pullRequestReview') or {}).get('databaseId') != review_id
+                or (comment.get('author') or {}).get('login', '').lower() != login.lower()
+                or not re.fullmatch(r'[0-9a-f]{40}', (comment.get('commit') or {}).get('oid', ''))
                 or not isinstance(comment.get('body'), str)):
             raise ReviewError('Comments have ambiguous ownership or identity; no writes allowed')
-        ids.add(comment['id'])
-        comments.append(comment)
+        if (thread is None or thread.get('path') != comment.get('path')
+                or thread.get('diffSide') not in ('LEFT', 'RIGHT')
+                or thread.get('subjectType') not in ('LINE', 'FILE')
+                or 'line' not in comment
+                or (comment['line'] is not None and not positive_id(comment['line']))):
+            raise ReviewError('Comment thread location unavailable; no writes allowed')
+        ids.add(comment_id)
+        comments.append({'id': comment_id, 'path': comment['path'], 'line': comment['line'],
+                         'original_line': comment.get('originalLine'), 'side': thread['diffSide'],
+                         'body': comment['body'], 'user': {'login': comment['author']['login']},
+                         'commit_id': comment['commit']['oid'], 'pull_request_review_id': review_id})
+    if set(locations) != ids:
+        raise ReviewError('Review comments changed during thread read; no writes allowed')
     return review, comments
 
 

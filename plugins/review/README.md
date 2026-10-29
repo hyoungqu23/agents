@@ -39,6 +39,10 @@ relocation, submission or replacement of an existing Pending review.
 On continuation, it reconciles a durable receipt with all remote comments. Same-head
 reruns deduplicate; new findings append to the existing Pending review. Manual edits,
 deletions, changed findings and summaries are preserved and returned as conflicts.
+Pending comment lines and diff sides are read through GraphQL review comments and
+review threads, including additional pages and replies within a thread. Missing or
+incomplete data blocks writes. Receipts left `create_unconfirmed` by the former REST
+404 can be reconciled by `inspect` after upgrading, without creating another review.
 Interrupted writes require positive readback before continuing. A new head gets a
 local reassessment plan while the older Pending stays intact: this version does not
 repin reviews or move draft anchors. See [resume and recovery](skills/review-pr/references/resume.md)

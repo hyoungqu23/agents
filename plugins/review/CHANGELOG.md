@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.3 - 2026-10-29
+
+- Read Pending inline comments without REST detail 404s, including existing drafts and interrupted-write recovery.
+- Read all review-comment, thread and reply pages through GraphQL before continuing; block writes on incomplete or inconsistent data.
+- Include the API method and endpoint in command failures without including request bodies.
+
 ## 0.7.2 - 2026-10-29
 
 - Preserve required review boundaries and claim-verification rules in skill-directory installations. Install all four review skills together.
