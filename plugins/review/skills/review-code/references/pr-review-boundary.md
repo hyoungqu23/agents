@@ -61,4 +61,4 @@ Continuations may add a new thread only through `addPullRequestReviewThread` wit
 the verified existing Pending review ID on the same reviewed commit. Reconcile the
 durable journal and all remote comment pages first. Preserve edits and deletions;
 never replace an older Pending to make room for a new revision. See review-pr's
-[resume rules](../skills/review-pr/references/resume.md) for conflict and recovery handling.
+[resume rules](../../review-pr/references/resume.md) for conflict and recovery handling.
