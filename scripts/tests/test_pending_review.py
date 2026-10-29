@@ -33,6 +33,46 @@ def review(state='PENDING'):
 def comment(c,index):
  return {**c,'id':index,'pull_request_review_id':91,'commit_id':d.get('created_head',d['head_sha']),
          'user':{'login':'reviewer'}}
+def connection(rows,after=None):
+ offset=int(after.split(':')[-1]) if after else 0
+ page=rows[offset:offset+100];more=offset+len(page)<len(rows)
+ cursor=f'cursor:{offset+len(page)}' if page else None
+ if d.get('bad_graphql_cursor') and more:cursor=None
+ return {'nodes':page,'totalCount':len(rows),'pageInfo':{'hasNextPage':more,'endCursor':cursor}}
+if endpoint=='graphql' and payload.get('query','').lstrip().startswith('query'):
+ if d.get('read_graphql_errors'):
+  print(json.dumps({'data':None,'errors':[{'message':'incomplete read'}]}));sys.exit(0)
+ variables=payload['variables'];after=variables.get('after');query=payload['query']
+ r=review(d.get('readback_state','PENDING'))
+ if d.get('wrong_review_commit') or d.get('wrong_commit_on_read')==d.get('review_reads'):r['commit_id']='e'*40
+ node={'id':r['node_id'],'databaseId':r['id'],'state':r['state'],'submittedAt':'2026-10-14T00:00:00Z' if d.get('submitted_at') else None,
+       'author':r['user'],'commit':{'oid':r['commit_id']},'body':r['body']}
+ comments=d.get('review_comments',[])
+ def graphql_comment(c):
+  return {'id':f"PRRC_{c['id']}",'databaseId':c['id'],'path':c['path'],
+          'line':c.get('line'),'originalLine':c.get('original_line',c.get('line')),
+          'body':c['body'],'author':c.get('user',{'login':'reviewer'}),
+          'commit':{'oid':c.get('commit_id',d.get('created_head',d['head_sha']))},
+          'pullRequestReview':{'databaseId':c.get('pull_request_review_id',91)}}
+ threads={}
+ for c in comments:
+  if c.get('missing_thread'):continue
+  thread_id=c.get('thread_id',f"PRRT_{c['id']}")
+  thread=threads.setdefault(thread_id,{'id':thread_id,'path':c['path'],'line':c.get('line'),
+   'originalLine':c.get('original_line',c.get('line')),'diffSide':c.get('side','RIGHT'),
+   'subjectType':c.get('subject_type','LINE'),'isOutdated':c.get('line') is None,'rows':[]})
+  thread['rows'].append({'id':f"PRRC_{c['id']}",'databaseId':c['id'],
+                         'pullRequestReview':{'databaseId':c.get('pull_request_review_id',91)}})
+ if 'query ReviewComments' in query:
+  node['comments']=connection([graphql_comment(c) for c in comments],after)
+ elif 'query ReviewThreads' in query:
+  rows=[{k:v for k,v in thread.items() if k!='rows'}|{'comments':connection(thread['rows'])} for thread in threads.values()]
+  node['pullRequest']={'reviewThreads':connection(rows,after)}
+ elif 'query ThreadComments' in query:
+  node={'id':variables['id'],'comments':connection(threads[variables['id']]['rows'],after)}
+ else:sys.exit(35)
+ if d.get('missing_graphql_node'):node=None
+ print(json.dumps({'data':{'node':node}}));sys.exit(0)
 if method=='POST':
  if endpoint=='graphql':
   if d.get('submit_before_append'):d['readback_state']='COMMENTED';p.write_text(json.dumps(d));sys.exit(1)
@@ -79,8 +119,10 @@ elif endpoint.startswith(prefix+'/reviews?'):
  else:result=[review(d.get('readback_state','PENDING'))] if d.get('existing_pending') or d.get('created') or d.get('pending_page_two') else []
 elif endpoint.startswith(prefix+'/reviews/91/comments?'):
  page=int(endpoint.split('page=')[-1]);result=d.get('review_comments',[])[(page-1)*100:page*100]
- if d.get('legacy_comment_shape'):result=[{k:v for k,v in c.items() if k not in ('line','side')} for c in result]
+ result=[{k:v for k,v in c.items() if k not in ('line','side')} for c in result]
 elif endpoint.startswith('repos/example/project/pulls/comments/'):
+ if d.get('readback_state','PENDING')=='PENDING':
+  print('gh: Not Found (HTTP 404)',file=sys.stderr);sys.exit(1)
  comment_id=int(endpoint.rsplit('/',1)[1]);result=next(c for c in d['review_comments'] if c['id']==comment_id)
 elif endpoint==prefix+'/reviews/91':
  if d.get('missing_review'):sys.exit(1)
@@ -165,7 +207,9 @@ class PendingReviewTests(unittest.TestCase):
     def log(self):
         return [json.loads(x) for x in self.calls.read_text().splitlines() if x.strip()]
 
-    def mutations(self):return [c for c in self.log() if c['method']!='GET']
+    def mutations(self):
+        return [c for c in self.log() if c['method']!='GET' and not (
+            c['endpoint']=='graphql' and c['payload'].get('query','').lstrip().startswith('query'))]
 
     def record(self):return json.loads(self.receipt.read_text())
 
@@ -356,11 +400,81 @@ class PendingReviewTests(unittest.TestCase):
         self.assertEqual(self.record()['plan']['conflicts'][0]['reason'],'deleted_remote')
         self.assertEqual(self.mutations(),[])
 
-    def test_legacy_comment_listing_uses_detail_not_diff_position(self):
-        self.remote(legacy_comment_shape=True)
+    def test_pending_comments_use_graphql_not_rest_detail_or_diff_position(self):
         record=self.save_ok();self.assertEqual(len(record['managed']),1)
-        self.assertTrue(any(c['endpoint']=='repos/example/project/pulls/comments/101' for c in self.log()))
+        self.assertFalse(any(c['endpoint'].startswith('repos/example/project/pulls/comments/') for c in self.log()))
+        self.assertTrue(any(c['endpoint']=='graphql' and 'query ReviewComments' in c['payload']['query'] for c in self.log()))
         self.calls.write_text('');self.save_ok();self.assertEqual(self.mutations(),[])
+
+    def manual_comments(self, count=1, **changes):
+        comments=[{**self.draft()['comments'][0], 'id':101+i,'pull_request_review_id':91,
+                   'commit_id':self.head,'user':{'login':'reviewer'},**changes} for i in range(count)]
+        self.remote(existing_pending=True,review_comments=comments)
+        return comments
+
+    def test_inspect_reads_manual_pending_with_inline_comments(self):
+        self.manual_comments()
+        result=self.invoke('inspect');self.assertEqual(result.returncode,0,result.stderr)
+        observed=self.record()['observed']['comments']
+        self.assertEqual((observed[0]['line'],observed[0]['side']),(2,'RIGHT'))
+        self.assertEqual(self.mutations(),[])
+
+    def test_inspect_paginates_review_comments_and_threads(self):
+        self.manual_comments(count=101)
+        result=self.invoke('inspect');self.assertEqual(result.returncode,0,result.stderr)
+        self.assertEqual(len(self.record()['observed']['comments']),101)
+        queries=[c['payload'] for c in self.log() if c['endpoint']=='graphql']
+        for name in ('ReviewComments','ReviewThreads'):
+            self.assertTrue(any(f'query {name}' in q['query'] and q['variables'].get('after') for q in queries))
+        self.assertEqual(self.mutations(),[])
+
+    def test_inspect_paginates_comments_within_one_thread(self):
+        self.manual_comments(count=101,thread_id='PRRT_long')
+        result=self.invoke('inspect');self.assertEqual(result.returncode,0,result.stderr)
+        self.assertEqual(len(self.record()['observed']['comments']),101)
+        self.assertTrue(any(c['endpoint']=='graphql' and 'query ThreadComments' in c['payload']['query'] for c in self.log()))
+        self.assertEqual(self.mutations(),[])
+
+    def test_incomplete_graphql_read_blocks_append(self):
+        self.save_ok();self.append_candidate()
+        for change in ({'read_graphql_errors':True},{'missing_graphql_node':True}):
+            with self.subTest(change=change):
+                self.remote(**{'read_graphql_errors':False,'missing_graphql_node':False,**change})
+                self.calls.write_text('')
+                self.assertNotEqual(self.invoke('save').returncode,0)
+                self.assertEqual(self.mutations(),[])
+
+    def test_invalid_pagination_or_unmapped_comment_blocks_write(self):
+        for change in ({'count':101},{'missing_thread':True}):
+            with self.subTest(change=change):
+                self.manual_comments(**change)
+                self.remote(bad_graphql_cursor='count' in change)
+                self.calls.write_text('')
+                self.assertNotEqual(self.invoke('save').returncode,0)
+                self.assertEqual(self.mutations(),[])
+
+    def test_graphql_read_recovers_unconfirmed_create_without_replay(self):
+        self.remote(read_graphql_errors=True)
+        self.assertNotEqual(self.invoke('save').returncode,0)
+        self.assertEqual(self.record()['status'],'create_unconfirmed')
+        self.remote(read_graphql_errors=False);self.calls.write_text('')
+        result=self.invoke('inspect');self.assertEqual(result.returncode,0,result.stderr)
+        self.assertIsNone(self.record()['operation']);self.assertEqual(len(self.record()['managed']),1)
+        self.assertEqual(self.mutations(),[])
+
+    def test_inspect_preserves_left_and_outdated_anchors(self):
+        self.manual_comments(line=None,original_line=2,side='LEFT')
+        result=self.invoke('inspect');self.assertEqual(result.returncode,0,result.stderr)
+        comment=self.record()['observed']['comments'][0]
+        self.assertIsNone(comment['line']);self.assertEqual(comment['side'],'LEFT')
+        self.assertEqual(comment['original_line'],2)
+
+    def test_api_error_identifies_method_and_endpoint_without_payload(self):
+        self.remote(drop_create=True)
+        result=self.invoke('save')
+        self.assertNotEqual(result.returncode,0)
+        self.assertIn('[POST repos/example/project/pulls/7/reviews]',result.stderr)
+        self.assertNotIn(self.draft()['comments'][0]['body'],result.stderr)
 
     def test_summary_is_preserved_and_omission_keeps_it(self):
         self.save_ok();self.remote(review_body='Manual summary edit');self.append_candidate()
@@ -564,7 +678,8 @@ class PendingReviewTests(unittest.TestCase):
         comments.append(original);self.remote(review_comments=comments)
         self.receipt.unlink();self.calls.write_text('')
         self.save_ok();self.assertEqual(self.mutations(),[])
-        self.assertTrue(any('/comments?per_page=100&page=2' in c['endpoint'] for c in self.log()))
+        self.assertTrue(any(c['endpoint']=='graphql' and 'query ReviewComments' in c['payload']['query']
+                            and c['payload']['variables'].get('after') for c in self.log()))
 
     def test_concurrent_saves_share_a_lock_and_create_once(self):
         self.remote(pause_create=1.5)
