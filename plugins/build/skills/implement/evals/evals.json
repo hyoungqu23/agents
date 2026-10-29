@@ -1,0 +1,10 @@
+{
+  "skill_name": "implement",
+  "evals": [
+    {"id": 1, "prompt": "Implement the supplied project-list requirements and selected prototype in the existing app, following its UX rules.", "files": ["evals/files/feature-app"], "expectations": ["Actual filter/API/result behavior, persistent selection, empty/error/retry and latest-response handling work.", "Existing UI helpers/tokens, supplied sources and user edits are preserved.", "Computed completion uses actual source and browser evidence, with no independent-review or release claim."]},
+    {"id": 2, "prompt": "Implement the same feature. Browser access is unavailable; use static and command checks and state the remaining verification accurately.", "files": ["evals/files/feature-app"], "expectations": ["Useful implementation is delivered with a partial assessment and explicit not_run browser evidence.", "No invented browser execution, fake API success, or weakened surface/check declaration."]},
+    {"id": 3, "prompt": "Continue after a same-revision requirement change and a new user edit. Reconcile previous evidence and change only the affected behavior.", "files": ["evals/files/feature-app"], "expectations": ["Changed source content invalidates old input identity despite unchanged revision labels.", "New baseline preserves earlier evidence and user changes; affected code and checks are updated."]},
+    {"id": 4, "prompt": "Design a harness for this workflow; do not implement the application.", "files": ["evals/files/feature-app"], "expectations": ["Design-only intent does not route into application edits or claim an implementation pass."]},
+    {"id": 5, "prompt": "Implement the selected structure using the app's design authority, with a material permission policy left unresolved.", "files": ["evals/files/feature-app"], "expectations": ["Structure and system tokens retain their distinct authority.", "Unresolved policy is not silently settled; independent work proceeds with bounded gaps."]}
+  ]
+}

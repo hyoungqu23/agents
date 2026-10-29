@@ -1,0 +1,405 @@
+$ python3 /private/tmp/hm2-implement-forward-codex-20261030-a/implement/scripts/implementation_state.py capture --worktree /private/tmp/hm2-implement-forward-codex-20261030-a/source --inputs /private/tmp/hm2-implement-forward-codex-20261030-a/state/inputs.json --output /private/tmp/hm2-implement-forward-codex-20261030-a/state/verification-target.json
+{
+  "schema_version": 1,
+  "root": "/private/tmp/hm2-implement-forward-codex-20261030-a/source",
+  "head": "a30eef69718712526d8ea2fd504a3dcd982c0054",
+  "inputs": {
+    "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/state/inputs.json",
+    "sha256": "f960e2f714323faed70ab0899b52c79823cbec237e0fa61f4f4d96c92c886814",
+    "data": {
+      "schema_version": 1,
+      "task": "Implement project list AC-1, AC-2, AC-3 using selected prototype and existing UI/API owners",
+      "surface": "ui",
+      "scope": [
+        "src",
+        "tests"
+      ],
+      "preserve": [
+        "AGENTS.md",
+        "spec.md",
+        "DESIGN.md",
+        "ux.md",
+        "prototype.html",
+        "server.mjs",
+        "index.html",
+        "package.json",
+        "user-draft.md"
+      ],
+      "source_roots": [
+        "/private/tmp/hm2-implement-forward-codex-20261030-a"
+      ],
+      "sources": [
+        {
+          "id": "request",
+          "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/prompt.txt"
+        },
+        {
+          "id": "instructions",
+          "path": "AGENTS.md"
+        },
+        {
+          "id": "spec",
+          "path": "spec.md"
+        },
+        {
+          "id": "design",
+          "path": "DESIGN.md"
+        },
+        {
+          "id": "ux",
+          "path": "ux.md"
+        },
+        {
+          "id": "prototype",
+          "path": "prototype.html"
+        },
+        {
+          "id": "server-contract",
+          "path": "server.mjs"
+        },
+        {
+          "id": "entrypoint",
+          "path": "index.html"
+        },
+        {
+          "id": "commands",
+          "path": "package.json"
+        }
+      ],
+      "requirements": [
+        {
+          "id": "AC-1",
+          "source": "spec",
+          "description": "Labelled All/Active/Archived/Paused selector above rows fetches through existing API and shows matching results/count using selected reference structure.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "browser-filter"
+          ]
+        },
+        {
+          "id": "AC-2",
+          "source": "spec",
+          "description": "Selecting shows project name; selected project survives hidden/empty result and regains selected appearance on return; successful empty result is visible.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "browser-selection"
+          ]
+        },
+        {
+          "id": "AC-3",
+          "source": "spec",
+          "description": "Failed request uses existing showProblem and Retry, distinct from empty; Retry uses current filter and preserves selected project.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "browser-retry"
+          ]
+        },
+        {
+          "id": "ux:latest-loading",
+          "source": "ux",
+          "description": "Loading is distinct from empty/error; selection panel survives request/error; only latest filter response may render.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "browser-race"
+          ]
+        },
+        {
+          "id": "design:responsive-focus",
+          "source": "design",
+          "description": "Use existing blue/system tokens and UI helpers; wide split and narrow stacked layout; visible selector label and keyboard focus.",
+          "disposition": "required",
+          "checks": [
+            "design-trace",
+            "browser-layout"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "native-tests",
+          "kind": "command",
+          "required": true,
+          "description": "Run npm test including API forwarding, selection persistence, distinct loading/empty/error, retry current filter, stale success/failure suppression."
+        },
+        {
+          "id": "browser-filter",
+          "kind": "browser",
+          "required": true,
+          "description": "Actual app All 3, Active 2, Archived 1, Paused 0 and labelled selector; inspect real request URLs."
+        },
+        {
+          "id": "browser-selection",
+          "kind": "browser",
+          "required": true,
+          "description": "Actual app Tide selected panel persists across hidden Archived and empty Paused; Active restores pressed Tide."
+        },
+        {
+          "id": "browser-retry",
+          "kind": "browser",
+          "required": true,
+          "description": "Synthetic fail true shows existing error and Retry at current Archived/Paused filter; restoring mode and Retry yields correct filtered data with selection intact."
+        },
+        {
+          "id": "browser-race",
+          "kind": "browser",
+          "required": true,
+          "description": "Actual app rapid slow Active then faster Archived retains latest Archived result; loading leaves selected panel intact."
+        },
+        {
+          "id": "design-trace",
+          "kind": "static",
+          "required": true,
+          "description": "Trace use of existing UI helpers and API owner, reference toolbar structure, system accent/focus/spacing and responsive rules; preserve documents/server/draft."
+        },
+        {
+          "id": "browser-layout",
+          "kind": "browser",
+          "required": true,
+          "description": "Actual app wide side-by-side, narrow stacked with no overflow, visible keyboard focus and blue selected row."
+        }
+      ],
+      "handoff": {
+        "planned_change_paths": [
+          "src/app.js",
+          "src/project-list.js",
+          "src/theme.css",
+          "tests/project-list.test.mjs"
+        ],
+        "initial_dirty": "Only user-draft.md is initially untracked and is preserved."
+      },
+      "editable_dirty": []
+    }
+  },
+  "sources": {
+    "request": {
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/prompt.txt",
+      "sha256": "de26f69e56eb9789e34a48c4454db678d10f793119215f5e1ca62fdf1f13692b"
+    },
+    "instructions": {
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/source/AGENTS.md",
+      "sha256": "1845ca03e935a008c4976c80ede6a5df49280ffdfcc5cfe9a19c9932cb06bb5f"
+    },
+    "spec": {
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/source/spec.md",
+      "sha256": "53026266ae872b456c7b3bebaea9d24f3d0c971d31b2a4c83b4d1bf953234cfc"
+    },
+    "design": {
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/source/DESIGN.md",
+      "sha256": "ab770e44f3c48c5a1658c40d84519e227f147dfac6ca4c0b6adc81cf3c363b7f"
+    },
+    "ux": {
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/source/ux.md",
+      "sha256": "1c928e842ab98616a3dd124bb3396c6e75019be357f106590bc54b4585c2afc1"
+    },
+    "prototype": {
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/source/prototype.html",
+      "sha256": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee"
+    },
+    "server-contract": {
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/source/server.mjs",
+      "sha256": "66a18a14c464000a8b3f86abc603cd9a1c04683a12ab1c3303a2a780482fc1e6"
+    },
+    "entrypoint": {
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/source/index.html",
+      "sha256": "df2ff6aa8a91cb479bbfccaaed45322489a6ff80ccaa7c4bb3c7c6f4ca56e8aa"
+    },
+    "commands": {
+      "path": "/private/tmp/hm2-implement-forward-codex-20261030-a/source/package.json",
+      "sha256": "235f362b49114d373c4ddc9eb6075c42a4196ac871870396814b899c4e5d4f68"
+    }
+  },
+  "files": {
+    ".gitignore": {
+      "index": {
+        "mode": "100644",
+        "oid": "b9470778764f72c5257a3361590d2994547f90e1"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+        "executable": false
+      }
+    },
+    "AGENTS.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "51543b009118702e595f637e889d252db639cbbb"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "1845ca03e935a008c4976c80ede6a5df49280ffdfcc5cfe9a19c9932cb06bb5f",
+        "executable": false
+      }
+    },
+    "DESIGN.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "e00659cdd066ea9ee8919eaf14418743e12101fa"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "ab770e44f3c48c5a1658c40d84519e227f147dfac6ca4c0b6adc81cf3c363b7f",
+        "executable": false
+      }
+    },
+    "index.html": {
+      "index": {
+        "mode": "100644",
+        "oid": "4d001aff34768c24ad62393f5781781bb0fd5c6f"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "df2ff6aa8a91cb479bbfccaaed45322489a6ff80ccaa7c4bb3c7c6f4ca56e8aa",
+        "executable": false
+      }
+    },
+    "package.json": {
+      "index": {
+        "mode": "100644",
+        "oid": "1086adfa1a62aafc7a8a55b338991a011e08c708"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "235f362b49114d373c4ddc9eb6075c42a4196ac871870396814b899c4e5d4f68",
+        "executable": false
+      }
+    },
+    "prototype.html": {
+      "index": {
+        "mode": "100644",
+        "oid": "40cbac50b4235f4ba5978c7fac472f16dff2e7ec"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee",
+        "executable": false
+      }
+    },
+    "server.mjs": {
+      "index": {
+        "mode": "100644",
+        "oid": "9904fb936543312f153b00a80d3bd3ebcb0b13ee"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "66a18a14c464000a8b3f86abc603cd9a1c04683a12ab1c3303a2a780482fc1e6",
+        "executable": false
+      }
+    },
+    "spec.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "5836698ccd180d9fedd64ce49b19001a01a46951"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "53026266ae872b456c7b3bebaea9d24f3d0c971d31b2a4c83b4d1bf953234cfc",
+        "executable": false
+      }
+    },
+    "src/api.js": {
+      "index": {
+        "mode": "100644",
+        "oid": "6e6c1dfee130a5b620933d1d669d0a2084591a1d"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "7b5232af77b6d8bdf24bfb9cd88031dae2761d1d3c2473e12bd978ff26f4fad0",
+        "executable": false
+      }
+    },
+    "src/app.js": {
+      "index": {
+        "mode": "100644",
+        "oid": "adf46076d116d68f00878c4d53bfc8b188c008c2"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "463908a21fed78d27b5acfa95ddd09c7e72f412755a438f2e880355778255f87",
+        "executable": false
+      }
+    },
+    "src/project-list.js": {
+      "index": null,
+      "working": {
+        "kind": "file",
+        "sha256": "993ada10c41911406cf9d71a2f99581ebe908524fecbf11f61672f4073051cbc",
+        "executable": false
+      }
+    },
+    "src/theme.css": {
+      "index": {
+        "mode": "100644",
+        "oid": "b2be4a35c15cbdc8f6a2522abf438f473ffae596"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "f3570a6276a51279fa52e062e4849adbc9e0676811e09d806d20e81d2dc410a3",
+        "executable": false
+      }
+    },
+    "src/ui.js": {
+      "index": {
+        "mode": "100644",
+        "oid": "99e8e1119bef56c16ba79b97d02fcc556660e9ec"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "8c5f2f7af73596d6471bb1d8f907e65d972eff90110e8dfc4e32a2c6ffb24cfa",
+        "executable": false
+      }
+    },
+    "tests/api.test.mjs": {
+      "index": {
+        "mode": "100644",
+        "oid": "79e5287665e26a218df7b3075c99e94f375fa9e8"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "dbdb223e6022936ada468c529f5367fbedcd6c594cf825f645f2e10bc461b83b",
+        "executable": false
+      }
+    },
+    "tests/project-list.test.mjs": {
+      "index": null,
+      "working": {
+        "kind": "file",
+        "sha256": "8bb55aba7b56a8e66473194b9a2cd479b0f64eb75484a17f157c580197e1fcc9",
+        "executable": false
+      }
+    },
+    "user-draft.md": {
+      "index": null,
+      "working": {
+        "kind": "file",
+        "sha256": "185223621b58f58f247bdba87d677f71498af5ad4e06aad572b5a7ccd03a93d6",
+        "executable": false
+      }
+    },
+    "ux.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "54e9ecf27ee40eaf22ba7115279e0b19d97e46cb"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "1c928e842ab98616a3dd124bb3396c6e75019be357f106590bc54b4585c2afc1",
+        "executable": false
+      }
+    }
+  },
+  "dirty": [
+    "src/app.js",
+    "src/project-list.js",
+    "src/theme.css",
+    "tests/project-list.test.mjs",
+    "user-draft.md"
+  ],
+  "digest": "583411576793e009f2b816fb8844750ce033b931f09199c6dbfdc306e43d6fa7"
+}
+
+exit_code=0

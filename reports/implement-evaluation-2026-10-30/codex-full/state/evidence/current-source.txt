@@ -1,0 +1,238 @@
+## src/app.js
+1: import { projects } from './api.js';
+2: import { createProjectList } from './project-list.js';
+3: import { selectField, renderRows, showProblem } from './ui.js';
+4: 
+5: const toolbar = document.querySelector('#toolbar');
+6: const rows = document.querySelector('#rows');
+7: const selection = document.querySelector('#selection');
+8: const count = document.createElement('span');
+9: count.id = 'result-count';
+10: count.setAttribute('role', 'status');
+11: const list = createProjectList({ loadProjects: projects, onChange: render });
+12: 
+13: toolbar.className = 'filter';
+14: toolbar.append(selectField({
+15:   label: 'Status',
+16:   options: [['all', 'All'], ['active', 'Active'], ['archived', 'Archived'], ['paused', 'Paused']],
+17:   value: 'all',
+18:   onChange: status => list.load(status),
+19: }), count);
+20: 
+21: function message(text) {
+22:   const paragraph = document.createElement('p');
+23:   paragraph.textContent = text;
+24:   paragraph.setAttribute('role', 'status');
+25:   rows.replaceChildren(paragraph);
+26: }
+27: 
+28: function render(state) {
+29:   selection.textContent = state.selected?.name ?? 'None';
+30:   rows.setAttribute('aria-busy', String(state.loading));
+31:   count.textContent = '';
+32:   if (state.loading) {
+33:     message('Loading projects…');
+34:   } else if (state.error) {
+35:     showProblem(rows, () => list.load());
+36:   } else {
+37:     count.textContent = `${state.projects.length} ${state.projects.length === 1 ? 'project' : 'projects'}`;
+38:     if (state.projects.length === 0) {
+39:       message('No projects match this status.');
+40:     } else {
+41:       renderRows(rows, state.projects, state.selected?.id, project => list.select(project));
+42:     }
+43:   }
+44: }
+45: 
+46: list.load();
+
+## src/project-list.js
+1: export function createProjectList({ loadProjects, onChange }) {
+2:   let state = { status: 'all', projects: [], selected: null, loading: false, error: null };
+3:   let request = 0;
+4: 
+5:   function update(changes) {
+6:     state = { ...state, ...changes };
+7:     onChange(state);
+8:   }
+9: 
+10:   return {
+11:     getState: () => state,
+12:     select(project) {
+13:       update({ selected: project });
+14:     },
+15:     async load(status = state.status) {
+16:       const current = ++request;
+17:       update({ status, projects: [], loading: true, error: null });
+18:       try {
+19:         const projects = await loadProjects(status);
+20:         if (current !== request) return;
+21:         update({ projects, loading: false, error: null });
+22:       } catch (error) {
+23:         if (current !== request) return;
+24:         update({ projects: [], loading: false, error });
+25:       }
+26:     },
+27:   };
+28: }
+
+## src/ui.js
+1: export function selectField({ label, options, value, onChange }) {
+2:   const wrapper = document.createElement('label');
+3:   wrapper.append(document.createTextNode(`${label} `));
+4:   const select = document.createElement('select');
+5:   for (const [key, title] of options) select.add(new Option(title, key));
+6:   select.value = value;
+7:   select.addEventListener('change', () => onChange(select.value));
+8:   wrapper.append(select);
+9:   return wrapper;
+10: }
+11: 
+12: export function renderRows(container, rows, selectedId, onSelect) {
+13:   container.replaceChildren();
+14:   for (const row of rows) {
+15:     const button = document.createElement('button');
+16:     button.className = 'project'; button.dataset.projectId = row.id;
+17:     button.setAttribute('aria-pressed', String(selectedId === row.id));
+18:     button.textContent = `${row.name} — ${row.status}`;
+19:     button.addEventListener('click', () => onSelect(row));
+20:     container.append(button);
+21:   }
+22: }
+23: 
+24: export function showProblem(container, retry) {
+25:   const problem = document.createElement('div'); problem.className = 'problem';
+26:   problem.setAttribute('role', 'alert'); problem.append('Could not load projects. ');
+27:   const button = document.createElement('button'); button.textContent = 'Retry';
+28:   button.addEventListener('click', retry); problem.append(button);
+29:   container.replaceChildren(problem);
+30: }
+
+## src/api.js
+1: export async function projects(status = 'all') {
+2:   const response = await fetch(`/api/projects?status=${encodeURIComponent(status)}`);
+3:   if (!response.ok) throw new Error('Could not load projects');
+4:   return response.json();
+5: }
+
+## src/theme.css
+1: :root{--accent:#2053e8;--surface:#fff;--line:#d8dee9;--space:12px}
+2: body{font:16px system-ui;margin:32px;background:#f6f7fa;color:#182230}header{margin-bottom:24px}
+3: .layout{display:grid;grid-template-columns:2fr 1fr;gap:24px}.panel{background:var(--surface);padding:24px;border:1px solid var(--line);border-radius:12px}
+4: button,select{font:inherit;padding:10px;border-radius:6px}button{border:1px solid var(--line);background:var(--surface);cursor:pointer}
+5: .project{display:block;margin:var(--space) 0;width:100%;text-align:left}.project[aria-pressed=true]{border:2px solid var(--accent)}
+6: .filter{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space);margin-bottom:calc(var(--space)*2)}
+7: .filter label{display:flex;align-items:center;gap:var(--space)}
+8: :focus-visible{outline:3px solid var(--accent);outline-offset:3px}.problem{border-left:3px solid var(--accent);padding:var(--space)}
+9: @media(max-width:700px){.layout{grid-template-columns:1fr}body{margin:16px}}
+
+## tests/project-list.test.mjs
+1: import assert from 'node:assert/strict';
+2: import test from 'node:test';
+3: import { createProjectList } from '../src/project-list.js';
+4: 
+5: const tide = { id: 'tide', name: 'Tide', status: 'active' };
+6: const forest = { id: 'forest', name: 'Forest', status: 'archived' };
+7: const north = { id: 'north', name: 'North', status: 'active' };
+8: const all = [tide, forest, north];
+9: 
+10: function deferred() {
+11:   let resolve, reject;
+12:   const promise = new Promise((yes, no) => { resolve = yes; reject = no; });
+13:   return { promise, resolve, reject };
+14: }
+15: 
+16: test('filters fetch matching results and selection survives hidden and empty results', async () => {
+17:   const calls = [];
+18:   const list = createProjectList({
+19:     loadProjects: async status => {
+20:       calls.push(status);
+21:       return status === 'all' ? all : all.filter(project => project.status === status);
+22:     },
+23:     onChange: () => {},
+24:   });
+25:   await list.load();
+26:   assert.equal(list.getState().projects.length, 3);
+27:   list.select(tide);
+28:   await list.load('archived');
+29:   assert.deepEqual(list.getState().projects, [forest]);
+30:   assert.equal(list.getState().selected, tide);
+31:   await list.load('paused');
+32:   assert.deepEqual(list.getState().projects, []);
+33:   assert.equal(list.getState().error, null);
+34:   assert.equal(list.getState().loading, false);
+35:   assert.equal(list.getState().selected, tide);
+36:   await list.load('active');
+37:   assert.deepEqual(list.getState().projects, [tide, north]);
+38:   assert.equal(list.getState().selected.id, 'tide');
+39:   assert.deepEqual(calls, ['all', 'archived', 'paused', 'active']);
+40: });
+41: 
+42: test('loading and errors keep the selection; retry fetches the current filter', async () => {
+43:   let fail = true;
+44:   const calls = [];
+45:   const states = [];
+46:   const list = createProjectList({
+47:     loadProjects: async status => {
+48:       calls.push(status);
+49:       if (fail) throw new Error('Could not load projects');
+50:       return [forest];
+51:     },
+52:     onChange: state => states.push(state),
+53:   });
+54:   list.select(tide);
+55:   const pending = list.load('archived');
+56:   assert.equal(list.getState().loading, true);
+57:   assert.equal(list.getState().error, null);
+58:   assert.equal(list.getState().selected, tide);
+59:   await pending;
+60:   assert.match(list.getState().error.message, /Could not load/);
+61:   assert.equal(list.getState().loading, false);
+62:   assert.equal(list.getState().selected, tide);
+63:   fail = false;
+64:   await list.load();
+65:   assert.deepEqual(calls, ['archived', 'archived']);
+66:   assert.deepEqual(list.getState().projects, [forest]);
+67:   assert.equal(list.getState().error, null);
+68:   assert.equal(list.getState().selected, tide);
+69:   assert.equal(states.filter(state => state.loading).length, 2);
+70: });
+71: 
+72: for (const stale of ['success', 'failure']) {
+73:   test(`stale ${stale} cannot replace the latest filter result`, async () => {
+74:     const slow = deferred();
+75:     const fast = deferred();
+76:     const list = createProjectList({
+77:       loadProjects: status => status === 'active' ? slow.promise : fast.promise,
+78:       onChange: () => {},
+79:     });
+80:     list.select(tide);
+81:     const active = list.load('active');
+82:     const archived = list.load('archived');
+83:     fast.resolve([forest]);
+84:     await archived;
+85:     if (stale === 'success') slow.resolve([tide, north]);
+86:     else slow.reject(new Error('Old request failed'));
+87:     await active;
+88:     assert.equal(list.getState().status, 'archived');
+89:     assert.deepEqual(list.getState().projects, [forest]);
+90:     assert.equal(list.getState().error, null);
+91:     assert.equal(list.getState().loading, false);
+92:     assert.equal(list.getState().selected, tide);
+93:   });
+94: }
+
+## tests/api.test.mjs
+1: import assert from 'node:assert/strict';
+2: import test from 'node:test';
+3: import { projects } from '../src/api.js';
+4: 
+5: test('API client forwards status and rejects a failed response', async () => {
+6:   const original = globalThis.fetch;
+7:   try {
+8:     globalThis.fetch = async url => { assert.equal(url, '/api/projects?status=archived'); return { ok: true, json: async () => [] }; };
+9:     assert.deepEqual(await projects('archived'), []);
+10:     globalThis.fetch = async () => ({ ok: false });
+11:     await assert.rejects(() => projects('active'), /Could not load/);
+12:   } finally { globalThis.fetch = original; }
+13: });

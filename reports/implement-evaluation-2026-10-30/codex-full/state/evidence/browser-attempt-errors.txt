@@ -1,0 +1,3 @@
+Initial Node deepStrictEqual on browser-returned array reported equal structure with a cross-realm prototype mismatch; no app assertion failed. Changed verification to compare primitive joined IDs. IAB visible tab creation was unavailable in a subagent; Chrome was used successfully.
+getByLabel("Status", exact:true) produced no matches although AX exposes Status. Inspecting DOM snapshot to use the actual existing helper label with a non-exact locator.
+Browser read-only evaluation does not expose performance.getEntriesByType; direct browser resource timing request inspection unavailable. Real outcomes, API owner source, console failure URL and live loopback contract checks are retained instead.
