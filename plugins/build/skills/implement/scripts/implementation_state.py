@@ -65,12 +65,14 @@ def load(path):
 
 
 def git(root, *args):
+    # Text mode rewrites CR/CRLF even in NUL-delimited filenames. Decode the
+    # original bytes so distinct paths cannot collapse or disappear from capture.
     result = subprocess.run(['git', '--no-optional-locks', '-c', 'core.fsmonitor=false',
-                             '-C', str(root), *args], text=True, capture_output=True, timeout=60,
+                             '-C', str(root), *args], capture_output=True, timeout=60,
                             env={**os.environ, 'GIT_NO_LAZY_FETCH': '1'})
     if result.returncode:
-        raise StateError('Git inspection failed: ' + result.stderr.strip())
-    return result.stdout
+        raise StateError('Git inspection failed: ' + result.stderr.decode('utf-8', errors='replace').strip())
+    return result.stdout.decode('utf-8')
 
 
 def repo_root(path):

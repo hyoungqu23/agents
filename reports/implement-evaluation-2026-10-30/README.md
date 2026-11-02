@@ -66,6 +66,18 @@ rejects partial/promisor clones before object inspection; a real filtered-clone
 fixture verifies that the upload-pack marker cannot execute. Ordinary-case records
 were reassessed with that final helper as well.
 
+### Follow-up verification — 2026-11-03
+
+Re-review reproduced CR/CRLF filenames being normalized by Git subprocess text
+mode, hiding source edits from drift, scope and initial-user-work checks. The helper
+now decodes Git's original output bytes without newline conversion. Three new
+regressions failed against the original helper and passed after the fix, covering
+distinct tracked/untracked CR/LF/CRLF paths and the affected assessment boundaries.
+Both retained ordinary-case outputs were reassessed: Codex remains `complete` and
+Claude remains `partial`. No new model/browser execution is claimed. The updated
+helper SHA-256 is `4f8491c2bb31a9fb0dd2c9c6ff4cc7b24139b162cf42778e615f31691b5fc149`;
+the earlier execution records retain their historical helper hashes.
+
 ## Limits and reproduction
 
 This is two bounded executions, not a complete pass of all declared eval scenarios,

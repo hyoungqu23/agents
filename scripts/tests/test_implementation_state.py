@@ -91,6 +91,54 @@ class ImplementationStateTests(unittest.TestCase):
         (self.repo / 'src/app.js').write_text('export const name = "after checks";\n')
         self.assertEqual(self.assess()['status'], 'invalid')
 
+    def test_inventory_preserves_newline_filenames_without_collisions(self):
+        tracked, untracked = [], []
+        for newline in ('\r', '\n', '\r\n'):
+            for names, prefix in ((tracked, 'tracked'), (untracked, 'untracked')):
+                name = f'{prefix}{newline}draft.txt'
+                (self.repo / name).write_text(f'Original bytes for {name!r}\n')
+                names.append(name)
+        self.git('add', '--', *tracked)
+        self.git('commit', '-qm', 'newline filename fixtures')
+        captured = gate.capture(self.repo, self.inputs_path)
+        for name in tracked + untracked:
+            with self.subTest(name=name):
+                entry = captured['files'][name]
+                self.assertEqual(entry['working']['kind'], 'file')
+                self.assertEqual(entry['working']['sha256'], hashlib.sha256((self.repo / name).read_bytes()).hexdigest())
+                self.assertEqual(name in captured['dirty'], name in untracked)
+
+    def test_carriage_return_filename_cannot_hide_out_of_scope_changes(self):
+        for tracked in (True, False):
+            with self.subTest(tracked=tracked):
+                (self.repo / 'src/app.js').write_text('export const name = "before";\n')
+                user = self.repo / f'user-{tracked}\rdraft.txt'
+                user.write_text('Existing user draft\n')
+                if tracked:
+                    self.git('add', '--', user.name)
+                    self.git('commit', '-qm', 'tracked user draft')
+                self.capture_baseline()
+                (self.repo / 'src/app.js').write_text('export const name = "requested";\n')
+                self.prepare_result()
+                self.assertEqual(self.assess()['status'], 'complete')
+                user.write_text('Replacement outside authorized scope\n')
+                self.assertEqual(self.assess()['status'], 'invalid')
+                # Even recapturing and declaring the edit must fail scope checks.
+                self.prepare_result()
+                self.assertEqual(self.assess()['status'], 'invalid')
+
+    def test_carriage_return_filename_keeps_initial_dirty_work_protected(self):
+        (self.repo / 'src/app.js').write_text('export const name = "before";\n')
+        user = self.repo / 'src/user\rdraft.txt'
+        user.write_text('Existing user draft\n')
+        self.capture_baseline()
+        (self.repo / 'src/app.js').write_text('export const name = "requested";\n')
+        self.prepare_result()
+        self.assertEqual(self.assess()['status'], 'complete')
+        user.write_text('Replacement inside authorized scope\n')
+        self.prepare_result()
+        self.assertEqual(self.assess()['status'], 'invalid')
+
     def test_source_change_without_revision_change_invalidates_inputs(self):
         (self.state / 'spec.md').write_text('AC-1: Different outcome; revision unchanged.\n')
         self.assertEqual(self.assess()['status'], 'invalid')
