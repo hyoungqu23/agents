@@ -20,7 +20,31 @@ review plugin is required. It accepts existing formats and direct requirements.
 Code review, Visual QA and release remain separate workflows, run when requested
 or required by the project. Never interpret implementation completion as those passes.
 
-The bundled [state helper](skills/implement/scripts/implementation_state.py) records
+## Scoped corrections
+
+`fix` addresses reported bugs and requested QA behavior/design improvements in an
+existing product. It chooses the smallest complete correction, verifies supplied
+claims, preserves user edits and separates applied changes from verified outcomes.
+Already satisfied or refuted items can correctly result in no source changes.
+
+```text
+Use $fix to address these bugs and apply the selected QA improvements.
+Preserve the existing API, selection and design tokens; verify the changed flow.
+```
+
+Claude Code supports `/build:fix`. The skill and its reference are self-contained;
+no sibling helper or new state engine is installed. UI corrections need actual-app
+verification; unavailable browser checks remain visible. PR replies/publication
+follow the current task authorization and the relevant PR-response workflow.
+
+Prepare independent raw tasks with `python3 scripts/behavioral/fix.py prepare --case
+bug --output /tmp/new-fix-case`. The evaluation adapter is repository tooling and
+does not impose a JSON schema on ordinary fix use. See
+[fix evaluation setup](skills/fix/evals/SETUP.md).
+
+## Implementation evidence
+
+The implement [state helper](skills/implement/scripts/implementation_state.py) records
 initial and verification source independently. It checks current-source identity,
 scope, dirty-work preservation, requirement coverage and evidence references.
 UI completion requires actual-app browser evidence. Missing browser access leaves

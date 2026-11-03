@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "id": "QA-1",
+      "action": "applied",
+      "reason": "채택된 빈 결과 개선을 기존 app.js 렌더 분기와 theme.css에 적용했다. Clear filter는 list.load(all)을 호출하고 select는 상태와 동기화된다. 기존 선택·Retry·요청 경합 소유자는 보존했다. 실제 API/Node 검사 통과와 별도로 브라우저 UI 검증은 미실행 상태다.",
+      "checks": [
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "서버가 출력한 실제 loopback URL에 연결하여 실제 app.js·기존 UI helper·API client를 Node DOM 대역에서 실행했다. All→Tide 선택→Paused 빈 결과→Clear filter→All 3건 및 선택 표시 복원, 초기화 숨김, 현재 필터 Retry 실패·복구, 응답 경합 보존을 포함해 3개 테스트 통과. 브라우저 검사가 아니다.",
+          "argv": [
+            "npm",
+            "test"
+          ],
+          "cwd": "/private/tmp/hm2-fix-no-browser-20261104-a/source",
+          "exit_code": 0,
+          "evidence": [
+            "evidence/final-tests-command.json",
+            "evidence/final-tests-command.log",
+            "evidence/final-tests-target.json"
+          ]
+        },
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "PORT=0 node server.mjs로 시작한 실제 서버의 출력 URL에서 index/app/CSS 바이트 동일성, All 3건, Paused 0건, fixture 503와 Archived 복구를 확인했다. 테스트 후 서버 SIGTERM 종료를 기록했다.",
+          "argv": [
+            "node",
+            "/private/tmp/hm2-fix-no-browser-20261104-a/state/verify-live.mjs"
+          ],
+          "cwd": "/private/tmp/hm2-fix-no-browser-20261104-a/source",
+          "exit_code": 0,
+          "evidence": [
+            "evidence/final-live-command.json",
+            "evidence/final-live-command.log",
+            "evidence/final-live-target.json"
+          ]
+        },
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "외부 TEST_APP_URL 없이 기본 npm test를 실행했다. 자체 임시 포트 서버를 사용하는 Node 회귀검사를 포함하여 원본 2개와 추가 1개, 총 3개 테스트 통과 후 서버 종료.",
+          "argv": [
+            "npm",
+            "test"
+          ],
+          "cwd": "/private/tmp/hm2-fix-no-browser-20261104-a/source",
+          "exit_code": 0,
+          "evidence": [
+            "evidence/final-standalone-tests-command.json",
+            "evidence/final-standalone-tests-command.log",
+            "evidence/final-standalone-tests-target.json"
+          ]
+        },
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "git diff --check 통과.",
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": "/private/tmp/hm2-fix-no-browser-20261104-a/source",
+          "exit_code": 0,
+          "evidence": [
+            "evidence/final-diff-check-command.json",
+            "evidence/final-diff-check-command.log",
+            "evidence/final-diff-check-target.json"
+          ]
+        },
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "전체 baseline-to-final 해시 비교로 변경이 승인된 3개 파일뿐임을 확인했다. 기존 문서·API/UI/state 소유자·서버·원본 테스트·초기 사용자 작성물이 바이트 동일하며 모든 최종 검사 대상 해시가 현재 소스와 일치한다.",
+          "argv": [
+            "node",
+            "/private/tmp/hm2-fix-no-browser-20261104-a/state/verify-preservation.mjs"
+          ],
+          "cwd": "/private/tmp/hm2-fix-no-browser-20261104-a/source",
+          "exit_code": 0,
+          "evidence": [
+            "evidence/final-preservation-command.json",
+            "evidence/final-preservation-command.log",
+            "evidence/final-preservation-target.json"
+          ]
+        },
+        {
+          "kind": "static",
+          "status": "passed",
+          "detail": "기존 상태·UI/API 소유자 재사용과 분기 조건, 토큰 및 반응형 CSS 규칙을 확인했다. 실제 렌더링·overflow·focus pass를 의미하지 않는다.",
+          "evidence": [
+            "evidence/static-review.md",
+            "evidence/final.diff",
+            "final-target.json"
+          ]
+        },
+        {
+          "kind": "browser",
+          "status": "not_run",
+          "detail": "실제 앱의 넓은/좁은 화면 배치, 빈 결과 그룹·초기화 상호작용·선택 복원, overflow 및 키보드 focus 확인.",
+          "reason": "사용자가 이 실행에서 브라우저 사용 불가를 명시했다. UI 변경은 적용했으나 필수 브라우저 검증이 남았다.",
+          "evidence": [
+            "evidence/browser-not-run.md"
+          ]
+        }
+      ]
+    }
+  ],
+  "changed_files": {
+    "src/app.js": "97ebf3e669464c597fe17c3ac3addff2a829b98294256337ebb05c89446a9437",
+    "src/theme.css": "f77ef5031d2a6fbd9066406d3ca6493bd0ab17611f68d3e00955c6fd7938588a",
+    "tests/app.test.mjs": "47b41eeda568c7fe1b189625651d83077142a7c4ae91cc8cf5e42ab6c019bcdf"
+  },
+  "change_reasons": {
+    "src/app.js": "빈 성공 결과에 메시지와 Clear filter를 같은 그룹으로 표시하고 상태 기반 selector 동기화 및 All 재조회를 추가. 기존 Retry/selection/renderRows 경로 보존.",
+    "src/theme.css": "기존 공간·선 토큰을 사용한 로컬 빈 상태 테두리 그룹과 좁은 화면 버튼 아래 배치 추가. 기존 전역 토큰과 열 배치 보존.",
+    "tests/app.test.mjs": "실제 fixture API와 기존 app 모듈에 연결하는 Node DOM 대역 회귀검사를 추가. 초기화·선택 복원·숨김 조건·Retry·응답 경합 검증. 원본 테스트 보존."
+  }
+}

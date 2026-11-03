@@ -1,0 +1,106 @@
+diff --git a/src/project-list.js b/src/project-list.js
+index 3a9d222..a413706 100644
+--- a/src/project-list.js
++++ b/src/project-list.js
+@@ -17,8 +17,10 @@ export function createProjectList({ loadProjects, onChange }) {
+       update({ status, projects: [], loading: true, error: null });
+       try {
+         const projects = await loadProjects(status);
++        if (current !== request) return;
+         update({ projects, loading: false, error: null });
+       } catch (error) {
++        if (current !== request) return;
+         update({ projects: [], loading: false, error });
+       }
+     },
+diff --git a/tests/project-list.test.mjs b/tests/project-list.test.mjs
+index 11da284..34b7d38 100644
+--- a/tests/project-list.test.mjs
++++ b/tests/project-list.test.mjs
+@@ -11,3 +11,86 @@ test('filter and empty success preserve the selected project', async () => {
+   assert.equal(list.getState().selected, tide);
+   assert.equal(list.getState().error, null);
+ });
++
++function deferred() {
++  let resolve, reject;
++  const promise = new Promise((resolvePromise, rejectPromise) => {
++    resolve = resolvePromise;
++    reject = rejectPromise;
++  });
++  return { promise, resolve, reject };
++}
++
++for (const outcome of ['success', 'failure']) {
++  for (const latestFirst of [true, false]) {
++    test(`stale ${outcome} ${latestFirst ? 'after' : 'before'} latest completion cannot replace current state`, async () => {
++      const tide = { id: 'tide', name: 'Tide', status: 'active' };
++      const forest = { id: 'forest', name: 'Forest', status: 'archived' };
++      const active = deferred();
++      const archived = deferred();
++      const list = createProjectList({
++        loadProjects: status => status === 'all' ? Promise.resolve([tide, forest])
++          : status === 'active' ? active.promise : archived.promise,
++        onChange() {},
++      });
++      await list.load();
++      list.select(tide);
++      const olderLoad = list.load('active');
++      const latestLoad = list.load('archived');
++      const loading = { status: 'archived', projects: [], selected: tide, loading: true, error: null };
++      const loaded = { ...loading, projects: [forest], loading: false };
++      assert.deepEqual(list.getState(), loading);
++
++      if (latestFirst) {
++        archived.resolve([forest]);
++        await latestLoad;
++        assert.deepEqual(list.getState(), loaded);
++      }
++      if (outcome === 'success') active.resolve([tide]);
++      else active.reject(new Error('Old Active request failed'));
++      await olderLoad;
++      assert.deepEqual(list.getState(), latestFirst ? loaded : loading);
++
++      if (!latestFirst) {
++        archived.resolve([forest]);
++        await latestLoad;
++      }
++      assert.deepEqual(list.getState(), loaded);
++    });
++  }
++}
++
++test('current failure and retry use the current filter and preserve selection', async () => {
++  const tide = { id: 'tide', name: 'Tide', status: 'active' };
++  const forest = { id: 'forest', name: 'Forest', status: 'archived' };
++  const failed = deferred();
++  const retried = deferred();
++  const requests = [failed, retried];
++  const list = createProjectList({
++    loadProjects: status => {
++      if (status === 'all') return Promise.resolve([tide, forest]);
++      assert.equal(status, 'archived');
++      return requests.shift().promise;
++    },
++    onChange() {},
++  });
++  await list.load();
++  list.select(tide);
++  const failingLoad = list.load('archived');
++  const error = new Error('Current Archived request failed');
++  failed.reject(error);
++  await failingLoad;
++  assert.deepEqual(list.getState(), {
++    status: 'archived', projects: [], selected: tide, loading: false, error,
++  });
++
++  const retry = list.load();
++  assert.deepEqual(list.getState(), {
++    status: 'archived', projects: [], selected: tide, loading: true, error: null,
++  });
++  retried.resolve([forest]);
++  await retry;
++  assert.deepEqual(list.getState(), {
++    status: 'archived', projects: [forest], selected: tide, loading: false, error: null,
++  });
++});

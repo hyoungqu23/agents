@@ -1,0 +1,26 @@
+{
+  "race": {
+    "loading": "false",
+    "rows": [
+      "forest"
+    ],
+    "selection": "Tide",
+    "status": "archived"
+  },
+  "empty": {
+    "selection": "Tide",
+    "text": "No projects match this status."
+  },
+  "error": {
+    "selection": "Tide",
+    "status": "archived",
+    "text": "Could not load projects. Retry"
+  },
+  "retry": {
+    "rows": [
+      "forest"
+    ],
+    "selection": "Tide",
+    "status": "archived"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "source_digest": "2dcab29700e0e7719f28d66a5349004ba7f894f7ace567faa2af7922f372b65f",
+  "model_contract": true,
+  "selection_preserved": true,
+  "retry_current_filter": true,
+  "actual_app": true,
+  "reset_to_all": true,
+  "select_synchronized": true,
+  "selection_restored": true,
+  "action_empty_only": true,
+  "design_matches": true,
+  "responsive": true
+}

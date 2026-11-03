@@ -1,6 +1,6 @@
 ---
 name: implement
-description: Implement requested product functionality in an existing application from requirements, a selected prototype, and applicable UX patterns; connect changes to observable behavior, verify the actual app, and resume from recorded evidence. Use when the user asks to implement or change a feature from those inputs. Do not use for requirements or harness design alone, unselected prototype exploration, review-only requests, or release/deployment. UI work requires actual-app browser evidence for complete verification.
+description: Implement requested product functionality in an existing application from requirements, a selected prototype, and applicable UX patterns; connect changes to observable behavior, verify the actual app, and resume from recorded evidence. Use when the user asks to implement or change a feature from those inputs. Do not use for isolated bug fixes or supplied QA corrections, requirements or harness design alone, unselected prototype exploration, review-only requests, or release/deployment. UI work requires actual-app browser evidence for complete verification.
 ---
 
 # Implement

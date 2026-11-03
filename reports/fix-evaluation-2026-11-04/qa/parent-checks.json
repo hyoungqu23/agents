@@ -1,0 +1,23 @@
+{
+  "model-contract": {
+    "argv": [
+      "node",
+      "--test",
+      "/Users/hyoungmin/.codex/worktrees/fix-harness-plan/agents/scripts/behavioral/fix-contract.test.mjs"
+    ],
+    "cwd": "/private/tmp/hm2-fix-qa-20261104-a/source",
+    "exit_code": 0,
+    "stdout": "\u2714 latest filter survives an older success (0.569875ms)\n\u2714 latest filter survives an older failure (0.057959ms)\n\u2714 empty success, error and Retry retain selection and the current filter (0.117208ms)\n\u2139 tests 3\n\u2139 suites 0\n\u2139 pass 3\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 33.248458\n",
+    "stderr": ""
+  },
+  "app-tests": {
+    "argv": [
+      "npm",
+      "test"
+    ],
+    "cwd": "/private/tmp/hm2-fix-qa-20261104-a/source",
+    "exit_code": 0,
+    "stdout": "\n> test\n> node --test tests/*.test.mjs\n\n\u2714 API client forwards status and rejects a failed response (0.630958ms)\n\u2714 filter and empty success preserve the selected project (0.547292ms)\n\u2139 tests 2\n\u2139 suites 0\n\u2139 pass 2\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 33.740042\n",
+    "stderr": ""
+  }
+}

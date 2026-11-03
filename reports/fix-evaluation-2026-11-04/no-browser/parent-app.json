@@ -1,0 +1,59 @@
+{
+  "wide": {
+    "border": "1px",
+    "borderColor": "rgb(216, 222, 233)",
+    "buttonBelow": false,
+    "columns": "794.664px 397.336px",
+    "gap": "12px",
+    "line": "#d8dee9",
+    "overflow": false,
+    "rows": "No projects match this status.Clear filter",
+    "selection": "Tide",
+    "space": "12px",
+    "status": "paused",
+    "width": 1280
+  },
+  "narrow": {
+    "border": "1px",
+    "borderColor": "rgb(216, 222, 233)",
+    "buttonBelow": true,
+    "columns": "343px",
+    "gap": "12px",
+    "line": "#d8dee9",
+    "overflow": false,
+    "rows": "No projects match this status.Clear filter",
+    "selection": "Tide",
+    "space": "12px",
+    "status": "paused",
+    "width": 375
+  },
+  "reset": {
+    "clear": false,
+    "ids": [
+      "tide",
+      "forest",
+      "north"
+    ],
+    "selected": [
+      "tide"
+    ],
+    "selection": "Tide",
+    "status": "all"
+  },
+  "loading": {
+    "clear": false,
+    "loading": "true"
+  },
+  "error": {
+    "clear": false,
+    "selection": "Tide",
+    "text": "Could not load projects. Retry"
+  },
+  "retry": {
+    "rows": [
+      "forest"
+    ],
+    "selection": "Tide",
+    "status": "archived"
+  }
+}

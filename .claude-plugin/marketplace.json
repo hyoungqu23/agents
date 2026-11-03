@@ -63,13 +63,13 @@
     {
       "name": "build",
       "source": "./plugins/build",
-      "description": "Implement product behavior from requirements, selected designs and UX patterns with verification evidence.",
-      "version": "0.1.0",
+      "description": "Implement features and apply scoped bug/QA corrections with verification evidence.",
+      "version": "0.2.0",
       "category": "Productivity",
       "keywords": [
         "implementation",
-        "requirements",
-        "prototype",
+        "bug-fix",
+        "qa",
         "verification"
       ]
     }

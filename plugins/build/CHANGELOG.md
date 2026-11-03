@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 - 2026-11-04
+
+- Add `fix` for reported bugs and adopted QA behavior/design improvements, preserving scope and user work with the smallest complete correction.
+- Separate item dispositions from verification, support evidenced no-change outcomes, and retain UI verification gaps when browser access is unavailable.
+- Add independent correction fixtures, a repository evaluation adapter and grader sensitivity checks.
+
 ## 0.1.0 - 2026-10-30
 
 - Implement product functionality from requirements, selected designs and applicable UX patterns using the existing application's owners and contracts.

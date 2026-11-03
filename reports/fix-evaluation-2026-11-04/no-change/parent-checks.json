@@ -1,0 +1,7 @@
+{
+  "model-contract": {
+    "exit_code": 0,
+    "stdout": "\u2714 latest filter survives an older success (0.629417ms)\n\u2714 latest filter survives an older failure (0.059ms)\n\u2714 empty success, error and Retry retain selection and the current filter (0.123125ms)\n\u2139 tests 3\n\u2139 suites 0\n\u2139 pass 3\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 33.5455\n",
+    "stderr": ""
+  }
+}

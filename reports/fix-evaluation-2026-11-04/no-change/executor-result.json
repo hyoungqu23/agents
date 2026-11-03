@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "id": "CHECK-1",
+      "action": "not_needed",
+      "reason": "현재 코드와 실제 API를 연결한 Node 실행에서 All→Tide 선택→Paused의 로딩·빈 성공에도 상세 Tide가 보존됐고, All 복귀 후 Tide 행의 aria-pressed=true가 복원됐다. selected를 지우는 호출 경로가 없어 영구 유실 주장은 현재 경로에서 반증된다. 과거 코드나 수정 이력은 확인하지 않았다. 기존 초기 선택 None과 빈 결과 디자인을 포함해 source를 변경하지 않았다.",
+      "checks": [
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "기존 npm test의 2개 테스트 통과. API 계약과 빈 성공 후 선택 프로젝트 보존을 확인했다.",
+          "argv": [
+            "npm",
+            "test"
+          ],
+          "cwd": "/private/tmp/hm2-fix-no-change-20261104-a/source",
+          "exit_code": 0,
+          "evidence": [
+            "evidence/existing-tests-command.json",
+            "evidence/existing-tests-command.log",
+            "evidence/existing-tests-target.json"
+          ]
+        },
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "PORT=0 node server.mjs의 출력 URL에서 현재 소스 바이트 동일성을 확인하고, 실제 app.js·API client·UI helper를 Node DOM 대역으로 실행했다. 초기 None→All 3건→Tide 선택→Paused 로딩/0건에도 Tide 상세→All 복귀 시 Tide 선택 표시를 확인했다. HTTP/관찰값/서버 종료 기록은 evidence/current-app.json에 보존했다. 브라우저 검사는 아니다.",
+          "argv": [
+            "node",
+            "/private/tmp/hm2-fix-no-change-20261104-a/state/check-current-app.mjs"
+          ],
+          "cwd": "/private/tmp/hm2-fix-no-change-20261104-a/source",
+          "exit_code": 0,
+          "evidence": [
+            "evidence/actual-app-command.json",
+            "evidence/actual-app-command.log",
+            "evidence/actual-app-target.json",
+            "evidence/current-app.json"
+          ]
+        },
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "초기 baseline과 최종 source의 전체 SHA256, HEAD 및 git 상태를 비교했다. 모든 17개 파일과 초기 사용자 작성물이 동일하고, 두 실행 검사의 대상 해시도 최종 소스와 일치한다.",
+          "argv": [
+            "node",
+            "/private/tmp/hm2-fix-no-change-20261104-a/state/verify-unchanged.mjs"
+          ],
+          "cwd": "/private/tmp/hm2-fix-no-change-20261104-a/source",
+          "exit_code": 0,
+          "evidence": [
+            "evidence/unchanged-command.json",
+            "evidence/unchanged-command.log",
+            "evidence/unchanged-target.json"
+          ]
+        },
+        {
+          "kind": "static",
+          "status": "passed",
+          "detail": "Status 변경→load의 selected 보존→상세 렌더와 행 aria-pressed 복원 경로를 추적하여 현재 제보의 반증을 확인했다. 초기 선택 정책과 기존 빈 결과 디자인을 보존했다.",
+          "evidence": [
+            "evidence/static-current-path.md",
+            "initial/src/app.js",
+            "initial/src/project-list.js",
+            "initial/src/ui.js",
+            "final-target.json"
+          ]
+        },
+        {
+          "kind": "browser",
+          "status": "not_run",
+          "detail": "실제 브라우저의 화면·레이아웃·포커스 검사는 수행하지 않았다. UI 수정은 없다.",
+          "reason": "부모 작업 지시에서 브라우저 사용을 금지했다. 무수정 판정은 현재 소스와 실제 API/Node 실행의 반증을 근거로 한다.",
+          "evidence": [
+            "evidence/browser-not-run.md"
+          ]
+        }
+      ]
+    }
+  ],
+  "changed_files": {},
+  "change_reasons": {}
+}
