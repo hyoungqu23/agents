@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "target": "4cf90b3e3c14d620cf8a13ff1167c4150e5e7f309c93bb96b341c63e7bb63223",
+  "changes": [
+    {"path": "src/app.js", "reason": "Wires labelled Status selectField + result count into #toolbar, renders loading/empty/error(showProblem+Retry)/rows(renderRows) and the selected-project panel from controller state"},
+    {"path": "src/projectList.js", "reason": "New DOM-free controller: status, rows, selection kept independently, loading/ready/error phases, retry with current status, latest-request-only rendering"},
+    {"path": "src/theme.css", "reason": "Adds .filter toolbar layout and .empty/.status blocks using existing --space/--line tokens"},
+    {"path": "tests/projectList.test.mjs", "reason": "Controller tests: status reaches loader, selection persistence across hide/empty/restore, error vs empty, retry with current filter, stale response ignored"},
+    {"path": "tests/server.test.mjs", "reason": "Spawns provided server with PORT=0 and checks the real API client against filtered results and the /__fixture__/mode failure mode"}
+  ],
+  "requirements": [
+    {"id": "spec:AC-1", "state": "implemented", "reason": "Status selectField (All/Active/Archived/Paused) placed in #toolbar above #rows; change calls list.filter -> projects(status) via existing api.js; count span shows N projects",
+      "code": [
+        {"path": "src/app.js", "line": 32, "quote": "toolbar.append(selectField({ label: 'Status', options: statuses, value: list.state.status, onChange: status => list.filter(status) }), count);"},
+        {"path": "src/app.js", "line": 30, "quote": "const list = createProjectList({ load: projects, view });"},
+        {"path": "src/projectList.js", "line": 9, "quote": "      const rows = await load(state.status);"},
+        {"path": "src/app.js", "line": 25, "quote": "    count.textContent = `${state.rows.length} ${state.rows.length === 1 ? 'project' : 'projects'}`;"}
+      ]},
+    {"id": "spec:AC-2", "state": "implemented", "reason": "Selection stored in controller state independent of rows; panel always renders selected name; renderRows marks aria-pressed by id so filtering back restores it; empty success shows its own 'No <status> projects.' block",
+      "code": [
+        {"path": "src/projectList.js", "line": 21, "quote": "    select(project) { state.selected = project; view(state); },"},
+        {"path": "src/app.js", "line": 13, "quote": "  selection.textContent = state.selected?.name ?? 'None';"},
+        {"path": "src/app.js", "line": 26, "quote": "    renderRows(rows, state.rows, state.selected?.id, project => list.select(project));"},
+        {"path": "src/app.js", "line": 23, "quote": "    rows.replaceChildren(Object.assign(document.createElement('p'), { className: 'empty', textContent: `No ${title} projects.` }));"}
+      ]},
+    {"id": "spec:AC-3", "state": "implemented", "reason": "Rejected load sets phase 'error' rendered with existing showProblem; Retry calls refresh(), which reloads state.status and leaves selection untouched",
+      "code": [
+        {"path": "src/projectList.js", "line": 14, "quote": "      state.phase = 'error';"},
+        {"path": "src/app.js", "line": 19, "quote": "    showProblem(rows, () => list.refresh());"}
+      ]},
+    {"id": "ux:patterns", "state": "implemented", "reason": "Uses selectField/renderRows/showProblem; separate loading phase; panel rendered from state.selected on every phase; request counter drops superseded responses",
+      "code": [
+        {"path": "src/app.js", "line": 3, "quote": "import { renderRows, selectField, showProblem } from './ui.js';"},
+        {"path": "src/app.js", "line": 16, "quote": "    rows.replaceChildren(Object.assign(document.createElement('p'), { className: 'status', textContent: 'Loading projects…' }));"},
+        {"path": "src/projectList.js", "line": 6, "quote": "    const request = ++latest;"},
+        {"path": "src/projectList.js", "line": 10, "quote": "      if (request !== latest) return;"}
+      ]},
+    {"id": "design:tokens-layout", "state": "implemented", "reason": "New CSS uses only --space/--line; selection highlight and focus stay on blue --accent (no prototype orange); existing .layout grid + 700px media rule keep side-by-side/stacked layout; select wrapped in visible label",
+      "code": [
+        {"path": "src/theme.css", "line": 7, "quote": ".filter{display:flex;align-items:center;justify-content:space-between;gap:var(--space);margin-bottom:calc(var(--space) * 2)}.empty,.status{margin:var(--space) 0;padding:var(--space);border:1px dashed var(--line);border-radius:6px}"},
+        {"path": "src/theme.css", "line": 8, "quote": "@media(max-width:700px){.layout{grid-template-columns:1fr}body{margin:16px}}"}
+      ]}
+  ],
+  "verification": [
+    {"id": "unit", "status": "passed", "detail": "npm test: 6/6 pass including 4 controller tests (filter->loader, selection persistence through hide/empty/restore, error vs empty + retry with current filter, latest-only)",
+      "target": "4cf90b3e3c14d620cf8a13ff1167c4150e5e7f309c93bb96b341c63e7bb63223",
+      "command": ["npm", "test"], "cwd": "/private/tmp/hm2-implement-forward-claude-20261030-b/source", "exit_code": 0,
+      "evidence": [{"path": "evidence/npm-test.txt", "sha256": "075e9f3a25fbff69912a439f8fe079bbd0f9a19449d8346f0eb2eb3d1bb213d8"}]},
+    {"id": "server-contract", "status": "passed", "detail": "Same npm test run: tests/server.test.mjs spawned server.mjs with PORT=0, projects('archived'|'active'|'paused'|'all') returned forest / tide,north / [] / 3 rows, and after PUT /__fixture__/mode {fail:true} projects() rejected with 'Could not load'; mode restored to fail:false",
+      "target": "4cf90b3e3c14d620cf8a13ff1167c4150e5e7f309c93bb96b341c63e7bb63223",
+      "command": ["npm", "test"], "cwd": "/private/tmp/hm2-implement-forward-claude-20261030-b/source", "exit_code": 0,
+      "evidence": [{"path": "evidence/npm-test.txt", "sha256": "075e9f3a25fbff69912a439f8fe079bbd0f9a19449d8346f0eb2eb3d1bb213d8"}]},
+    {"id": "static-design", "status": "passed", "detail": "node --check on app.js/projectList.js ok; app.js uses selectField/renderRows/showProblem; new CSS uses only tokens; no orange/#d56812 in src; preserved files (user-draft.md, server.mjs, index.html) hashes equal baseline",
+      "target": "4cf90b3e3c14d620cf8a13ff1167c4150e5e7f309c93bb96b341c63e7bb63223",
+      "evidence": [{"path": "evidence/static-trace.txt", "sha256": "70c0a5abf75a929b9c4e0fc8ac4566f045f6b4e975813f0da457ddfc32f4d9cb"}]},
+    {"id": "app-browser", "status": "not_run", "detail": "Actual app was not opened in a browser", "reason": "Browser access is unavailable for this task per user instruction; DOM rendering, focus visibility, wide/narrow layout and the Retry click in the real page are unverified"}
+  ],
+  "differences": [
+    "Prototype orange .picked border replaced by existing blue --accent via renderRows aria-pressed styling (DESIGN.md).",
+    "Row labels use renderRows' existing 'Name — status' format (lowercase status from API) rather than the prototype's capitalised status text.",
+    "Loading and empty states are not in the prototype; added as dashed --line blocks per ux.md."
+  ],
+  "handoff": [
+    "Run: cd source && PORT=0 npm start, open the printed http://127.0.0.1:<port>/ URL.",
+    "Browser scenarios to verify: select Tide, choose Archived (Tide hidden, panel still Tide), choose All (Tide highlighted again), choose Paused (0 projects + 'No paused projects.'), PUT /__fixture__/mode {\"fail\":true} then change filter (error + Retry, panel unchanged), PUT {\"fail\":false} then Retry (current filter reloads); repeat at >700px and <=700px widths; tab to the select and rows for focus outline.",
+    "Quickly switching Active (150 ms server delay) then Archived should show only Archived results.",
+    "No code review or Visual QA has been run."
+  ]
+}

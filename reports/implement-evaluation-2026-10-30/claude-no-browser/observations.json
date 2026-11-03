@@ -1,0 +1,39 @@
+{
+  "all_ids": [
+    "tide",
+    "forest",
+    "north"
+  ],
+  "active_ids": [
+    "tide",
+    "north"
+  ],
+  "archived_ids": [
+    "forest"
+  ],
+  "paused_ids": [],
+  "displayed_counts": [
+    3,
+    2,
+    1,
+    0
+  ],
+  "empty_state_visible": true,
+  "selection_hidden": "Tide",
+  "selected_after_return": "tide",
+  "error_distinct": true,
+  "retry_status": "archived",
+  "latest_status": "archived",
+  "wide_columns": 2,
+  "narrow_columns": 1,
+  "target": "4cf90b3e3c14d620cf8a13ff1167c4150e5e7f309c93bb96b341c63e7bb63223",
+  "observer": "Parent CUA IAB actual-app observation on port 63004, 1440/375 CSS pixel widths",
+  "raw_counts": [
+    "3 projects",
+    "2 projects",
+    "1 project",
+    "0 projects"
+  ],
+  "empty_message": "No paused projects.",
+  "error_message": "Could not load projects. Retry"
+}

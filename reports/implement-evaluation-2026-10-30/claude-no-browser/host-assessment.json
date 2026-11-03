@@ -1,0 +1,35 @@
+{
+  "status": "partial",
+  "gaps": [
+    {
+      "check": "app-browser",
+      "reason": "not_run"
+    },
+    {
+      "requirement": "spec:AC-1",
+      "check": "app-browser",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "spec:AC-2",
+      "check": "app-browser",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "spec:AC-3",
+      "check": "app-browser",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "ux:patterns",
+      "check": "app-browser",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "design:tokens-layout",
+      "check": "app-browser",
+      "reason": "outcome_unverified"
+    }
+  ],
+  "target": "4cf90b3e3c14d620cf8a13ff1167c4150e5e7f309c93bb96b341c63e7bb63223"
+}

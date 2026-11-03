@@ -1,0 +1,33 @@
+$ node --check src/app.js src/projectList.js
+ok
+$ helper/state usage in src/app.js
+3:import { renderRows, selectField, showProblem } from './ui.js';
+10:count.setAttribute('aria-live', 'polite');
+13:  selection.textContent = state.selected?.name ?? 'None';
+19:    showProblem(rows, () => list.refresh());
+26:    renderRows(rows, state.rows, state.selected?.id, project => list.select(project));
+32:toolbar.append(selectField({ label: 'Status', options: statuses, value: list.state.status, onChange: status => list.filter(status) }), count);
+$ token / responsive / focus rules in src/theme.css
+3:.layout{display:grid;grid-template-columns:2fr 1fr;gap:24px}.panel{background:var(--surface);padding:24px;border:1px solid var(--line);border-radius:12px}
+4:button,select{font:inherit;padding:10px;border-radius:6px}button{border:1px solid var(--line);background:var(--surface);cursor:pointer}
+5:.project{display:block;margin:var(--space) 0;width:100%;text-align:left}.project[aria-pressed=true]{border:2px solid var(--accent)}
+6::focus-visible{outline:3px solid var(--accent);outline-offset:3px}.problem{border-left:3px solid var(--accent);padding:var(--space)}
+7:.filter{display:flex;align-items:center;justify-content:space-between;gap:var(--space);margin-bottom:calc(var(--space) * 2)}.empty,.status{margin:var(--space) 0;padding:var(--space);border:1px dashed var(--line);border-radius:6px}
+8:@media(max-width:700px){.layout{grid-template-columns:1fr}body{margin:16px}}
+$ prototype orange accent in src (expect none)
+none
+$ git status --short
+ M src/app.js
+ M src/theme.css
+?? src/projectList.js
+?? tests/projectList.test.mjs
+?? tests/server.test.mjs
+?? user-draft.md
+$ git diff --stat
+ src/app.js    | 38 ++++++++++++++++++++++++++++----------
+ src/theme.css |  1 +
+ 2 files changed, 29 insertions(+), 10 deletions(-)
+$ sha256 of preserved files
+185223621b58f58f247bdba87d677f71498af5ad4e06aad572b5a7ccd03a93d6  user-draft.md
+66a18a14c464000a8b3f86abc603cd9a1c04683a12ab1c3303a2a780482fc1e6  server.mjs
+df2ff6aa8a91cb479bbfccaaed45322489a6ff80ccaa7c4bb3c7c6f4ca56e8aa  index.html

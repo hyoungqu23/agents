@@ -1,0 +1,394 @@
+{
+  "schema_version": 1,
+  "target": "583411576793e009f2b816fb8844750ce033b931f09199c6dbfdc306e43d6fa7",
+  "changes": [
+    {
+      "path": "src/app.js",
+      "reason": "Connect labelled four-status selector, result counts and loading/error/empty rows to independent project selection using existing API and UI helpers."
+    },
+    {
+      "path": "src/project-list.js",
+      "reason": "Own asynchronous filter/selection state; preserve selection on loading, empty and failure; guard stale responses; retry current status."
+    },
+    {
+      "path": "src/theme.css",
+      "reason": "Add wrapping reference toolbar and labelled-control spacing with existing space token while keeping blue and responsive tokens/styles."
+    },
+    {
+      "path": "tests/project-list.test.mjs",
+      "reason": "Cover filtered data, preserved selection, current-filter retry, distinct request states and stale success/failure suppression."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "AC-1",
+      "state": "implemented",
+      "reason": "Status selector uses all four values; existing projects client receives selection; successful row count and rows render from returned result. Actual browser showed 3/2/1/0 for All/Active/Archived/Paused.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 16,
+          "quote": "  options: [['all', 'All'], ['active', 'Active'], ['archived', 'Archived'], ['paused', 'Paused']],"
+        },
+        {
+          "path": "src/app.js",
+          "line": 18,
+          "quote": "  onChange: status => list.load(status),"
+        },
+        {
+          "path": "src/project-list.js",
+          "line": 19,
+          "quote": "        const projects = await loadProjects(status);"
+        },
+        {
+          "path": "src/app.js",
+          "line": 37,
+          "quote": "    count.textContent = `${state.projects.length} ${state.projects.length === 1 ? 'project' : 'projects'}`;"
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "state": "implemented",
+      "reason": "Selection lives separately from visible projects, panel always reflects selected name, empty is a distinct success branch, selected ID is passed to existing renderRows. Browser Tide remained selected while hidden and empty then returned pressed.",
+      "code": [
+        {
+          "path": "src/project-list.js",
+          "line": 13,
+          "quote": "      update({ selected: project });"
+        },
+        {
+          "path": "src/app.js",
+          "line": 29,
+          "quote": "  selection.textContent = state.selected?.name ?? 'None';"
+        },
+        {
+          "path": "src/app.js",
+          "line": 39,
+          "quote": "      message('No projects match this status.');"
+        },
+        {
+          "path": "src/app.js",
+          "line": 41,
+          "quote": "      renderRows(rows, state.projects, state.selected?.id, project => list.select(project));"
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "state": "implemented",
+      "reason": "Errors use existing showProblem and Retry callback; default load status is the current filter and selection is not reset. Browser failure at Paused stayed distinct from empty; after recovery Retry returned 0 and retained Tide.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 35,
+          "quote": "    showProblem(rows, () => list.load());"
+        },
+        {
+          "path": "src/project-list.js",
+          "line": 15,
+          "quote": "    async load(status = state.status) {"
+        },
+        {
+          "path": "src/project-list.js",
+          "line": 24,
+          "quote": "        update({ projects: [], loading: false, error });"
+        }
+      ]
+    },
+    {
+      "id": "ux:latest-loading",
+      "state": "implemented",
+      "reason": "Dedicated loading message and busy flag preserve selected panel. Both successful and failed stale responses are ignored by request ID. Browser loading observed and rapid Active then Archived settled to Forest; unit tests cover both stale outcomes.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 30,
+          "quote": "  rows.setAttribute('aria-busy', String(state.loading));"
+        },
+        {
+          "path": "src/app.js",
+          "line": 33,
+          "quote": "    message('Loading projects\u2026');"
+        },
+        {
+          "path": "src/project-list.js",
+          "line": 16,
+          "quote": "      const current = ++request;"
+        },
+        {
+          "path": "src/project-list.js",
+          "line": 20,
+          "quote": "        if (current !== request) return;"
+        },
+        {
+          "path": "src/project-list.js",
+          "line": 23,
+          "quote": "        if (current !== request) return;"
+        }
+      ]
+    },
+    {
+      "id": "design:responsive-focus",
+      "state": "implemented",
+      "reason": "Uses unchanged selectField/renderRows/showProblem and API client; selected reference toolbar uses app blue/system space values. Actual 1280 wide split, 375 narrow stack, no overflow and 3px blue keyboard focus were observed.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 3,
+          "quote": "import { selectField, renderRows, showProblem } from './ui.js';"
+        },
+        {
+          "path": "src/theme.css",
+          "line": 1,
+          "quote": ":root{--accent:#2053e8;--surface:#fff;--line:#d8dee9;--space:12px}"
+        },
+        {
+          "path": "src/theme.css",
+          "line": 6,
+          "quote": ".filter{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space);margin-bottom:calc(var(--space)*2)}"
+        },
+        {
+          "path": "src/theme.css",
+          "line": 8,
+          "quote": ":focus-visible{outline:3px solid var(--accent);outline-offset:3px}.problem{border-left:3px solid var(--accent);padding:var(--space)}"
+        },
+        {
+          "path": "src/theme.css",
+          "line": 9,
+          "quote": "@media(max-width:700px){.layout{grid-template-columns:1fr}body{margin:16px}}"
+        }
+      ]
+    }
+  ],
+  "verification": [
+    {
+      "id": "native-tests",
+      "status": "passed",
+      "detail": "npm test passed 5 tests: API status/rejection; filter-selection-empty; loading/error/current-filter retry; stale success; stale failure. No skipped tests.",
+      "target": "583411576793e009f2b816fb8844750ce033b931f09199c6dbfdc306e43d6fa7",
+      "evidence": [
+        {
+          "path": "evidence/native-tests.txt",
+          "sha256": "855d248977773784db127a9144754c5414f30cc9f6daa6f70b4ace0220af0523"
+        }
+      ],
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/private/tmp/hm2-implement-forward-codex-20261030-a/source",
+      "exit_code": 0
+    },
+    {
+      "id": "browser-filter",
+      "status": "passed",
+      "detail": "Actual app displayed visible Status combobox with All/Active/Archived/Paused and 3/2/1/0 matching rows. Request paths are traced through unchanged src/api.js, and live loopback GET URL/status/count checks passed. Direct browser performance/network timing inspection was unavailable, retained honestly in tool-limit evidence.",
+      "target": "583411576793e009f2b816fb8844750ce033b931f09199c6dbfdc306e43d6fa7",
+      "evidence": [
+        {
+          "path": "evidence/browser-trace.json",
+          "sha256": "e243328d62094d580c33843bb0f8b8cd9fa1e5fbc5a0d8c9730be7592e1064fe"
+        },
+        {
+          "path": "evidence/browser-check-summary.txt",
+          "sha256": "3c9e2436b465aab060514599e077365fec85366f902650bba24337f2c830b581"
+        },
+        {
+          "path": "evidence/fixture-restored-live-contract.txt",
+          "sha256": "211a8f7d87f10792721fe7a176f661f327bcf5b312ca287007a7c97368fa2b66"
+        },
+        {
+          "path": "evidence/current-source.txt",
+          "sha256": "c1c63c1ea5e0aa9e8667e8ed13916ef432f55cd5fecbb49a0c9f070390369afa"
+        },
+        {
+          "path": "evidence/browser-attempt-errors.txt",
+          "sha256": "9a3c2b2b9cb52bf4fbf931e5ccb3e33e4011601dddbefcdcd89bb2c83936551d"
+        }
+      ],
+      "tool": "mcp__cua_repl.js \u2014 cua Chrome browser / documented Playwright UI APIs",
+      "url": "http://127.0.0.1:62230/",
+      "scenario": "Initial All=3; select Archived=1 Forest; select Paused=0 empty; select Active=2 Tide/North. Route is actual index app, not prototype.",
+      "viewport": {
+        "width": 2320,
+        "height": 1329
+      }
+    },
+    {
+      "id": "browser-selection",
+      "status": "passed",
+      "detail": "Selected Tide panel remained Tide on Archived and Paused; Active restored Tide aria-pressed=true.",
+      "target": "583411576793e009f2b816fb8844750ce033b931f09199c6dbfdc306e43d6fa7",
+      "evidence": [
+        {
+          "path": "evidence/browser-trace.json",
+          "sha256": "e243328d62094d580c33843bb0f8b8cd9fa1e5fbc5a0d8c9730be7592e1064fe"
+        },
+        {
+          "path": "evidence/empty.png",
+          "sha256": "a37e21c4429d31ab9ccb8805c798b53230ce41da3df948b8e93cf0f261cf7ad3"
+        },
+        {
+          "path": "evidence/wide-active.png",
+          "sha256": "20aba178dde856295888e02d1699efe0a0ee567eb47a29b2bac26e56cb01faf7"
+        }
+      ],
+      "tool": "mcp__cua_repl.js \u2014 cua Chrome browser / documented Playwright UI APIs",
+      "url": "http://127.0.0.1:62230/",
+      "scenario": "Click Tide from All, select Archived hiding Tide, select Paused successful empty, then Active.",
+      "viewport": {
+        "width": 2320,
+        "height": 1329
+      }
+    },
+    {
+      "id": "browser-retry",
+      "status": "passed",
+      "detail": "Synthetic fail:true produced Could not load projects and Retry at Paused, distinct from empty; repeated Retry stayed error; fail:false then same Retry recovered current Paused to 0 projects, keeping Tide throughout. Fixture restored to healthy.",
+      "target": "583411576793e009f2b816fb8844750ce033b931f09199c6dbfdc306e43d6fa7",
+      "evidence": [
+        {
+          "path": "evidence/browser-trace.json",
+          "sha256": "e243328d62094d580c33843bb0f8b8cd9fa1e5fbc5a0d8c9730be7592e1064fe"
+        },
+        {
+          "path": "evidence/fixture-fail-on-retry.txt",
+          "sha256": "8755bf5b419e328cc1861b2998dbdf7d1f82b637bebd5b3714db072b7ef569fb"
+        },
+        {
+          "path": "evidence/fixture-restored-live-contract.txt",
+          "sha256": "211a8f7d87f10792721fe7a176f661f327bcf5b312ca287007a7c97368fa2b66"
+        },
+        {
+          "path": "evidence/error.png",
+          "sha256": "1fbf1ca7b13d04a28138eaccd2ed12c69dd374951d2f3f78cbffcee33569cc4b"
+        }
+      ],
+      "tool": "mcp__cua_repl.js \u2014 cua Chrome browser / documented Playwright UI APIs",
+      "url": "http://127.0.0.1:62230/",
+      "scenario": "Documented local PUT mode fail:true; select Paused and Retry; documented PUT fail:false; click Retry without filter change.",
+      "viewport": {
+        "width": 2320,
+        "height": 1329
+      }
+    },
+    {
+      "id": "browser-race",
+      "status": "passed",
+      "detail": "Immediate Active load read aria-busy=true, Loading projects and selected Tide; rapid slow Active then fast Archived and networkidle retained Archived/Forest/count 1.",
+      "target": "583411576793e009f2b816fb8844750ce033b931f09199c6dbfdc306e43d6fa7",
+      "evidence": [
+        {
+          "path": "evidence/loading-observation.json",
+          "sha256": "d549408d9a36a4aabcdc4a25de143a2c6ab08e5f1965589ec76f4bf36ac1e93d"
+        },
+        {
+          "path": "evidence/browser-trace.json",
+          "sha256": "e243328d62094d580c33843bb0f8b8cd9fa1e5fbc5a0d8c9730be7592e1064fe"
+        },
+        {
+          "path": "evidence/native-tests.txt",
+          "sha256": "855d248977773784db127a9144754c5414f30cc9f6daa6f70b4ace0220af0523"
+        }
+      ],
+      "tool": "mcp__cua_repl.js \u2014 cua Chrome browser / documented Playwright UI APIs",
+      "url": "http://127.0.0.1:62230/",
+      "scenario": "Select Active from Paused then observe loading before reply; later select All then rapidly Active\u2192Archived; wait latest row and networkidle. Native deferred tests additionally prove stale rejection ignored.",
+      "viewport": {
+        "width": 2320,
+        "height": 1329
+      }
+    },
+    {
+      "id": "design-trace",
+      "status": "passed",
+      "detail": "Source trace confirms existing API/UI owners unchanged, reference toolbar structure with app blue/space tokens, existing responsive/focus rules. Nine protected documents/infrastructure/draft files have unchanged baseline hashes; only four declared src/tests files changed; git diff --check passed.",
+      "target": "583411576793e009f2b816fb8844750ce033b931f09199c6dbfdc306e43d6fa7",
+      "evidence": [
+        {
+          "path": "evidence/design-source-trace.json",
+          "sha256": "67c7bff8cec16c9f1ee043f21c08fa79d65e796437069ac51f2cf7320abacbd3"
+        },
+        {
+          "path": "evidence/current-source.txt",
+          "sha256": "c1c63c1ea5e0aa9e8667e8ed13916ef432f55cd5fecbb49a0c9f070390369afa"
+        },
+        {
+          "path": "evidence/diff-check.txt",
+          "sha256": "fa77ab6dcf895a30623113e37b6ee812c6cd35b0cbb9693a0c18de550e6b1cf6"
+        }
+      ]
+    },
+    {
+      "id": "browser-layout",
+      "status": "passed",
+      "detail": "Browser measurements and screenshots show wide same-row panels, narrow below-list panel with no horizontal overflow. Keyboard Tab focuses Tide with visible 3px rgb(32,83,232) outline; selected border matches --accent #2053e8. Temporary viewport override reset.",
+      "target": "583411576793e009f2b816fb8844750ce033b931f09199c6dbfdc306e43d6fa7",
+      "evidence": [
+        {
+          "path": "evidence/wide-layout.json",
+          "sha256": "0f6b5d6291b434b8cfa7513d528c93600e315af1a8aa6c44317ff83f9077f144"
+        },
+        {
+          "path": "evidence/narrow-layout.json",
+          "sha256": "7798694efa8ef1ba486dd1e4d9dbc0daa87694b0dffcf9629f504dce1834b73c"
+        },
+        {
+          "path": "evidence/keyboard-focus.json",
+          "sha256": "cd56f6e99d8ade6716ec58609ae3ffbe3378efea96ec3d98c66ca1d24e538836"
+        },
+        {
+          "path": "evidence/wide-focus.png",
+          "sha256": "0593487ca2cb583914d1261107f1364bbae7c48174cd9c80b6c9f0387e6c0502"
+        },
+        {
+          "path": "evidence/narrow.png",
+          "sha256": "ba266e2ba5e6ae97ec8cbe8d2e7df84cd409453108f35a80a1d231f2a94ec4ea"
+        },
+        {
+          "path": "evidence/browser-trace.json",
+          "sha256": "e243328d62094d580c33843bb0f8b8cd9fa1e5fbc5a0d8c9730be7592e1064fe"
+        }
+      ],
+      "tool": "mcp__cua_repl.js \u2014 cua Chrome browser / documented Playwright UI APIs",
+      "url": "http://127.0.0.1:62230/",
+      "scenario": "At 1280x800 inspect layout and Tab from Status to Tide; at 375x812 inspect stacked panels/overflow/selection.",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      }
+    }
+  ],
+  "differences": [
+    "Prototype orange demo selection is rendered with required existing blue --accent #2053e8, per DESIGN.md.",
+    "Existing renderRows helper keeps lowercase server status labels; reference layout, selector labels and selection behavior are retained."
+  ],
+  "handoff": {
+    "source": "/private/tmp/hm2-implement-forward-codex-20261030-a/source",
+    "app_url": "http://127.0.0.1:62230/",
+    "start_command": [
+      "env",
+      "PORT=0",
+      "node",
+      "server.mjs"
+    ],
+    "start_cwd": "/private/tmp/hm2-implement-forward-codex-20261030-a/source",
+    "server_exec_session": 85827,
+    "server_pid_file": "/private/tmp/hm2-implement-forward-codex-20261030-a/state/server-pid.txt",
+    "fixture_mode": "fail:false (healthy)",
+    "input_manifest": "/private/tmp/hm2-implement-forward-codex-20261030-a/state/inputs.json",
+    "baseline": "/private/tmp/hm2-implement-forward-codex-20261030-a/state/target.json",
+    "verification_target": "/private/tmp/hm2-implement-forward-codex-20261030-a/state/verification-target.json",
+    "diff": "/private/tmp/hm2-implement-forward-codex-20261030-a/state/current.diff",
+    "scenario_data": "Tide active, Forest archived, North active; Paused has no rows.",
+    "environment_limits": [
+      "Sandbox initially denied loopback listen/connect (EPERM); authorized require_escalated server and synthetic fixture requests succeeded.",
+      "IAB visible tab unsupported for a subagent; actual Chrome app used instead.",
+      "Browser evaluation does not expose performance resource timing and dev logs returned no entries; no direct browser network trace is claimed."
+    ],
+    "remaining_requirements": [],
+    "independent_reviews_run": [],
+    "publication": "No commit, push, dependency install, deployment or external posting."
+  }
+}

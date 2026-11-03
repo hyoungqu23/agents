@@ -1,0 +1,23 @@
+{
+  "accent": "#2053e8",
+  "overflow": false,
+  "panels": [
+    {
+      "height": 225,
+      "width": 794.6640625,
+      "x": 32,
+      "y": 134.4375
+    },
+    {
+      "height": 225,
+      "width": 397.3359375,
+      "x": 850.6640625,
+      "y": 134.4375
+    }
+  ],
+  "selectedBorder": "rgb(32, 83, 232)",
+  "viewport": {
+    "height": 800,
+    "width": 1280
+  }
+}

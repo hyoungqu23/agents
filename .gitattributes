@@ -1,0 +1,2 @@
+# Preserve exact numbered-source stdout referenced by hashed evaluation evidence.
+reports/implement-evaluation-2026-10-30/codex-full/state/evidence/current-source.txt -whitespace

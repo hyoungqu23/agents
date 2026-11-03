@@ -14,6 +14,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | [`review`](plugins/review) | `review-pr`, `review-code`, `review-respond`, `review-check` | Read-only PR review with resumable Pending drafts, code review, claim verification, and author responses. |
 | [`design`](plugins/design) | `design-brief`, `prototype-explore`, `prototype-promote` | Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references. |
 | [`product`](plugins/product) | `problem-frame`, `prd-write`, `prd-gate`, `flow-spec` | Problem framing, traceable requirements, readiness review and user-flow specifications. |
+| [`build`](plugins/build) | `implement` | Implement requested functionality in existing apps, preserving UX patterns and current-source verification evidence. |
 
 ## Repository layout
 
@@ -28,6 +29,8 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
     │   └── skills/{review-pr,review-code,review-respond,review-check}/
     ├── product/
     │   └── skills/{problem-frame,prd-write,prd-gate,flow-spec}/
+    ├── build/
+    │   └── skills/implement/
     └── design/
         ├── references/
         └── skills/{design-brief,prototype-explore,prototype-promote}/

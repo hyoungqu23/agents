@@ -1,0 +1,9 @@
+{
+  "name": "build",
+  "displayName": "Build",
+  "version": "0.1.0",
+  "description": "Implement requested product behavior from requirements, selected designs and UX patterns with current-source verification evidence.",
+  "author": { "name": "HM2" },
+  "keywords": ["implementation", "requirements", "prototype", "verification"],
+  "skills": "./skills/"
+}

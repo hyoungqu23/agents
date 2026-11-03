@@ -1,0 +1,534 @@
+[
+  {
+    "step": "initial-all",
+    "actions": "Open Chrome actual implementation at server printed URL",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:37:42.304Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: All, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 (selected) All\n\t\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 Paused\n\t\t\t\t15 text 3 projects\n\t\t\t16 container rows\n\t\t\t\t17 checkbox Tide — active, Value: 0\n\t\t\t\t18 checkbox Forest — archived, Value: 0\n\t\t\t\t19 checkbox North — active, Value: 0\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t23 text None\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "3 projects",
+      "message": "Tide — activeForest — archivedNorth — active",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [
+        {
+          "id": "tide",
+          "pressed": "false",
+          "text": "Tide — active"
+        },
+        {
+          "id": "forest",
+          "pressed": "false",
+          "text": "Forest — archived"
+        },
+        {
+          "id": "north",
+          "pressed": "false",
+          "text": "North — active"
+        }
+      ],
+      "selection": "None",
+      "status": "all",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "select-tide",
+    "actions": "click [data-project-id=\"tide\"]",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:38:05.720Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: All, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 (selected) All\n\t\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 Paused\n\t\t\t\t23 text 3 projects\n\t\t\t16 container rows\n\t\t\t\t24 checkbox Tide — active, Value: 1\n\t\t\t\t25 checkbox Forest — archived, Value: 0\n\t\t\t\t26 checkbox North — active, Value: 0\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t27 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "3 projects",
+      "message": "Tide — activeForest — archivedNorth — active",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [
+        {
+          "id": "tide",
+          "pressed": "true",
+          "text": "Tide — active"
+        },
+        {
+          "id": "forest",
+          "pressed": "false",
+          "text": "Forest — archived"
+        },
+        {
+          "id": "north",
+          "pressed": "false",
+          "text": "North — active"
+        }
+      ],
+      "selection": "Tide",
+      "status": "all",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "archived-hides-selection",
+    "actions": "selectOption archived using visible combobox Status; waitFor 1 project",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:38:18.786Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Archived, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t\t13 (selected) Archived\n\t\t\t\t\t\t\t14 Paused\n\t\t\t\t23 text 1 project\n\t\t\t24 checkbox Forest — archived, Value: 0\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t25 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "1 project",
+      "message": "Forest — archived",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [
+        {
+          "id": "forest",
+          "pressed": "false",
+          "text": "Forest — archived"
+        }
+      ],
+      "selection": "Tide",
+      "status": "archived",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "paused-success-empty",
+    "actions": "selectOption paused; waitFor empty success",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:38:18.955Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Paused, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 (selected) Paused\n\t\t\t\t23 text 0 projects\n\t\t\t24 text No projects match this status.\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t25 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "0 projects",
+      "message": "No projects match this status.",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [],
+      "selection": "Tide",
+      "status": "paused",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "active-restores-selection",
+    "actions": "selectOption active; immediate loading observation saved; waitFor 2 projects",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:38:38.416Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Active, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 (selected) Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 Paused\n\t\t\t\t23 text 2 projects\n\t\t\t24 container rows\n\t\t\t\t25 checkbox Tide — active, Value: 1\n\t\t\t\t26 checkbox North — active, Value: 0\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t27 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "2 projects",
+      "message": "Tide — activeNorth — active",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [
+        {
+          "id": "tide",
+          "pressed": "true",
+          "text": "Tide — active"
+        },
+        {
+          "id": "north",
+          "pressed": "false",
+          "text": "North — active"
+        }
+      ],
+      "selection": "Tide",
+      "status": "active",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "rapid-active-archived",
+    "actions": "select all and wait; rapidly select slow active then fast archived; wait 1 project and networkidle",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:38:43.858Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Archived, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t\t13 (selected) Archived\n\t\t\t\t\t\t\t14 Paused\n\t\t\t\t23 text 1 project\n\t\t\t24 checkbox Forest — archived, Value: 0\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t25 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "1 project",
+      "message": "Forest — archived",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [
+        {
+          "id": "forest",
+          "pressed": "false",
+          "text": "Forest — archived"
+        }
+      ],
+      "selection": "Tide",
+      "status": "archived",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "paused-request-error",
+    "actions": "Documented fixture PUT fail:true; select paused; wait existing problem treatment",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:39:26.439Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Paused, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 (selected) Paused\n\t\t\t23 container\n\t\t\t\t24 text Could not load projects. \n\t\t\t\t25 button Retry\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t26 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "",
+      "message": "Could not load projects. Retry",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [],
+      "selection": "Tide",
+      "status": "paused",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "retry-still-failing",
+    "actions": "click Retry while fail mode remains true; wait for distinct error",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:39:26.802Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Paused, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 (selected) Paused\n\t\t\t23 container\n\t\t\t\t24 text Could not load projects. \n\t\t\t\t25 button Retry\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t26 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "",
+      "message": "Could not load projects. Retry",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [],
+      "selection": "Tide",
+      "status": "paused",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "paused-retry-recovers-to-empty",
+    "actions": "Documented fixture restored fail:false via local PUT; click Retry without changing Paused filter; wait empty success",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:39:50.565Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Paused, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 (selected) Paused\n\t\t\t\t23 text 0 projects\n\t\t\t24 text No projects match this status.\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t25 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "0 projects",
+      "message": "No projects match this status.",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [],
+      "selection": "Tide",
+      "status": "paused",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "active-after-recovery",
+    "actions": "select Active after successful retry; selected Tide restored",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:39:50.840Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Active, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 (selected) Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 Paused\n\t\t\t\t23 text 2 projects\n\t\t\t24 container rows\n\t\t\t\t25 checkbox Tide — active, Value: 1\n\t\t\t\t26 checkbox North — active, Value: 0\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t27 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "2 projects",
+      "message": "Tide — activeNorth — active",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [
+        {
+          "id": "tide",
+          "pressed": "true",
+          "text": "Tide — active"
+        },
+        {
+          "id": "north",
+          "pressed": "false",
+          "text": "North — active"
+        }
+      ],
+      "selection": "Tide",
+      "status": "active",
+      "viewport": {
+        "height": 1329,
+        "width": 2320
+      }
+    }
+  },
+  {
+    "step": "wide-layout",
+    "actions": "viewport.set 1280×800",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:40:18.021Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Active, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 (selected) Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 Paused\n\t\t\t\t23 text 2 projects\n\t\t\t24 container rows\n\t\t\t\t25 checkbox Tide — active, Value: 1\n\t\t\t\t26 checkbox North — active, Value: 0\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t27 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:62230/",
+    "dom": {
+      "busy": "false",
+      "count": "2 projects",
+      "message": "Tide — activeNorth — active",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [
+        {
+          "id": "tide",
+          "pressed": "true",
+          "text": "Tide — active"
+        },
+        {
+          "id": "north",
+          "pressed": "false",
+          "text": "North — active"
+        }
+      ],
+      "selection": "Tide",
+      "status": "active",
+      "viewport": {
+        "height": 800,
+        "width": 1280
+      }
+    }
+  },
+  {
+    "step": "narrow-layout",
+    "actions": "viewport.set 375×812",
+    "url": "http://127.0.0.1:62230/",
+    "observedAt": "2026-10-29T17:40:29.063Z",
+    "ax": "Browser tab: 1893493522, Title: \"Projects\", URL: \"http://127.0.0.1:62230/\".\n0 AXWebArea Projects, URL: 127.0.0.1:62230/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t\t5 container\n\t\t\t6 container toolbar\n\t\t\t\t7 container\n\t\t\t\t\t8 text Status\n\t\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Active, Secondary Actions: Expand\n\t\t\t\t\t\t10 menu\n\t\t\t\t\t\t\t11 All\n\t\t\t\t\t\t\t12 (selected) Active\n\t\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t\t14 Paused\n\t\t\t\t23 text 2 projects\n\t\t\t24 container rows\n\t\t\t\t25 checkbox Tide — active, Value: 1\n\t\t\t\t26 checkbox North — active, Value: 0\n\t\t20 container\n\t\t\t21 heading Selected project, Value: 2\n\t\t\t\t22 text Selected project\n\t\t\t27 text Tide\n\nThe focused UI element is 25 checkbox Tide — active, Value: 1",
+    "dom": {
+      "busy": "false",
+      "count": "2 projects",
+      "message": "Tide — activeNorth — active",
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "rows": [
+        {
+          "id": "tide",
+          "pressed": "true",
+          "text": "Tide — active"
+        },
+        {
+          "id": "north",
+          "pressed": "false",
+          "text": "North — active"
+        }
+      ],
+      "selection": "Tide",
+      "status": "active",
+      "viewport": {
+        "height": 812,
+        "width": 375
+      }
+    }
+  }
+]

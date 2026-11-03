@@ -1,0 +1,44 @@
+{
+  "status": "partial",
+  "gaps": [
+    {
+      "check": "contract",
+      "reason": "not_run"
+    },
+    {
+      "check": "app",
+      "reason": "not_run"
+    },
+    {
+      "requirement": "spec:AC-1",
+      "check": "contract",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "spec:AC-1",
+      "check": "app",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "spec:AC-2",
+      "check": "app",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "spec:AC-3",
+      "check": "app",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "ux:latest-response",
+      "check": "app",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "design:tokens-layout",
+      "check": "app",
+      "reason": "outcome_unverified"
+    }
+  ],
+  "target": "f986d679136d33abac218ae875387fc2cd827fe86e8464d1ba15b42e5acbca63"
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "--input-type=module",
+    "-e",
+    "const url='http://127.0.0.1:62230/__fixture__/mode'; const response=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({fail:true})}); console.log(JSON.stringify({url,method:'PUT',body:{fail:true},status:response.status,response:await response.text()})); if(!response.ok)process.exitCode=1;"
+  ],
+  "cwd": "/private/tmp/hm2-implement-forward-codex-20261030-a"
+}
+{"url":"http://127.0.0.1:62230/__fixture__/mode","method":"PUT","body":{"fail":true},"status":200,"response":"{}"}
+
+exit_code=0

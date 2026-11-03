@@ -1,0 +1,31 @@
+{
+  "case": "full",
+  "source": "/private/tmp/hm2-implement-forward-codex-20261030-a/source",
+  "installed": "/private/tmp/hm2-implement-forward-codex-20261030-a/implement",
+  "state": "/private/tmp/hm2-implement-forward-codex-20261030-a/state",
+  "head": "a30eef69718712526d8ea2fd504a3dcd982c0054",
+  "before": {
+    ".gitignore": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+    "AGENTS.md": "1845ca03e935a008c4976c80ede6a5df49280ffdfcc5cfe9a19c9932cb06bb5f",
+    "DESIGN.md": "ab770e44f3c48c5a1658c40d84519e227f147dfac6ca4c0b6adc81cf3c363b7f",
+    "index.html": "df2ff6aa8a91cb479bbfccaaed45322489a6ff80ccaa7c4bb3c7c6f4ca56e8aa",
+    "package.json": "235f362b49114d373c4ddc9eb6075c42a4196ac871870396814b899c4e5d4f68",
+    "prototype.html": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee",
+    "server.mjs": "66a18a14c464000a8b3f86abc603cd9a1c04683a12ab1c3303a2a780482fc1e6",
+    "spec.md": "53026266ae872b456c7b3bebaea9d24f3d0c971d31b2a4c83b4d1bf953234cfc",
+    "src/api.js": "7b5232af77b6d8bdf24bfb9cd88031dae2761d1d3c2473e12bd978ff26f4fad0",
+    "src/app.js": "ddd6e93584ce108b97112190faf0cfb3e302e5b7ce887daa4ddc03b1c8d2ec78",
+    "src/theme.css": "d3cc3e39dc694de990903e474a384ef5a9df8664f2e0b1f6f0e53bcc04232c43",
+    "src/ui.js": "8c5f2f7af73596d6471bb1d8f907e65d972eff90110e8dfc4e32a2c6ffb24cfa",
+    "tests/api.test.mjs": "dbdb223e6022936ada468c529f5367fbedcd6c594cf825f645f2e10bc461b83b",
+    "user-draft.md": "185223621b58f58f247bdba87d677f71498af5ad4e06aad572b5a7ccd03a93d6",
+    "ux.md": "1c928e842ab98616a3dd124bb3396c6e75019be357f106590bc54b4585c2afc1"
+  },
+  "instructions": {
+    "SKILL.md": "521d9d8779e606b6e6f2525721c07419587167c478cdb8aa2eb5666405729486",
+    "agents/openai.yaml": "252c0f708f3f0744c9ef596cb11a0a9234c3235486c6f38b5c1ee971a2463055",
+    "references/execution-and-evidence.md": "a43b0375e168b9cc884d9f674bc4411c22e63707aada192f26e5e9937725bd12",
+    "references/inputs-and-authority.md": "64db90fdcee212baf1971a1ba41f939c1ec174d9d0e01773ba39d7bf3b249413",
+    "scripts/implementation_state.py": "2559330665c89d4d19cf9ced6627c932e9bdfe5f29131959b9e520f5a448c27c"
+  }
+}

@@ -1,0 +1,3 @@
+$ PORT=0 node server.mjs
+cwd=/private/tmp/hm2-implement-forward-codex-20261030-a/source
+http://127.0.0.1:62230/

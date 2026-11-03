@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task": "Project list status filter, selection, empty and error states",
+  "surface": "ui",
+  "scope": ["src", "tests"],
+  "preserve": ["user-draft.md", "server.mjs", "spec.md", "DESIGN.md", "ux.md", "AGENTS.md", "prototype.html", "index.html", "package.json", ".gitignore"],
+  "sources": [
+    {"id": "spec", "path": "spec.md"},
+    {"id": "design", "path": "DESIGN.md"},
+    {"id": "ux", "path": "ux.md"},
+    {"id": "prototype", "path": "prototype.html", "locator": "selected prototype"},
+    {"id": "agents", "path": "AGENTS.md"},
+    {"id": "server", "path": "server.mjs", "locator": "provided fixture API contract"}
+  ],
+  "requirements": [
+    {"id": "spec:AC-1", "source": "spec", "description": "Labelled status selector (All, Active, Archived, Paused) above the list fetches the selected status via the existing API client and shows matching projects and a result count, in the prototype's structure", "disposition": "required", "checks": ["unit", "server-contract", "app-browser"]},
+    {"id": "spec:AC-2", "source": "spec", "description": "Selecting a project shows its name in the selected-project panel; selection survives filtering that hides it and is restored visually when filtering back; a successful empty result has its own empty state", "disposition": "required", "checks": ["unit", "app-browser"]},
+    {"id": "spec:AC-3", "source": "spec", "description": "Failed request shows the existing showProblem error with Retry, distinct from empty; Retry uses the current filter and preserves the selection", "disposition": "required", "checks": ["unit", "server-contract", "app-browser"]},
+    {"id": "ux:patterns", "source": "ux", "description": "Use selectField/renderRows/showProblem; selection in app state independent of visible list; loading distinct from empty/error; panel not cleared on request/error; only the latest filter's response renders", "disposition": "required", "checks": ["unit", "static-design", "app-browser"]},
+    {"id": "design:tokens-layout", "source": "design", "description": "Use existing --accent/--surface/--line/--space tokens with blue accent (not prototype orange); side-by-side on wide screens, panel below list on narrow; labelled, keyboard-focusable controls", "disposition": "required", "checks": ["static-design", "app-browser"]}
+  ],
+  "checks": [
+    {"id": "unit", "kind": "command", "required": true, "description": "npm test: controller tests prove status reaches the loader, selection persists across filters, empty vs error phases, retry with current filter, stale responses ignored"},
+    {"id": "server-contract", "kind": "command", "required": true, "description": "npm test spawns the provided server with PORT=0 and verifies filtered results through the real API client path and the 503 failure mode via /__fixture__/mode"},
+    {"id": "static-design", "kind": "static", "required": true, "description": "Source trace: tokens only (no orange), responsive layout rule, labelled select, existing helpers used"},
+    {"id": "app-browser", "kind": "browser", "required": true, "description": "Open the actual app, change filters, select, hide/restore selection, empty (paused), failure + Retry, wide and narrow viewports"}
+  ]
+}

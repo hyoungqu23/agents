@@ -1,0 +1,22 @@
+{
+  "overflow": false,
+  "panels": [
+    {
+      "height": 225,
+      "width": 343,
+      "x": 16,
+      "y": 142.875
+    },
+    {
+      "height": 152.828125,
+      "width": 343,
+      "x": 16,
+      "y": 391.875
+    }
+  ],
+  "selection": "Tide",
+  "viewport": {
+    "height": 812,
+    "width": 375
+  }
+}

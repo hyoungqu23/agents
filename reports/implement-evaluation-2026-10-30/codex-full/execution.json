@@ -1,0 +1,8 @@
+{
+  "host": "Codex desktop subagent",
+  "model": "inherited parent; immutable model identity unavailable",
+  "scope": "synthetic existing-app fixture only; no GitHub writes or packages",
+  "executor_browser": "available",
+  "host_reassessment_helper_sha256": "45debc9cd0c4034c074b99d2eb7bdb8b159bf4e863e6a60c21f88181c6c0e1b3",
+  "coordinator_grader_sha256": "c6fe12e73339aa37aa99df1fbc706fa6368fd500d9788e87a00ed647e8ab3f92"
+}

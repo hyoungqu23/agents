@@ -1,0 +1,10 @@
+{
+  "action": "selectOption active from Paused then immediate read-only DOM observation",
+  "url": "http://127.0.0.1:62230/",
+  "dom": {
+    "busy": "true",
+    "count": "",
+    "message": "Loading projects…",
+    "selection": "Tide"
+  }
+}

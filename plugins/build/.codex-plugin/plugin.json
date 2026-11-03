@@ -1,0 +1,17 @@
+{
+  "name": "build",
+  "version": "0.1.0",
+  "description": "Implement requested product behavior from requirements, selected designs and UX patterns with current-source verification evidence.",
+  "author": { "name": "HM2" },
+  "keywords": ["implementation", "requirements", "prototype", "verification"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Build",
+    "shortDescription": "Implement features and verify actual behavior",
+    "longDescription": "Connect requirements and selected designs to existing product code, preserve UX patterns and user edits, and report current-source implementation evidence and remaining gaps.",
+    "developerName": "HM2",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write", "Interactive"],
+    "defaultPrompt": "Implement these requirements and the selected design in the existing application."
+  }
+}
