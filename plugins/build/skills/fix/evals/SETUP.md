@@ -28,6 +28,16 @@ and the bordered empty group at wide/narrow sizes. Record actual observations an
 the final source hashes outside the executor's inputs, then pass them to `grade`.
 Parent browser observations never upgrade a no-browser executor's unverified result.
 
+For coordinator Python tooling, import `fix` from `scripts/behavioral` and bind
+observations to `gate.digest(source_hashes(snapshot))`, where `snapshot` is obtained
+with `gate.capture(source, coordinator / 'inputs.json')` before observing the app.
+Re-capture afterwards and verify it still equals that snapshot. Use this Git
+inventory for source identity, not the generic instruction-directory hash helper:
+nonignored `__pycache__` files are source entries, while ignored runtime files are
+outside the captured source inventory. A separate scope guard still checks for
+new ignored files outside the authorized paths. Initial dirty or untracked test drafts
+are protected user work rather than test blobs assumed to exist in HEAD.
+
 The grader checks identity, scope, protected inputs/user work, original test prefixes, changes, item
 coverage, evidence files and independently supplied observations. It does not run
 app code or authenticate a claimed command/browser execution. Coordinator metadata

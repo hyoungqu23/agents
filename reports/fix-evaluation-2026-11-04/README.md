@@ -68,6 +68,23 @@ Codex/Claude plugin validation and installation/loading were exercised. Ordinary
 plugin validation passes; optional public-directory license/icon advice is outside
 this marketplace submission's scope.
 
+## Inventory follow-up — 2026-11-04
+
+An additional synthetic probe found that the generic directory hash helper omitted
+`__pycache__` entries present in Git capture. It rejected a real file's correct hash,
+accepted a null hash for that present file, and missed later content changes.
+Source hashes now come from the captured Git inventory for preparation, accounting,
+user-work preservation and observation identity. Original dirty/untracked test
+drafts are protected directly; clean original tests retain their prefix checks.
+The separate guard for newly added ignored files outside scope is retained.
+
+Three added cache regressions failed before the fix; all four new regressions pass,
+including the unchanged ignored-file guard. The four retained cases were regraded
+without changing their source, observations or executor records. The original
+execution/grade files keep their historical hashes; current-grader results and
+provenance are in [the follow-up record](inventory-follow-up.json). No new model or
+browser execution is claimed by this bookkeeping correction.
+
 ## Limits
 
 This is one small app and four bounded tasks on Codex. Claude execution, automatic

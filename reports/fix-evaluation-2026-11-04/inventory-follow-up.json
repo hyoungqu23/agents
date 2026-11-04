@@ -1,0 +1,121 @@
+{
+  "scope": "Source-inventory correction; no new model or browser execution.",
+  "grader_sha256": "c8e688af7bb80a0dae4c9a8d2d627062077a093d7b53521d82c9680032ec9b90",
+  "tests_sha256": "4f78b9af05d3d4795e4423c10754604d981092b29e2bafc9556af93bda6d7ab5",
+  "before_probe": {
+    "correct_sha256_record": "failed",
+    "present_file_with_null_hash": "passed",
+    "changed_after_observation": "passed"
+  },
+  "regression_checks": {
+    "new_tests": 4,
+    "cache_tests_failed_before": 3,
+    "focused_suite_passed": 20
+  },
+  "retained_cases": {
+    "bug": {
+      "grade": {
+        "status": "passed",
+        "checks": {
+          "metadata_consistent": true,
+          "instructions_preserved": true,
+          "head_preserved": true,
+          "protected_work_preserved": true,
+          "original_tests_preserved": true,
+          "scope_preserved": true,
+          "regular_outputs": true,
+          "change_matches_case": true,
+          "result_contract": true,
+          "current_files_accounted": true,
+          "change_purposes": true,
+          "item_coverage": true,
+          "disposition": true,
+          "useful_checks_passed": true,
+          "browser_boundary": true,
+          "observations_current": true,
+          "independent_outcomes": true
+        }
+      },
+      "observations_sha256": "3c3d1eefb268388a1d1f05c1fbb52fcaf97c2be1aa0e0a3e9164a33e250e95b1"
+    },
+    "qa": {
+      "grade": {
+        "status": "passed",
+        "checks": {
+          "metadata_consistent": true,
+          "instructions_preserved": true,
+          "head_preserved": true,
+          "protected_work_preserved": true,
+          "original_tests_preserved": true,
+          "scope_preserved": true,
+          "regular_outputs": true,
+          "change_matches_case": true,
+          "result_contract": true,
+          "current_files_accounted": true,
+          "change_purposes": true,
+          "item_coverage": true,
+          "disposition": true,
+          "useful_checks_passed": true,
+          "browser_boundary": true,
+          "observations_current": true,
+          "independent_outcomes": true
+        }
+      },
+      "observations_sha256": "93910910c2bc8b28584173259130f6f0e506d7f39aa84823182b88bff6c7f5fc"
+    },
+    "no-browser": {
+      "grade": {
+        "status": "passed",
+        "checks": {
+          "metadata_consistent": true,
+          "instructions_preserved": true,
+          "head_preserved": true,
+          "protected_work_preserved": true,
+          "original_tests_preserved": true,
+          "scope_preserved": true,
+          "regular_outputs": true,
+          "change_matches_case": true,
+          "result_contract": true,
+          "current_files_accounted": true,
+          "change_purposes": true,
+          "item_coverage": true,
+          "disposition": true,
+          "useful_checks_passed": true,
+          "browser_boundary": true,
+          "observations_current": true,
+          "independent_outcomes": true
+        }
+      },
+      "observations_sha256": "b7f755e2a950740cd75bca9ceed146689747cd45fe4f3d405fa98df0fab0cb2d"
+    },
+    "no-change": {
+      "grade": {
+        "status": "passed",
+        "checks": {
+          "metadata_consistent": true,
+          "instructions_preserved": true,
+          "head_preserved": true,
+          "protected_work_preserved": true,
+          "original_tests_preserved": true,
+          "scope_preserved": true,
+          "regular_outputs": true,
+          "change_matches_case": true,
+          "result_contract": true,
+          "current_files_accounted": true,
+          "change_purposes": true,
+          "item_coverage": true,
+          "disposition": true,
+          "useful_checks_passed": true,
+          "browser_boundary": true,
+          "observations_current": true,
+          "independent_outcomes": true
+        }
+      },
+      "observations_sha256": "65e638634d29aa1a3f7f939d77ac5dc421b67ad62ffb1871ec13caab290e7e7d"
+    }
+  },
+  "verification": {
+    "python_suite_passed": 211,
+    "node_fixture_tests_passed": 5
+  }
+}

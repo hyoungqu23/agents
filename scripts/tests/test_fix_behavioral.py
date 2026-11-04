@@ -1,8 +1,10 @@
 """Mechanical sensitivity only: synthetic records/observations are not host runs."""
 import copy
+import hashlib
 import importlib.util
 from pathlib import Path
 import sys
+import subprocess
 import tempfile
 import unittest
 
@@ -149,6 +151,65 @@ class FixEvaluationTests(unittest.TestCase):
             self.assertEqual(self.grade()['status'], 'failed'); self.observed[name] = original
         (self.source / 'src/app.js').write_text('changed after checks')
         self.assertFalse(self.grade()['checks']['current_files_accounted'])
+
+    def test_cached_file_needs_its_real_hash_and_fresh_observation(self):
+        self.records()
+        name = 'tests/__pycache__/fixture.json'
+        path = self.source / name; path.parent.mkdir(); path.write_text('{"answer":1}\n')
+        expected = evaluation.hashes(self.source)
+        expected[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+        self.result['changed_files'][name] = expected[name]
+        self.result['change_reasons'][name] = 'Synthetic fixture input'
+        self.observed['source_digest'] = evaluation.gate.digest(expected)
+        self.assertEqual(self.grade()['status'], 'passed')
+
+        self.result['changed_files'][name] = None
+        self.assertFalse(self.grade()['checks']['current_files_accounted'])
+        path.write_text('{"answer":2}\n')
+        self.result['changed_files'][name] = hashlib.sha256(path.read_bytes()).hexdigest()
+        verdict = self.grade()
+        self.assertTrue(verdict['checks']['current_files_accounted'])
+        self.assertFalse(verdict['checks']['observations_current'])
+
+    def test_cached_symlink_is_not_an_omitted_or_regular_output(self):
+        self.records()
+        name = 'tests/__pycache__/fixture.json'
+        path = self.source / name; path.parent.mkdir(); path.symlink_to(self.source / 'task.md')
+        self.refresh_changes(); self.result['changed_files'] = self.changes
+        self.result['change_reasons'] = {p: 'Synthetic output' for p in self.changes}
+        self.assertFalse(self.grade()['checks']['regular_outputs'])
+
+    def test_initial_untracked_cached_user_work_remains_protected(self):
+        self.records()
+        original = evaluation.gate.git(self.source, 'show', 'HEAD:src/app.js')
+        name = 'tests/__pycache__/user-draft.json'
+        path = self.source / name; path.parent.mkdir()
+        coordinator = self.output / 'coordinator'
+        for staged in (False, True):
+            with self.subTest(staged=staged):
+                (self.source / 'src/app.js').write_text(original)
+                path.write_text('Existing draft\n')
+                if staged:
+                    subprocess.run(['git', '-c', 'core.hooksPath=/dev/null', '-C', str(self.source), 'add', '--', name], check=True)
+                baseline = evaluation.gate.capture(self.source, coordinator / 'inputs.json')
+                evaluation.write(coordinator / 'baseline.json', baseline)
+                metadata = evaluation.gate.load(coordinator / 'case.json')
+                metadata['before'][name] = hashlib.sha256(path.read_bytes()).hexdigest()
+                evaluation.write(coordinator / 'case.json', metadata)
+                (self.source / 'src/app.js').write_text(original + '\n// Synthetic correction.\n')
+                self.refresh_changes(); self.result['changed_files'] = self.changes
+                self.result['change_reasons'] = {p: 'Synthetic correction' for p in self.changes}
+                expected = evaluation.hashes(self.source); expected[name] = metadata['before'][name]
+                self.observed['source_digest'] = evaluation.gate.digest(expected)
+                self.assertEqual(self.grade()['status'], 'passed')
+                path.write_text('Unauthorized replacement\n')
+                verdict = self.grade()
+                self.assertFalse(verdict['checks']['protected_work_preserved'])
+
+    def test_ignored_files_added_outside_scope_are_still_rejected(self):
+        self.records()
+        path = self.source / 'node_modules/unrequested.txt'; path.parent.mkdir(); path.write_text('Unrequested file\n')
+        self.assertFalse(self.grade()['checks']['scope_preserved'])
 
     def test_initial_head_and_instruction_changes_do_not_pass(self):
         self.records()
