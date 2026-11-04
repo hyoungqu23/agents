@@ -36,3 +36,4 @@ jobs:
       - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
       - run: node --test plugins/design/evals/tests/fixtures.test.mjs
       - run: node --test plugins/build/skills/implement/evals/files/feature-app/tests/*.test.mjs
+      - run: node --test plugins/build/skills/fix/evals/files/project-list/tests/*.test.mjs

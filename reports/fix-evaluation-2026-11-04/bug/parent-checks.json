@@ -1,0 +1,23 @@
+{
+  "model-contract": {
+    "argv": [
+      "node",
+      "--test",
+      "/Users/hyoungmin/.codex/worktrees/fix-harness-plan/agents/scripts/behavioral/fix-contract.test.mjs"
+    ],
+    "cwd": "/private/tmp/hm2-fix-bug-20261104-a/source",
+    "exit_code": 0,
+    "stdout": "\u2714 latest filter survives an older success (0.619834ms)\n\u2714 latest filter survives an older failure (0.065292ms)\n\u2714 empty success, error and Retry retain selection and the current filter (0.118709ms)\n\u2139 tests 3\n\u2139 suites 0\n\u2139 pass 3\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 33.167208\n",
+    "stderr": ""
+  },
+  "app-tests": {
+    "argv": [
+      "npm",
+      "test"
+    ],
+    "cwd": "/private/tmp/hm2-fix-bug-20261104-a/source",
+    "exit_code": 0,
+    "stdout": "\n> test\n> node --test tests/*.test.mjs\n\n\u2714 API client forwards status and rejects a failed response (0.613583ms)\n\u2714 filter and empty success preserve the selected project (0.744375ms)\n\u2714 stale success after latest completion cannot replace current state (0.210208ms)\n\u2714 stale success before latest completion cannot replace current state (0.071959ms)\n\u2714 stale failure after latest completion cannot replace current state (0.121083ms)\n\u2714 stale failure before latest completion cannot replace current state (0.078958ms)\n\u2714 current failure and retry use the current filter and preserve selection (0.21775ms)\n\u2139 tests 7\n\u2139 suites 0\n\u2139 pass 7\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 37.199584\n",
+    "stderr": ""
+  }
+}

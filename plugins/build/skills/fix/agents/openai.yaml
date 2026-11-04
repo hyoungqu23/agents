@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fix"
+  short_description: "Fix bugs and apply scoped QA improvements"
+  default_prompt: "Use $fix to address these bugs and requested QA improvements with the smallest complete correction and focused verification."

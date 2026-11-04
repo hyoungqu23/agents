@@ -1,9 +1,16 @@
 {
   "name": "build",
   "displayName": "Build",
-  "version": "0.1.0",
-  "description": "Implement requested product behavior from requirements, selected designs and UX patterns with current-source verification evidence.",
-  "author": { "name": "HM2" },
-  "keywords": ["implementation", "requirements", "prototype", "verification"],
+  "version": "0.2.0",
+  "description": "Implement product features and make scoped bug or QA corrections with verification evidence.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "implementation",
+    "bug-fix",
+    "qa",
+    "verification"
+  ],
   "skills": "./skills/"
 }

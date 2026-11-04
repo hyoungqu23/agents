@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "id": "QA-1",
+      "action": "applied",
+      "reason": "Adopted the requested empty-results design and reset behavior in existing app/style owners. Clear filter loads all through the existing list/API, state synchronizes the select and selected project is preserved.",
+      "checks": [
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "> test\n> node --test tests/*.test.mjs\n\n✔ API client forwards status and rejects a failed response (0.649958ms)\n✔ filter and empty success preserve the selected project (0.557958ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 41.018833",
+          "evidence": [
+            "command-checks.json",
+            "verification-target.json",
+            "final-identity.json"
+          ],
+          "argv": [
+            "npm",
+            "test"
+          ],
+          "cwd": "/private/tmp/hm2-fix-qa-20261104-a/source",
+          "exit_code": 0
+        },
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "Command completed successfully.",
+          "evidence": [
+            "command-checks.json",
+            "verification-target.json",
+            "final-identity.json"
+          ],
+          "argv": [
+            "node",
+            "--check",
+            "src/app.js"
+          ],
+          "cwd": "/private/tmp/hm2-fix-qa-20261104-a/source",
+          "exit_code": 0
+        },
+        {
+          "kind": "command",
+          "status": "passed",
+          "detail": "Command completed successfully.",
+          "evidence": [
+            "command-checks.json",
+            "verification-target.json",
+            "final-identity.json"
+          ],
+          "argv": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "cwd": "/private/tmp/hm2-fix-qa-20261104-a/source",
+          "exit_code": 0
+        },
+        {
+          "kind": "browser",
+          "status": "passed",
+          "detail": "Actual app before/after: Paused empty results keep Tide; Clear filter sets selector All, renders all three projects and restores Tide aria-pressed=true. Loading and nonempty results have no reset action.",
+          "evidence": [
+            "browser-before.json",
+            "before-empty.png",
+            "browser-after.json",
+            "after-wide-empty.png",
+            "after-wide-reset.png"
+          ],
+          "tool": "mcp__cua_repl.js",
+          "url": "http://127.0.0.1:62013/",
+          "scenario": "Select Tide → Paused empty → Clear filter → All; Active loading/nonempty",
+          "viewport": {
+            "width": 1100,
+            "height": 800
+          }
+        },
+        {
+          "kind": "browser",
+          "status": "passed",
+          "detail": "Fixture failure on Archived shows only Retry with Tide retained; after recovery Retry keeps Archived and displays Forest only. Active→Paused remains empty after the slower Active response settles.",
+          "evidence": [
+            "browser-after.json",
+            "after-error.png",
+            "fixture-fail-on-authorized.json",
+            "fixture-fail-off-authorized.json"
+          ],
+          "tool": "mcp__cua_repl.js",
+          "url": "http://127.0.0.1:62013/",
+          "scenario": "Failure/retry at current filter; latest-filter response preservation",
+          "viewport": {
+            "width": 1100,
+            "height": 800
+          }
+        },
+        {
+          "kind": "browser",
+          "status": "passed",
+          "detail": "Wide panels remain side by side. The empty group has 1px --line border and 12px --space gap; accent remains blue.",
+          "evidence": [
+            "browser-layout.json",
+            "after-wide-empty.png"
+          ],
+          "tool": "mcp__cua_repl.js",
+          "url": "http://127.0.0.1:62013/",
+          "scenario": "Wide empty group layout and app token reuse",
+          "viewport": {
+            "width": 1100,
+            "height": 800
+          }
+        },
+        {
+          "kind": "browser",
+          "status": "passed",
+          "detail": "320px screen: button below message, selected-project panel below list, no horizontal overflow. Tab gives Clear filter a visible blue focus outline; Enter restores All, all rows and Tide selection.",
+          "evidence": [
+            "browser-after.json",
+            "browser-layout.json",
+            "browser-focus.json",
+            "after-narrow-empty-focus.png",
+            "after-narrow-reset.png"
+          ],
+          "tool": "mcp__cua_repl.js",
+          "url": "http://127.0.0.1:62013/",
+          "scenario": "Narrow empty group, keyboard focus and Enter reset",
+          "viewport": {
+            "width": 320,
+            "height": 780
+          }
+        },
+        {
+          "kind": "static",
+          "status": "passed",
+          "detail": "Baseline-to-final changed paths are exactly src/app.js and src/theme.css; all original tests, API/UI/list helpers, documents, server and existing untracked user drafts have identical SHA256 bytes. Final source matches pre-verification target.",
+          "evidence": [
+            "baseline.json",
+            "verification-target.json",
+            "final-identity.json"
+          ]
+        }
+      ]
+    }
+  ],
+  "changed_files": {
+    "src/app.js": "489796ac123c2711b4f9cb93c6a8f598653f8909811fe7e4b4bb2fd7b229cb73",
+    "src/theme.css": "6d977ef5fbe39adb66cb696e58de3f0acdae752248e0c517a095bb80aea3a7d8"
+  },
+  "change_reasons": {
+    "src/app.js": "Render the bordered empty-results message/action group only on empty success; reset via list.load(all) and synchronize the existing Status select from application state.",
+    "src/theme.css": "Apply local empty-state token-based border/gap and stack message/action at the existing narrow breakpoint."
+  },
+  "remaining_verification": [],
+  "attempts": [
+    {
+      "status": "resolved",
+      "detail": "Initial sandbox server listen was denied (EPERM); authorized loopback launch succeeded.",
+      "evidence": [
+        "server.log",
+        "server-authorized.log",
+        "server-lifecycle.json"
+      ]
+    },
+    {
+      "status": "resolved",
+      "detail": "Exact label selector had no match; observed combobox role selector was used successfully.",
+      "evidence": [
+        "browser-attempts.json"
+      ]
+    },
+    {
+      "status": "resolved",
+      "detail": "Sandbox curl could not reach the authorized server; authorized fixture PUT commands succeeded.",
+      "evidence": [
+        "fixture-fail-on.json",
+        "fixture-fail-on-authorized.json",
+        "fixture-fail-off-authorized.json"
+      ]
+    }
+  ],
+  "cleanup": {
+    "server": "stopped with Ctrl-C; exec session 31287 completed",
+    "browser_tab": "closed; viewport override reset",
+    "evidence": [
+      "server-lifecycle.json",
+      "browser-cleanup.json"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "skill_name": "fix",
+  "evals": [
+    {"id": 1, "prompt": "Use $fix to address BUG-1 in the existing app.", "files": ["evals/files/bug.md", "evals/files/project-list"], "expectations": ["The latest success and failure ordering preserve the current filter result.", "A relevant regression fails on the original model and passes on the correction.", "Original selection, APIs, tests and unrelated user edits remain intact."]},
+    {"id": 2, "prompt": "Use $fix to apply the adopted QA-1 behavior and design.", "files": ["evals/files/qa.md", "evals/files/project-list"], "expectations": ["The real empty-state action resets the filter and select while preserving selection.", "Actual wide/narrow rendering matches the chosen layout and app tokens.", "No unrelated state refactor or global token change."]},
+    {"id": 3, "prompt": "Use $fix to verify and address CHECK-1 if present.", "files": ["evals/files/no-change.md", "evals/files/project-list"], "expectations": ["The claim is checked against current behavior and counterevidence is retained.", "Correct code remains unchanged rather than manufacturing a patch."]},
+    {"id": 4, "prompt": "Use $fix for QA-1 with browser access unavailable.", "files": ["evals/files/qa.md", "evals/files/project-list"], "expectations": ["Useful code changes and command/static checks are delivered.", "UI verification remains not run, with no claimed browser pass or full completion."]}
+  ]
+}

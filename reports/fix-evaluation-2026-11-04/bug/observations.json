@@ -1,0 +1,10 @@
+{
+  "source_digest": "ecb63092a04a748b71841a06be654283a6e8dd86bf6015ef141b8d98f1083260",
+  "model_contract": true,
+  "selection_preserved": true,
+  "retry_current_filter": true,
+  "actual_app": true,
+  "regression_failed_before": true,
+  "regression_passed_after": true,
+  "latest_result": true
+}
