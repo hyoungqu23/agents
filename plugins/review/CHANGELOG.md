@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.6 - 2026-11-06
+
+- Share one Git inspection executor between review-code and review-pr; force no lazy fetch and reject partial/promisor clones before object reads, including on older Git.
+- Add real filtered-clone regressions proving capture/diff cannot launch a configured remote command and ordinary return-code/text contracts remain supported.
+
 ## 0.7.5 - 2026-11-06
 
 - Collect every author-response review, thread, nested reply and conversation page before classifying items; block partial reads and changed targets with a read-only collector.
