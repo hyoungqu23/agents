@@ -31,33 +31,27 @@ cd ../<repo>-pr-<number>-respond && gh pr checkout <number>
 
 ## 2. Collect what is waiting on you
 
-Use GraphQL. REST has no thread objects and no resolution state, and `gh pr view --json` exposes no `reviewThreads` field. Let `gh` paginate the threads through `$endCursor`:
+Use the trusted bundled read-only collector. It verifies authorship, independently
+paginates all review bodies and threads, every thread's complete comment list and
+conversation comments, then rechecks the PR head and identity. It reuses the installed
+Pending helper's connection reader; no comments, replies, Git changes or review
+mutations are performed by collection.
 
 ```sh
-gh api graphql --paginate -F owner=<owner> -F repo=<repo> -F pr=<number> -f query='
-query($owner:String!, $repo:String!, $pr:Int!, $endCursor:String) {
-  repository(owner:$owner, name:$repo) {
-    pullRequest(number:$pr) {
-      viewerDidAuthor headRefName headRefOid reviewDecision isDraft
-      reviews(last:50) { nodes { id state body author { login } submittedAt url } }
-      reviewThreads(first:100, after:$endCursor) {
-        pageInfo { hasNextPage endCursor }
-        nodes {
-          id isResolved isOutdated viewerCanResolve viewerCanReply
-          path line originalLine diffSide subjectType
-          comments(first:50) { nodes {
-            id databaseId url body createdAt outdated
-            author { login } authorAssociation
-            replyTo { id } pullRequestReview { state }
-          } }
-        }
-      }
-    }
-  }
-}'
+python3 /absolute/installed/review-respond/scripts/collect_review.py \
+  --repo owner/repo --pr 123 --hostname github.com > /absolute/state/run-1-input.json
 ```
 
-Conversation comments come from `gh api --paginate repos/<owner>/<repo>/issues/<number>/comments`.
+Use a new external output path. A missing installed helper, API error, incomplete
+page or changed target stops collection with a nonzero exit and no partial JSON
+success. Install the four review skills together; do not fall back to a fixed
+first/last page. Only classify or edit after successful collection. Collection is
+not an atomic API snapshot: revalidate new replies before posting and collect again
+when the target changes.
+
+The result carries viewer/PR metadata, `reviews`, `reviewThreads` with complete
+`comments` arrays, `conversation` and counts. Preserve all items and node IDs.
+Determine the last comment from the complete ordered thread, not its first page.
 
 Keep the three sources apart because each has different mechanics:
 
