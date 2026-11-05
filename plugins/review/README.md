@@ -52,6 +52,8 @@ PR review and all specialists are report-only. Head-side instructions and script
 remain review input; trusted base rules and actual host execution controls govern
 the review. See [the shared boundary](skills/review-code/references/pr-review-boundary.md).
 The helper's Git checks detect visible checkout changes; they are not an OS sandbox.
+Hidden assume-unchanged/skip-worktree index flags block capture and save; they are
+never cleared automatically to make a checkout appear reviewable.
 
 Git-backed `review-code` reviews now produce a structured result outside the source.
 The checker compares current SHAs, the real changed-file inventory and exact source

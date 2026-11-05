@@ -21,6 +21,11 @@ final working copy. Binary and untracked contents are fingerprinted. Keep output
 outside the source so they do not change the inventory. Capture again after any
 authorized autofix and review the resulting changes; never reuse a stale result.
 
+Capture rejects assume-unchanged/skip-worktree index flags rather than omitting
+hidden changes. Keep those flags intact; report the unsupported target instead of
+clearing user state to obtain a complete review. The same check applies before a
+Pending target is captured or saved.
+
 Copy the returned `target` verbatim into the result and account for every entry in
 `files`, including renamed/deleted/generated/config/test files. The helper does not
 fetch, run tests, execute target code or follow symlinks to read external source.
