@@ -236,6 +236,32 @@ class PendingReviewTests(unittest.TestCase):
         self.assertEqual((self.worktree/'app.py').read_bytes(),self.original)
         self.assertEqual(self.g('-C',str(self.worktree),'status','--porcelain').stdout,'')
 
+    def test_hidden_index_flags_block_capture_without_remote_reads(self):
+        for flag in ('assume-unchanged','skip-worktree'):
+            with self.subTest(flag=flag):
+                self.g('-C',str(self.worktree),'update-index','--'+flag,'app.py')
+                (self.worktree/'app.py').write_text('hidden local change\n')
+                self.snapshot=self.root/(flag+'-target.json')
+                result=self.invoke('capture','--worktree',str(self.worktree))
+                self.assertNotEqual(result.returncode,0)
+                self.assertIn('index flag',result.stderr)
+                self.assertFalse(self.snapshot.exists());self.assertEqual(self.log(),[])
+                tag=self.g('-C',str(self.worktree),'ls-files','-v','--','app.py').stdout[0]
+                self.assertTrue(tag.islower() or tag=='S')
+                self.g('-C',str(self.worktree),'update-index','--no-'+flag,'app.py')
+                (self.worktree/'app.py').write_bytes(self.original)
+
+    def test_hidden_index_flags_after_capture_block_save(self):
+        for flag in ('assume-unchanged','skip-worktree'):
+            with self.subTest(flag=flag):
+                self.g('-C',str(self.worktree),'update-index','--'+flag,'app.py')
+                (self.worktree/'app.py').write_text('hidden after capture\n')
+                result=self.invoke('save')
+                self.assertNotEqual(result.returncode,0);self.assertIn('index flag',result.stderr)
+                self.assertEqual(self.mutations(),[])
+                self.g('-C',str(self.worktree),'update-index','--no-'+flag,'app.py')
+                (self.worktree/'app.py').write_bytes(self.original)
+
     def test_all_event_values_and_override_commit_are_rejected(self):
         original=json.loads(self.payload.read_text())
         for key,value in [('event','COMMENT'),('event','APPROVE'),('event','REQUEST_CHANGES'),('event','PENDING'),('event',None),('commit_id',self.head)]:

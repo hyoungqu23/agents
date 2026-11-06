@@ -45,6 +45,12 @@ def sha(root, value):
     return git(root, 'rev-parse', '--verify', '--end-of-options', value + '^{commit}').decode().strip()
 
 
+def reject_hidden_index(root):
+    for row in git(root, 'ls-files', '-v', '-z').decode('utf-8').split('\x00'):
+        if row and (row[0].islower() or row[0] == 'S'):
+            raise ResultError('Unsupported index flag (assume-unchanged/skip-worktree); preserve user flags and use an explicitly supported target')
+
+
 def inventory(raw):
     parts = raw.decode('utf-8').split('\x00')
     rows, i = [], 0
@@ -76,6 +82,7 @@ def local_bytes(root, path):
 
 def capture_scope(worktree, base=None, head=None, working_tree=False):
     root = Path(git(worktree, 'rev-parse', '--show-toplevel').decode().strip()).resolve()
+    reject_hidden_index(root)
     current = sha(root, 'HEAD')
     options = ['--no-ext-diff', '--no-textconv', '--ignore-submodules=none', '--no-color', '--unified=3']
     if working_tree:

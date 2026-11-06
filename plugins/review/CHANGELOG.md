@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.4 - 2026-11-05
+
+- Reject hidden Git index flags before working/committed review capture and Pending capture/save, preserving the user's flags and edits.
+- Share the index preflight through the installed review-code checker and add real-Git regressions for both review paths.
+
 ## 0.7.3 - 2026-10-29
 
 - Read Pending inline comments without REST detail 404s, including existing drafts and interrupted-write recovery.

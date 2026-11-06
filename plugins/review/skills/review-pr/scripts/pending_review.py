@@ -116,7 +116,21 @@ def locked(receipt):
             fcntl.flock(stream, fcntl.LOCK_UN)
 
 
+def review_gate():
+    # Resolve only the trusted sibling in this installed plugin, never PR code.
+    script = Path(__file__).resolve().parents[2] / 'review-code/scripts/review_result.py'
+    spec = importlib.util.spec_from_file_location('review_result_gate', script)
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    return gate
+
+
 def clean_head(worktree):
+    gate = review_gate()
+    try:
+        gate.reject_hidden_index(worktree)
+    except gate.ResultError as error:
+        raise ReviewError(str(error)) from error
     if git(worktree, 'symbolic-ref', '-q', 'HEAD', ok=(0, 1)).returncode != 1:
         raise ReviewError('Use a detached reviewer checkout')
     if git(worktree, 'status', '--ignore-submodules=none', '--porcelain=v1', '--untracked-files=all').stdout.strip():
@@ -514,11 +528,7 @@ def plan_status(plan):
 
 
 def check_review_result(path, target, worktree, value):
-    # Resolve only the trusted sibling in this installed plugin, never PR code.
-    script = Path(__file__).resolve().parents[2] / 'review-code/scripts/review_result.py'
-    spec = importlib.util.spec_from_file_location('review_result_gate', script)
-    gate = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(gate)
+    gate = review_gate()
     report = json.loads(path.read_text())
     scope = gate.capture_scope(worktree, target['base_sha'], target['head_sha'])
     verdict = gate.assess(scope, report)
