@@ -387,11 +387,38 @@ class DeliveryTests(GitFixture):
         with patch('hm2_review_harness.delivery.module', return_value=self.helper(gh)), self.assertRaises(HarnessError):
             delivery.save(self.cfg, gh, event, snapshot, {}, response, None, self.root, self.root / 'state')
         self.assertEqual(gh.writes, [])
+        with patch('hm2_review_harness.delivery.module', return_value=self.helper(gh)):
+            inspected = delivery.inspect(self.cfg, gh, event, self.root / 'state')
+        self.assertEqual(inspected['status'], 'local_ready')
         gh.snapshot = original
         save_json(self.root / 'state/config.json', self.cfg)
         with patch('hm2_review_harness.delivery.module', return_value=self.helper(gh)):
             result = delivery.save(self.cfg, gh, event, snapshot, {}, response, None, self.root, self.root / 'state')
         self.assertEqual(result['status'], 'pending_saved'); self.assertEqual(len(gh.writes), 2)
+        creation = next((self.root / 'state/receipts').glob('*/reply-review.json'))
+        self.assertEqual(len(read_json(creation)['blocked_operations']), 1)
+
+    def test_unsent_reply_can_reconcile_then_resume_after_policy_is_restored(self):
+        snapshot = self.snapshot(own=True); add_thread(snapshot); gh = FakeGitHub(snapshot)
+        event, response = self.response(snapshot)
+        helper = self.helper(gh); original_read = helper.read_review; revoked = False
+        def revoke_after_creation(*args):
+            nonlocal revoked
+            if not revoked:
+                save_json(self.root / 'state/config.json', {**self.cfg, 'pending_enabled': False})
+                revoked = True
+            return original_read(*args)
+        helper.read_review = revoke_after_creation
+        with patch('hm2_review_harness.delivery.module', return_value=helper):
+            with self.assertRaises(HarnessError):
+                delivery.save(self.cfg, gh, event, snapshot, {}, response, None, self.root, self.root / 'state')
+            self.assertEqual(len(gh.writes), 1)
+            self.assertEqual(delivery.inspect(self.cfg, gh, event, self.root / 'state')['status'], 'local_ready')
+            save_json(self.root / 'state/config.json', self.cfg)
+            result = delivery.save(self.cfg, gh, event, snapshot, {}, response, None, self.root, self.root / 'state')
+        self.assertEqual(result['status'], 'pending_saved'); self.assertEqual(len(gh.writes), 2)
+        journals = [p for p in (self.root / 'state/receipts').glob('*/reply-*.json') if p.name != 'reply-review.json']
+        self.assertEqual(len(read_json(journals[0])['blocked_operations']), 1)
 
     def test_conversation_change_during_code_save_is_marked_stale(self):
         snapshot = self.snapshot(); gh = FakeGitHub(snapshot)

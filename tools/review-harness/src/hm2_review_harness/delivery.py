@@ -30,7 +30,8 @@ def inspect(config, gh, event, state_root):
         if value['status'] not in ('inspected', 'no_pending'):
             return {'status': 'write_unconfirmed', 'detail': 'Code journal cannot be positively reconciled'}
     creation = directory / 'reply-review.json'
-    if creation.exists() and not read_json(creation).get('review_id'):
+    if (creation.exists() and not read_json(creation).get('review_id')
+            and read_json(creation).get('status') != 'policy_blocked'):
         return {'status': 'write_unconfirmed', 'detail': 'Pending creation has no confirmed review identity'}
     snapshot = gh.snapshot(event['repo'], event['pr'])
     for path in directory.glob('reply-*.json'):
@@ -40,6 +41,10 @@ def inspect(config, gh, event, state_root):
         matches = [c for t in snapshot['threads'] if t['id'] == record['thread_id'] for c in t['comments']
                    if c.get('body') == record['body'] and (c.get('author') or {}).get('login', '').lower() == login.lower()
                    and (c.get('pullRequestReview') or {}).get('databaseId') == record['review_id']]
+        if record['status'] == 'policy_blocked':
+            if matches:
+                return {'status': 'pending_conflict', 'detail': 'Unsent reply matches unmanaged remote content; preserve it'}
+            continue
         if len(matches) != 1:
             return {'status': 'pending_conflict' if record['status'] == 'pending' else 'write_unconfirmed',
                     'detail': 'Reply is missing, edited or ambiguous; preserve it and reconcile in GitHub'}
@@ -91,6 +96,8 @@ def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, s
                     if record.get('operation'):
                         record.setdefault('blocked_operations', []).append(record['operation'])
                         record['operation'] = None
+                    else:
+                        record.setdefault('blocked_operations', []).append({'endpoint': target, 'payload_sha256': digest(payload)})
                     record['status'] = 'policy_blocked'
                     save_json(path, record)
                 raise
@@ -159,12 +166,13 @@ def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, s
     if not pending_id:
         if reply_receipt.exists() and read_json(reply_receipt).get('status') != 'policy_blocked':
             raise DeliveryError('write_unconfirmed', 'Reconcile the prior Pending creation before another write')
-        save_json(reply_receipt, {**identity, 'status': 'create_unconfirmed', 'head_sha': latest['pr']['head']['sha']})
+        blocked_operations = read_json(reply_receipt).get('blocked_operations', []) if reply_receipt.exists() else []
+        save_json(reply_receipt, {**identity, 'status': 'create_unconfirmed', 'head_sha': latest['pr']['head']['sha'], 'blocked_operations': blocked_operations})
         created = guarded_api(event['hostname'], endpoint + '/reviews', {'commit_id': latest['pr']['head']['sha'], 'body': ''}, reply_receipt)
         pending_id = created.get('id')
         if type(pending_id) is not int:
             raise DeliveryError('write_unconfirmed', 'Pending creation returned no ID; do not replay')
-        save_json(reply_receipt, {**identity, 'review_id': pending_id, 'status': 'created', 'head_sha': latest['pr']['head']['sha']})
+        save_json(reply_receipt, {**read_json(reply_receipt), 'review_id': pending_id, 'status': 'created'})
     review, _ = helper.read_review(event['hostname'], endpoint, pending_id, login)
     if review['commit_id'] != latest['pr']['head']['sha']:
         raise DeliveryError('pending_conflict', 'Existing Pending is pinned to an older head')
@@ -190,7 +198,8 @@ def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, s
             continue
         if matches:
             raise DeliveryError('pending_conflict', 'Matching unmanaged draft reply exists; preserve it')
-        save_json(receipt, {'status': 'attempted', **identity, 'review_id': pending_id,
+        blocked_operations = read_json(receipt).get('blocked_operations', []) if receipt.exists() else []
+        save_json(receipt, {'status': 'attempted', **identity, 'review_id': pending_id, 'blocked_operations': blocked_operations,
                             'thread_id': claim['thread_id'], 'body': body, 'head_sha': review['commit_id']})
         output = guarded_api(event['hostname'], 'graphql', {'query': '''mutation($input:AddPullRequestReviewThreadReplyInput!){addPullRequestReviewThreadReply(input:$input){comment{id body author{login} pullRequestReview{databaseId:fullDatabaseId state}}}}''',
                                    'variables': {'input': {'pullRequestReviewId': review['node_id'],
