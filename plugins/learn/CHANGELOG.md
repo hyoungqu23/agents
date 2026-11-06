@@ -7,3 +7,5 @@
 - Separate independent success from hinted, solution-seen and reported help; require a final independent transfer before a goal counts as demonstrated.
 - Register materials as fixed copies, cite exact lines, and extract propositions and joint-premise chains on request without treating them as mastery.
 - Resume the same folder from Claude Code or Codex; verified on macOS with both CLIs.
+- Verify source snapshot hashes before accepting citations; reject aliased engine directories and preserve journals during exports and projection failures.
+- Return structured corruption errors for malformed event containers and recover identity from the journal when projections are missing.

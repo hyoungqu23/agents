@@ -75,19 +75,28 @@ class Store:
             fail("INVALID_REQUEST", f"{relative} is not a usable path: {error}")
         if base != root and root not in base.parents:
             fail("PATH_OUTSIDE_WORKSPACE", f"{area}/ itself resolves outside the workspace")
+        if area and base != root / area:
+            fail("PATH_OUTSIDE_WORKSPACE", f"{area}/ must not alias another directory")
         if target != base and base not in target.parents:
             where = f"{area}/" if area else "the workspace"
             fail("PATH_OUTSIDE_WORKSPACE", f"{relative} resolves outside {where}")
         return target
 
+    def owned(self, relative, area=None):
+        """Engine-owned records and outputs must not alias learner files."""
+        target = self.inside(relative, area=area)
+        if target != self.root.resolve() / relative:
+            fail("PATH_OUTSIDE_WORKSPACE", f"{relative} must not traverse a link")
+        return target
+
     # ---- journal ----------------------------------------------------------
 
     def initialized(self):
-        return self.journal.exists()
+        return self.owned(JOURNAL).exists()
 
     def read_commits(self):
         try:
-            data = self.journal.read_bytes()
+            data = self.owned(JOURNAL).read_bytes()
         except OSError as error:
             fail("WRITE_FAILED", f"cannot read journal: {error}")
         if not data.endswith(b"\n"):
@@ -114,6 +123,7 @@ class Store:
 
     def append(self, commit, operation_id):
         """Copy the journal plus one new line into a temp file, then replace it."""
+        self.owned(JOURNAL)
         try:
             temp, fd = self._new_temp(self.records, f".study-loop-events-{operation_id}")
             with os.fdopen(fd, "wb") as out:
@@ -139,6 +149,7 @@ class Store:
 
     @contextmanager
     def lock(self, timeout=2.0):
+        self.owned(LOCK)
         try:
             self.records.mkdir(exist_ok=True)  # never creates a missing workspace
             fd = os.open(self.root / LOCK, os.O_RDWR | os.O_CREAT | NOFOLLOW, 0o644)
@@ -168,7 +179,7 @@ class Store:
     # ---- atomic files -----------------------------------------------------
 
     def write_atomic(self, relative, data):
-        path = self.root / relative
+        path = self.owned(relative)
         path.parent.mkdir(parents=True, exist_ok=True)
         temp, fd = self._new_temp(path.parent, f".{path.name}")
         try:
@@ -220,7 +231,7 @@ class Store:
             fail("WORKSPACE_NOT_EMPTY", "a journal temp file exists without a valid init intent")
 
     def read_intent(self):
-        path = self.root / INTENT
+        path = self.owned(INTENT)
         if not path.exists():
             return None
         try:
@@ -233,6 +244,7 @@ class Store:
         return intent
 
     def write_intent(self, intent):
+        self.owned(INTENT)
         temp, fd = self._new_temp(self.records, f".study-loop-init-{intent['request']['operationId']}")
         try:
             with os.fdopen(fd, "wb") as out:

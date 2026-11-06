@@ -43,9 +43,13 @@ when the learner asks to study over time or names a learning folder.
    If none is found, tell the learner to install Python 3.10+ and stop. Each
    shell call starts fresh, so write the printed name (for example `python3.13`)
    in later commands instead of relying on `$PY`.
-3. If `<folder>/workspace.json` exists, read `workspace.workspaceId` from it and
-   query `view=resume`. Otherwise run `workspace.init` with the learner's goal,
-   their UTC offset in minutes and any background they gave.
+3. Check `<folder>/records/events.jsonl` first. If it exists, read `workspaceId`
+   from its first commit and query `view=resume`; missing/stale `workspace.json`
+   is only a projection problem, not permission to initialize again. If no journal
+   exists but `records/.init.json` does, retry its recorded initialization request
+   with the same IDs. An orphaned `workspace.json` needs recovery, not a new goal.
+   Only when no journal or initialization intent exists run `workspace.init` with
+   the learner's goal, UTC offset in minutes and the background they gave.
 4. Act on `packet.nextAction` using the table below.
 
 ## Calling the engine

@@ -63,7 +63,10 @@ def verify_commit(state, commit):
     version = commit.get("schemaVersion")
     if isinstance(version, int) and not isinstance(version, bool) and version > 1:
         fail("UNSUPPORTED_VERSION", f"{where}: schemaVersion {version} is newer than this engine")
-    for event in commit.get("events") or []:
+    events = commit.get("events")
+    if not isinstance(events, list):
+        fail("CORRUPT_JOURNAL", f"{where}: events is not an array")
+    for event in events:
         if isinstance(event, dict) and isinstance(event.get("type"), str) and event["type"] not in KNOWN_EVENTS:
             fail("UNSUPPORTED_VERSION", f"{where}: unknown event type {event['type']}")
     problem = check(commit, "Commit")

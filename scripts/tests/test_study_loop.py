@@ -588,6 +588,72 @@ class AcceptanceTests(Lab):
             "relativePath": f"materials/{name}", "title": "노트", "originKind": "local_file", "origin": name,
         })["entityIds"]["sourceId"]
 
+    def test_changed_or_non_utf8_snapshot_cannot_support_a_new_citation(self):
+        self.ready()
+        source_id = self.register()
+        snapshot = self.root / "sources" / f"{source_id}.txt"
+        for data in (b"Changed snapshot\n", b"\xff\n"):
+            with self.subTest(data=data):
+                snapshot.write_bytes(data)
+                ref = {"kind": "material", "sourceId": source_id, "startLine": 1, "endLine": 1, "quote": "Changed snapshot"}
+                self.refuse("CORRUPT_JOURNAL", "question.pose", {"sessionId": self.sid, "question": self.question(sourceRefs=[ref])})
+
+    def test_malformed_event_containers_return_structured_corruption(self):
+        self.init()
+        path = self.root / "records/events.jsonl"
+        original = json.loads(path.read_text().splitlines()[0])
+        for events in (1, True, "wrong", {}, None):
+            with self.subTest(events=events):
+                damaged = dict(original, events=events)
+                path.write_text(json.dumps(damaged) + "\n")
+                self.refuse("CORRUPT_JOURNAL", "workspace.query", {"view": "status", "id": None, "search": None, "cursor": None, "limit": 1})
+
+    def test_snapshot_directory_alias_cannot_write_outside_workspace(self):
+        self.init()
+        self.register()
+        (self.root / "sources").rename(self.root / "saved-sources")
+        outside = self.tmp / "outside"; outside.mkdir()
+        (self.root / "sources").symlink_to(outside, target_is_directory=True)
+        (self.root / "materials/next.md").write_text("New material\n")
+        self.refuse("PATH_OUTSIDE_WORKSPACE", "source.register", {
+            "relativePath": "materials/next.md", "title": "next", "originKind": "local_file", "origin": "next.md",
+        })
+        self.assertEqual(list(outside.iterdir()), [])
+
+    def test_artifact_directory_alias_cannot_overwrite_append_only_journal(self):
+        self.init()
+        artifacts = self.root / "artifacts"
+        if artifacts.exists(): artifacts.rmdir()
+        artifacts.symlink_to(self.root / "records", target_is_directory=True)
+        self.refuse("PATH_OUTSIDE_WORKSPACE", "workspace.export", {
+            "format": "json", "outputPath": "artifacts/events.jsonl", "overwrite": True,
+        })
+
+    def test_record_directory_alias_is_refused_before_external_lock_or_append(self):
+        self.init()
+        original = self.journal()
+        (self.root / "records").rename(self.root / "saved-records")
+        outside = self.tmp / "outside"; outside.mkdir()
+        (outside / "events.jsonl").write_bytes(original)
+        (self.root / "records").symlink_to(outside, target_is_directory=True)
+        self.refuse("PATH_OUTSIDE_WORKSPACE", "session.start", {
+            "mode": "learning", "startAt": "auto", "targetNodeIds": [], "maxItems": None, "userText": "시작",
+        })
+        self.assertFalse((outside / ".lock").exists())
+
+    def test_protected_projection_reports_stale_after_a_real_commit(self):
+        self.init()
+        learner = (self.root / "learner.md").read_bytes()
+        (self.root / "state.json").unlink()
+        (self.root / "state.json").symlink_to(self.root / "learner.md")
+        response = self.send("session.start", {
+            "mode": "learning", "startAt": "auto", "targetNodeIds": [], "maxItems": None, "userText": "시작",
+        })
+        self.assertTrue(response["ok"]); self.assertTrue(response["committed"])
+        self.assertEqual(response["viewsStatus"], "stale")
+        self.assertEqual(len(self.journal().splitlines()), 2)
+        self.assertEqual((self.root / "learner.md").read_bytes(), learner)
+
     def test_ac31_bad_citation(self):
         self.ready()
         source = self.register()

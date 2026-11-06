@@ -131,8 +131,8 @@ class Engine:
 
     def learner_text(self):
         try:
-            return (self.store.root / "learner.md").read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
+            return self.store.owned("learner.md").read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError, StudyError):
             return ""
 
     # ---- writes -------------------------------------------------------------
@@ -262,7 +262,7 @@ class Engine:
             if not learner.exists():
                 self.store.write_atomic("learner.md", state.initial_learner_text.encode("utf-8"))
             (self.store.root / "materials").mkdir(exist_ok=True)
-        except OSError:
+        except (OSError, StudyError):
             pass  # The journal holds the initial text; a later init retry recreates the file.
 
     def refresh(self, packet):
@@ -272,15 +272,25 @@ class Engine:
             return "current"
         except OSError:
             return "stale"
+        except StudyError as error:
+            if error.code != "PATH_OUTSIDE_WORKSPACE":
+                raise
+            return "stale"  # The journal committed; a protected projection may be rebuilt later.
 
     # ---- sources ---------------------------------------------------------------
 
     def read_source(self, source_id):
         source = self.state.sources[source_id]
         try:
-            return (self.store.root / source["snapshotPath"]).read_text(encoding="utf-8")
+            data = self.store.owned(source["snapshotPath"], area="sources").read_bytes()
         except OSError as error:
-            fail("INVALID_REFERENCE", f"source snapshot {source['snapshotPath']} is unreadable: {error}")
+            fail("CORRUPT_JOURNAL", f"source snapshot {source['snapshotPath']} is unreadable: {error}")
+        if sha256(data) != source["contentHash"]:
+            fail("CORRUPT_JOURNAL", f"source snapshot {source['snapshotPath']} is missing or changed")
+        try:
+            return data.decode("utf-8")
+        except UnicodeDecodeError:
+            fail("CORRUPT_JOURNAL", f"source snapshot {source['snapshotPath']} is not UTF-8")
 
     def material(self):
         relative = self.request["payload"]["relativePath"]
@@ -310,14 +320,8 @@ class Engine:
         }
 
     def validate(self):
-        for source in self.state.sources.values():
-            path = self.store.root / source["snapshotPath"]
-            try:
-                actual = sha256(path.read_bytes())
-            except OSError:
-                actual = None
-            if actual != source["contentHash"]:
-                fail("CORRUPT_JOURNAL", f"source snapshot {source['snapshotPath']} is missing or changed")
+        for source_id in self.state.sources:
+            self.read_source(source_id)
         issues = []
         try:
             recorded = loads((self.store.root / "state.json").read_bytes()).get("revision")
