@@ -38,7 +38,11 @@ def command(args, *, data=None, ok=(0,)):
 
 
 def git(worktree, *args, ok=(0,)):
-    return command(['git', '--no-optional-locks', '-c', 'core.fsmonitor=false', '-C', str(worktree), *args], ok=ok)
+    gate = review_gate()
+    try:
+        return gate.git_process(worktree, *args, ok=ok, text=True)
+    except (gate.ResultError, OSError, subprocess.TimeoutExpired) as error:
+        raise ReviewError('Git inspection did not complete; no automatic fetch or retry: ' + str(error)) from error
 
 
 def api(host, endpoint, *, payload=None):

@@ -54,6 +54,9 @@ the review. See [the shared boundary](skills/review-code/references/pr-review-bo
 The helper's Git checks detect visible checkout changes; they are not an OS sandbox.
 Hidden assume-unchanged/skip-worktree index flags block capture and save; they are
 never cleared automatically to make a checkout appear reviewable.
+Git inspection also rejects configured partial/promisor clones before object reads
+and forces no lazy fetch. The Pending helper reuses the same executor, so direct
+diff/capture calls cannot silently launch a remote fetch while checking source.
 
 Git-backed `review-code` reviews now produce a structured result outside the source.
 The checker compares current SHAs, the real changed-file inventory and exact source

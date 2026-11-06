@@ -24,12 +24,30 @@ QUALITY = ('cohesion', 'coupling', 'duplication', 'repository_fit', 'naming')
 CLASSIFICATIONS = {'source', 'test', 'config', 'migration', 'generated', 'lock', 'fixture', 'docs', 'other'}
 
 
+def git_process(root, *args, ok=(0,), text=False):
+    """One inspection boundary for both reviewers, including direct diff callers."""
+    prefix = ['git', '--no-optional-locks', '-c', 'core.fsmonitor=false',
+              '-c', 'core.quotePath=false', '-C', str(root)]
+    env = {**os.environ, 'GIT_NO_LAZY_FETCH': '1'}
+    # Config is object-independent. Reject before any requested object read, also
+    # on older Git versions that do not implement GIT_NO_LAZY_FETCH.
+    config = subprocess.run([*prefix, 'config', '--null', '--list'], capture_output=True, timeout=60, env=env)
+    if config.returncode:
+        raise ResultError(config.stderr.decode('utf-8', errors='replace').strip())
+    for setting in config.stdout.split(b'\0'):
+        key, _, value = setting.partition(b'\n'); key = key.lower()
+        if key == b'extensions.partialclone' or (key.startswith(b'remote.') and key.endswith(b'.promisor')
+                and value.lower() not in (b'false', b'no', b'off', b'0')):
+            raise ResultError('Partial/promisor clones are unsupported for review inspection; no automatic fetch allowed')
+    result = subprocess.run([*prefix, *args], text=text, capture_output=True, timeout=60, env=env)
+    if result.returncode not in ok:
+        message = result.stderr if text else result.stderr.decode('utf-8', errors='replace')
+        raise ResultError(message.strip())
+    return result
+
+
 def git(root, *args):
-    result = subprocess.run(['git', '--no-optional-locks', '-c', 'core.fsmonitor=false',
-        '-c', 'core.quotePath=false', '-C', str(root), *args], capture_output=True, timeout=60)
-    if result.returncode:
-        raise ResultError(result.stderr.decode('utf-8', errors='replace').strip())
-    return result.stdout
+    return git_process(root, *args).stdout
 
 
 def digest(value):
