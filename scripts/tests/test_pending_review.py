@@ -72,6 +72,11 @@ if endpoint=='graphql' and payload.get('query','').lstrip().startswith('query'):
   node={'id':variables['id'],'comments':connection(threads[variables['id']]['rows'],after)}
  else:sys.exit(35)
  if d.get('missing_graphql_node'):node=None
+ def numeric_strings(value):
+  if isinstance(value,list):return [numeric_strings(v) for v in value]
+  if isinstance(value,dict):return {k:('invalid' if d.get('bad_graphql_ids') else str(v)) if k=='databaseId' and v is not None else numeric_strings(v) for k,v in value.items()}
+  return value
+ if d.get('string_graphql_ids') or d.get('bad_graphql_ids'):node=numeric_strings(node)
  print(json.dumps({'data':{'node':node}}));sys.exit(0)
 if method=='POST':
  if endpoint=='graphql':
@@ -261,6 +266,19 @@ class PendingReviewTests(unittest.TestCase):
                 self.assertEqual(self.mutations(),[])
                 self.g('-C',str(self.worktree),'update-index','--no-'+flag,'app.py')
                 (self.worktree/'app.py').write_bytes(self.original)
+
+    def test_graphql_full_database_ids_accept_decimal_strings(self):
+        self.remote(string_graphql_ids=True)
+        self.assertEqual(self.save_ok()['state'],'PENDING')
+        large=2**40+1
+        self.assertEqual(pending.graphql_database_ids({'databaseId':str(large)}),{'databaseId':large})
+
+    def test_invalid_graphql_numeric_ids_block_writes(self):
+        existing={**self.draft()['comments'][0],'id':101,'pull_request_review_id':91}
+        self.remote(existing_pending=True,review_body=self.draft()['body'],review_comments=[existing],bad_graphql_ids=True)
+        result=self.invoke('save')
+        self.assertNotEqual(result.returncode,0);self.assertIn('numeric identity',result.stderr)
+        self.assertEqual(self.mutations(),[])
 
     def test_all_event_values_and_override_commit_are_rejected(self):
         original=json.loads(self.payload.read_text())

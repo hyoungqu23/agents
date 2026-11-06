@@ -48,9 +48,29 @@ def api(host, endpoint, *, payload=None):
         args += ['--input', '-']
     raw = command(args, data=None if payload is None else json.dumps(payload)).stdout
     try:
-        return json.loads(raw)
+        value = json.loads(raw)
+        return graphql_database_ids(value) if endpoint == 'graphql' else value
     except ValueError as error:
         raise ReviewError('API returned invalid JSON; inspect pending reviews before retrying') from error
+
+
+def graphql_database_ids(value):
+    """Normalize fullDatabaseId aliases at the GraphQL boundary, not receipt input."""
+    if isinstance(value, list):
+        return [graphql_database_ids(row) for row in value]
+    if isinstance(value, dict):
+        result = {}
+        for key, item in value.items():
+            if key == 'databaseId' and item is not None:
+                if isinstance(item, str) and re.fullmatch(r'[1-9][0-9]*', item):
+                    item = int(item)
+                if type(item) is not int or item <= 0:
+                    raise ReviewError('GraphQL numeric identity unavailable; no writes allowed')
+                result[key] = item
+            else:
+                result[key] = graphql_database_ids(item)
+        return result
+    return value
 
 
 def outside(path, worktree):
@@ -266,11 +286,11 @@ def own_pending(host, endpoint, login):
     return rows[0]['id'] if rows else None
 
 
-REVIEW_FIELDS = 'id databaseId state submittedAt body author{login} commit{oid}'
+REVIEW_FIELDS = 'id databaseId:fullDatabaseId state submittedAt body author{login} commit{oid}'
 PAGE_FIELDS = 'totalCount pageInfo{hasNextPage endCursor}'
-COMMENT_FIELDS = '''id databaseId path line originalLine body author{login}
-commit{oid} pullRequestReview{databaseId}'''
-THREAD_COMMENT_FIELDS = 'id databaseId pullRequestReview{databaseId}'
+COMMENT_FIELDS = '''id databaseId:fullDatabaseId path line originalLine body author{login}
+commit{oid} pullRequestReview{databaseId:fullDatabaseId}'''
+THREAD_COMMENT_FIELDS = 'id databaseId:fullDatabaseId pullRequestReview{databaseId:fullDatabaseId}'
 REVIEW_COMMENTS = ('query ReviewComments($id:ID!,$after:String){node(id:$id){... on PullRequestReview{'
                    + REVIEW_FIELDS + ' comments(first:100,after:$after){nodes{' + COMMENT_FIELDS + '}'
                    + PAGE_FIELDS + '}}}}')

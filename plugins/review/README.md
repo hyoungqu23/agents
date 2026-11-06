@@ -88,6 +88,15 @@ Required safety checks and behavior tests remain intact. This restraint draws on
 
 [PR #16 and #17 evaluation evidence](../../reports/review-code-evaluation-2026-10-11/report.md) records the fixed commits, model, paired scenarios, outputs, and limitations. Both old and updated instructions passed the selected cases; the result does not establish a general detection improvement. The same cases are reused to check the consolidated guidance.
 
+## Author-response collection
+
+Author-side `review-respond` collection uses its bundled read-only collector to
+page review bodies, threads, every thread's replies and conversation comments
+independently. Incomplete reads or changed heads stop collection before fixes or
+replies are prepared. The collector only reads; reply approval and posting remain
+the separate author-response workflow. Pending readers use current fullDatabaseId
+GraphQL fields with strict numeric normalization for stored REST-compatible IDs.
+
 ## Checking an existing review
 
 Use `review-check` for requests such as “Claude가 남긴 이 리뷰가 맞는지 확인해줘.”

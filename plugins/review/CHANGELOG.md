@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.5 - 2026-11-06
+
+- Collect every author-response review, thread, nested reply and conversation page before classifying items; block partial reads and changed targets with a read-only collector.
+- Use current fullDatabaseId GraphQL fields and normalize decimal BigInt aliases at the API boundary while preserving receipt identifiers.
+- Verify the original 51-item cutoff and multi-page collections without live writes.
+
 ## 0.7.4 - 2026-11-05
 
 - Reject hidden Git index flags before working/committed review capture and Pending capture/save, preserving the user's flags and edits.
