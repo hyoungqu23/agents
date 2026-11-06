@@ -654,6 +654,17 @@ class AcceptanceTests(Lab):
         self.assertEqual(len(self.journal().splitlines()), 2)
         self.assertEqual((self.root / "learner.md").read_bytes(), learner)
 
+    def test_projection_symlink_loop_preserves_successful_commit_status(self):
+        self.init()
+        (self.root / "state.json").unlink()
+        (self.root / "state.json").symlink_to("state.json")
+        response = self.send("session.start", {
+            "mode": "learning", "startAt": "auto", "targetNodeIds": [], "maxItems": None, "userText": "시작",
+        })
+        self.assertTrue(response["ok"]); self.assertTrue(response["committed"])
+        self.assertEqual(response["viewsStatus"], "stale")
+        self.assertEqual(len(self.journal().splitlines()), 2)
+
     def test_ac31_bad_citation(self):
         self.ready()
         source = self.register()

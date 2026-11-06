@@ -270,11 +270,7 @@ class Engine:
             for relative, data in views.projections(self.state, packet).items():
                 self.store.write_atomic(relative, data)
             return "current"
-        except OSError:
-            return "stale"
-        except StudyError as error:
-            if error.code != "PATH_OUTSIDE_WORKSPACE":
-                raise
+        except (OSError, StudyError):
             return "stale"  # The journal committed; a protected projection may be rebuilt later.
 
     # ---- sources ---------------------------------------------------------------
