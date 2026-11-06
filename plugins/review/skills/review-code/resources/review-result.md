@@ -21,6 +21,15 @@ final working copy. Binary and untracked contents are fingerprinted. Keep output
 outside the source so they do not change the inventory. Capture again after any
 authorized autofix and review the resulting changes; never reuse a stale result.
 
+Capture rejects assume-unchanged/skip-worktree index flags rather than omitting
+hidden changes. Keep those flags intact; report the unsupported target instead of
+clearing user state to obtain a complete review. The same check applies before a
+Pending target is captured or saved.
+Both review helpers force `GIT_NO_LAZY_FETCH=1` and reject configured partial/promisor
+clones before object inspection. Missing objects must be reported as unavailable;
+do not fetch, change clone configuration or rely on an old Git version ignoring
+that environment variable to obtain a pass. Preparation isolation remains required.
+
 Copy the returned `target` verbatim into the result and account for every entry in
 `files`, including renamed/deleted/generated/config/test files. The helper does not
 fetch, run tests, execute target code or follow symlinks to read external source.

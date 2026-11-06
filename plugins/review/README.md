@@ -52,6 +52,11 @@ PR review and all specialists are report-only. Head-side instructions and script
 remain review input; trusted base rules and actual host execution controls govern
 the review. See [the shared boundary](skills/review-code/references/pr-review-boundary.md).
 The helper's Git checks detect visible checkout changes; they are not an OS sandbox.
+Hidden assume-unchanged/skip-worktree index flags block capture and save; they are
+never cleared automatically to make a checkout appear reviewable.
+Git inspection also rejects configured partial/promisor clones before object reads
+and forces no lazy fetch. The Pending helper reuses the same executor, so direct
+diff/capture calls cannot silently launch a remote fetch while checking source.
 
 Git-backed `review-code` reviews now produce a structured result outside the source.
 The checker compares current SHAs, the real changed-file inventory and exact source
@@ -85,6 +90,15 @@ Required safety checks and behavior tests remain intact. This restraint draws on
 ## Behavioral evaluation
 
 [PR #16 and #17 evaluation evidence](../../reports/review-code-evaluation-2026-10-11/report.md) records the fixed commits, model, paired scenarios, outputs, and limitations. Both old and updated instructions passed the selected cases; the result does not establish a general detection improvement. The same cases are reused to check the consolidated guidance.
+
+## Author-response collection
+
+Author-side `review-respond` collection uses its bundled read-only collector to
+page review bodies, threads, every thread's replies and conversation comments
+independently. Incomplete reads or changed heads stop collection before fixes or
+replies are prepared. The collector only reads; reply approval and posting remain
+the separate author-response workflow. Pending readers use current fullDatabaseId
+GraphQL fields with strict numeric normalization for stored REST-compatible IDs.
 
 ## Checking an existing review
 
