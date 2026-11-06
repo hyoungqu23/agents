@@ -33,7 +33,7 @@ For a PR URL/number or explicit PR review, recommend comments from promoted find
 
 1. Map each comment to one finding and the smallest valid changed head-side line (`RIGHT`, or platform equivalent). For an absence finding, anchor where the missing handling becomes actionable. If no valid diff anchor exists, keep the finding in the main report and mark it unsuitable for inline placement.
 2. State the concrete trigger/effect or demonstrated structural cost and the smallest useful change. Keep one concern per comment, normally two to four short sentences. A question expresses a genuinely unresolved contract; it must not disguise a proven issue or uncertainty as a vague best-practice claim.
-3. Follow the sole wording procedure in `resources/skill-routing.md#pr-comment-wording-route`: use `un-ai` from the `content` plugin, or its documented fallback. Keep severity and placement metadata outside the copy-ready quote. Recheck the final text against the evidence and diff anchor.
+3. Follow the sole wording procedure in `resources/skill-routing.md#pr-comment-wording-route`: use `un-ai` from the `content` plugin, or its documented fallback. Keep placement metadata outside the copy-ready quote. Under `hm2-five`, include its one policy prefix in the comment itself. Recheck the final text against the evidence and diff anchor.
 
 Do not write comments or submit reviews from review-code. Authorized draft review
 creation belongs to review-pr and remains Pending; author replies belong to review-respond.

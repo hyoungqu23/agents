@@ -1,0 +1,99 @@
+name: review-harness
+
+on:
+  pull_request:
+    paths: ['tools/review-harness/**', 'plugins/review/**', 'plugins/build/**', '.github/workflows/review-harness.yml']
+  push:
+    branches: [main]
+    tags: ['review-harness-v*']
+    paths: ['tools/review-harness/**', 'plugins/review/**', 'plugins/build/**', '.github/workflows/review-harness.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install build
+      - name: Run source and state integration tests
+        run: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/review-harness/src python -m unittest discover -s tools/review-harness/tests -v
+      - name: Build wheel through the self-contained sdist
+        run: python -m build tools/review-harness --outdir dist
+      - name: Install outside the checkout without a skill cache
+        shell: bash
+        run: |
+          python -m venv "$RUNNER_TEMP/harness-clean"
+          "$RUNNER_TEMP/harness-clean/bin/python" -m pip install --no-index --no-deps dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$RUNNER_TEMP/harness-clean/bin/hm2-review-harness" --version
+          "$RUNNER_TEMP/harness-clean/bin/python" -c 'from hm2_review_harness.trusted import bundle_root,module; assert bundle_root().name == "bundle"; assert "P999" in module("review-code", "automation_contract.py").LABELS'
+      - name: Generate checksummed formula from these artifacts
+        run: python tools/review-harness/packaging/make_formula.py --repo '${{ github.repository }}' --tag review-harness-v0.1.0 --sdist dist/hm2_review_harness-0.1.0.tar.gz --wheel dist/hm2_review_harness-0.1.0-py3-none-any.whl --output dist/hm2-review-harness.rb
+      - name: Test actual Homebrew installation on a clean Mac
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: '1'
+        run: |
+          python tools/review-harness/packaging/make_formula.py --repo '${{ github.repository }}' --tag review-harness-v0.1.0 --sdist dist/hm2_review_harness-0.1.0.tar.gz --wheel dist/hm2_review_harness-0.1.0-py3-none-any.whl --artifact-base "file://$GITHUB_WORKSPACE/dist" --output "$RUNNER_TEMP/hm2-review-harness.rb"
+          brew tap-new hm2-test/review-harness
+          cp "$RUNNER_TEMP/hm2-review-harness.rb" "$(brew --repository hm2-test/review-harness)/Formula/hm2-review-harness.rb"
+          brew install --build-from-source hm2-test/review-harness/hm2-review-harness
+          brew test hm2-test/review-harness/hm2-review-harness
+          brew uninstall hm2-test/review-harness/hm2-review-harness
+      - uses: actions/upload-artifact@v4
+        with:
+          name: review-harness-${{ matrix.os }}
+          path: dist/
+
+  release:
+    needs: package
+    if: startsWith(github.ref, 'refs/tags/review-harness-v') && vars.HM2_HARNESS_RELEASE_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: review-harness-ubuntu-latest
+          path: dist
+      - name: Check release identity and public-distribution prerequisites
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          test "$TAG" = review-harness-v0.1.0
+          test -f LICENSE || { echo 'Resolve the root README licensing/attribution requirement before public release.'; exit 1; }
+          cd dist
+          sha256sum *.whl *.tar.gz > SHA256SUMS
+      - name: Publish versioned artifacts and propose the tap update
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          gh release create "$TAG" dist/* --verify-tag --title "$TAG" --generate-notes
+          git switch -c "codex/tap-$TAG"
+          mkdir -p Formula
+          cp dist/hm2-review-harness.rb Formula/hm2-review-harness.rb
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add Formula/hm2-review-harness.rb
+          git commit -m "chore: publish Homebrew formula for $TAG"
+          git push origin "codex/tap-$TAG"
+          gh pr create --repo "$REPOSITORY" --base main --head "codex/tap-$TAG" --title "Homebrew formula for $TAG" --body 'Install the checksummed release wheel in a managed Python environment. Merge this formula before advertising Homebrew installation.'

@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "scenario": "S4",
+  "target": {
+    "mode": "commits",
+    "base_sha": "62b765fcbb9c816ed862ed0dd0c5ac5dec7b1a66",
+    "head_sha": "8ee2b4d00684342b224fa2b63729c4681a42699c",
+    "diff_sha256": "b566e1b84ceeec9c474cd146af22537c022e066a5908ef1e8eea0a413870982b"
+  },
+  "review": {
+    "schema_version": 1,
+    "target": {
+      "mode": "commits",
+      "base_sha": "62b765fcbb9c816ed862ed0dd0c5ac5dec7b1a66",
+      "head_sha": "8ee2b4d00684342b224fa2b63729c4681a42699c",
+      "diff_sha256": "b566e1b84ceeec9c474cd146af22537c022e066a5908ef1e8eea0a413870982b"
+    },
+    "comment_policy": "hm2-five",
+    "files": [
+      {
+        "path": "export.py",
+        "classification": "source",
+        "risk": "medium",
+        "status": "reviewed",
+        "note": "현재 캡처의 유일한 변경 파일이다. 2행에서 오름차순 정렬을 내림차순으로 변경했으며, 기존 동작과 PR 본문의 oldest-first 요구사항에 어긋난다. 후보 export-order-reversed를 발견으로 승격했다."
+      }
+    ],
+    "passes": {
+      "standards": {
+        "status": "complete",
+        "note": "제공된 export.py 전체와 app.py를 비교했다. 책임, 의존성, 중복, 저장소 적합성, 이름을 검토했으며 별도 구조 결함은 발견하지 않았다. 검토 범위는 제공된 소스로 한정된다."
+      },
+      "spec": {
+        "status": "complete",
+        "note": "PR 본문의 first([]) 반환 요구사항은 현재 app.py의 빈 입력 분기로 충족한다. oldest-first 정렬 요구사항은 export.py의 reverse=True와 충돌한다. 테스트와 실행 설정은 제공되지 않아 회귀 테스트의 존재와 민감도는 확인하지 못했다."
+      },
+      "runtime": {
+        "status": "complete",
+        "note": "서로 다른 정렬 가능 값이 둘 이상인 rows가 export에 전달되면 sorted(..., reverse=True)가 기존 결과의 반대 순서를 반환한다. 별도의 변환이나 보호 분기는 없다. previous_review_delta도 따로 대조하여 app.py의 빈 입력 수정과 export.py의 정렬 회귀를 구분했다. 실제 호출부와 소비자는 제공되지 않았다."
+      }
+    },
+    "quality": {
+      "cohesion": {
+        "status": "checked",
+        "note": "export는 정렬, first는 첫 항목 조회를 각각 담당한다. 제공된 두 함수에서 책임 혼합은 확인되지 않았다."
+      },
+      "coupling": {
+        "status": "checked",
+        "note": "export의 의존성은 내장 sorted이며 새 모듈 의존성은 없다. 반환 순서 변경이 호출자에게 노출되지만 실제 호출부는 제공되지 않았다."
+      },
+      "duplication": {
+        "status": "checked",
+        "note": "제공된 app.py와 export.py에서 정렬 및 첫 항목 조회 구현을 비교했다. 같은 규칙을 중복 구현한 부분은 없다. 저장소 전체 검색은 수행하지 않았다."
+      },
+      "repository_fit": {
+        "status": "checked",
+        "note": "trusted_base_rules는 비어 있다. base:export.py의 오름차순 동작과 PR 본문의 순서 유지 요구사항을 기준으로 정렬 변경을 검토했다."
+      },
+      "naming": {
+        "status": "checked",
+        "note": "export, rows, first의 이름은 변경되지 않았다. 제공된 정의만으로 구체적인 이름 결함을 입증할 근거는 없다."
+      }
+    },
+    "verification": [
+      {
+        "kind": "static",
+        "status": "passed",
+        "detail": "현재 캡처의 export.py 변경을 base/head 전체 소스로 대조했다. 서로 다른 두 값의 입력에서 반환 순서가 반전되는 경로를 정적으로 확인했다."
+      },
+      {
+        "kind": "static",
+        "status": "passed",
+        "detail": "previous_review_delta를 현재 캡처와 별도로 검사했다. 과거 app.py의 무조건적인 rows[0] 접근과 현재 빈 입력 보호 분기를 비교했고, 델타의 export.py 변경도 현재 소스와 일치함을 확인했다."
+      },
+      {
+        "kind": "command",
+        "status": "not_run",
+        "detail": "테스트, 타입 검사, 실행 재현 및 구조화 결과 검증은 실행하지 않았다.",
+        "reason": "요청이 도구 사용과 코드 실행을 금지하며 테스트와 실행 설정도 제공되지 않았다.",
+        "risk": "실제 호출부의 입력 형태, 통합 동작, 회귀 테스트 민감도 및 코디네이터의 인용·범위 검증 결과는 확인되지 않았다."
+      }
+    ],
+    "findings": [
+      {
+        "id": "export-order-reversed",
+        "status": "supported",
+        "severity": "P2",
+        "path": "export.py",
+        "line": 2,
+        "revision": "head",
+        "trigger": "서로 다른 정렬 가능 값이 둘 이상인 rows를 export에 전달한다.",
+        "effect": "기존 오름차순 결과가 내림차순으로 바뀌어 PR 본문의 oldest-first 순서 유지 요구사항을 위반한다.",
+        "fix": "reverse=True를 제거하여 기존 오름차순 정렬을 유지한다.",
+        "refutation": "빈 입력이나 같은 값만 있는 입력에서는 차이가 없지만 서로 다른 값이 있는 입력에서는 순서가 반전된다. 제공된 함수에는 이를 보정하는 분기가 없으며, base 구현과 PR 본문 모두 기존 순서를 유지해야 한다는 판단을 뒷받침한다.",
+        "evidence": [
+          {
+            "revision": "head",
+            "path": "export.py",
+            "line": 1,
+            "quote": "def export(rows):"
+          },
+          {
+            "revision": "head",
+            "path": "export.py",
+            "line": 2,
+            "quote": "    return sorted(rows, reverse=True)"
+          },
+          {
+            "revision": "base",
+            "path": "export.py",
+            "line": 2,
+            "quote": "    return sorted(rows)"
+          }
+        ],
+        "comment": "[P2] 서로 다른 값이 둘 이상이면 `reverse=True` 때문에 기존 오름차순 결과가 내림차순으로 바뀝니다. PR 본문에서 요구한 oldest-first 순서를 유지하도록 `reverse=True`를 제거해 주세요."
+      }
+    ],
+    "limitations": [
+      "제공된 불변 스냅샷만 정적으로 검토했다. Git 범위와 인용의 기계적 검증은 코디네이터가 수행해야 한다.",
+      "previous_review_delta의 app.py는 현재 캡처의 변경 파일이 아니므로 파일 목록에 추가하지 않고 기존 주장 검증에서 별도로 처리했다.",
+      "호출부, 소비자, 테스트, 매니페스트가 제공되지 않아 통합 검증과 저장소 전체 중복 검색은 수행하지 못했다.",
+      "omitted 목록은 비어 있으며 필수 리뷰 계약은 제공되었다. 이전 결과와 기존 Pending 초안·수동 편집 정보는 없어 초안 충돌 여부는 확인하지 못했다."
+    ]
+  },
+  "claims": [
+    {
+      "id": "inline:C1",
+      "verdict": "confirmed",
+      "current_state": "already_addressed",
+      "action": "already-addressed",
+      "evidence": [
+        {
+          "revision": "review",
+          "path": "app.py",
+          "line": 2,
+          "quote": "    return rows[0]"
+        }
+      ],
+      "counterevidence": [
+        {
+          "revision": "head",
+          "path": "app.py",
+          "line": 2,
+          "quote": "    return rows[0] if rows else None"
+        }
+      ],
+      "missing_evidence": null,
+      "reply": {
+        "label": "P2",
+        "body": "[P2] 원래 리뷰 시점에는 빈 리스트에서 `rows[0]`을 읽어 `IndexError`가 발생하므로 지적이 타당했습니다. 현재 코드는 빈 입력이면 `None`을 반환하도록 수정되어 해당 문제는 해결된 상태입니다. 과거 소스와 현재 분기를 정적으로 대조했으며 실행 검증은 하지 않았습니다."
+      }
+    }
+  ],
+  "limitations": [
+    "S4의 기존 주장 검증과 현재 코드 리뷰를 별도로 기록했다. 기존 빈 입력 결함은 수정되었지만 export 정렬 회귀는 현재 남아 있다.",
+    "코드 실행, 서비스 접촉, 파일 변경, 초안 저장 또는 리뷰 제출은 수행하지 않았다."
+  ]
+}

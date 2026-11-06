@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "mode": "draft-only",
+  "scenario": "S2",
+  "target": {
+    "mode": "commits",
+    "base_sha": "cb5f9929cb0e20468e2e92dfe3e92152bb4454a0",
+    "head_sha": "9ec22c32e5bf0f44f1efdf7a27deffecf78f72f6",
+    "diff_sha256": "9e53df98cb8628af5eb028272c9560b8ec3e505f23f77e3b625a0a62b4dfbb52"
+  },
+  "claims": [
+    {
+      "id": "inline:C1",
+      "source": "inline",
+      "body": "[P2] Empty rows raise IndexError rather than returning None.",
+      "review_ref": "9ec22c32e5bf0f44f1efdf7a27deffecf78f72f6",
+      "path": "app.py"
+    },
+    {
+      "id": "conversation:2",
+      "source": "conversation",
+      "body": "[질문] What ordering does export currently preserve?",
+      "review_ref": null
+    }
+  ]
+}

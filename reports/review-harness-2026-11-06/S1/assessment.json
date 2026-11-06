@@ -1,0 +1,26 @@
+{
+  "status": "partial",
+  "target": {
+    "mode": "working-tree",
+    "base_sha": "93320c8f01027df36afdaeff256cde1503fae550",
+    "head_sha": "93320c8f01027df36afdaeff256cde1503fae550",
+    "diff_sha256": "103cbf2b397c8c65021c22ddf79d684afcaa8f173cd2ec2ee48aae9e303fbb13"
+  },
+  "gaps": [
+    {
+      "code": "incomplete_check",
+      "detail": "passes.runtime"
+    }
+  ],
+  "eligible_findings": [
+    "first-empty-input-regression"
+  ],
+  "rejected_findings": [],
+  "spec_conformance": "unverified",
+  "limitations": [
+    "요구사항, 호출부, 테스트 및 실행 설정이 제공되지 않아 의도와 제품 전체 영향은 확인하지 못했습니다.",
+    "참조된 review-check의 claim-verification.md는 제공되지 않았습니다. 이번 S1 입력에는 평가할 claim이 없어 claim 판정에는 적용되지 않았습니다.",
+    "도구나 코드를 실행하지 않았으며 Git 범위의 최신성, 인용 일치 및 결과 계약 검증은 코디네이터에 남아 있습니다."
+  ],
+  "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+}

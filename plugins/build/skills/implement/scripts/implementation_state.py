@@ -12,6 +12,7 @@ from pathlib import Path, PurePosixPath
 import stat
 import subprocess
 import sys
+import shutil
 
 
 class StateError(RuntimeError):
@@ -421,6 +422,7 @@ def main():
             command.add_argument('--target', type=Path, required=True)
             command.add_argument('--verification-target', type=Path, required=True)
             command.add_argument('--result', type=Path, required=True)
+            command.add_argument('--notify-review', action='store_true', help='Enqueue S1 in an already configured local review harness after complete assessment')
     args = parser.parse_args()
     try:
         root = repo_root(args.worktree)
@@ -433,6 +435,24 @@ def main():
             value = assess(root, *paths)
         write_new(args.output, value, root)
         print(json.dumps(value, ensure_ascii=False, indent=2))
+        if args.action == 'assess' and args.notify_review and value.get('status') == 'complete':
+            executable = shutil.which('hm2-review-harness')
+            notification = {'status': 'not_queued', 'reason': 'Local harness is not installed'}
+            if executable:
+                try:
+                    queued = subprocess.run([executable, 'notify-implementation', '--worktree', str(root),
+                                             '--assessment', str(args.output.resolve()), '--inputs',
+                                             snapshot(args.verification_target)['inputs']['path']], capture_output=True, text=True, timeout=30)
+                    notification = {'status': 'queued' if queued.returncode == 0 else 'not_queued',
+                                    'detail': queued.stdout.strip() if queued.returncode == 0 else queued.stderr.strip()}
+                except (OSError, subprocess.SubprocessError) as error:
+                    notification = {'status': 'not_queued', 'reason': str(error)}
+            try:
+                write_new(args.output.with_suffix('.review-queue.json'), notification, root)
+            except (StateError, OSError) as error:
+                print('Review notification receipt unavailable: ' + str(error), file=sys.stderr)
+            if notification['status'] != 'queued':
+                print('Implementation complete; automatic review was not queued. Check the notification receipt.', file=sys.stderr)
         return 0 if value.get('status') in (None, 'complete') else 2
     except (StateError, OSError, ValueError, TypeError) as error:
         print(str(error), file=sys.stderr)

@@ -65,6 +65,12 @@ Do not claim a proposed fix is complete. A fix action has no completion reply un
 current source establishes `already_addressed`. Questions have no verified severity.
 Replies with `action: answer` use the `[질문]` prefix, not an impact priority.
 
+For claim assessments only, `revision: review` may quote the original claim's
+`review_ref` when the coordinator supplied that source. The coordinator checks that
+exact immutable Git object separately. Code-review findings still use the ordinary
+base/head/index/working revisions. If the old object is unavailable, do not claim
+historical correctness from a present-day fix alone.
+
 The trusted `scripts/automation_contract.py` checks envelope identity, coverage,
 states and prefix consistency. The coordinator must additionally validate actual
 source quotations, scope freshness and the code ledger. JSON checks alone cannot

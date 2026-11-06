@@ -40,6 +40,11 @@ The Claude Code and Codex manifests are platform-specific wrappers. Each skill i
 
 ## Local testing
 
+The [Review Harness CLI](tools/review-harness/README.md) packages the four automated
+review workflows separately from the interactive plugins. It includes matching
+review instructions and supports local reports, authorized Pending drafts, and
+portable wheel/sdist distribution with a generated Homebrew service formula.
+
 ### Claude Code
 
 From the parent directory of this repository:

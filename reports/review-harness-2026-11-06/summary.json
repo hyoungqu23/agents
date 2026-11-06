@@ -1,0 +1,78 @@
+[
+  {
+    "scenario": "S1",
+    "model": "gpt-6-astra",
+    "cli": "codex 0.156.1",
+    "assessment": "partial",
+    "target": {
+      "mode": "working-tree",
+      "base_sha": "93320c8f01027df36afdaeff256cde1503fae550",
+      "head_sha": "93320c8f01027df36afdaeff256cde1503fae550",
+      "diff_sha256": "103cbf2b397c8c65021c22ddf79d684afcaa8f173cd2ec2ee48aae9e303fbb13"
+    },
+    "files": {
+      "request.json": "1948b690581bfa0e55689e84146dde5a5993a78585b75ea5905ddcf6d1ae5e9d",
+      "source-packet.json": "18bd41e85524f668ee105084fadc2e5aab6b100638d74a090ea968baf77781c6",
+      "assessment.json": "6f8610c3fb248318199ec5b3cc0009a2f751bcafb78b3483940f865f7eb7d818",
+      "scope.json": "70c7dfe247502b5a4e093105402a2c7efba99b33be48e91bf74f5a220a3b3e57",
+      "response.json": "65866672a92fc30b5e2ef188814977cad0f52f38b58e725e1f2a1513fb4ba213"
+    }
+  },
+  {
+    "scenario": "S2",
+    "model": "gpt-6-astra",
+    "cli": "codex 0.156.1",
+    "assessment": "complete",
+    "target": {
+      "mode": "commits",
+      "base_sha": "cb5f9929cb0e20468e2e92dfe3e92152bb4454a0",
+      "head_sha": "9ec22c32e5bf0f44f1efdf7a27deffecf78f72f6",
+      "diff_sha256": "9e53df98cb8628af5eb028272c9560b8ec3e505f23f77e3b625a0a62b4dfbb52"
+    },
+    "files": {
+      "request.json": "aa935b3026a1336717cd1553c608982033bb1f997d1238b491ac5f3760f64c9a",
+      "source-packet.json": "442fed44588b6f98146f8b564170fc4d5c1c7f351f6b91ccc701dcb2c32222e4",
+      "assessment.json": "263d45d75405cdbca071b629036b4113bae3f23c5809146e430bdd165759580f",
+      "scope.json": "210017dc4ba88106fb0c3f3d9cbe1bc49c6585ee00775d8bc23861730cc967e0",
+      "response.json": "0b6c2cf48638e0d0de503024ddddc2e20c65447ed825a52ef2d1d3c78d8e418c"
+    }
+  },
+  {
+    "scenario": "S3",
+    "model": "gpt-6-astra",
+    "cli": "codex 0.156.1",
+    "assessment": "complete",
+    "target": {
+      "mode": "commits",
+      "base_sha": "9f4be91d46233220971b0a96bf2d6815d9758535",
+      "head_sha": "a7be655f03171338c9801e3b854ab212b594a957",
+      "diff_sha256": "9e53df98cb8628af5eb028272c9560b8ec3e505f23f77e3b625a0a62b4dfbb52"
+    },
+    "files": {
+      "request.json": "d6d882fa2498f929a6acfb501d290114f5588c812810f3a7b8f50ca0e9536850",
+      "source-packet.json": "484b44272877b6a4eb24975f28b01fd1b3e066169ed2a7799bf48b67b78b16d0",
+      "assessment.json": "1c032963188bfcc30f6089b757b25d342c01cd54de3cd81d65ec5a9e25b79de5",
+      "scope.json": "65fcb410c9e84287972102a55c4dd8e8618c315caf337f3f1f393f917b87b526",
+      "response.json": "7a777f9eb0151dfe37d19df2c4755dbfbc92157bb13f6c70b564cb05a5886ed6"
+    }
+  },
+  {
+    "scenario": "S4",
+    "model": "gpt-6-astra",
+    "cli": "codex 0.156.1",
+    "assessment": "complete",
+    "target": {
+      "mode": "commits",
+      "base_sha": "62b765fcbb9c816ed862ed0dd0c5ac5dec7b1a66",
+      "head_sha": "8ee2b4d00684342b224fa2b63729c4681a42699c",
+      "diff_sha256": "b566e1b84ceeec9c474cd146af22537c022e066a5908ef1e8eea0a413870982b"
+    },
+    "files": {
+      "request.json": "4ad8ca46cf5555163eceb228493c2930d2c02940365c476b866bfb9fe8de489d",
+      "source-packet.json": "3e433d1da1706a9660a72b601f4ec0ea5482cf4612e07033a6a2c201f96c4f70",
+      "assessment.json": "099d682f040b61c5eb38b9e676e3d0d6887a2e6cbbeaacf0b7a7fdf21ec7dc0e",
+      "scope.json": "5737a22e04f9a2528de1a78cd64a8c176e00a1f0b1ada30f0e84de87b2fc6796",
+      "response.json": "b0c56ee3e6fd9df9493b4a774f2e415c3882bc3d50477f448a4890252a32f7c0"
+    }
+  }
+]

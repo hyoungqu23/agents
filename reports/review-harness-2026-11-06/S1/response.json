@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "scenario": "S1",
+  "target": {
+    "mode": "working-tree",
+    "base_sha": "93320c8f01027df36afdaeff256cde1503fae550",
+    "head_sha": "93320c8f01027df36afdaeff256cde1503fae550",
+    "diff_sha256": "103cbf2b397c8c65021c22ddf79d684afcaa8f173cd2ec2ee48aae9e303fbb13"
+  },
+  "review": {
+    "schema_version": 1,
+    "target": {
+      "mode": "working-tree",
+      "base_sha": "93320c8f01027df36afdaeff256cde1503fae550",
+      "head_sha": "93320c8f01027df36afdaeff256cde1503fae550",
+      "diff_sha256": "103cbf2b397c8c65021c22ddf79d684afcaa8f173cd2ec2ee48aae9e303fbb13"
+    },
+    "comment_policy": "hm2-five",
+    "files": [
+      {
+        "path": "app.py",
+        "classification": "source",
+        "risk": "medium",
+        "status": "reviewed",
+        "note": "유일한 변경 파일입니다. base·head·index의 빈 입력 처리가 working에서 제거됐습니다. first([])가 None 대신 IndexError를 발생시키는 회귀를 확인했습니다. 호출부와 테스트는 제공되지 않았습니다."
+      }
+    ],
+    "passes": {
+      "standards": {
+        "status": "complete",
+        "note": "제공된 app.py와 export.py를 비교해 책임, 의존성, 중복, 저장소 적합성, 이름을 검토했습니다. 별도 저장소 규칙이나 설정은 제공되지 않아 특정 관례 위반을 주장하지 않았습니다."
+      },
+      "spec": {
+        "status": "unavailable",
+        "note": "요구사항이나 변경 의도, 테스트가 제공되지 않았습니다. base의 빈 입력 반환 동작은 확인했지만 이를 의도적으로 변경하는 요구사항이 있는지는 확인할 수 없습니다."
+      },
+      "runtime": {
+        "status": "partial",
+        "note": "빈 리스트 → first → rows[0] → IndexError 경로는 정적으로 확인했습니다. 호출부가 제공되지 않아 제품 진입점에서 빈 리스트가 전달되는 경로와 예외 처리까지는 확인하지 못했습니다."
+      }
+    },
+    "quality": {
+      "cohesion": {
+        "status": "checked",
+        "note": "first는 첫 항목 선택, export는 정렬을 담당합니다. 변경으로 서로 다른 책임이 결합되지는 않았습니다."
+      },
+      "coupling": {
+        "status": "checked",
+        "note": "제공된 두 모듈에는 상호 호출, import, 공유 상태가 없습니다. 빈 입력 반환 계약 변경 외에 새로운 의존 관계는 없습니다. 외부 호출부는 미제공입니다."
+      },
+      "duplication": {
+        "status": "checked",
+        "note": "제공된 전체 소스에서 첫 항목 선택과 빈 입력 처리를 대조했습니다. export의 sorted(rows)는 별도 연산이므로 first와 같은 규칙의 중복 구현이 아닙니다."
+      },
+      "repository_fit": {
+        "status": "checked",
+        "note": "trusted_base_rules는 비어 있습니다. base·head·index가 유지하던 빈 입력 처리가 working에서 제거된 사실을 근거로 회귀를 판단했으며, 추가 관례를 추정하지 않았습니다."
+      },
+      "naming": {
+        "status": "checked",
+        "note": "first와 rows는 첫 항목 선택이라는 책임과 입력을 나타냅니다. 이름이나 단위 변경에 따른 별도 결함은 없습니다."
+      }
+    },
+    "verification": [
+      {
+        "kind": "static",
+        "status": "passed",
+        "detail": "캡처된 변경 파일 app.py를 모두 검토하고 base·head·index·working을 비교했습니다. index까지 존재하던 빈 입력 보호 분기가 working에서 제거됐습니다."
+      },
+      {
+        "kind": "static",
+        "status": "not_run",
+        "detail": "호출부, 요구사항 및 회귀 테스트의 입력·분기·검증식 연결 확인",
+        "reason": "해당 자료가 스냅샷에 제공되지 않았습니다.",
+        "risk": "제품 경로에서 빈 입력이 발생하는 빈도와 의도적인 계약 변경 여부, 기존 테스트의 회귀 탐지 능력을 확인하지 못했습니다."
+      },
+      {
+        "kind": "command",
+        "status": "not_run",
+        "detail": "저장소 테스트 및 구조화 결과 검증",
+        "reason": "요청에서 도구와 코드 실행을 금지했으며 테스트 설정도 제공되지 않았습니다. 인용과 범위 검증은 코디네이터가 담당합니다.",
+        "risk": "실행 결과와 현재 Git 상태에 대한 독립 검증은 없습니다."
+      }
+    ],
+    "findings": [
+      {
+        "id": "first-empty-input-regression",
+        "status": "supported",
+        "severity": "P2",
+        "path": "app.py",
+        "line": 2,
+        "revision": "working",
+        "trigger": "first에 빈 리스트 []를 전달합니다.",
+        "effect": "base·head·index에서는 None을 반환하지만 working에서는 rows[0] 접근으로 IndexError가 발생합니다.",
+        "fix": "첫 항목 접근 전에 빈 입력을 검사하고 기존처럼 None을 반환하도록 보호 분기를 복원하세요.",
+        "refutation": "base·head·index의 동일한 보호 분기와 working 함수 전체를 비교했습니다. working에는 대체 보호 분기가 없으며 export.py에도 first를 감싸는 호출부가 없습니다. 외부 호출부의 빈 입력 금지 조건이나 의도적인 계약 변경 요구사항은 제공되지 않았습니다.",
+        "basis": "기준은 app.py의 기존 반환 동작과 변경 전후의 정적 실행 경로입니다. 빈 입력 처리 제거로 발생한 동작 회귀를 복원하는 수정이며, 새로운 추상화나 관련 없는 정리는 필요하지 않습니다.",
+        "evidence": [
+          {
+            "revision": "working",
+            "path": "app.py",
+            "line": 2,
+            "quote": "    return rows[0]"
+          },
+          {
+            "revision": "working",
+            "path": "app.py",
+            "line": 1,
+            "quote": "def first(rows):"
+          },
+          {
+            "revision": "base",
+            "path": "app.py",
+            "line": 2,
+            "quote": "    return rows[0] if rows else None"
+          },
+          {
+            "revision": "index",
+            "path": "app.py",
+            "line": 2,
+            "quote": "    return rows[0] if rows else None"
+          }
+        ],
+        "comment": "[P2] 빈 리스트를 전달하면 기존에는 `None`을 반환했지만 이제 `rows[0]`에서 `IndexError`가 발생합니다. 기존 빈 입력 동작을 유지하도록 보호 분기를 복원해 주세요."
+      }
+    ],
+    "limitations": [
+      "요구사항, 호출부, 테스트 및 실행 설정이 제공되지 않아 의도와 제품 전체 영향은 확인하지 못했습니다.",
+      "참조된 review-check의 claim-verification.md는 제공되지 않았습니다. 이번 S1 입력에는 평가할 claim이 없어 claim 판정에는 적용되지 않았습니다.",
+      "도구나 코드를 실행하지 않았으며 Git 범위의 최신성, 인용 일치 및 결과 계약 검증은 코디네이터에 남아 있습니다."
+    ]
+  },
+  "claims": [],
+  "limitations": [
+    "입력 claim은 0개이며 캡처된 변경 파일 app.py는 원장에 포함했습니다.",
+    "previous_review_delta와 previous_result는 null이므로 과거 리뷰와의 별도 비교 자료가 없습니다.",
+    "snapshot_data.omitted는 빈 배열입니다. 다만 호출부·요구사항·테스트 등 제공되지 않은 자료에 대한 검증 공백은 남아 있습니다."
+  ]
+}

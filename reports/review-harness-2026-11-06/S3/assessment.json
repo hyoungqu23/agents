@@ -1,0 +1,25 @@
+{
+  "code": {
+    "status": "complete",
+    "target": {
+      "mode": "commits",
+      "base_sha": "9f4be91d46233220971b0a96bf2d6815d9758535",
+      "head_sha": "a7be655f03171338c9801e3b854ab212b594a957",
+      "diff_sha256": "9e53df98cb8628af5eb028272c9560b8ec3e505f23f77e3b625a0a62b4dfbb52"
+    },
+    "gaps": [],
+    "eligible_findings": [
+      "empty-input"
+    ],
+    "rejected_findings": [],
+    "limitations": [
+      "코드 실행, 외부 조회, 파일 수정 및 초안 저장은 수행하지 않았다.",
+      "테스트와 행 자료형 계약이 없어 회귀 테스트의 민감도 및 oldest-first의 도메인 의미는 확인하지 못했다.",
+      "automation-contract가 참조하는 claim-verification.md가 제공되지 않았다. 입력 claims는 비어 있어 개별 주장 판정은 없지만 참조 계약 누락으로 기록한다.",
+      "omitted는 비어 있고 previous_review_delta 및 previous_result는 null이다. 별도 과거 리뷰 비교 자료는 없다."
+    ],
+    "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+  },
+  "claim_gaps": [],
+  "status": "complete"
+}

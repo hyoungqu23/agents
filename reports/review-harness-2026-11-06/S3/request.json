@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "mode": "draft-only",
+  "scenario": "S3",
+  "target": {
+    "mode": "commits",
+    "base_sha": "9f4be91d46233220971b0a96bf2d6815d9758535",
+    "head_sha": "a7be655f03171338c9801e3b854ab212b594a957",
+    "diff_sha256": "9e53df98cb8628af5eb028272c9560b8ec3e505f23f77e3b625a0a62b4dfbb52"
+  },
+  "claims": []
+}

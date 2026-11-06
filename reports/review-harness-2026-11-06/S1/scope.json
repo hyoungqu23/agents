@@ -1,0 +1,1 @@
+{"schema_version": 1, "worktree": "/private/tmp/hm2-review-model-smoke-_4rnk8it/source", "target": {"mode": "working-tree", "base_sha": "93320c8f01027df36afdaeff256cde1503fae550", "head_sha": "93320c8f01027df36afdaeff256cde1503fae550", "diff_sha256": "103cbf2b397c8c65021c22ddf79d684afcaa8f173cd2ec2ee48aae9e303fbb13"}, "files": [{"path": "app.py", "change": "M"}]}

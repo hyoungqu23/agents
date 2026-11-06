@@ -60,6 +60,13 @@ the exact external input/environment needed when progress depends on it.
 
 ## Assess, resume and hand off
 
+When the user has configured the local `hm2-review-harness` for this checkout,
+pass `--notify-review` to the assessment command. The trusted helper queues one
+self-review only after a computed complete assessment and retains a separate
+notification receipt. A missing/stopped/unconfigured harness does not invalidate
+the implementation assessment. Do not install, authenticate or start a service
+from this skill; follow the existing setup authorization.
+
 Record actual changes, requirement dispositions, current-source quotations and
 verification evidence in the result contract. Run the bundled `assess` operation
 against baseline, verification target and result; report its computed status and
