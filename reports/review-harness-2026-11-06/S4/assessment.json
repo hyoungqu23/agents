@@ -1,0 +1,25 @@
+{
+  "code": {
+    "status": "complete",
+    "target": {
+      "mode": "commits",
+      "base_sha": "62b765fcbb9c816ed862ed0dd0c5ac5dec7b1a66",
+      "head_sha": "8ee2b4d00684342b224fa2b63729c4681a42699c",
+      "diff_sha256": "b566e1b84ceeec9c474cd146af22537c022e066a5908ef1e8eea0a413870982b"
+    },
+    "gaps": [],
+    "eligible_findings": [
+      "export-order-reversed"
+    ],
+    "rejected_findings": [],
+    "limitations": [
+      "제공된 불변 스냅샷만 정적으로 검토했다. Git 범위와 인용의 기계적 검증은 코디네이터가 수행해야 한다.",
+      "previous_review_delta의 app.py는 현재 캡처의 변경 파일이 아니므로 파일 목록에 추가하지 않고 기존 주장 검증에서 별도로 처리했다.",
+      "호출부, 소비자, 테스트, 매니페스트가 제공되지 않아 통합 검증과 저장소 전체 중복 검색은 수행하지 못했다.",
+      "omitted 목록은 비어 있으며 필수 리뷰 계약은 제공되었다. 이전 결과와 기존 Pending 초안·수동 편집 정보는 없어 초안 충돌 여부는 확인하지 못했다."
+    ],
+    "scope_note": "Recorded scope and source quotations checked; reasoning and defect absence are not certified."
+  },
+  "claim_gaps": [],
+  "status": "complete"
+}

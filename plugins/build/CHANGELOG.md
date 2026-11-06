@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 - 2026-11-06
+
+- Add opt-in local S1 review notification after complete implementation assessment, with an independent delivery receipt. Missing harnesses do not change implementation verification results.
+
 ## 0.2.0 - 2026-11-04
 
 - Add `fix` for reported bugs and adopted QA behavior/design improvements, preserving scope and user work with the smallest complete correction.

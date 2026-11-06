@@ -1,7 +1,7 @@
 {
   "name": "build",
   "displayName": "Build",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Implement product features and make scoped bug or QA corrections with verification evidence.",
   "author": {
     "name": "HM2"

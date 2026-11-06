@@ -1,0 +1,22 @@
+{
+  "sources": {
+    "head:export.py": "def export(rows):\n    return sorted(rows, reverse=True)\n",
+    "head:app.py": "def first(rows):\n    return rows[0] if rows else None\n",
+    "base:export.py": "def export(rows):\n    return sorted(rows)\n",
+    "review:af3fff27225dbd8b8a246d10eb71be699737a4dc:app.py": "def first(rows):\n    return rows[0]\n"
+  },
+  "repository_paths": [
+    "app.py",
+    "export.py",
+    ""
+  ],
+  "trusted_base_rules": {},
+  "previous_review_delta": "diff --git a/app.py b/app.py\nindex 408ab95..457dc8c 100644\n--- a/app.py\n+++ b/app.py\n@@ -1,2 +1,2 @@\n def first(rows):\n-    return rows[0]\n+    return rows[0] if rows else None\ndiff --git a/export.py b/export.py\nindex c452f30..b31d785 100644\n--- a/export.py\n+++ b/export.py\n@@ -1,2 +1,2 @@\n def export(rows):\n-    return sorted(rows)\n+    return sorted(rows, reverse=True)\n",
+  "omitted": [],
+  "context": {
+    "pull_request": {
+      "title": "Simplify first-row lookup",
+      "body": "Keep first([]) returning None. Export must preserve oldest-first sorted order."
+    }
+  }
+}

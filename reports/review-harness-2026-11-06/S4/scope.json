@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "worktree": "/private/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tmpcapbq3tm/app",
+  "target": {
+    "mode": "commits",
+    "base_sha": "62b765fcbb9c816ed862ed0dd0c5ac5dec7b1a66",
+    "head_sha": "8ee2b4d00684342b224fa2b63729c4681a42699c",
+    "diff_sha256": "b566e1b84ceeec9c474cd146af22537c022e066a5908ef1e8eea0a413870982b"
+  },
+  "files": [
+    {
+      "path": "export.py",
+      "change": "M"
+    }
+  ]
+}

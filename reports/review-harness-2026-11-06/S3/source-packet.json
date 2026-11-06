@@ -1,0 +1,21 @@
+{
+  "sources": {
+    "head:app.py": "def first(rows):\n    return rows[0]\n",
+    "head:export.py": "def export(rows):\n    return sorted(rows)\n",
+    "base:app.py": "def first(rows):\n    return rows[0] if rows else None\n"
+  },
+  "repository_paths": [
+    "app.py",
+    "export.py",
+    ""
+  ],
+  "trusted_base_rules": {},
+  "previous_review_delta": null,
+  "omitted": [],
+  "context": {
+    "pull_request": {
+      "title": "Simplify first-row lookup",
+      "body": "Keep first([]) returning None. Export must preserve oldest-first sorted order."
+    }
+  }
+}

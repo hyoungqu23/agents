@@ -64,7 +64,7 @@
       "name": "build",
       "source": "./plugins/build",
       "description": "Implement features and apply scoped bug/QA corrections with verification evidence.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "category": "Productivity",
       "keywords": [
         "implementation",

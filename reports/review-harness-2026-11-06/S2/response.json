@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "scenario": "S2",
+  "target": {
+    "mode": "commits",
+    "base_sha": "cb5f9929cb0e20468e2e92dfe3e92152bb4454a0",
+    "head_sha": "9ec22c32e5bf0f44f1efdf7a27deffecf78f72f6",
+    "diff_sha256": "9e53df98cb8628af5eb028272c9560b8ec3e505f23f77e3b625a0a62b4dfbb52"
+  },
+  "review": null,
+  "claims": [
+    {
+      "id": "inline:C1",
+      "verdict": "confirmed",
+      "current_state": "present",
+      "action": "fix",
+      "evidence": [
+        {
+          "revision": "head",
+          "path": "app.py",
+          "line": 2,
+          "quote": "    return rows[0]"
+        },
+        {
+          "revision": "base",
+          "path": "app.py",
+          "line": 2,
+          "quote": "    return rows[0] if rows else None"
+        }
+      ],
+      "counterevidence": [],
+      "missing_evidence": null,
+      "reply": null,
+      "trigger": "first([])를 호출합니다.",
+      "impact": "기존의 None 반환 대신 IndexError가 발생합니다.",
+      "recommended_fix": "빈 입력이면 None을 반환하는 기존 분기를 복원합니다.",
+      "refutation": "base에는 빈 입력을 처리하는 분기가 있지만 head에는 없습니다. 제공된 함수 내부에는 인덱스 접근을 막는 다른 보호 장치가 없습니다.",
+      "verified_severity": "P2"
+    },
+    {
+      "id": "conversation:2",
+      "verdict": "confirmed",
+      "current_state": "present",
+      "action": "answer",
+      "evidence": [
+        {
+          "revision": "head",
+          "path": "export.py",
+          "line": 1,
+          "quote": "def export(rows):"
+        },
+        {
+          "revision": "head",
+          "path": "export.py",
+          "line": 2,
+          "quote": "    return sorted(rows)"
+        }
+      ],
+      "counterevidence": [],
+      "missing_evidence": "rows 원소의 자료형과 비교 규칙이 없어 기본 오름차순이 실제 oldest-first 순서인지는 확인할 수 없습니다.",
+      "reply": {
+        "label": "질문",
+        "body": "[질문] 현재 `export`는 `export.py:2`의 `sorted(rows)`로 원소의 기본 비교 규칙에 따른 오름차순 목록을 반환합니다. 비교 결과가 같은 원소끼리는 입력 순서를 유지합니다. 별도의 날짜 정렬 키는 없으므로, 이 순서가 oldest-first인지는 `rows` 원소의 자료형과 비교 규칙을 확인해야 합니다.\n<!-- review-respond -->"
+      },
+      "verified_severity": null
+    }
+  ],
+  "limitations": [
+    "변경 파일은 app.py 한 개이며 inline:C1 검증에서 base와 head 전체를 확인했습니다. export.py는 conversation:2의 답변 근거로 확인했습니다. S2이므로 전체 코드 리뷰 원장은 작성하지 않았습니다.",
+    "입력 주장 2건을 모두 평가했습니다. omitted는 비어 있고 previous_review_delta와 previous_result는 제공되지 않았습니다.",
+    "PR 작성자 확인 정보와 전체 댓글 수집·페이지네이션 정보가 없어 작성자 여부 및 제공된 2건 외 대기 항목의 존재는 검증하지 못했습니다.",
+    "스냅샷만 정적으로 검토했습니다. 호출자와 테스트는 제공되지 않았으며 실행 검증, 명령 실행, 파일 변경, 게시를 수행하지 않았습니다.",
+    "export의 oldest-first 요구사항 충족 여부를 판정하려면 원소 자료형과 날짜 비교 계약이 필요합니다."
+  ]
+}

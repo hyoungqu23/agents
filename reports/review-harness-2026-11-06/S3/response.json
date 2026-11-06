@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "scenario": "S3",
+  "target": {
+    "mode": "commits",
+    "base_sha": "9f4be91d46233220971b0a96bf2d6815d9758535",
+    "head_sha": "a7be655f03171338c9801e3b854ab212b594a957",
+    "diff_sha256": "9e53df98cb8628af5eb028272c9560b8ec3e505f23f77e3b625a0a62b4dfbb52"
+  },
+  "review": {
+    "schema_version": 1,
+    "target": {
+      "mode": "commits",
+      "base_sha": "9f4be91d46233220971b0a96bf2d6815d9758535",
+      "head_sha": "a7be655f03171338c9801e3b854ab212b594a957",
+      "diff_sha256": "9e53df98cb8628af5eb028272c9560b8ec3e505f23f77e3b625a0a62b4dfbb52"
+    },
+    "comment_policy": "hm2-five",
+    "files": [
+      {
+        "path": "app.py",
+        "classification": "source",
+        "risk": "medium",
+        "status": "reviewed",
+        "note": "유일한 변경 파일의 전체 base/head를 비교했다. first의 빈 입력 처리가 제거되어 명시된 None 반환 요구사항을 위반한다. empty-input으로 보고한다."
+      }
+    ],
+    "passes": {
+      "standards": {
+        "status": "complete",
+        "note": "제공된 app.py와 export.py에서 책임, 의존성, 중복, 기존 구현과 이름을 검토했다. 별도 구조 개선이 필요한 근거는 없다."
+      },
+      "spec": {
+        "status": "complete",
+        "note": "PR 본문의 first([])가 None을 반환해야 한다는 요구사항은 empty-input으로 연결했다. export.py의 sorted(rows)는 유지되어 제공된 코드에서 정렬 제거는 확인되지 않는다. oldest-first에 해당하는 실제 행 자료형과 테스트는 제공되지 않았다."
+      },
+      "runtime": {
+        "status": "complete",
+        "note": "first([]) 호출은 보호 조건 없이 rows[0]에 도달하여 IndexError를 발생시킨다. 비어 있지 않은 목록의 첫 원소 반환은 유지된다. export는 별도 함수이며 first를 호출하지 않는다."
+      }
+    },
+    "quality": {
+      "cohesion": {
+        "status": "checked",
+        "note": "first는 첫 원소 선택, export는 정렬을 각각 담당한다. 변경으로 책임이 섞이지 않았다."
+      },
+      "coupling": {
+        "status": "checked",
+        "note": "제공된 두 함수에는 상호 호출, import, 공유 상태가 없다. 새로운 의존성은 없다."
+      },
+      "duplication": {
+        "status": "checked",
+        "note": "제공된 전체 소스 app.py와 export.py를 비교했다. 첫 원소 선택과 전체 정렬은 서로 다른 연산이며 같은 규칙의 중복 구현은 없다."
+      },
+      "repository_fit": {
+        "status": "checked",
+        "note": "trusted_base_rules는 비어 있다. base의 빈 입력 처리와 PR의 동작 보존 요구사항을 기준으로 검토했으며, 빈 입력 회귀를 보고한다."
+      },
+      "naming": {
+        "status": "checked",
+        "note": "first와 rows의 이름은 첫 원소 선택 동작 및 입력과 맞는다. 변경된 이름이나 단위는 없다."
+      }
+    },
+    "verification": [
+      {
+        "kind": "static",
+        "status": "passed",
+        "detail": "captured_scope의 변경 파일 app.py를 모두 검토하고 base/head의 두 줄을 비교했다. export.py도 요구사항 관련 소비 경로와 중복 검토 대상으로 읽었다."
+      },
+      {
+        "kind": "static",
+        "status": "passed",
+        "detail": "빈 목록을 head의 rows[0]에 대입하는 정적 추적으로 IndexError를 확인했다. base의 조건식은 같은 입력에 None을 반환한다."
+      },
+      {
+        "kind": "command",
+        "status": "not_run",
+        "detail": "런타임 테스트 및 결과 계약 검증기를 실행하지 않았다.",
+        "reason": "도구 및 코드 실행이 금지된 불변 스냅샷 검토다.",
+        "risk": "실행 결과와 Git 범위·인용의 기계적 검증은 코디네이터의 확인이 필요하다."
+      },
+      {
+        "kind": "static",
+        "status": "not_run",
+        "detail": "회귀 테스트의 assertion 민감도와 oldest-first 정렬의 실제 데이터 계약을 확인하지 못했다.",
+        "reason": "테스트, 행 자료형, 정렬 키 계약이 제공되지 않았다.",
+        "risk": "빈 입력 회귀를 검출하는 기존 테스트의 존재와 도메인 정렬 의미는 검증되지 않았다."
+      }
+    ],
+    "findings": [
+      {
+        "id": "empty-input",
+        "status": "supported",
+        "severity": "P2",
+        "path": "app.py",
+        "line": 2,
+        "revision": "head",
+        "trigger": "명시적으로 지원해야 하는 first([]) 호출.",
+        "effect": "기존 None 반환 대신 IndexError가 발생하여 빈 입력 처리 계약이 깨진다.",
+        "fix": "빈 목록이면 None을 반환하는 기존 조건을 복원한다.",
+        "refutation": "호출자가 빈 입력을 차단한다는 근거는 없으며, PR 본문이 first([]) 지원을 직접 요구한다. base는 이를 처리했지만 head 함수에는 보호 조건이나 예외 처리가 없다.",
+        "evidence": [
+          {
+            "revision": "head",
+            "path": "app.py",
+            "line": 2,
+            "quote": "    return rows[0]"
+          },
+          {
+            "revision": "base",
+            "path": "app.py",
+            "line": 2,
+            "quote": "    return rows[0] if rows else None"
+          }
+        ],
+        "comment": "[P2] PR 본문에서 유지하도록 명시한 `first([])`가 이제 `None` 대신 `IndexError`를 발생시킵니다. 빈 목록이면 `None`을 반환하는 기존 조건을 복원해 주세요."
+      }
+    ],
+    "limitations": [
+      "코드 실행, 외부 조회, 파일 수정 및 초안 저장은 수행하지 않았다.",
+      "테스트와 행 자료형 계약이 없어 회귀 테스트의 민감도 및 oldest-first의 도메인 의미는 확인하지 못했다.",
+      "automation-contract가 참조하는 claim-verification.md가 제공되지 않았다. 입력 claims는 비어 있어 개별 주장 판정은 없지만 참조 계약 누락으로 기록한다.",
+      "omitted는 비어 있고 previous_review_delta 및 previous_result는 null이다. 별도 과거 리뷰 비교 자료는 없다."
+    ]
+  },
+  "claims": [],
+  "limitations": [
+    "결과의 범위 신선도, 정확한 인용 및 완료 판정은 코디네이터가 검증해야 한다.",
+    "참조된 claim-verification.md가 패킷에 없다. 입력 주장은 0건이다."
+  ]
+}
