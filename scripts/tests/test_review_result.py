@@ -172,6 +172,19 @@ class ReviewResultTests(unittest.TestCase):
         with self.assertRaises(gate.ResultError):gate.capture_scope(self.repo,self.base,self.head)
         with self.assertRaises(gate.ResultError):gate.capture_scope(self.repo,self.base,self.base)
 
+    def test_hidden_index_flags_cannot_omit_working_or_committed_changes(self):
+        path=self.repo/'guard.py';original=path.read_bytes()
+        for flag in ('assume-unchanged','skip-worktree'):
+            with self.subTest(flag=flag):
+                self.g('update-index','--'+flag,'guard.py')
+                path.write_text('raise RuntimeError("hidden change")\n')
+                for kwargs in ({'working_tree':True},{'base':self.base,'head':self.head}):
+                    with self.assertRaisesRegex(gate.ResultError,'index flag'):
+                        gate.capture_scope(self.repo,**kwargs)
+                tag=self.g('ls-files','-v','--','guard.py')[0]
+                self.assertTrue(tag.islower() or tag=='S','User flag must remain unchanged')
+                self.g('update-index','--no-'+flag,'guard.py');path.write_bytes(original)
+
     def test_working_evidence_does_not_follow_external_symlink(self):
         external=self.root/'private';external.write_text('private secret\n')
         (self.repo/'link').symlink_to(external)
