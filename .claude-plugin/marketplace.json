@@ -72,6 +72,19 @@
         "qa",
         "verification"
       ]
+    },
+    {
+      "name": "learn",
+      "source": "./plugins/learn",
+      "description": "Resumable tutoring that diagnoses, plans, teaches and keeps the learning record in a local folder.",
+      "version": "0.1.0",
+      "category": "Productivity",
+      "keywords": [
+        "learning",
+        "tutoring",
+        "study",
+        "practice"
+      ]
     }
   ]
 }

@@ -1,0 +1,575 @@
+{
+  "schemaVersion": 1,
+  "description": "첫 수업·저장·일시 중단·호스트 변경·답변 기록. 제품 실행 결과가 아닌 계약 fixture.",
+  "clock": "2026-11-06T00:00:00Z",
+  "workspaceId": "11111111-1111-4111-8111-111111111111",
+  "steps": [
+    {
+      "id": "flow-01",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000001",
+        "expectedRevision": 0,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "workspace.init",
+        "payload": {
+          "goal": {
+            "title": "덧셈 설명",
+            "description": "덧셈의 결과와 의미를 설명한다",
+            "depth": "explain"
+          },
+          "utcOffsetMinutes": 540,
+          "learnerText": "초등 수학을 복습한다."
+        }
+      },
+      "expect": {
+        "revision": 1,
+        "nextAction": "start_session",
+        "committed": true
+      }
+    },
+    {
+      "id": "flow-02",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000002",
+        "expectedRevision": 1,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "session.start",
+        "payload": {
+          "mode": "learning",
+          "startAt": "auto",
+          "targetNodeIds": [],
+          "maxItems": null,
+          "userText": "처음부터 시작하자"
+        }
+      },
+      "expect": {
+        "revision": 2,
+        "nextAction": "ask_diagnostic",
+        "committed": true
+      }
+    },
+    {
+      "id": "flow-03",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000003",
+        "expectedRevision": 2,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "question.pose",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "question": {
+            "purpose": "diagnostic",
+            "nodeId": null,
+            "planVersion": null,
+            "format": "open",
+            "prompt": "2+3은 무엇이며 왜 그런가?",
+            "options": [],
+            "selectionCriterionId": null,
+            "expectedAnswer": "두 개와 세 개를 합치면 다섯 개이므로 5이다.",
+            "correctOptionIds": [],
+            "criteria": [
+              {
+                "criterionId": "state-result",
+                "description": "정확한 합을 제시한다"
+              },
+              {
+                "criterionId": "explain-reason",
+                "description": "덧셈의 의미를 설명한다"
+              }
+            ],
+            "lessonText": null,
+            "sourceRefs": [],
+            "variationReason": null,
+            "parentQuestionId": null
+          }
+        }
+      },
+      "expect": {
+        "revision": 3,
+        "nextAction": "await_answer",
+        "committed": true
+      }
+    },
+    {
+      "id": "flow-04",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000004",
+        "expectedRevision": 3,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "answer.record",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "answer": {
+            "questionId": "36f849e2-1c94-5130-9b08-05fdcec45860",
+            "responseKind": "answer",
+            "text": "5. 두 개와 세 개를 합친 개수이기 때문이다.",
+            "selectedOptionIds": [],
+            "thinking": null,
+            "confidence": 80,
+            "reportedExternalHelp": "none"
+          }
+        }
+      },
+      "expect": {
+        "revision": 4,
+        "nextAction": "assess_answer",
+        "committed": true
+      }
+    },
+    {
+      "id": "assessor-flow-04",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000130",
+        "expectedRevision": null,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "workspace.query",
+        "payload": {
+          "view": "assessor",
+          "id": "ce8fbfb1-9050-511b-9647-151376f13e17",
+          "search": null,
+          "cursor": null,
+          "limit": 20
+        }
+      },
+      "expect": {
+        "revision": 4,
+        "resultKind": "assessor",
+        "expectedAnswer": "두 개와 세 개를 합치면 다섯 개이므로 5이다.",
+        "committed": false
+      }
+    },
+    {
+      "id": "flow-05",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000005",
+        "expectedRevision": 4,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "assessment.record",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "assessment": {
+            "answerId": "ce8fbfb1-9050-511b-9647-151376f13e17",
+            "replacesAssessmentId": null,
+            "criterionResults": [
+              {
+                "criterionId": "state-result",
+                "result": "met",
+                "evidence": "실제 응답에서 확인됨"
+              },
+              {
+                "criterionId": "explain-reason",
+                "result": "met",
+                "evidence": "실제 응답에서 확인됨"
+              }
+            ],
+            "feedback": "합과 이유를 모두 설명했다.",
+            "errorStep": null,
+            "sourceRefs": [],
+            "issue": null,
+            "changeReason": null
+          }
+        }
+      },
+      "expect": {
+        "revision": 5,
+        "nextAction": "wait_for_continue",
+        "committed": true
+      }
+    },
+    {
+      "id": "flow-06",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000006",
+        "expectedRevision": 5,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "diagnosis.complete",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "summary": "기초 덧셈은 설명할 수 있다.",
+          "heldConcepts": [
+            "덧셈"
+          ],
+          "gaps": [],
+          "evidenceAnswerIds": [
+            "ce8fbfb1-9050-511b-9647-151376f13e17"
+          ],
+          "skipRequested": false,
+          "userText": null
+        }
+      },
+      "expect": {
+        "revision": 6,
+        "nextAction": "propose_plan",
+        "committed": true
+      }
+    },
+    {
+      "id": "flow-07",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000007",
+        "expectedRevision": 6,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "plan.propose",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "baseVersion": 0,
+          "goalNodeId": "addition",
+          "nodes": [
+            {
+              "nodeId": "addition",
+              "title": "덧셈",
+              "objective": "두 수의 합과 그 이유를 설명한다",
+              "depth": "explain",
+              "prerequisites": [],
+              "criteria": [
+                {
+                  "criterionId": "state-result",
+                  "description": "정확한 합을 제시한다"
+                },
+                {
+                  "criterionId": "explain-reason",
+                  "description": "덧셈의 의미를 설명한다"
+                }
+              ],
+              "sourceRefs": []
+            }
+          ],
+          "diagnosisSummary": "덧셈을 다른 상황에 적용해 확인한다.",
+          "revisionReason": null
+        }
+      },
+      "expect": {
+        "revision": 7,
+        "nextAction": "await_plan_approval",
+        "committed": true
+      }
+    },
+    {
+      "id": "flow-08",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000008",
+        "expectedRevision": 7,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "plan.accept",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "version": 1,
+          "userText": "이 계획으로 하자"
+        }
+      },
+      "expect": {
+        "revision": 8,
+        "nextAction": "present_and_check",
+        "committed": true
+      }
+    },
+    {
+      "id": "flow-09",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000009",
+        "expectedRevision": 8,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "question.pose",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "question": {
+            "purpose": "check",
+            "nodeId": "addition",
+            "planVersion": 1,
+            "format": "open",
+            "prompt": "상자에 사과 2개와 3개를 넣었다. 모두 몇 개이며 왜 그런가?",
+            "options": [],
+            "selectionCriterionId": null,
+            "expectedAnswer": "두 개와 세 개를 합치면 다섯 개이므로 5이다.",
+            "correctOptionIds": [],
+            "criteria": [
+              {
+                "criterionId": "state-result",
+                "description": "정확한 합을 제시한다"
+              },
+              {
+                "criterionId": "explain-reason",
+                "description": "덧셈의 의미를 설명한다"
+              }
+            ],
+            "lessonText": "덧셈은 두 집합의 개수를 합쳐 세는 것이다.",
+            "sourceRefs": [],
+            "variationReason": null,
+            "parentQuestionId": null
+          }
+        }
+      },
+      "expect": {
+        "revision": 9,
+        "nextAction": "await_answer",
+        "committed": true
+      }
+    },
+    {
+      "id": "flow-10",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-00000000000a",
+        "expectedRevision": 9,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "session.pause",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "userText": "잠깐 쉬자"
+        }
+      },
+      "expect": {
+        "revision": 10,
+        "nextAction": "resume_session",
+        "committed": true
+      }
+    },
+    {
+      "id": "read-after-host-change",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000064",
+        "expectedRevision": null,
+        "actor": {
+          "host": "codex",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "workspace.query",
+        "payload": {
+          "view": "resume",
+          "id": null,
+          "search": null,
+          "cursor": null,
+          "limit": 20
+        }
+      },
+      "expect": {
+        "revision": 10,
+        "nextAction": "resume_session",
+        "committed": false,
+        "pendingQuestionId": "40cfb100-5d35-5a7b-9bf3-39b05a343602"
+      }
+    },
+    {
+      "id": "resume-after-host-change",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000065",
+        "expectedRevision": 10,
+        "actor": {
+          "host": "codex",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "session.resume",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "userText": "Codex에서 이어서 하자"
+        }
+      },
+      "expect": {
+        "revision": 11,
+        "nextAction": "await_answer",
+        "committed": true,
+        "pendingQuestionId": "40cfb100-5d35-5a7b-9bf3-39b05a343602"
+      }
+    },
+    {
+      "id": "flow-11",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-00000000000b",
+        "expectedRevision": 11,
+        "actor": {
+          "host": "codex",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "answer.record",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "answer": {
+            "questionId": "40cfb100-5d35-5a7b-9bf3-39b05a343602",
+            "responseKind": "answer",
+            "text": "5. 두 개와 세 개를 합친 개수이기 때문이다.",
+            "selectedOptionIds": [],
+            "thinking": null,
+            "confidence": 80,
+            "reportedExternalHelp": "none"
+          }
+        }
+      },
+      "expect": {
+        "revision": 12,
+        "nextAction": "assess_answer",
+        "committed": true
+      }
+    },
+    {
+      "id": "assessor-flow-11",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000137",
+        "expectedRevision": null,
+        "actor": {
+          "host": "codex",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "workspace.query",
+        "payload": {
+          "view": "assessor",
+          "id": "528450d5-acf1-5eac-988a-8d74134e8f0f",
+          "search": null,
+          "cursor": null,
+          "limit": 20
+        }
+      },
+      "expect": {
+        "revision": 12,
+        "resultKind": "assessor",
+        "expectedAnswer": "두 개와 세 개를 합치면 다섯 개이므로 5이다.",
+        "committed": false
+      }
+    },
+    {
+      "id": "flow-12",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-00000000000c",
+        "expectedRevision": 12,
+        "actor": {
+          "host": "codex",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "assessment.record",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "assessment": {
+            "answerId": "528450d5-acf1-5eac-988a-8d74134e8f0f",
+            "replacesAssessmentId": null,
+            "criterionResults": [
+              {
+                "criterionId": "state-result",
+                "result": "met",
+                "evidence": "실제 응답에서 확인됨"
+              },
+              {
+                "criterionId": "explain-reason",
+                "result": "met",
+                "evidence": "실제 응답에서 확인됨"
+              }
+            ],
+            "feedback": "합과 이유를 모두 설명했다.",
+            "errorStep": null,
+            "sourceRefs": [],
+            "issue": null,
+            "changeReason": null
+          }
+        }
+      },
+      "expect": {
+        "revision": 13,
+        "nextAction": "wait_for_continue",
+        "committed": true
+      }
+    }
+  ],
+  "finalExpect": {
+    "revision": 13,
+    "pending": "continuation",
+    "qualifiedNodeIds": [
+      "addition"
+    ],
+    "goalDemonstrated": false,
+    "reason": "별도의 무힌트 transfer 질문이 아직 없다."
+  }
+}

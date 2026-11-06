@@ -1,0 +1,4 @@
+interface:
+  display_name: "Study Loop"
+  short_description: "Resumable tutoring with a local learning record"
+  default_prompt: "Use $study-loop to study this topic with me step by step, saving my progress in a learning folder I can resume later."

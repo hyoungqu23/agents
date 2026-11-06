@@ -1,0 +1,33 @@
+{
+  "skill_name": "study-loop",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to learn how binary search works well enough to explain it. Use the folder /tmp/study-binary-search and start.",
+      "files": [],
+      "expectations": [
+        "The folder is initialized through workspace.init with the learner's goal and a depth of explain.",
+        "The learner is asked which kind of session to start (learning, practice or review) before any session or question is created.",
+        "No answer, confidence, thinking or session choice is written on the learner's behalf."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Teach me binary search so I can explain it; keep my progress in /tmp/study-binary-search-2. Start a learning session now, I have no materials.",
+      "files": [],
+      "expectations": [
+        "workspace.init and session.start are both recorded; session.start carries the learner's own words.",
+        "Exactly one diagnostic question is saved with question.pose before it is shown, with no lessonText.",
+        "The turn ends waiting for the learner's answer instead of answering or continuing on their behalf."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Quick question: what is the time complexity of binary search?",
+      "files": [],
+      "expectations": [
+        "The question is answered directly without creating or writing a learning folder."
+      ]
+    }
+  ]
+}

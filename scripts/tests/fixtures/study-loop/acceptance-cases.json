@@ -1,0 +1,575 @@
+{
+  "schemaVersion": 1,
+  "status": "engine_tests_pass",
+  "structuralNegativeCases": [
+    {
+      "id": "unknown-field",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000001",
+        "expectedRevision": 0,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "workspace.init",
+        "payload": {
+          "goal": {
+            "title": "덧셈 설명",
+            "description": "덧셈의 결과와 의미를 설명한다",
+            "depth": "explain"
+          },
+          "utcOffsetMinutes": 540,
+          "learnerText": "초등 수학을 복습한다."
+        },
+        "apiKey": "not-allowed"
+      },
+      "expectSchemaValid": false
+    },
+    {
+      "id": "unsupported-protocol",
+      "request": {
+        "protocolVersion": 2,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000001",
+        "expectedRevision": 0,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "workspace.init",
+        "payload": {
+          "goal": {
+            "title": "덧셈 설명",
+            "description": "덧셈의 결과와 의미를 설명한다",
+            "depth": "explain"
+          },
+          "utcOffsetMinutes": 540,
+          "learnerText": "초등 수학을 복습한다."
+        }
+      },
+      "expectSchemaValid": false
+    },
+    {
+      "id": "bad-workspace-id",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "../other",
+        "operationId": "22222222-2222-4222-8222-000000000001",
+        "expectedRevision": 0,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "workspace.init",
+        "payload": {
+          "goal": {
+            "title": "덧셈 설명",
+            "description": "덧셈의 결과와 의미를 설명한다",
+            "depth": "explain"
+          },
+          "utcOffsetMinutes": 540,
+          "learnerText": "초등 수학을 복습한다."
+        }
+      },
+      "expectSchemaValid": false
+    },
+    {
+      "id": "init-nonzero-revision",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000001",
+        "expectedRevision": 1,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "workspace.init",
+        "payload": {
+          "goal": {
+            "title": "덧셈 설명",
+            "description": "덧셈의 결과와 의미를 설명한다",
+            "depth": "explain"
+          },
+          "utcOffsetMinutes": 540,
+          "learnerText": "초등 수학을 복습한다."
+        }
+      },
+      "expectSchemaValid": false
+    },
+    {
+      "id": "missing-goal",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000001",
+        "expectedRevision": 0,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "workspace.init",
+        "payload": {
+          "utcOffsetMinutes": 540,
+          "learnerText": "초등 수학을 복습한다."
+        }
+      },
+      "expectSchemaValid": false
+    },
+    {
+      "id": "confidence-out-of-range",
+      "request": {
+        "protocolVersion": 1,
+        "workspaceId": "11111111-1111-4111-8111-111111111111",
+        "operationId": "22222222-2222-4222-8222-000000000004",
+        "expectedRevision": 3,
+        "actor": {
+          "host": "claude-code",
+          "hostVersion": null,
+          "model": null,
+          "authMode": "subscription"
+        },
+        "command": "answer.record",
+        "payload": {
+          "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+          "answer": {
+            "questionId": "36f849e2-1c94-5130-9b08-05fdcec45860",
+            "responseKind": "answer",
+            "text": "5. 두 개와 세 개를 합친 개수이기 때문이다.",
+            "selectedOptionIds": [],
+            "thinking": null,
+            "confidence": 101,
+            "reportedExternalHelp": "none"
+          }
+        }
+      },
+      "expectSchemaValid": false
+    }
+  ],
+  "semanticCases": [
+    {
+      "id": "AC-01",
+      "name": "empty-start",
+      "given": "빈 폴더",
+      "when": "workspace.init → session.start",
+      "then": "revision 2; diagnosing; pending=null; ask_diagnostic"
+    },
+    {
+      "id": "AC-02",
+      "name": "wait-for-real-answer",
+      "given": "question 대기",
+      "when": "question.pose 재호출",
+      "then": "INVALID_TRANSITION; journal 불변"
+    },
+    {
+      "id": "AC-03",
+      "name": "missing-prerequisite",
+      "given": "A 미통과, B가 A에 의존",
+      "when": "B의 check 질문 생성",
+      "then": "TARGET_NOT_ALLOWED"
+    },
+    {
+      "id": "AC-04",
+      "name": "partial-answer",
+      "given": "rubric 2개 중 1개 충족",
+      "when": "assessment.record",
+      "then": "partial; qualified=false; targeted_repair"
+    },
+    {
+      "id": "AC-05",
+      "name": "correct-reasoning",
+      "given": "답·추론 모두 충족, 도움 기록 없음",
+      "when": "assessment.record",
+      "then": "correct; demonstrated; pending=continuation"
+    },
+    {
+      "id": "AC-06",
+      "name": "right-answer-wrong-reason",
+      "given": "답은 맞고 추론 criterion 실패",
+      "when": "assessment.record",
+      "then": "partial; 다음 노드로 자동 진행하지 않음"
+    },
+    {
+      "id": "AC-07",
+      "name": "hinted-correct",
+      "given": "hint.record 후 정답",
+      "when": "answer.record → assessment.record",
+      "then": "assistance=hinted; 새 qualification 없음; fresh_check"
+    },
+    {
+      "id": "AC-08",
+      "name": "solution-exposed",
+      "given": "사용자가 풀이 요청",
+      "when": "question.reveal",
+      "then": "질문 종료; answer 생성 없음; 노출 기록; pending=continuation"
+    },
+    {
+      "id": "AC-09",
+      "name": "dont-know",
+      "given": "모르겠음·confidence=null",
+      "when": "answer.record → assessment.record",
+      "then": "not_recalled; 오답 추측과 구분"
+    },
+    {
+      "id": "AC-10",
+      "name": "missing-confidence",
+      "given": "confidence=null인 정상 응답",
+      "when": "answer.record",
+      "then": "null 보존; 0으로 바꾸지 않음"
+    },
+    {
+      "id": "AC-11",
+      "name": "delayed-performance",
+      "given": "이전 도움 후 다음 로컬 날짜·다른 promptHash·correct",
+      "when": "assessment.record",
+      "then": "delayedEvidence 추가; 장기 숙련 점수는 만들지 않음"
+    },
+    {
+      "id": "AC-12",
+      "name": "same-day-repeat",
+      "given": "같은 날 같은 문항 반복",
+      "when": "assessment.record",
+      "then": "독립 시도는 기록하되 새 delayedEvidence 없음"
+    },
+    {
+      "id": "AC-13",
+      "name": "duplicate-operation",
+      "given": "동일 operationId와 동일 논리 요청",
+      "when": "재호출",
+      "then": "replayed=true; revision 불변; entityIds 동일"
+    },
+    {
+      "id": "AC-14",
+      "name": "operation-collision",
+      "given": "같은 operationId와 다른 payload",
+      "when": "재호출",
+      "then": "OPERATION_CONFLICT; 불변"
+    },
+    {
+      "id": "AC-15",
+      "name": "stale-client",
+      "given": "현재 8, expectedRevision=7",
+      "when": "새 mutation",
+      "then": "REVISION_CONFLICT; 불변"
+    },
+    {
+      "id": "AC-16",
+      "name": "writer-conflict",
+      "given": "다른 프로세스가 잠금 보유",
+      "when": "새 mutation",
+      "then": "2초 후 LOCK_BUSY; 잠금 강제 제거 없음"
+    },
+    {
+      "id": "AC-17",
+      "name": "crash-before-commit",
+      "given": "임시 journal 작성 뒤 replace 전 종료",
+      "when": "재개",
+      "then": "이전 revision 사용; 임시 파일을 기준으로 채택하지 않음"
+    },
+    {
+      "id": "AC-18",
+      "name": "crash-after-commit",
+      "given": "journal replace 후 projection 전 종료",
+      "when": "같은 operation 재시도",
+      "then": "중복 commit 없음; view 재생성; 원래 entityIds"
+    },
+    {
+      "id": "AC-19",
+      "name": "corrupt-journal",
+      "given": "마지막 줄이 잘린 JSONL",
+      "when": "query 또는 mutation",
+      "then": "CORRUPT_JOURNAL; 자동 삭제·건너뛰기 없음"
+    },
+    {
+      "id": "AC-20",
+      "name": "future-format",
+      "given": "schemaVersion=2인 commit",
+      "when": "query 또는 mutation",
+      "then": "UNSUPPORTED_VERSION; 불변"
+    },
+    {
+      "id": "AC-21",
+      "name": "cross-host-question",
+      "given": "Claude에서 미응답 질문 후 pause",
+      "when": "Codex query → resume",
+      "then": "동일 questionId·pending 복원; expectedAnswer 공개 안 함"
+    },
+    {
+      "id": "AC-22",
+      "name": "wrong-workspace",
+      "given": "실제 workspaceId와 요청 불일치",
+      "when": "모든 작업",
+      "then": "WORKSPACE_MISMATCH; 새 상태 생성 없음"
+    },
+    {
+      "id": "AC-23",
+      "name": "plan-cycle",
+      "given": "A→B→A",
+      "when": "plan.propose",
+      "then": "INVALID_PLAN"
+    },
+    {
+      "id": "AC-24",
+      "name": "redefine-node",
+      "given": "accepted nodeId의 objective·rubric 변경",
+      "when": "plan.propose",
+      "then": "NODE_REDEFINED; 새 nodeId 필요"
+    },
+    {
+      "id": "AC-25",
+      "name": "replan-pending",
+      "given": "미응답 question 존재",
+      "when": "plan.propose",
+      "then": "INVALID_TRANSITION"
+    },
+    {
+      "id": "AC-26",
+      "name": "alternative-solution",
+      "given": "다른 풀이지만 rubric 모두 충족",
+      "when": "assessment.record",
+      "then": "correct로 기록 가능; 문자열 일치 강제 없음"
+    },
+    {
+      "id": "AC-27",
+      "name": "ambiguous-material",
+      "given": "unassessable criterion·issue 존재",
+      "when": "assessment.record",
+      "then": "ungradable; pending=repair; qualified 증가 없음"
+    },
+    {
+      "id": "AC-28",
+      "name": "fix-assessment",
+      "given": "최신 assessment, continuation 미소비",
+      "when": "replacesAssessmentId로 assessment.record",
+      "then": "기존 기록 보존; 새 평가로 progress 재계산"
+    },
+    {
+      "id": "AC-29",
+      "name": "late-assessment-edit",
+      "given": "다음 question이 이미 생성됨",
+      "when": "이전 평가 교체",
+      "then": "ASSESSMENT_FINALIZED; 새 확인 문제로 검토"
+    },
+    {
+      "id": "AC-30",
+      "name": "unsafe-path",
+      "given": "../outside 또는 바깥으로 향하는 symlink",
+      "when": "source.register/export",
+      "then": "PATH_OUTSIDE_WORKSPACE; 외부 쓰기 없음"
+    },
+    {
+      "id": "AC-31",
+      "name": "bad-citation",
+      "given": "원문 범위에 없는 quote",
+      "when": "plan/question/assessment/knowledge의 sourceRef",
+      "then": "INVALID_REFERENCE"
+    },
+    {
+      "id": "AC-32",
+      "name": "joint-premises",
+      "given": "A와 B를 함께 써야 C",
+      "when": "knowledge.commit",
+      "then": "한 chain의 premises=[A,B]; 두 개의 독립 chain으로 분할하지 않음"
+    },
+    {
+      "id": "AC-33",
+      "name": "identity-link",
+      "given": "새 localKey를 기존 node로 연결",
+      "when": "knowledge.commit",
+      "then": "기존 statement 유지; 출처·동일성 판단 근거 추가"
+    },
+    {
+      "id": "AC-34",
+      "name": "graph-not-mastery",
+      "given": "명제만 추출·수입",
+      "when": "knowledge.commit",
+      "then": "progress.qualified와 session 진도 불변"
+    },
+    {
+      "id": "AC-35",
+      "name": "early-finish",
+      "given": "아직 기준 미충족",
+      "when": "session.finish outcome=goal_demonstrated",
+      "then": "INVALID_TRANSITION; partial로 종료 가능"
+    },
+    {
+      "id": "AC-36",
+      "name": "finish-with-pending",
+      "given": "미응답 질문에서 종료 요청",
+      "when": "session.finish abandonPending=true",
+      "then": "질문 abandoned; 가짜 Answer·Assessment 없음"
+    },
+    {
+      "id": "AC-37",
+      "name": "export-retry",
+      "given": "같은 revision의 같은 export 파일 존재",
+      "when": "workspace.export 재호출",
+      "then": "동일 bytes면 changed=false; 다른 bytes면 FILE_EXISTS"
+    },
+    {
+      "id": "AC-38",
+      "name": "oversized-context",
+      "given": "mutation 결과의 필수 packet JSON 256 KiB 초과",
+      "when": "저장 전 packet 생성",
+      "then": "CONTEXT_LIMIT; commit 없음; 긴 모델 작성 설명을 줄여 다시 요청"
+    },
+    {
+      "id": "AC-39",
+      "name": "hint-limit",
+      "given": "동일 question의 힌트 3개 존재",
+      "when": "네 번째 hint.record",
+      "then": "HINT_LIMIT; answer/reveal/skip 허용"
+    },
+    {
+      "id": "AC-40",
+      "name": "read-only-query",
+      "given": "paused/active 상태",
+      "when": "query 반복",
+      "then": "revision·journal·개인 입력 파일 불변"
+    },
+    {
+      "id": "AC-41",
+      "name": "init-before-intent",
+      "given": "첫 init의 .lock 또는 intent 임시 파일만 남음",
+      "when": "동일 init 재시도",
+      "then": "허용된 부분 생성물만 검사; 기준으로 채택하지 않고 첫 init 완료"
+    },
+    {
+      "id": "AC-42",
+      "name": "init-after-intent",
+      "given": "정상 .init.json 저장 후 첫 journal replace 전에 종료",
+      "when": "동일 init 재시도",
+      "then": "원래 workspaceId·operationId·createdAt 복원; revision 1 한 번만 기록"
+    },
+    {
+      "id": "AC-43",
+      "name": "cross-host-regrade",
+      "given": "최신 평가 continuation에서 호스트 변경",
+      "when": "assessor 조회 → replacesAssessmentId로 평가 교정",
+      "then": "원래 풀이·rubric 제공; 이전 평가 보존; 유효 평가로 진도 재계산"
+    },
+    {
+      "id": "AC-44",
+      "name": "replan-after-practice",
+      "given": "practice/review repair를 partial로 종료, 승인 계획 존재",
+      "when": "session.start mode=learning,startAt=replan → plan.propose",
+      "then": "질문을 먼저 만들지 않고 planning 진입; 수정된 draft 승인 대기"
+    }
+  ],
+  "hostRuns": [
+    {
+      "host": "claude-code",
+      "status": "partial",
+      "requiredFlows": [
+        "first-lesson",
+        "pause-resume",
+        "cross-host-pending-question",
+        "practice",
+        "knowledge-extraction"
+      ],
+      "hostVersion": "Claude Code 2.1.319",
+      "model": "claude-opus-5-5",
+      "loading": "--plugin-dir plugins/learn, /learn:study-loop",
+      "commands": [
+        "workspace.init",
+        "answer.record",
+        "assessment.record",
+        "plan.accept",
+        "question.pose"
+      ],
+      "date": "2026-11-06",
+      "os": "macOS (Darwin 25.6)",
+      "python": "python3.13 (found by the skill; /usr/bin/python3 3.9 skipped)",
+      "workspace": "one folder shared by six alternating runs, revisions 1-11",
+      "passedFlows": [
+        "first-lesson",
+        "cross-host-pending-question"
+      ],
+      "notRunFlows": [
+        "pause-resume",
+        "practice",
+        "knowledge-extraction"
+      ]
+    },
+    {
+      "host": "codex",
+      "status": "partial",
+      "requiredFlows": [
+        "first-lesson",
+        "pause-resume",
+        "cross-host-pending-question",
+        "practice",
+        "knowledge-extraction"
+      ],
+      "hostVersion": "codex-cli 0.166.0",
+      "model": "gpt-6.1-sol",
+      "loading": ".agents/skills/study-loop symlink in the run folder, $study-loop",
+      "commands": [
+        "session.start",
+        "question.pose",
+        "diagnosis.complete",
+        "plan.propose",
+        "answer.record",
+        "assessment.record"
+      ],
+      "date": "2026-11-06",
+      "os": "macOS (Darwin 25.6)",
+      "python": "python3.13 (found by the skill; /usr/bin/python3 3.9 skipped)",
+      "workspace": "one folder shared by six alternating runs, revisions 1-11",
+      "passedFlows": [
+        "first-lesson",
+        "cross-host-pending-question"
+      ],
+      "notRunFlows": [
+        "pause-resume",
+        "practice",
+        "knowledge-extraction"
+      ]
+    },
+    {
+      "host": "claude-code-desktop",
+      "status": "not_run",
+      "requiredFlows": [
+        "first-lesson",
+        "pause-resume",
+        "cross-host-pending-question",
+        "practice",
+        "knowledge-extraction"
+      ]
+    },
+    {
+      "host": "codex-desktop",
+      "status": "not_run",
+      "requiredFlows": [
+        "first-lesson",
+        "pause-resume",
+        "cross-host-pending-question",
+        "practice",
+        "knowledge-extraction"
+      ]
+    },
+    {
+      "host": "claude-cowork",
+      "status": "not_run",
+      "requiredFlows": [
+        "first-lesson",
+        "pause-resume",
+        "cross-host-pending-question",
+        "practice",
+        "knowledge-extraction"
+      ]
+    }
+  ]
+}
