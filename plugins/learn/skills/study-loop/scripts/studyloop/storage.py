@@ -75,7 +75,7 @@ class Store:
             fail("INVALID_REQUEST", f"{relative} is not a usable path: {error}")
         if base != root and root not in base.parents:
             fail("PATH_OUTSIDE_WORKSPACE", f"{area}/ itself resolves outside the workspace")
-        if area and base != root / area:
+        if area and ((self.root / area).is_symlink() or base != root / area):
             fail("PATH_OUTSIDE_WORKSPACE", f"{area}/ must not alias another directory")
         if target != base and base not in target.parents:
             where = f"{area}/" if area else "the workspace"
@@ -87,6 +87,11 @@ class Store:
         target = self.inside(relative, area=area)
         if target != self.root.resolve() / relative:
             fail("PATH_OUTSIDE_WORKSPACE", f"{relative} must not traverse a link")
+        current = self.root
+        for part in Path(relative).parts:
+            current = current / part
+            if current.is_symlink():
+                fail("PATH_OUTSIDE_WORKSPACE", f"{relative} must not traverse a link")
         return target
 
     # ---- journal ----------------------------------------------------------
