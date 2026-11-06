@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0 - 2026-11-06
+
+- Add explicit draft-only automation contracts for self review, author responses, PR review and re-review without changing interactive mutation permissions.
+- Support P1/P2/P3/P999 and severity-free questions in opt-in structured ledgers; keep existing P1–P3 ledgers compatible.
+- Preserve claim identities, validity and current fix state, and reject stale envelopes or completion replies for unimplemented fixes.
+
 ## 0.7.3 - 2026-10-29
 
 - Read Pending inline comments without REST detail 404s, including existing drafts and interrupted-write recovery.

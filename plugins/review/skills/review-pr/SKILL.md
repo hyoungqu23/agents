@@ -5,6 +5,8 @@ description: Review a GitHub PR read-only and save or resume an unsubmitted Pend
 
 # Review PR
 
+For an explicit trusted `mode: draft-only` request, read [the automation contract](../review-code/references/automation-contract.md) first. It selects report-only execution and structured output; the coordinator owns separately authorized Pending delivery. In this mode skip implementation, staging, commits, push and publication. Ordinary interactive requests retain the workflow below.
+
 Review the specified PR and, when authorized, leave comments **Pending** for the user.
 **코멘트는 반드시 Pending review로 남긴다. 이 스킬은 리뷰를 제출하지 않는다.**
 The only source of findings is review-code, including on continuation. Load

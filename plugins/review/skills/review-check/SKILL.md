@@ -5,6 +5,8 @@ description: Check whether existing review comments from a person, model, or bot
 
 # Review Check
 
+For an explicit trusted `mode: draft-only` request, read [the automation contract](../review-code/references/automation-contract.md) first. It selects report-only execution and structured output; the coordinator owns separately authorized Pending delivery. In this mode skip implementation, staging, commits, push and publication. Ordinary interactive requests retain the workflow below.
+
 Check a review's claims and explain which ones hold, which do not, and what remains
 unknown. The Korean label is **리뷰 지적 검증**. A PR is optional: pasted text, a
 review file, and a supplied code snapshot are valid inputs.
