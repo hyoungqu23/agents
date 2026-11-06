@@ -199,7 +199,10 @@ def learning_advance(state, session):
     if target:
         return target, dict(CHECK)
     plan = accepted_plan(state)
-    if plan and all(item["qualified"] for item in all_progress(state)) and not final_transfer_done(state):
+    if (
+        plan and plan["goalNodeId"] not in session["deferredNodeIds"]
+        and all(item["qualified"] for item in all_progress(state)) and not final_transfer_done(state)
+    ):
         return plan["goalNodeId"], {"purpose": "transfer", "teachingMove": None}
     return None, None
 
@@ -264,12 +267,15 @@ def follow(state, session, continuation, intent):
         return fields
     if session["mode"] != "learning":
         queue, index = session["targetNodeIds"], session["queueIndex"]
+        following = _practice_at(session, queue[index + 1] if index + 1 < len(queue) else None, index + 1)
+        if intent == "skip_target":
+            return following
         move = continuation["recommendedMove"] if intent == "next" else None
         if intent == "retry" or move == "fresh_check" or continuation["kind"] == "resolve":
             return _practice_at(session, node_id, index)
         if move == "replan":
             return fields
-        return _practice_at(session, queue[index + 1] if index + 1 < len(queue) else None, index + 1)
+        return following
     if intent == "replan":
         return {**fields, "phase": "planning"}
     if intent == "retry":
@@ -376,9 +382,9 @@ def next_action(state):
         return done("wait_for_continue", "피드백을 보여준 뒤 학습자의 진행 의사를 기다린다.", commands + common)
     phase = session["phase"]
     if phase == "diagnosing":
-        commands = ["question.pose"] if session["requiredMove"] else []
-        if assessed_diagnostics(state, session):
-            commands.append("diagnosis.complete")
+        # diagnosis.complete is always possible: with an assessed diagnostic, or with
+        # skipRequested and the learner's own words.
+        commands = (["question.pose"] if session["requiredMove"] else []) + ["diagnosis.complete"]
         if session["requiredMove"]:
             return done("ask_diagnostic", "출발점을 찾을 진단 질문을 한다.", commands + common)
         return done("complete_diagnosis", "진단 질문을 모두 했다. 진단을 정리한다.", commands + common)

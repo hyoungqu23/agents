@@ -576,6 +576,9 @@ def decide_question_pose(state, request, context):
 
 
 def _check_format(draft):
+    criteria = [item["criterionId"] for item in draft["criteria"]]
+    if len(criteria) != len(set(criteria)):
+        fail("INVALID_REQUEST", "criterionId is repeated; each criterion must be assessable exactly once")
     options = [option["optionId"] for option in draft["options"]]
     if draft["format"] == "open":
         if options or draft["correctOptionIds"] or draft["selectionCriterionId"]:
@@ -588,7 +591,6 @@ def _check_format(draft):
         fail("INVALID_REQUEST", "correctOptionIds must be options of the question")
     if draft["format"] == "single_choice" and len(correct) != 1:
         fail("INVALID_REQUEST", "single_choice has exactly one correct option")
-    criteria = [item["criterionId"] for item in draft["criteria"]]
     if draft["selectionCriterionId"] not in criteria:
         fail("INVALID_REQUEST", "selectionCriterionId must be one of the question criteria")
 
@@ -657,9 +659,9 @@ def decide_assessment_record(state, request, context):
     assessment = payload["assessment"]
     replaces = assessment["replacesAssessmentId"]
     if replaces is None:
+        require_pending(session, ("assessment",), {"answerId": assessment["answerId"]})
         if assessment["changeReason"] is not None:
             fail("INVALID_REQUEST", "changeReason is only for a corrected assessment")
-        require_pending(session, ("assessment",), {"answerId": assessment["answerId"]})
     else:
         old = state.assessments.get(replaces)
         if old is None:
@@ -686,8 +688,9 @@ def decide_assessment_record(state, request, context):
     if selection:
         chosen = sorted(answer["selectedOptionIds"]) == sorted(question["correctOptionIds"])
         engine = "met" if answer["responseKind"] == "answer" and chosen else "not_met"
-        if results[selection] != engine:
-            fail("RUBRIC_MISMATCH", f"{selection} is decided by the selected options: {engine}")
+        # unassessable is allowed so a wrong answer key can go to repair instead of a false verdict.
+        if results[selection] not in (engine, "unassessable"):
+            fail("RUBRIC_MISMATCH", f"{selection} is decided by the selected options: {engine} (or unassessable with an issue)")
     values = list(results.values())
     if "unassessable" in values:
         verdict = "ungradable"

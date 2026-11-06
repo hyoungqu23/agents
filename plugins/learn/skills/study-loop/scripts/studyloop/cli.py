@@ -41,7 +41,8 @@ def run(raw, workspace, clock=utc_now, lock_timeout=2.0):
             fail("INVALID_REQUEST", "the request is larger than 1 MiB")
         try:
             request = loads(raw)
-        except (ValueError, UnicodeDecodeError) as error:
+            canonical(request)  # lone surrogates parse but can be neither hashed nor stored
+        except (ValueError, RecursionError) as error:
             fail("INVALID_REQUEST", f"request is not strict UTF-8 JSON: {error}")
         check_request(request)
         if not os.path.isabs(workspace):
@@ -96,6 +97,9 @@ class Engine:
             else:
                 result = self.validate()
             return self.success(result, committed=False, replayed=False, operation_revision=None, views_status="not_applicable")
+        if not self.store.initialized():
+            # Checked before locking so a wrong path never gets records/.lock.
+            fail("WORKSPACE_MISSING", f"{self.store.root} has no study-loop journal")
         with self.store.lock(self.lock_timeout):
             if command == "workspace.export":
                 self.load()
@@ -111,6 +115,10 @@ class Engine:
         if not self.store.initialized():
             fail("WORKSPACE_MISSING", f"{self.store.root} has no study-loop journal")
         state = reducer.replay(self.store.read_commits())
+        try:
+            views.context_packet(state, "")
+        except (KeyError, TypeError, IndexError, AttributeError) as error:
+            fail("CORRUPT_JOURNAL", f"the journal replays into an inconsistent state: {error!r}")
         self.state = state
         self.revision = state.revision
         if state.workspace["workspaceId"] != self.request["workspaceId"]:
@@ -143,7 +151,7 @@ class Engine:
         session_id, data, entity_ids = reducer.DECIDE[request["command"]](state, request, context)
         return self.commit(state, digest, now, session_id, data, entity_ids, material)
 
-    def commit(self, state, digest, now, session_id, data, entity_ids, material=None, actor=None):
+    def commit(self, state, digest, now, session_id, data, entity_ids, material=None, actor=None, before_append=None):
         request = self.request
         commit = {
             "schemaVersion": 1,
@@ -171,6 +179,8 @@ class Engine:
         packet = views.context_packet(state, state.initial_learner_text if initial else self.learner_text())
         if len(canonical(packet)) > PACKET_LIMIT:
             fail("CONTEXT_LIMIT", "the resulting context packet is larger than 256 KiB; nothing was saved")
+        if before_append:
+            before_append()
         if material:
             try:
                 self.store.write_atomic(data["snapshotPath"], material["bytes"])
@@ -219,20 +229,26 @@ class Engine:
                     or request_hash(earlier) != digest
                 ):
                     fail("OPERATION_CONFLICT", "a different workspace.init is recorded in records/.init.json; retry that request")
-            else:
-                intent = {"schemaVersion": 1, "createdAt": self.clock(), "request": request}
-                store.write_intent(intent)
             text = payload["learnerText"] if payload["learnerText"] is not None else (existing or "")
+            if len(text) > views.LEARNER_TEXT_LIMIT:
+                fail("INVALID_REQUEST", f"learner.md is longer than {views.LEARNER_TEXT_LIMIT} characters; shorten it first")
+            # The intent is recorded only once the first commit has passed every check,
+            # so a refused init leaves nothing that blocks a corrected retry.
+            new_intent = None if intent else {"schemaVersion": 1, "createdAt": self.clock(), "request": request}
+            first = intent or new_intent
             self.state = reducer.State()
-            session_id, data, entity_ids = reducer.workspace_event(request, intent["createdAt"], text)
-            return self.commit(self.state, digest, self.clock(), session_id, data, entity_ids, actor=intent["request"]["actor"])
+            session_id, data, entity_ids = reducer.workspace_event(request, first["createdAt"], text)
+            return self.commit(
+                self.state, digest, self.clock(), session_id, data, entity_ids, actor=first["request"]["actor"],
+                before_append=(lambda: store.write_intent(new_intent)) if new_intent else None,
+            )
 
     @staticmethod
     def existing_learner(path, requested):
         if not path.exists():
             return None
         try:
-            existing = path.read_text(encoding="utf-8")
+            existing = path.read_bytes().decode("utf-8")  # no newline translation
         except (OSError, UnicodeDecodeError) as error:
             fail("WORKSPACE_NOT_EMPTY", f"learner.md is not readable UTF-8: {error}")
         if requested is not None and requested != existing:
@@ -269,14 +285,14 @@ class Engine:
     def material(self):
         relative = self.request["payload"]["relativePath"]
         path = self.store.inside(relative, area="materials")
-        if not path.is_file():
-            fail("INVALID_REQUEST", f"{relative} is not a file under materials/")
         try:
+            if not path.is_file():
+                fail("INVALID_REQUEST", f"{relative} is not a file under materials/")
             before = path.stat()
             data = path.read_bytes()
             after = path.stat()
         except OSError as error:
-            fail("WRITE_FAILED", f"cannot read {relative}: {error}")
+            fail("INVALID_REQUEST", f"cannot read {relative}: {error}")
         if (before.st_mtime_ns, before.st_size) != (after.st_mtime_ns, after.st_size) or len(data) != after.st_size:
             fail("SOURCE_CHANGED", f"{relative} changed while it was read")
         try:
@@ -317,11 +333,14 @@ class Engine:
         relative = target.relative_to(self.store.root.resolve()).as_posix()
         data = views.export_bytes(self.state, payload["format"])
         changed = True
-        if target.exists():
-            if target.read_bytes() == data:
-                changed = False
-            elif not payload["overwrite"]:
-                fail("FILE_EXISTS", f"{relative} exists with different content")
+        try:  # a directory or over-long name surfaces here as OSError
+            if target.exists():
+                if target.read_bytes() == data:
+                    changed = False
+                elif not payload["overwrite"]:
+                    fail("FILE_EXISTS", f"{relative} exists with different content")
+        except OSError as error:
+            fail("INVALID_REQUEST", f"cannot use {relative}: {error}")
         if changed:
             try:
                 self.store.write_atomic(relative, data)

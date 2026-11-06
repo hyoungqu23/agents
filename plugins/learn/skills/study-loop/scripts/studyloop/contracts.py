@@ -4,6 +4,7 @@ The JSON Schema file is the structural contract. `check` interprets only the
 keywords that schema uses, so the runtime keeps no third-party dependency.
 """
 
+import functools
 import hashlib
 import json
 import re
@@ -176,6 +177,14 @@ def _type_ok(value, kind):
     raise ValueError(f"unsupported schema type {kind}")
 
 
+@functools.lru_cache(maxsize=None)
+def _pattern(source):
+    # JSON Schema uses ECMA regexes, where `$` ends the input; Python's `$` also
+    # matches before a final newline, so "<uuid>\n" would pass. The contract
+    # patterns contain no escaped `$`.
+    return re.compile(source.replace("$", r"\Z"))
+
+
 def _same(a, b):
     return canonical(a) == canonical(b)
 
@@ -214,7 +223,7 @@ def errors(value, schema, path="$"):
             return f"{path}: shorter than {schema['minLength']}"
         if "maxLength" in schema and len(value) > schema["maxLength"]:
             return f"{path}: longer than {schema['maxLength']}"
-        if "pattern" in schema and not re.search(schema["pattern"], value):
+        if "pattern" in schema and not _pattern(schema["pattern"]).search(value):
             return f"{path}: does not match {schema['pattern']}"
         if schema.get("format") == "date-time" and not _timestamp_ok(value):
             return f"{path}: not a date-time"

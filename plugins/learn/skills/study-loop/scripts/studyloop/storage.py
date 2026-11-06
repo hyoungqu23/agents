@@ -67,8 +67,14 @@ class Store:
         """Resolve a workspace-relative path; refuse escapes and links that leave it."""
         if "\x00" in relative or Path(relative).is_absolute() or ".." in Path(relative).parts:
             fail("PATH_OUTSIDE_WORKSPACE", f"{relative} is not a path inside the workspace")
-        target = (self.root / relative).resolve()
-        base = (self.root / area).resolve() if area else self.root.resolve()
+        try:
+            root = self.root.resolve()
+            target = (self.root / relative).resolve()
+            base = (self.root / area).resolve() if area else root
+        except (OSError, RuntimeError) as error:
+            fail("INVALID_REQUEST", f"{relative} is not a usable path: {error}")
+        if base != root and root not in base.parents:
+            fail("PATH_OUTSIDE_WORKSPACE", f"{area}/ itself resolves outside the workspace")
         if target != base and base not in target.parents:
             where = f"{area}/" if area else "the workspace"
             fail("PATH_OUTSIDE_WORKSPACE", f"{relative} resolves outside {where}")
@@ -134,7 +140,7 @@ class Store:
     @contextmanager
     def lock(self, timeout=2.0):
         try:
-            self.records.mkdir(parents=True, exist_ok=True)
+            self.records.mkdir(exist_ok=True)  # never creates a missing workspace
             fd = os.open(self.root / LOCK, os.O_RDWR | os.O_CREAT | NOFOLLOW, 0o644)
         except OSError as error:
             if error.errno == errno.ELOOP:
