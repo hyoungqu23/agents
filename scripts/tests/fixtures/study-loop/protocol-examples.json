@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "initIntent": {
+    "schemaVersion": 1,
+    "createdAt": "2026-11-06T00:00:00Z",
+    "request": {
+      "protocolVersion": 1,
+      "workspaceId": "11111111-1111-4111-8111-111111111111",
+      "operationId": "22222222-2222-4222-8222-000000000001",
+      "expectedRevision": 0,
+      "actor": {
+        "host": "claude-code",
+        "hostVersion": null,
+        "model": null,
+        "authMode": "subscription"
+      },
+      "command": "workspace.init",
+      "payload": {
+        "goal": {
+          "title": "덧셈 설명",
+          "description": "덧셈의 결과와 의미를 설명한다",
+          "depth": "explain"
+        },
+        "utcOffsetMinutes": 540,
+        "learnerText": "초등 수학을 복습한다."
+      }
+    }
+  },
+  "commit": {
+    "schemaVersion": 1,
+    "workspaceId": "11111111-1111-4111-8111-111111111111",
+    "operationId": "22222222-2222-4222-8222-000000000001",
+    "revision": 1,
+    "recordedAt": "2026-11-06T00:00:00Z",
+    "requestHash": "9fa5f3c64f787d0385ddfef87faec7ff00f6e8d189e35f772aea1098643fab4e",
+    "actor": {
+      "host": "claude-code",
+      "hostVersion": null,
+      "model": null,
+      "authMode": "subscription"
+    },
+    "command": "workspace.init",
+    "events": [
+      {
+        "eventId": "f3caeef7-be27-55d9-804b-28a1291025a2",
+        "type": "workspace_initialized",
+        "sessionId": null,
+        "data": {
+          "workspace": {
+            "schemaVersion": 1,
+            "workspaceId": "11111111-1111-4111-8111-111111111111",
+            "createdAt": "2026-11-06T00:00:00Z",
+            "utcOffsetMinutes": 540,
+            "goal": {
+              "title": "덧셈 설명",
+              "description": "덧셈의 결과와 의미를 설명한다",
+              "depth": "explain"
+            },
+            "policyVersion": "1.0.0"
+          },
+          "initialLearnerText": "초등 수학을 복습한다."
+        }
+      }
+    ],
+    "entityIds": {
+      "workspaceId": "11111111-1111-4111-8111-111111111111"
+    }
+  },
+  "successResponse": {
+    "protocolVersion": 1,
+    "ok": true,
+    "workspaceId": "11111111-1111-4111-8111-111111111111",
+    "operationId": "22222222-2222-4222-8222-000000000001",
+    "command": "workspace.init",
+    "revision": 1,
+    "operationRevision": 1,
+    "committed": true,
+    "replayed": false,
+    "viewsStatus": "current",
+    "result": {
+      "kind": "transition",
+      "entityIds": {
+        "workspaceId": "11111111-1111-4111-8111-111111111111"
+      },
+      "packet": {
+        "kind": "context",
+        "workspace": {
+          "schemaVersion": 1,
+          "workspaceId": "11111111-1111-4111-8111-111111111111",
+          "createdAt": "2026-11-06T00:00:00Z",
+          "utcOffsetMinutes": 540,
+          "goal": {
+            "title": "덧셈 설명",
+            "description": "덧셈의 결과와 의미를 설명한다",
+            "depth": "explain"
+          },
+          "policyVersion": "1.0.0"
+        },
+        "revision": 1,
+        "session": null,
+        "acceptedPlan": null,
+        "draftPlan": null,
+        "progress": [],
+        "question": null,
+        "revealedSolution": null,
+        "answer": null,
+        "assessment": null,
+        "hints": [],
+        "learnerText": "초등 수학을 복습한다.",
+        "nextAction": {
+          "kind": "start_session",
+          "reason": "학습 세션이 없다.",
+          "nodeId": null,
+          "questionId": null,
+          "answerId": null,
+          "recommendedMove": null,
+          "allowedCommands": [
+            "session.start",
+            "workspace.query",
+            "workspace.validate",
+            "workspace.rebuild",
+            "workspace.export",
+            "source.register",
+            "knowledge.commit"
+          ]
+        }
+      }
+    }
+  },
+  "failureResponse": {
+    "protocolVersion": 1,
+    "ok": false,
+    "workspaceId": "11111111-1111-4111-8111-111111111111",
+    "operationId": "22222222-2222-4222-8222-0000000000c8",
+    "revision": 13,
+    "committed": false,
+    "error": {
+      "code": "REVISION_CONFLICT",
+      "message": "현재 revision은 13이다.",
+      "retryable": false,
+      "recovery": "workspace.query로 현재 상태를 읽고 새 operationId로 재계획한다."
+    }
+  }
+}
