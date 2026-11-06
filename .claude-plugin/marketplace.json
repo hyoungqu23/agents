@@ -23,7 +23,7 @@
       "name": "review",
       "source": "./plugins/review",
       "description": "Evidence-backed code review, Pending PR review drafts, claim verification and author responses.",
-      "version": "0.7.6",
+      "version": "0.8.0",
       "category": "Productivity",
       "keywords": [
         "review",

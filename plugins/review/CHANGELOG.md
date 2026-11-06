@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0 - 2026-11-06
+
+- Add explicit draft-only automation contracts for self review, author responses, PR review and re-review without changing interactive mutation permissions.
+- Support P1/P2/P3/P999 and severity-free questions in opt-in structured ledgers; keep existing P1–P3 ledgers compatible.
+- Preserve claim identities, validity and current fix state, and reject stale envelopes or completion replies for unimplemented fixes.
+
 ## 0.7.6 - 2026-11-06
 
 - Share one Git inspection executor between review-code and review-pr; force no lazy fetch and reject partial/promisor clones before object reads, including on older Git.

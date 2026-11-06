@@ -260,8 +260,19 @@ def assess(scope, report):
                 gaps.append({'code': 'unresolved_candidate', 'detail': key})
             continue
         try:
-            if disposition != 'supported' or finding.get('severity') not in ('P1', 'P2', 'P3'):
-                raise ResultError('Only supported P1-P3 findings can be promoted')
+            policy = report.get('comment_policy')
+            if policy not in (None, 'hm2-five'):
+                raise ResultError('Unknown comment policy')
+            question = policy == 'hm2-five' and finding.get('kind') == 'question'
+            allowed = ('P1', 'P2', 'P3', 'P999') if policy == 'hm2-five' else ('P1', 'P2', 'P3')
+            if disposition != 'supported' or (finding.get('severity') is not None if question else finding.get('severity') not in allowed):
+                raise ResultError('Unsupported finding severity or question severity')
+            if policy == 'hm2-five':
+                label = '질문' if question else finding['severity']
+                if not re.match(r'^\[' + re.escape(label) + r'\]\s+\S', finding.get('comment', '')):
+                    raise ResultError('Comment prefix differs from its verified label')
+                if question and any(not text(finding.get(k)) for k in ('question', 'why')):
+                    raise ResultError('Question needs a specific missing fact and why it matters')
             if finding.get('path') not in reviewed:
                 raise ResultError('Finding belongs to an unreviewed or unaccounted file')
             if any(not text(finding.get(k)) for k in ('trigger', 'effect', 'fix', 'refutation', 'comment')):

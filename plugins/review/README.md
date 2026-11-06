@@ -130,3 +130,7 @@ model forward-test results and limits are recorded in
 [the Pending review evaluation](../../reports/review-pr-pending-2026-10-14/README.md).
 Continuation tests and model-run limits are recorded in
 [the A3 evaluation](../../reports/review-pr-resume-2026-10-15/README.md).
+
+## Draft-only automation
+
+A trusted coordinator can select `mode: draft-only` for all four review scenarios. See [the automation contract](skills/review-code/references/automation-contract.md) and [five-prefix policy](skills/review-code/references/review-comment-policy.md). The skills only produce reports and candidate replies in this mode; the coordinator owns separately authorized Pending delivery. P999 is optional taste/style feedback; questions have no severity. Existing interactive workflows and legacy structured results remain supported.
