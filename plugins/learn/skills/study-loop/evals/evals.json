@@ -1,0 +1,33 @@
+{
+  "skill_name": "study-loop",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to learn how binary search works well enough to explain it. Use the folder /tmp/study-binary-search and start.",
+      "files": [],
+      "expectations": [
+        "The folder is initialized through workspace.init with the learner's goal and a depth of explain.",
+        "A single diagnostic question is saved with question.pose before it is shown, and the turn ends waiting for the learner's answer.",
+        "No answer, confidence or thinking is written on the learner's behalf."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Continue my study in /tmp/study-binary-search. My answer: the middle element is compared first because the list is sorted, so half can be dropped. I'm about 70% sure.",
+      "files": [],
+      "expectations": [
+        "The pending question is read from view=resume, not from the previous conversation.",
+        "The answer is recorded verbatim with confidence 70 before it is assessed.",
+        "Each rubric criterion is assessed from the learner's words, feedback is shown, and the turn ends waiting for the learner's choice to continue."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Quick question: what is the time complexity of binary search?",
+      "files": [],
+      "expectations": [
+        "The question is answered directly without creating or writing a learning folder."
+      ]
+    }
+  ]
+}
