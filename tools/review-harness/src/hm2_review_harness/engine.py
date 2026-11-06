@@ -9,17 +9,30 @@ import hashlib
 
 from . import __version__, agent, delivery, source
 from .github import ApiError, GitHub, claims, fingerprint
-from .state import HarnessError, Store, device, digest, save_json
+from .state import HarnessError, Store, digest, save_json, load_config
 from .trusted import module
+from .policy import PolicyChanged, require_pending
 
 
 class Engine:
     def __init__(self, config, root, *, github=None, reviewer=None):
         self.config = config; self.root = Path(root); self.store = Store(root)
         self.gh = github or GitHub(config, root); self.reviewer = reviewer or agent.run
+        self.managed_client = github is None
         self.gate = module('review-code', 'review_result.py')
         self.contract = module('review-code', 'automation_contract.py')
         # Trusted helpers use these installed executables even under launchd.
+        os.environ['PATH'] = os.pathsep.join(dict.fromkeys([
+            str(Path(config['git_path']).parent), str(Path(config['gh_path']).parent), os.environ.get('PATH', '')]))
+
+    def configure(self, config):
+        identity = ('hostname', 'login', 'gh_path')
+        if self.managed_client:
+            if any(config[key] != self.config[key] for key in identity):
+                self.gh = GitHub(config, self.root)
+            else:
+                self.gh.config = config
+        self.config = config
         os.environ['PATH'] = os.pathsep.join(dict.fromkeys([
             str(Path(config['git_path']).parent), str(Path(config['gh_path']).parent), os.environ.get('PATH', '')]))
 
@@ -137,10 +150,17 @@ class Engine:
                 'status': 'partial' if claim_gaps or packet['omitted'] or (code and code['status'] != 'complete') else 'complete'}
 
     def run_one(self):
+        if (self.root / 'config.json').exists():
+            self.configure(load_config(self.root))
         job = self.store.next()
         if job is None or self.config.get('paused'):
             return None
         key = job['id']; event = json.loads(job['event'])
+        repository = next((row for row in self.config['repositories'] if row['name'] == event['repo']), None)
+        if (repository is None or event['hostname'] != self.config['hostname']
+                or (event.get('worktree') and (not repository.get('path')
+                    or Path(repository['path']).resolve() != Path(event['worktree']).resolve()))):
+            self.store.update(key, 'superseded', error='Queued scope is no longer registered'); return key
         if event.get('account') != self.config['login']:
             self.store.update(key, 'auth_required', error='Queued work belongs to another account'); return key
         if self.store.storage_bytes() >= self.config.get('max_state_bytes', 2 * 1024 ** 3):
@@ -205,8 +225,8 @@ class Engine:
             self._report(run_dir, job, output)
             # Preserve analysis even if remote delivery is blocked or uncertain.
             self.store.update(key, 'local_ready', result=output)
-            if (snapshot and self.config['pending_enabled']
-                    and self.config['active_device'] == device(self.root)):
+            if snapshot and self.config['pending_enabled']:
+                require_pending(self.config, self.root, event)
                 self.store.update(key, 'saving')
                 output['delivery'] = delivery.save(self.config, self.gh, event, snapshot, scope, response,
                                                    assessment['code'], run_dir, self.root)
@@ -214,6 +234,8 @@ class Engine:
             if assessment['status'] != 'complete' and status == 'local_ready':
                 status = 'partial'
             self.store.update(key, status, result=output); self._report(run_dir, job, output)
+        except PolicyChanged as error:
+            self._failure(job, run_dir, 'policy_blocked', error)
         except delivery.DeliveryError as error:
             self._failure(job, run_dir, error.status, error)
         except ApiError as error:

@@ -8,6 +8,7 @@ import uuid
 from .github import fingerprint, public_comments
 from .state import HarnessError, digest, read_json, save_json
 from .trusted import module
+from .policy import PolicyChanged, require_pending
 
 
 class DeliveryError(HarnessError):
@@ -69,9 +70,8 @@ def fresh(gh, event, expected):
 
 
 def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, state_root):
+    require_pending(config, state_root, event)
     helper = module('review-pr', 'pending_review.py')
-    # Use the same configured authenticated transport for the trusted helper.
-    helper.api = lambda host, endpoint, payload=None: gh.api(endpoint, payload)
     login = gh.login()
     identity = {'host': event['hostname'], 'repo': event['repo'], 'pr': event['pr'], 'login': login.lower()}
     directory = Path(state_root) / 'receipts' / digest(identity)
@@ -79,6 +79,24 @@ def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, s
     endpoint = f'repos/{event["repo"]}/pulls/{event["pr"]}'
     code_receipt = directory / 'code.json'
     reply_receipt = directory / 'reply-review.json'
+    def guarded_api(host, target, payload=None, journal=None):
+        mutation = payload is not None and (target != 'graphql' or payload.get('query', '').lstrip().startswith('mutation'))
+        if mutation:
+            try:
+                require_pending(config, state_root, event)
+            except PolicyChanged:
+                path = journal or code_receipt
+                if path.exists():
+                    record = read_json(path)
+                    if record.get('operation'):
+                        record.setdefault('blocked_operations', []).append(record['operation'])
+                        record['operation'] = None
+                    record['status'] = 'policy_blocked'
+                    save_json(path, record)
+                raise
+        return gh.api(target, payload)
+    # GitHub.api retains canonical fullDatabaseId normalization for helper reads.
+    helper.api = guarded_api
     fresh(gh, event, snapshot)
     published_keys = set()
     for path in list(directory.glob('code*.json')) + list(directory.glob('round-*.json')):
@@ -100,9 +118,8 @@ def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, s
         report = result['review']
         eligible = set(code_assessment['eligible_findings'])
         candidates = [f for f in report['findings'] if f['id'] in eligible]
-        anchors_with_claims = {(c.get('path'), c.get('line')) for c in event.get('claims', []) if c['source'] == 'inline'}
-        existing_concerns = [f['id'] for f in candidates if f['id'] in published_keys or (f.get('path'), f.get('line')) in anchors_with_claims]
-        candidates = [f for f in candidates if f['id'] not in published_keys and (f.get('path'), f.get('line')) not in anchors_with_claims]
+        existing_concerns = [f['id'] for f in candidates if f['id'] in published_keys]
+        candidates = [f for f in candidates if f['id'] not in published_keys]
         target_path, payload_path, report_path = (Path(run_dir) / name for name in ('pending-target.json', 'draft.json', 'review-result.json'))
         args = Namespace(action='capture', hostname=event['hostname'], repo=event['repo'], pr=event['pr'],
                          worktree=scope['worktree'], snapshot=str(target_path))
@@ -129,6 +146,7 @@ def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, s
                 metadata = directory / f'round-{code_saved["review_id"]}.json'
                 previous = read_json(metadata).get('finding_ids', []) if metadata.exists() else []
                 save_json(metadata, {'review_id': code_saved['review_id'], 'finding_ids': sorted(set(previous) | {f['id'] for f in candidates})})
+            fresh(gh, event, snapshot)
     replies = [(claim, row) for row in result['claims'] if row.get('reply')
                for claim in [next(c for c in event['claims'] if c['id'] == row['id'])] if claim['source'] == 'inline']
     if not replies:
@@ -139,10 +157,10 @@ def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, s
     if pending_id and pending_id not in known_ids:
         raise DeliveryError('pending_conflict', 'An existing user Pending is protected; replies remain local')
     if not pending_id:
-        if reply_receipt.exists():
+        if reply_receipt.exists() and read_json(reply_receipt).get('status') != 'policy_blocked':
             raise DeliveryError('write_unconfirmed', 'Reconcile the prior Pending creation before another write')
         save_json(reply_receipt, {**identity, 'status': 'create_unconfirmed', 'head_sha': latest['pr']['head']['sha']})
-        created = gh.api(endpoint + '/reviews', {'commit_id': latest['pr']['head']['sha'], 'body': ''})
+        created = guarded_api(event['hostname'], endpoint + '/reviews', {'commit_id': latest['pr']['head']['sha'], 'body': ''}, reply_receipt)
         pending_id = created.get('id')
         if type(pending_id) is not int:
             raise DeliveryError('write_unconfirmed', 'Pending creation returned no ID; do not replay')
@@ -162,7 +180,8 @@ def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, s
                    and (c.get('author') or {}).get('login', '').lower() == login.lower()
                    and (c.get('pullRequestReview') or {}).get('databaseId') == pending_id
                    and (c.get('pullRequestReview') or {}).get('state') == 'PENDING']
-        if receipt.exists():
+        blocked = receipt.exists() and read_json(receipt).get('status') == 'policy_blocked' and not matches
+        if receipt.exists() and not blocked:
             if read_json(receipt)['body'] != body:
                 raise DeliveryError('pending_conflict', 'A reply wording change remains local; preserve the prior draft')
             if len(matches) != 1:
@@ -173,9 +192,9 @@ def save(config, gh, event, snapshot, scope, result, code_assessment, run_dir, s
             raise DeliveryError('pending_conflict', 'Matching unmanaged draft reply exists; preserve it')
         save_json(receipt, {'status': 'attempted', **identity, 'review_id': pending_id,
                             'thread_id': claim['thread_id'], 'body': body, 'head_sha': review['commit_id']})
-        output = gh.api('graphql', {'query': '''mutation($input:AddPullRequestReviewThreadReplyInput!){addPullRequestReviewThreadReply(input:$input){comment{id body author{login} pullRequestReview{databaseId state}}}}''',
+        output = guarded_api(event['hostname'], 'graphql', {'query': '''mutation($input:AddPullRequestReviewThreadReplyInput!){addPullRequestReviewThreadReply(input:$input){comment{id body author{login} pullRequestReview{databaseId:fullDatabaseId state}}}}''',
                                    'variables': {'input': {'pullRequestReviewId': review['node_id'],
-                                                          'pullRequestReviewThreadId': claim['thread_id'], 'body': body}}})
+                                                          'pullRequestReviewThreadId': claim['thread_id'], 'body': body}}}, receipt)
         comment = output.get('data', {}).get('addPullRequestReviewThreadReply', {}).get('comment', {})
         if (not comment.get('id') or comment.get('body') != body
                 or (comment.get('author') or {}).get('login', '').lower() != login.lower()

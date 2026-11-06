@@ -73,7 +73,7 @@ def serve(root, once=False):
             engine.store.recover(); next_poll = 0
             try:
                 while not stopping:
-                    engine.config = load_config(root)
+                    engine.configure(load_config(root))
                     if not engine.config['paused'] and time.monotonic() >= next_poll:
                         try:
                             engine.poll()

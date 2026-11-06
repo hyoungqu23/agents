@@ -14,7 +14,7 @@ from unittest.mock import patch
 from hm2_review_harness import agent, delivery, source
 from hm2_review_harness.cli import export, import_config
 from hm2_review_harness.engine import Engine
-from hm2_review_harness.github import ApiError, claims, fingerprint
+from hm2_review_harness.github import ApiError, GitHub, claims, fingerprint
 from hm2_review_harness.state import HarnessError, Store, defaults, device, digest, instance_lock, read_json, save_json
 from hm2_review_harness.trusted import module
 
@@ -129,6 +129,44 @@ def add_thread(snapshot, author='teammate'):
 
 
 class EngineTests(GitFixture):
+    def test_inflight_policy_withdrawal_prevents_delivery(self):
+        for change in ('pending', 'pause', 'scope'):
+            with self.subTest(change=change):
+                state = self.root / change
+                cfg = copy.deepcopy(self.cfg); cfg.update(pending_enabled=True, active_device=device(state))
+                save_json(state / 'config.json', cfg)
+                def reviewer(*args):
+                    updated = copy.deepcopy(cfg)
+                    if change == 'pending': updated['pending_enabled'] = False
+                    elif change == 'pause': updated['paused'] = True
+                    else: updated['repositories'] = []
+                    save_json(state / 'config.json', updated)
+                    return self.reviewer(*args)
+                engine = Engine(cfg, state, github=FakeGitHub(self.snapshot()), reviewer=reviewer)
+                try:
+                    engine.enqueue_pr('example/app', 7)
+                    with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo), patch('hm2_review_harness.delivery.save') as writer:
+                        engine.run_one()
+                    writer.assert_not_called()
+                    self.assertEqual(engine.store.rows()[0]['status'], 'policy_blocked')
+                finally: engine.store.close()
+
+    def test_removed_queued_scope_does_not_start_review(self):
+        engine = Engine(self.cfg, self.root / 'state', github=FakeGitHub(self.snapshot()), reviewer=self.reviewer)
+        self.addCleanup(engine.store.close); engine.enqueue_pr('example/app', 7)
+        engine.configure({**self.cfg, 'repositories': []})
+        with patch('hm2_review_harness.source.pr_checkout') as checkout:
+            engine.run_one()
+        checkout.assert_not_called(); self.assertEqual(engine.store.rows()[0]['status'], 'superseded')
+
+    def test_transport_rebuilds_when_host_or_account_configuration_changes(self):
+        engine = Engine(self.cfg, self.root / 'state')
+        self.addCleanup(engine.store.close); previous = engine.gh
+        updated = {**self.cfg, 'hostname': 'github.example.com', 'login': 'other'}
+        engine.configure(updated)
+        self.assertIsNot(engine.gh, previous); self.assertEqual(engine.gh.host, updated['hostname'])
+        self.assertEqual(engine.gh.config['login'], 'other')
+
     def reviewer(self, _config, request, scope, _packet, _prior, _directory):
         rows = []
         for claim in request['claims']:
@@ -260,6 +298,12 @@ class StateTests(unittest.TestCase):
 
 
 class DeliveryTests(GitFixture):
+    def setUp(self):
+        super().setUp()
+        state = self.root / 'state'
+        self.cfg.update(pending_enabled=True, active_device=device(state))
+        save_json(state / 'config.json', self.cfg)
+
     def helper(self, gh):
         class Helper:
             def own_pending(self, *_): return gh.review['id'] if gh.review else None
@@ -314,6 +358,69 @@ class DeliveryTests(GitFixture):
             result = delivery.save(self.cfg, gh, event, snapshot, {'worktree': str(self.repo)},
                                    {'review': report, 'claims': []}, {'eligible_findings': ['old-find']}, self.root, state)
         self.assertEqual(result['existing_concerns'], ['old-find']); self.assertEqual(gh.writes, [])
+
+    def test_distinct_regression_on_prior_claim_line_remains_eligible(self):
+        snapshot = self.snapshot(reviewed=True); gh = FakeGitHub(snapshot)
+        event = {'hostname': 'github.com', 'repo': 'example/app', 'pr': 7,
+                 'claims': [{'id': 'prior', 'source': 'inline', 'path': 'app.py', 'line': 2}]}
+        report = {'findings': [{'id': 'new-regression', 'path': 'app.py', 'line': 2, 'comment': '[P2] Returns the last item instead of the first.'}]}
+        payloads = []
+        def save_session(args):
+            payloads.append(read_json(args.payload)); return {'status': 'pending'}
+        helper = SimpleNamespace(own_pending=lambda *_: None, capture=lambda *_: {'base_sha': self.base, 'head_sha': self.head},
+                                 changed_lines=lambda *_: {'app.py': {2}}, diff_for=lambda *_: '', run_session=save_session)
+        with patch('hm2_review_harness.delivery.module', return_value=helper):
+            result = delivery.save(self.cfg, gh, event, snapshot, {'worktree': str(self.repo)}, {'review': report, 'claims': []},
+                                   {'eligible_findings': ['new-regression']}, self.root, self.root / 'state')
+        self.assertEqual(payloads[0]['comments'][0]['key'], 'new-regression')
+        self.assertEqual(result['existing_concerns'], [])
+
+    def test_permission_is_rechecked_immediately_before_api_mutation(self):
+        snapshot = self.snapshot(own=True); add_thread(snapshot); gh = FakeGitHub(snapshot)
+        event, response = self.response(snapshot)
+        original = gh.snapshot
+        def revoke(*args):
+            updated = {**self.cfg, 'pending_enabled': False}
+            save_json(self.root / 'state/config.json', updated)
+            return original(*args)
+        gh.snapshot = revoke
+        with patch('hm2_review_harness.delivery.module', return_value=self.helper(gh)), self.assertRaises(HarnessError):
+            delivery.save(self.cfg, gh, event, snapshot, {}, response, None, self.root, self.root / 'state')
+        self.assertEqual(gh.writes, [])
+        gh.snapshot = original
+        save_json(self.root / 'state/config.json', self.cfg)
+        with patch('hm2_review_harness.delivery.module', return_value=self.helper(gh)):
+            result = delivery.save(self.cfg, gh, event, snapshot, {}, response, None, self.root, self.root / 'state')
+        self.assertEqual(result['status'], 'pending_saved'); self.assertEqual(len(gh.writes), 2)
+
+    def test_conversation_change_during_code_save_is_marked_stale(self):
+        snapshot = self.snapshot(); gh = FakeGitHub(snapshot)
+        event = {'hostname': 'github.com', 'repo': 'example/app', 'pr': 7, 'claims': []}
+        report = {'findings': [{'id': 'new', 'path': 'app.py', 'line': 2, 'comment': '[P2] Empty input fails.'}]}
+        def save_session(_args):
+            gh.value['pr']['body'] = 'The empty-input contract changed.'
+            return {'status': 'pending'}
+        helper = SimpleNamespace(own_pending=lambda *_: None, capture=lambda *_: {'base_sha': self.base, 'head_sha': self.head},
+                                 changed_lines=lambda *_: {'app.py': {2}}, diff_for=lambda *_: '', run_session=save_session)
+        with patch('hm2_review_harness.delivery.module', return_value=helper), self.assertRaises(delivery.DeliveryError) as failure:
+            delivery.save(self.cfg, gh, event, snapshot, {'worktree': str(self.repo)}, {'review': report, 'claims': []},
+                          {'eligible_findings': ['new']}, self.root, self.root / 'state')
+        self.assertEqual(failure.exception.status, 'superseded')
+
+    def test_real_pending_helper_receives_normalized_bigint_aliases(self):
+        gh = GitHub(self.cfg, self.root / 'state')
+        helper = module('review-pr', 'pending_review.py')
+        helper.api = lambda host, endpoint, payload=None: gh.api(endpoint, payload)
+        review = {'id': 91, 'node_id': 'R91', 'state': 'PENDING', 'commit_id': self.head, 'body': '', 'user': {'login': 'me'}}
+        node = {'id': 'R91', 'databaseId': '91', 'state': 'PENDING', 'submittedAt': None, 'body': '',
+                'author': {'login': 'me'}, 'commit': {'oid': self.head},
+                'comments': {'nodes': [], 'totalCount': 0, 'pageInfo': {'hasNextPage': False, 'endCursor': None}}}
+        def transport(argv, **kwargs):
+            value = {'data': {'node': node}} if 'graphql' in argv else review
+            return SimpleNamespace(returncode=0, stdout='HTTP/2.0 200 OK\n\n' + json.dumps(value), stderr='')
+        with patch('hm2_review_harness.github.subprocess.run', side_effect=transport):
+            loaded, comments = helper.read_review('github.com', 'repos/example/app/pulls/7', 91, 'me')
+        self.assertEqual(loaded['id'], 91); self.assertEqual(comments, [])
 
     def test_own_pending_does_not_retrigger_review(self):
         snapshot = self.snapshot(); add_thread(snapshot); before = fingerprint(snapshot)

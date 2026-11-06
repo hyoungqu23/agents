@@ -7,6 +7,7 @@ import time
 from urllib.parse import quote
 
 from .state import HarnessError, digest, read_json, save_json
+from .trusted import module
 
 
 class ApiError(HarnessError):
@@ -14,14 +15,15 @@ class ApiError(HarnessError):
         super().__init__(message); self.status = status; self.retry_at = retry_at
 
 
-THREADS = '''query($owner:String!,$name:String!,$pr:Int!,$after:String){repository(owner:$owner,name:$name){pullRequest(number:$pr){reviewThreads(first:100,after:$after){totalCount pageInfo{hasNextPage endCursor} nodes{id path line originalLine diffSide isResolved isOutdated comments(first:100){totalCount pageInfo{hasNextPage endCursor} nodes{id databaseId body createdAt updatedAt author{login} commit{oid} pullRequestReview{databaseId state}}}}}}}}'''
-COMMENTS = '''query($id:ID!,$after:String){node(id:$id){... on PullRequestReviewThread{comments(first:100,after:$after){totalCount pageInfo{hasNextPage endCursor} nodes{id databaseId body createdAt updatedAt author{login} commit{oid} pullRequestReview{databaseId state}}}}}'''
+THREADS = '''query($owner:String!,$name:String!,$pr:Int!,$after:String){repository(owner:$owner,name:$name){pullRequest(number:$pr){reviewThreads(first:100,after:$after){totalCount pageInfo{hasNextPage endCursor} nodes{id path line originalLine diffSide isResolved isOutdated comments(first:100){totalCount pageInfo{hasNextPage endCursor} nodes{id databaseId:fullDatabaseId body createdAt updatedAt author{login} commit{oid} pullRequestReview{databaseId:fullDatabaseId state}}}}}}}}'''
+COMMENTS = '''query($id:ID!,$after:String){node(id:$id){... on PullRequestReviewThread{comments(first:100,after:$after){totalCount pageInfo{hasNextPage endCursor} nodes{id databaseId:fullDatabaseId body createdAt updatedAt author{login} commit{oid} pullRequestReview{databaseId:fullDatabaseId state}}}}}'''
 
 
 class GitHub:
     def __init__(self, config, root):
         self.config = config; self.host = config['hostname']; self.cache = Path(root) / 'http-cache'
         self.next_request = 0
+        self.normalize_ids = module('review-pr', 'pending_review.py').graphql_database_ids
 
     def api(self, endpoint, payload=None, *, cached=False):
         cache_path = self.cache / (digest({'host': self.host, 'endpoint': endpoint}) + '.json')
@@ -60,6 +62,8 @@ class GitHub:
             raise ApiError('GitHub returned malformed JSON: ' + endpoint) from error
         if isinstance(value, dict) and value.get('errors'):
             raise ApiError('GraphQL request incomplete; no write is authorized')
+        if endpoint == 'graphql':
+            value = self.normalize_ids(value)
         if cached:
             save_json(cache_path, {'etag': headers.get('etag'), 'body': value})
         return value

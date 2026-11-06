@@ -52,6 +52,13 @@ manual drafts and older-head Pending reviews are protected. Their conflicts rema
 local; the service keeps analyzing new revisions. Immediate comments are never a fallback.
 Use `disable-pending` to return to local-only operation.
 
+Queued scope and current authorization are checked again before delivery and every
+API mutation. Pausing, disabling drafts or removing a repository also blocks an
+in-flight review's later writes. A locally blocked, unsent operation is recorded as
+such, so re-enabling permission does not confuse it with an uncertain network write.
+Distinct new defects may share a line with old claims; deduplication uses recorded
+finding identities rather than discarding everything at that source line.
+
 ## Four workflows
 
 | Workflow | Trigger and behavior |
