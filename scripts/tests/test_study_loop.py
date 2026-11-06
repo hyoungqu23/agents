@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -422,6 +423,7 @@ class AcceptanceTests(Lab):
         finally:
             holder.kill()
             holder.wait()
+            holder.stdout.close()
         self.start()
 
     def test_ac17_crash_before_commit(self):
@@ -878,6 +880,246 @@ class PolicyTests(Lab):
         answer_id = self.answer(self.pose())
         self.assertEqual(self.packet()["answer"]["assistance"], "solution_seen")
         self.assertTrue(answer_id)
+
+
+class RuleCoverageTests(Lab):
+    """Each test fails if the named rule is removed (2026-11-06 review)."""
+
+    def hint(self, question_id):
+        self.ok("hint.record", {"sessionId": self.sid, "questionId": question_id, "kind": "cue", "text": "세어 봐", "userText": "힌트"})
+
+    def helped_then_alone(self, second_prompt, second_time):
+        question_id = self.pose()
+        self.hint(question_id)
+        self.assess(self.answer(question_id))
+        self.proceed()
+        self.now = second_time
+        answer_id = self.answer(self.pose(prompt=second_prompt, variationReason="다른 상황으로 확인"))
+        return answer_id, self.assess(answer_id)["packet"]["progress"][0]
+
+    def test_delayed_evidence_needs_a_later_local_date(self):
+        self.ready([node("a"), node("b", ["a"])])
+        _, progress = self.helped_then_alone("사과 4개와 1개는?", "2026-11-06T05:00:00Z")
+        self.assertTrue(progress["qualified"])
+        self.assertEqual(progress["delayedEvidenceAnswerIds"], [])
+
+    def test_delayed_evidence_needs_a_new_prompt(self):
+        self.ready([node("a"), node("b", ["a"])])
+        _, progress = self.helped_then_alone("2+3은 무엇이며 왜 그런가?", "2026-11-07T05:00:00Z")
+        self.assertEqual(progress["delayedEvidenceAnswerIds"], [])
+
+    def test_local_date_uses_the_workspace_offset(self):
+        self.ready([node("a"), node("b", ["a"])])  # UTC+9
+        self.now = "2026-11-06T14:00:00Z"  # 23:00 local
+        answer_id, progress = self.helped_then_alone("사과 4개와 1개는?", "2026-11-06T15:30:00Z")  # 00:30 next local day
+        self.assertEqual(progress["delayedEvidenceAnswerIds"], [answer_id])
+
+    def test_deferred_prerequisite_blocks_its_dependents(self):
+        self.ready([node("a"), node("b", ["a"])])
+        question_id = self.pose()
+        self.ok("question.skip", {"sessionId": self.sid, "questionId": question_id, "userText": "넘어가자"})
+        packet = self.proceed("skip_target")
+        self.assertEqual(packet["session"]["deferredNodeIds"], ["a"])
+        self.assertIsNone(packet["session"]["currentNodeId"])
+        self.assertEqual(packet["nextAction"]["kind"], "offer_finish")
+
+    def test_seen_solution_does_not_qualify(self):
+        self.ready()
+        question_id = self.pose()
+        self.ok("question.reveal", {"sessionId": self.sid, "questionId": question_id, "userText": "풀이"})
+        self.proceed()
+        packet = self.assess(self.answer(self.pose()))["packet"]
+        self.assertFalse(packet["progress"][0]["qualified"])
+        self.assertEqual(packet["progress"][0]["status"], "supported")
+        self.assertEqual(packet["nextAction"]["recommendedMove"], "fresh_check")
+
+    def test_reported_help_is_not_independent(self):
+        for help, assistance in (("hint", "hinted"), ("solution", "solution_seen"), ("unknown", "unknown")):
+            with self.subTest(help=help):
+                self.root, self.revision = self.tmp / f"ws-{help}", 0
+                self.ready()
+                packet = self.attempt(help=help)[2]["packet"]
+                self.assertEqual(packet["answer"]["assistance"], assistance)
+                self.assertFalse(packet["progress"][0]["qualified"])
+
+    def choice(self, form="single_choice", correct=("five",)):
+        options = [{"optionId": "five", "text": "5"}, {"optionId": "six", "text": "6"}, {"optionId": "seven", "text": "7"}]
+        return self.question(format=form, options=options, correctOptionIds=list(correct), selectionCriterionId="choose")
+
+    def test_choice_selection_is_graded_by_the_engine(self):
+        self.ready([node("pick", criteria=("choose", "why"))])
+        question_id = self.pose(self.choice())
+        for selected in (["eight"], ["five", "six"]):
+            self.refuse("INVALID_ANSWER", "answer.record", {"sessionId": self.sid, "answer": {
+                "questionId": question_id, "responseKind": "answer", "text": "고름", "selectedOptionIds": selected,
+                "thinking": None, "confidence": None, "reportedExternalHelp": "none",
+            }})
+        answer_id = self.answer(question_id, selected=["six"])
+        self.refuse("RUBRIC_MISMATCH", "assessment.record", {"sessionId": self.sid,
+                    "assessment": self.assessment(answer_id, {"choose": "met", "why": "met"})})
+        self.assertEqual(self.assess(answer_id, {"choose": "not_met", "why": "met"})["packet"]["assessment"]["verdict"], "partial")
+        self.proceed()
+        answer_id = self.answer(self.pose(self.choice("multiple_choice", ("five", "seven"))), selected=["seven", "five"])
+        self.assertEqual(self.assess(answer_id, {"choose": "met", "why": "met"})["packet"]["assessment"]["verdict"], "correct")
+
+    def test_wrong_answer_key_goes_to_repair(self):
+        self.ready([node("pick", criteria=("choose",))])
+        answer_id = self.answer(self.pose(self.choice(correct=("six",))), selected=["five"])
+        packet = self.assess(answer_id, {"choose": "unassessable"}, issue={"kind": "bad_rubric", "description": "정답 키가 6으로 잘못됐다"})["packet"]
+        self.assertEqual(packet["assessment"]["verdict"], "ungradable")
+        self.assertEqual(packet["session"]["pending"]["kind"], "repair")
+
+    def test_a_different_init_cannot_take_over_an_intent(self):
+        payload = {"goal": {"title": "t", "description": "d", "depth": "explain"}, "utcOffsetMinutes": 0, "learnerText": None}
+        with mock.patch("studyloop.storage.Store.append", side_effect=SystemExit("crash")):
+            with self.assertRaises(SystemExit):
+                self.call(self.request("workspace.init", payload))
+        self.assertEqual(self.call(self.request("workspace.init", payload))["error"]["code"], "OPERATION_CONFLICT")
+        self.assertFalse((self.root / "records/events.jsonl").exists())
+
+    def test_default_lock_wait_is_two_seconds(self):
+        self.init()
+        holder = subprocess.Popen(
+            [sys.executable, "-c", "import fcntl,sys,time; f=open(sys.argv[1],'a'); fcntl.flock(f, fcntl.LOCK_EX); print('locked', flush=True); time.sleep(30)",
+             str(self.root / "records/.lock")],
+            stdout=subprocess.PIPE, text=True,
+        )
+        try:
+            holder.stdout.readline()
+            started = time.monotonic()
+            response = self.send("session.start", {"mode": "learning", "startAt": "auto", "targetNodeIds": [], "maxItems": None, "userText": "시작"})
+            self.assertEqual(response["error"]["code"], "LOCK_BUSY")
+            self.assertGreaterEqual(time.monotonic() - started, 1.9)
+        finally:
+            holder.kill()
+            holder.wait()
+            holder.stdout.close()
+
+
+class ReviewFixTests(Lab):
+    """Regressions for the defects fixed after the 2026-11-06 review."""
+
+    def test_trailing_newline_ids_are_refused(self):
+        payload = {"goal": {"title": "t", "description": "d", "depth": "explain"}, "utcOffsetMinutes": 0, "learnerText": None}
+        self.assertEqual(self.send("workspace.init", payload, ws=WS + "\n")["error"]["code"], "INVALID_REQUEST")
+        self.assertFalse(self.root.exists())
+        self.init()
+        self.refuse("INVALID_REQUEST", "session.start",
+                    {"mode": "learning", "startAt": "auto", "targetNodeIds": [], "maxItems": None, "userText": "시작"},
+                    op="22222222-2222-4222-8222-0000000000aa\n")
+
+    def test_repeated_criterion_is_refused(self):
+        self.init()
+        self.start()
+        draft = self.question("diagnostic", criteria=crit("same", "same"))
+        self.refuse("INVALID_REQUEST", "question.pose", {"sessionId": self.sid, "question": draft})
+
+    def test_diagnosis_can_always_be_skipped(self):
+        self.init()
+        self.assertIn("diagnosis.complete", self.start()["nextAction"]["allowedCommands"])
+        for index in range(3):
+            question_id = self.pose(prompt=f"진단 {index}")
+            self.ok("question.skip", {"sessionId": self.sid, "questionId": question_id, "userText": "모르겠어, 넘어가"})
+            packet = self.proceed()
+        self.assertEqual(packet["nextAction"]["kind"], "complete_diagnosis")
+        self.assertIn("diagnosis.complete", packet["nextAction"]["allowedCommands"])
+        done = {"sessionId": self.sid, "summary": "진단 없이 시작", "heldConcepts": [], "gaps": [], "evidenceAnswerIds": []}
+        self.refuse("INVALID_TRANSITION", "diagnosis.complete", dict(done, skipRequested=False, userText=None))
+        packet = self.ok("diagnosis.complete", dict(done, skipRequested=True, userText="진단은 건너뛰고 계획부터 하자"))["packet"]
+        self.assertEqual(packet["nextAction"]["kind"], "propose_plan")
+
+    def test_wrong_path_leaves_no_trace(self):
+        missing = self.tmp / "typo" / "deep"
+        self.root = missing
+        response = self.send("session.pause", {"sessionId": "44444444-4444-4444-8444-444444444444", "userText": "쉬자"}, expected=1)
+        self.assertEqual(response["error"]["code"], "WORKSPACE_MISSING")
+        self.assertFalse((self.tmp / "typo").exists())
+        self.root = self.tmp / "documents"
+        self.root.mkdir()
+        (self.root / "notes.txt").write_text("남의 파일")
+        for command, payload, expected in (
+            ("workspace.export", {"format": "json", "outputPath": "artifacts/a.json", "overwrite": False}, None),
+            ("workspace.rebuild", {}, 1),
+        ):
+            self.assertEqual(self.send(command, payload, expected=expected)["error"]["code"], "WORKSPACE_MISSING")
+        self.assertEqual(sorted(path.name for path in self.root.iterdir()), ["notes.txt"])
+
+    def raw(self, data):
+        response, code = cli.run(data, str(self.root), lambda: self.now)
+        self.assertIsNone(check(response, "Response"), response)
+        return response, code
+
+    def test_bad_inputs_get_json_errors(self):
+        init = json.dumps(self.request("workspace.init", {"goal": {"title": "t", "description": "d", "depth": "explain"}, "utcOffsetMinutes": 0, "learnerText": "x"}))
+        surrogate = init.replace('"learnerText": "x"', '"learnerText": "\\ud800"').encode()
+        deep = b"[" * 200000 + b"]" * 200000
+        for data in (surrogate, deep):
+            response, code = self.raw(data)
+            self.assertEqual((response["error"]["code"], code), ("INVALID_REQUEST", 2))
+        self.assertFalse(self.root.exists())
+        self.init()
+        (self.root / "artifacts" / "folder").mkdir(parents=True)
+        for path in ("artifacts/folder", "artifacts/" + "a" * 300):
+            with self.subTest(path=path[:20]):
+                response = self.send("workspace.export", {"format": "json", "outputPath": path, "overwrite": True})
+                # Python 3.14's exists() swallows ENAMETOOLONG, so the write itself reports it.
+                self.assertIn(response["error"]["code"], ("INVALID_REQUEST", "WRITE_FAILED"))
+        response = self.send("source.register", {"relativePath": "materials/" + "a" * 300, "title": "t", "originKind": "local_file", "origin": "x"})
+        self.assertEqual(response["error"]["code"], "INVALID_REQUEST")
+        outside = self.tmp / "outside"
+        outside.mkdir()
+        (outside / "x.md").write_text("밖")
+        shutil.rmtree(self.root / "materials")
+        (self.root / "materials").symlink_to(outside)
+        response = self.send("source.register", {"relativePath": "materials/x.md", "title": "t", "originKind": "local_file", "origin": "x"})
+        self.assertEqual(response["error"]["code"], "PATH_OUTSIDE_WORKSPACE")
+
+    def test_skip_target_moves_on(self):
+        self.ready([node("a"), node("b", ["a"])])
+        self.ok("session.finish", {"sessionId": self.sid, "outcome": "partial", "abandonPending": False, "userText": "끝"})
+        self.start("practice", targets=["a", "b"], max_items=2)
+        repair = self.assess(self.answer(self.pose()), {"state-result": "unassessable"},
+                             issue={"kind": "ambiguous_question", "description": "모호하다"})["packet"]
+        self.ok("content.resolve", {"sessionId": self.sid, "assessmentId": repair["assessment"]["assessmentId"],
+                                    "resolution": "new_question", "correction": "다시 쓴다", "sourceRefs": []})
+        packet = self.proceed("skip_target")
+        self.assertEqual((packet["session"]["currentNodeId"], packet["session"]["queueIndex"]), ("b", 1))
+
+    def test_skipping_the_final_transfer_offers_finish(self):
+        self.ready()
+        self.attempt()
+        self.proceed()
+        question_id = self.pose(prompt="빵 3개와 4개는?", variationReason="새 상황")
+        self.ok("question.skip", {"sessionId": self.sid, "questionId": question_id, "userText": "이건 넘어가자"})
+        packet = self.proceed("skip_target")
+        self.assertIsNone(packet["session"]["requiredMove"])
+        self.assertEqual(packet["nextAction"]["kind"], "offer_finish")
+
+    def test_learner_file_edges(self):
+        payload = {"goal": {"title": "t", "description": "d", "depth": "explain"}, "utcOffsetMinutes": 0, "learnerText": None}
+        self.root.mkdir()
+        (self.root / "learner.md").write_text("가" * 16001, encoding="utf-8")
+        self.assertEqual(self.send("workspace.init", payload)["error"]["code"], "INVALID_REQUEST")
+        self.assertFalse((self.root / "records/.init.json").exists())
+        (self.root / "learner.md").write_bytes("배경\r\n메모".encode())
+        self.assertTrue(self.send("workspace.init", dict(payload, learnerText="배경\r\n메모"))["ok"])
+
+    def test_pending_is_checked_before_change_reason(self):
+        self.ready()
+        self.pose()
+        assessment = self.assessment("55555555-5555-4555-8555-555555555555", {"state-result": "met"}, reason="이유")
+        self.refuse("INVALID_TRANSITION", "assessment.record", {"sessionId": self.sid, "assessment": assessment})
+
+    def test_inconsistent_journal_is_reported(self):
+        self.init()
+        self.start()
+        path = self.root / "records/events.jsonl"
+        lines = path.read_text(encoding="utf-8").splitlines()
+        commit = json.loads(lines[1])
+        commit["events"][0]["data"]["pending"] = {"kind": "continuation", "afterEventId": "66666666-6666-4666-8666-666666666666"}
+        path.write_text("\n".join([lines[0], json.dumps(commit, ensure_ascii=False)]) + "\n", encoding="utf-8")
+        response = self.send("workspace.query", {"view": "resume", "id": None, "search": None, "cursor": None, "limit": 1})
+        self.assertEqual((response["error"]["code"], self.code), ("CORRUPT_JOURNAL", 4))
 
 
 class CommandLineTests(Lab):
