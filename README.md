@@ -15,6 +15,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | [`design`](plugins/design) | `design-brief`, `prototype-explore`, `prototype-promote` | Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references. |
 | [`product`](plugins/product) | `problem-frame`, `prd-write`, `prd-gate`, `flow-spec` | Problem framing, traceable requirements, readiness review and user-flow specifications. |
 | [`build`](plugins/build) | `implement`, `fix` | Implement features and make scoped bug/QA corrections with current-source verification evidence. |
+| [`learn`](plugins/learn) | `study-loop` | Resumable tutoring that diagnoses, plans, teaches, waits for real answers and keeps the learning record in a local folder that Claude Code and Codex can both continue. Needs Python 3.10+. |
 
 ## Repository layout
 
@@ -31,6 +32,8 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
     │   └── skills/{problem-frame,prd-write,prd-gate,flow-spec}/
     ├── build/
     │   └── skills/{implement,fix}/
+    ├── learn/
+    │   └── skills/study-loop/
     └── design/
         ├── references/
         └── skills/{design-brief,prototype-explore,prototype-promote}/
@@ -49,6 +52,7 @@ From the parent directory of this repository:
 /plugin install content@hm2-tools
 /plugin install review@hm2-tools
 /plugin install design@hm2-tools
+/plugin install learn@hm2-tools
 ```
 
 After publishing to GitHub, replace the local path with `<github-owner>/agents`.
@@ -86,7 +90,10 @@ The Python tests cover validation-environment recovery and every skill's SKILL.m
 frontmatter: delimiters that parse, a `name` matching its directory, a description that
 states both when to use the skill and what to use instead, and no reference file that
 nothing reaches. These repository-specific routing and reachability checks supplement
-the platform validators. The Node tests check design
+the platform validators. `test_study_loop.py` runs the `study-loop` engine against
+its contract fixtures in `scripts/tests/fixtures/study-loop/` (the happy path, protocol
+examples and the 44 acceptance cases);
+it is skipped on Python older than 3.10. The Node tests check design
 evaluation inputs, keyboard behavior, and development/production fixture isolation.
 Agent-executed scenarios are described in [the design evaluation guide](plugins/design/evals/README.md).
 

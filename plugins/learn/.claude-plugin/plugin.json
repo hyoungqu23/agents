@@ -1,0 +1,16 @@
+{
+  "name": "learn",
+  "displayName": "Learn",
+  "version": "0.1.0",
+  "description": "Resumable tutoring that diagnoses, plans, teaches, waits for real answers and keeps the learning record in a local folder.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "learning",
+    "tutoring",
+    "study",
+    "practice"
+  ],
+  "skills": "./skills/"
+}

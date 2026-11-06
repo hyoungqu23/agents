@@ -1,0 +1,28 @@
+{
+  "name": "learn",
+  "version": "0.1.0",
+  "description": "Resumable tutoring that diagnoses, plans, teaches, waits for real answers and keeps the learning record in a local folder.",
+  "author": {
+    "name": "HM2"
+  },
+  "keywords": [
+    "learning",
+    "tutoring",
+    "study",
+    "practice"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Learn",
+    "shortDescription": "Study a topic over several sessions with a resumable tutor",
+    "longDescription": "Diagnose what the learner knows, agree a small plan, teach one step at a time, wait for real answers and assess them against rubrics written before each question. Goals, answers, hints, progress and cited sources stay in a local learning folder that Claude Code and Codex can both resume.",
+    "developerName": "HM2",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": "Help me study this topic step by step and keep my progress in a learning folder."
+  }
+}
