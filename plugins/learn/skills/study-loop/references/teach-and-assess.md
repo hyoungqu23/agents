@@ -44,7 +44,12 @@ the learner actually wrote:
 - A right final answer with wrong or missing reasoning fails the reasoning
   criterion.
 - `unassessable` only when the question, rubric or material is at fault, with an
-  `issue` (`ambiguous_question`, `bad_source`, `bad_rubric`).
+  `issue` object `{"kind": "ambiguous_question|bad_source|bad_rubric",
+  "description": "…"}`.
+- For choice questions the engine grades `selectionCriterionId` from the
+  selected options; send the result it implies. If the answer key itself is
+  wrong, mark that criterion `unassessable` with a `bad_rubric` issue instead of
+  recording a false verdict.
 - `errorStep` is the first step where their reasoning went wrong, when you can
   point to one. Never invent reasoning they did not write.
 
@@ -88,6 +93,11 @@ Say what was wrong with the question or material, then `content.resolve`:
 `new_question` discards the faulty question and continues on the same node;
 `replan` (learning only) reopens the plan when the rubric or node itself is
 wrong.
+
+After `new_question` the engine waits again (`wait_for_continue` with no
+`recommendedMove`). Tell the learner a corrected question comes next and wait
+for them to say go on; then send `continuation.accept` with `intent: "next"` and
+their words.
 
 ## Finishing a goal
 

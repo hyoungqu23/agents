@@ -43,8 +43,10 @@ When the learner asks to collect what a lesson or document says:
    chains. Endpoints are `{"kind": "local", "id": localKey}` or
    `{"kind": "existing", "id": propositionId}`.
 4. If a new proposition says the same as an existing one (find it with
-   `view=knowledge` and `search`), add an `identityLinks` entry with the reason.
-   The existing statement is kept; your wording becomes an alias.
+   `view=knowledge` and `search`), add
+   `{"localKey": "…", "existingId": "<propositionId>", "reason": "…"}` to
+   `identityLinks`. The existing statement is kept; your wording becomes an alias.
+   Every proposition and chain needs at least one `sourceRef` inside the scope.
 5. `knowledge.commit`. Learner answers and unrevealed solutions are not sources.
 
 Having a proposition in the graph does not mean the learner knows it; progress

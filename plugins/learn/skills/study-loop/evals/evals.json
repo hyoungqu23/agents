@@ -7,18 +7,18 @@
       "files": [],
       "expectations": [
         "The folder is initialized through workspace.init with the learner's goal and a depth of explain.",
-        "A single diagnostic question is saved with question.pose before it is shown, and the turn ends waiting for the learner's answer.",
-        "No answer, confidence or thinking is written on the learner's behalf."
+        "The learner is asked which kind of session to start (learning, practice or review) before any session or question is created.",
+        "No answer, confidence, thinking or session choice is written on the learner's behalf."
       ]
     },
     {
       "id": 2,
-      "prompt": "Continue my study in /tmp/study-binary-search. My answer: the middle element is compared first because the list is sorted, so half can be dropped. I'm about 70% sure.",
+      "prompt": "Teach me binary search so I can explain it; keep my progress in /tmp/study-binary-search-2. Start a learning session now, I have no materials.",
       "files": [],
       "expectations": [
-        "The pending question is read from view=resume, not from the previous conversation.",
-        "The answer is recorded verbatim with confidence 70 before it is assessed.",
-        "Each rubric criterion is assessed from the learner's words, feedback is shown, and the turn ends waiting for the learner's choice to continue."
+        "workspace.init and session.start are both recorded; session.start carries the learner's own words.",
+        "Exactly one diagnostic question is saved with question.pose before it is shown, with no lessonText.",
+        "The turn ends waiting for the learner's answer instead of answering or continuing on their behalf."
       ]
     },
     {

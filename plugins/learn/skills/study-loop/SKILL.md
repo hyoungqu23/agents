@@ -12,8 +12,9 @@ move. The Korean label is **학습 루프**. Talk to the learner in their langua
 
 ## Rules that never bend
 
-- Save first, then show. Pose a question, record a hint, or reveal a solution
-  through the engine, and show the learner only what it saved.
+- Save first, then show. Pose a question, propose a plan, record an assessment,
+  record a hint, or reveal a solution through the engine, and show the learner
+  only what it saved.
 - Wait for the learner. After a question, end your turn and wait for their real
   answer. After feedback, wait for their real choice to continue. Never write the
   learner's answer, thinking, confidence or decision for them.
@@ -39,7 +40,9 @@ when the learner asks to study over time or names a learning folder.
    PY=$(for py in python3 python3.13 python3.12 python3.11 python3.10; do command -v "$py" >/dev/null 2>&1 && "$py" -c 'import sys; sys.exit(sys.version_info < (3, 10))' 2>/dev/null && { echo "$py"; break; }; done); echo "${PY:-none}"
    ```
 
-   If none is found, tell the learner to install Python 3.10+ and stop.
+   If none is found, tell the learner to install Python 3.10+ and stop. Each
+   shell call starts fresh, so write the printed name (for example `python3.13`)
+   in later commands instead of relying on `$PY`.
 3. If `<folder>/workspace.json` exists, read `workspace.workspaceId` from it and
    query `view=resume`. Otherwise run `workspace.init` with the learner's goal,
    their UTC offset in minutes and any background they gave.
@@ -78,7 +81,7 @@ views and the error codes. Read it before your first call in a conversation.
 | --- | --- | --- |
 | `start_session` | Ask what kind of session they want (learning, practice, review), then `session.start` with their words | [diagnose-and-plan.md](references/diagnose-and-plan.md) for a first session |
 | `resume_session` | Ask whether to continue; `session.resume` or `session.finish` | — |
-| `ask_diagnostic`, `complete_diagnosis`, `propose_plan`, `await_plan_approval` | Diagnose, summarize, propose a plan, get real approval | [diagnose-and-plan.md](references/diagnose-and-plan.md) |
+| `ask_diagnostic`, `complete_diagnosis`, `propose_plan`, `await_plan_approval` | Diagnose, summarize, propose a plan, get real approval. With no assessed diagnostic, ask whether to skip and send `skipRequested` with their words | [diagnose-and-plan.md](references/diagnose-and-plan.md) |
 | `present_and_check` | Teach and ask the question that `session.requiredMove` and `currentNodeId` call for | [teach-and-assess.md](references/teach-and-assess.md); practice and review sessions: [practice-and-review.md](references/practice-and-review.md) |
 | `await_answer` | Show `packet.question` (and hints) and wait. On request: `hint.record`, `question.reveal` or `question.skip` | [teach-and-assess.md](references/teach-and-assess.md) |
 | `assess_answer` | Query `view=assessor`, judge each criterion, `assessment.record` | [teach-and-assess.md](references/teach-and-assess.md) |

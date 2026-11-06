@@ -25,6 +25,8 @@ skills. Installing or updating never touches learning folders.
   can read files but cannot run the script cannot use this skill.
 - A local file system. Cloud-synced folders written from two machines at once
   are not supported.
+- Verified on macOS. The Windows lock path exists in the engine but has not been
+  run; treat Windows as unverified.
 
 ## Switch hosts
 

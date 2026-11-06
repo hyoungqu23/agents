@@ -53,7 +53,11 @@ Failure: `{"ok": false, "committed": false|null, "error": {"code", "message",
 {"command": "source.register", "expectedRevision": N, "payload": {
   "relativePath": "materials/notes.md", "title": "…", "originKind": "local_file|url|model_generated", "origin": "…"}}
 {"command": "knowledge.commit", "expectedRevision": N, "payload": {"extraction": {
-  "scopeRefs": [], "propositions": [], "chains": [], "identityLinks": []}}}
+  "scopeRefs": ["SourceRef, at least one"],
+  "propositions": [{"localKey": "lower-slug", "name": "…", "statement": "…", "sourceRefs": ["at least one, inside scopeRefs"]}],
+  "chains": [{"premises": [{"kind": "local", "id": "localKey"}, {"kind": "existing", "id": "propositionId"}],
+              "conclusion": {"kind": "local", "id": "localKey"}, "sourceRefs": ["at least one, inside scopeRefs"]}],
+  "identityLinks": [{"localKey": "…", "existingId": "propositionId", "reason": "…"}]}}}
 ```
 
 Query views:
@@ -137,7 +141,7 @@ Lists page with `limit` (1–100) and `cursor` = the previous `nextCursor`.
 
 - `purpose` must equal `session.requiredMove.purpose`; `nodeId` must equal
   `session.currentNodeId`; non-diagnostic questions use the accepted plan's
-  `version` and that node's exact `criteria`.
+  `version` and that node's exact `criteria`. Each `criterionId` appears once.
 - `lessonText` is required for `check` and must be null for every other purpose.
 - `transfer` is an open question on the goal node with a new prompt and a
   `variationReason`.
@@ -173,9 +177,16 @@ Lists page with `limit` (1–100) and `cursor` = the previous `nextCursor`.
 - Judge every criterion exactly once. The engine computes the verdict: any
   `unassessable` → `ungradable` (needs `issue`), all met → `correct`, all not met →
   `incorrect` (`not_recalled` for dont_know), otherwise `partial`.
+- `issue` is `null` or `{"kind": "ambiguous_question|bad_source|bad_rubric",
+  "description": "…"}`. `errorStep` is `null` or an integer ≥ 1.
+- The selection criterion of a choice question must be what the selected options
+  imply (`met` only for the exact correct set), or `unassessable` when the answer
+  key is wrong.
 - To correct the latest assessment before the learner continues, send a new
   assessment with `replacesAssessmentId` and `changeReason`.
 - During diagnosis only `intent: "next"` is allowed; `replan` only in learning.
+- `diagnosis.complete` is listed in every diagnosis state. Without an assessed
+  diagnostic it needs `skipRequested: true` and the learner's words.
 
 ## Source references
 

@@ -28,7 +28,9 @@ Do not ask for confidence ratings, scores or personal data the plan does not nee
 - After feedback, continue with `continuation.accept` `intent: "next"` for the
   next diagnostic, or go straight to `diagnosis.complete` when you know enough.
 - If the learner asks to skip diagnosis, send `skipRequested: true` with their
-  words in `userText`.
+  words in `userText`. This is always allowed during diagnosis. When every
+  diagnostic was revealed or skipped, ask whether to plan without one; a
+  `diagnosis.complete` without `skipRequested` needs at least one assessed answer.
 
 `diagnosis.complete`: `summary` is what the answers showed, not a judgment of
 the person. `heldConcepts` and `gaps` are short phrases. `evidenceAnswerIds` are
@@ -45,10 +47,11 @@ the diagnostic answers you relied on.
   `goalNodeId`, and nodes the learner already showed in diagnosis can be left out.
 - `diagnosisSummary` ties the plan to the diagnosis evidence.
 
-Show the plan as a short numbered list (title, what they will be able to do).
-Ask for agreement or changes. Record agreement with `plan.accept` and their
+Save the plan with `plan.propose` first, then show `packet.draftPlan` as a short
+numbered list (title, what they will be able to do). Ask for agreement or
+changes. Record agreement with `plan.accept`, the draft's `version` and their
 words. If they ask for changes, send a revised `plan.propose` with
-`baseVersion` = the draft's version.
+`baseVersion` = the draft's version and show the new draft.
 
 ## Replanning later
 
