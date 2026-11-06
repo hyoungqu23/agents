@@ -52,6 +52,11 @@ PR review and all specialists are report-only. Head-side instructions and script
 remain review input; trusted base rules and actual host execution controls govern
 the review. See [the shared boundary](skills/review-code/references/pr-review-boundary.md).
 The helper's Git checks detect visible checkout changes; they are not an OS sandbox.
+Hidden assume-unchanged/skip-worktree index flags block capture and save; they are
+never cleared automatically to make a checkout appear reviewable.
+Git inspection also rejects configured partial/promisor clones before object reads
+and forces no lazy fetch. The Pending helper reuses the same executor, so direct
+diff/capture calls cannot silently launch a remote fetch while checking source.
 
 Git-backed `review-code` reviews now produce a structured result outside the source.
 The checker compares current SHAs, the real changed-file inventory and exact source
@@ -86,6 +91,15 @@ Required safety checks and behavior tests remain intact. This restraint draws on
 
 [PR #16 and #17 evaluation evidence](../../reports/review-code-evaluation-2026-10-11/report.md) records the fixed commits, model, paired scenarios, outputs, and limitations. Both old and updated instructions passed the selected cases; the result does not establish a general detection improvement. The same cases are reused to check the consolidated guidance.
 
+## Author-response collection
+
+Author-side `review-respond` collection uses its bundled read-only collector to
+page review bodies, threads, every thread's replies and conversation comments
+independently. Incomplete reads or changed heads stop collection before fixes or
+replies are prepared. The collector only reads; reply approval and posting remain
+the separate author-response workflow. Pending readers use current fullDatabaseId
+GraphQL fields with strict numeric normalization for stored REST-compatible IDs.
+
 ## Checking an existing review
 
 Use `review-check` for requests such as “Claude가 남긴 이 리뷰가 맞는지 확인해줘.”
@@ -116,3 +130,7 @@ model forward-test results and limits are recorded in
 [the Pending review evaluation](../../reports/review-pr-pending-2026-10-14/README.md).
 Continuation tests and model-run limits are recorded in
 [the A3 evaluation](../../reports/review-pr-resume-2026-10-15/README.md).
+
+## Draft-only automation
+
+A trusted coordinator can select `mode: draft-only` for all four review scenarios. See [the automation contract](skills/review-code/references/automation-contract.md) and [five-prefix policy](skills/review-code/references/review-comment-policy.md). The skills only produce reports and candidate replies in this mode; the coordinator owns separately authorized Pending delivery. P999 is optional taste/style feedback; questions have no severity. Existing interactive workflows and legacy structured results remain supported.

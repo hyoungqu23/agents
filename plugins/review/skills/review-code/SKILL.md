@@ -5,6 +5,8 @@ description: Completion-gated hard code review workflow for PRs, branches, diffs
 
 # Review Code
 
+For an explicit trusted `mode: draft-only` request, read [the automation contract](references/automation-contract.md) first. It selects report-only execution and structured output; the coordinator owns separately authorized Pending delivery. In this mode skip implementation, staging, commits, push and publication. Ordinary interactive requests retain the workflow below.
+
 ## Purpose and Default Quality Bar
 
 Run a full-scope review of correctness, maintainability, repository fit, regression, and UI/UX. Keep the coverage ledger internal unless requested. Every invocation applies `resources/common-gate.md`, including all five engineering-quality criteria and Change Restraint. A concrete maintenance defect can be actionable even when tests pass; aim for the smallest complete fix and finish when the completion gate closes, without finding quotas or claims of perfection.
@@ -49,10 +51,14 @@ Do not autofix API contracts, migrations, auth, persistence, caching, concurrenc
 
 Use the user's language. Lead with findings; omit praise and category-by-category PASS output. Local project gates can replace this report shape and severity vocabulary; retain each finding's basis, source and applicability within the required format.
 
+Default comment policy: [five allowed prefixes](references/review-comment-policy.md). Automated ledgers use `comment_policy: hm2-five`; legacy ledgers remain readable.
+
 Severity:
 - `P1`: blocker or high-risk correctness/security/data-loss/regression issue.
 - `P2`: should fix before merge; meaningful maintainability, UX, test, or runtime risk.
 - `P3`: non-blocking improvement with concrete value.
+- `P999`: optional taste/style/minor suggestion.
+- `[질문]`: specific contract/intent question, with no severity.
 
 Apply the common gate's evidence and severity rules to quality findings; quality ambition alone cannot raise severity.
 

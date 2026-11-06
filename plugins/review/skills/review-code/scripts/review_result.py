@@ -24,12 +24,30 @@ QUALITY = ('cohesion', 'coupling', 'duplication', 'repository_fit', 'naming')
 CLASSIFICATIONS = {'source', 'test', 'config', 'migration', 'generated', 'lock', 'fixture', 'docs', 'other'}
 
 
+def git_process(root, *args, ok=(0,), text=False):
+    """One inspection boundary for both reviewers, including direct diff callers."""
+    prefix = ['git', '--no-optional-locks', '-c', 'core.fsmonitor=false',
+              '-c', 'core.quotePath=false', '-C', str(root)]
+    env = {**os.environ, 'GIT_NO_LAZY_FETCH': '1'}
+    # Config is object-independent. Reject before any requested object read, also
+    # on older Git versions that do not implement GIT_NO_LAZY_FETCH.
+    config = subprocess.run([*prefix, 'config', '--null', '--list'], capture_output=True, timeout=60, env=env)
+    if config.returncode:
+        raise ResultError(config.stderr.decode('utf-8', errors='replace').strip())
+    for setting in config.stdout.split(b'\0'):
+        key, _, value = setting.partition(b'\n'); key = key.lower()
+        if key == b'extensions.partialclone' or (key.startswith(b'remote.') and key.endswith(b'.promisor')
+                and value.lower() not in (b'false', b'no', b'off', b'0')):
+            raise ResultError('Partial/promisor clones are unsupported for review inspection; no automatic fetch allowed')
+    result = subprocess.run([*prefix, *args], text=text, capture_output=True, timeout=60, env=env)
+    if result.returncode not in ok:
+        message = result.stderr if text else result.stderr.decode('utf-8', errors='replace')
+        raise ResultError(message.strip())
+    return result
+
+
 def git(root, *args):
-    result = subprocess.run(['git', '--no-optional-locks', '-c', 'core.fsmonitor=false',
-        '-c', 'core.quotePath=false', '-C', str(root), *args], capture_output=True, timeout=60)
-    if result.returncode:
-        raise ResultError(result.stderr.decode('utf-8', errors='replace').strip())
-    return result.stdout
+    return git_process(root, *args).stdout
 
 
 def digest(value):
@@ -43,6 +61,12 @@ def path_ok(value):
 
 def sha(root, value):
     return git(root, 'rev-parse', '--verify', '--end-of-options', value + '^{commit}').decode().strip()
+
+
+def reject_hidden_index(root):
+    for row in git(root, 'ls-files', '-v', '-z').decode('utf-8').split('\x00'):
+        if row and (row[0].islower() or row[0] == 'S'):
+            raise ResultError('Unsupported index flag (assume-unchanged/skip-worktree); preserve user flags and use an explicitly supported target')
 
 
 def inventory(raw):
@@ -76,6 +100,7 @@ def local_bytes(root, path):
 
 def capture_scope(worktree, base=None, head=None, working_tree=False):
     root = Path(git(worktree, 'rev-parse', '--show-toplevel').decode().strip()).resolve()
+    reject_hidden_index(root)
     current = sha(root, 'HEAD')
     options = ['--no-ext-diff', '--no-textconv', '--ignore-submodules=none', '--no-color', '--unified=3']
     if working_tree:
@@ -235,8 +260,19 @@ def assess(scope, report):
                 gaps.append({'code': 'unresolved_candidate', 'detail': key})
             continue
         try:
-            if disposition != 'supported' or finding.get('severity') not in ('P1', 'P2', 'P3'):
-                raise ResultError('Only supported P1-P3 findings can be promoted')
+            policy = report.get('comment_policy')
+            if policy not in (None, 'hm2-five'):
+                raise ResultError('Unknown comment policy')
+            question = policy == 'hm2-five' and finding.get('kind') == 'question'
+            allowed = ('P1', 'P2', 'P3', 'P999') if policy == 'hm2-five' else ('P1', 'P2', 'P3')
+            if disposition != 'supported' or (finding.get('severity') is not None if question else finding.get('severity') not in allowed):
+                raise ResultError('Unsupported finding severity or question severity')
+            if policy == 'hm2-five':
+                label = '질문' if question else finding['severity']
+                if not re.match(r'^\[' + re.escape(label) + r'\]\s+\S', finding.get('comment', '')):
+                    raise ResultError('Comment prefix differs from its verified label')
+                if question and any(not text(finding.get(k)) for k in ('question', 'why')):
+                    raise ResultError('Question needs a specific missing fact and why it matters')
             if finding.get('path') not in reviewed:
                 raise ResultError('Finding belongs to an unreviewed or unaccounted file')
             if any(not text(finding.get(k)) for k in ('trigger', 'effect', 'fix', 'refutation', 'comment')):

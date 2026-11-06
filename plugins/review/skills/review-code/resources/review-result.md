@@ -21,6 +21,15 @@ final working copy. Binary and untracked contents are fingerprinted. Keep output
 outside the source so they do not change the inventory. Capture again after any
 authorized autofix and review the resulting changes; never reuse a stale result.
 
+Capture rejects assume-unchanged/skip-worktree index flags rather than omitting
+hidden changes. Keep those flags intact; report the unsupported target instead of
+clearing user state to obtain a complete review. The same check applies before a
+Pending target is captured or saved.
+Both review helpers force `GIT_NO_LAZY_FETCH=1` and reject configured partial/promisor
+clones before object inspection. Missing objects must be reported as unavailable;
+do not fetch, change clone configuration or rely on an old Git version ignoring
+that environment variable to obtain a pass. Preparation isolation remains required.
+
 Copy the returned `target` verbatim into the result and account for every entry in
 `files`, including renamed/deleted/generated/config/test files. The helper does not
 fetch, run tests, execute target code or follow symlinks to read external source.
@@ -79,7 +88,7 @@ Evidence quotations must match the complete indicated line (outer whitespace is
 ignored). Use `base` or `head`; local changes may also use `index` or `working`.
 The finding anchor itself must have a matching quotation. Include callers, guards,
 tests or contracts as additional references when they support the reasoning.
-Use the normalized P1/P2/P3 impact scale in this ledger; retain a named project's
+Legacy ledgers use the normalized P1/P2/P3 impact scale; retain a named project's
 own severity label in the human report or additional finding metadata when needed.
 
 Excluded candidates use `id`, `status` and `reason`. Supported alternative statuses
@@ -118,3 +127,7 @@ The checker verifies bookkeeping, source identity and quotations. It cannot prov
 that the model read every caller, executed a claimed command, chose the right severity,
 or reasoned correctly. Model evaluations must test known defects, false positives and
 scope omissions from actual outputs; merely loading a skill is not a quality pass.
+
+## Five-prefix ledgers
+
+Set `comment_policy: hm2-five` when applying [the shared comment policy](../references/review-comment-policy.md). Supported findings may use P999 for optional style/taste suggestions. Their exact `comment` starts with their severity prefix. A supported question instead has `kind: question`, `severity: null`, a specific `question`, `why`, and `[질문]` comment; its source and refutation evidence requirements still apply. This establishes a useful question, not a proven defect. Keep any unresolved defect candidate separate. Existing P1–P3 ledgers without this opt-in remain valid.

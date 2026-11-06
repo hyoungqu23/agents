@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.8.0 - 2026-11-06
+
+- Add explicit draft-only automation contracts for self review, author responses, PR review and re-review without changing interactive mutation permissions.
+- Support P1/P2/P3/P999 and severity-free questions in opt-in structured ledgers; keep existing P1–P3 ledgers compatible.
+- Preserve claim identities, validity and current fix state, and reject stale envelopes or completion replies for unimplemented fixes.
+
+## 0.7.6 - 2026-11-06
+
+- Share one Git inspection executor between review-code and review-pr; force no lazy fetch and reject partial/promisor clones before object reads, including on older Git.
+- Add real filtered-clone regressions proving capture/diff cannot launch a configured remote command and ordinary return-code/text contracts remain supported.
+
+## 0.7.5 - 2026-11-06
+
+- Collect every author-response review, thread, nested reply and conversation page before classifying items; block partial reads and changed targets with a read-only collector.
+- Use current fullDatabaseId GraphQL fields and normalize decimal BigInt aliases at the API boundary while preserving receipt identifiers.
+- Verify the original 51-item cutoff and multi-page collections without live writes.
+
+## 0.7.4 - 2026-11-05
+
+- Reject hidden Git index flags before working/committed review capture and Pending capture/save, preserving the user's flags and edits.
+- Share the index preflight through the installed review-code checker and add real-Git regressions for both review paths.
+
 ## 0.7.3 - 2026-10-29
 
 - Read Pending inline comments without REST detail 404s, including existing drafts and interrupted-write recovery.
