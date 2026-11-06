@@ -63,6 +63,8 @@ def validate(request, result):
             raise ContractError('Unresolved claims must identify missing evidence')
         if row['verdict'] != 'unresolved' and not row['evidence']:
             raise ContractError('Resolved judgments need source evidence')
+        if row['action'] == 'already-addressed' and row['current_state'] != 'already_addressed':
+            raise ContractError('Already-addressed action needs the matching current state')
         reply = row.get('reply')
         if reply is None:
             continue
@@ -73,8 +75,6 @@ def validate(request, result):
             raise ContractError('Question answers have no severity and use 질문')
         if row['action'] == 'fix' and row['current_state'] != 'already_addressed':
             raise ContractError('Unimplemented fixes cannot produce completion replies')
-        if row['action'] == 'already-addressed' and row['current_state'] != 'already_addressed':
-            raise ContractError('Already-addressed action needs the matching current state')
         if row['verdict'] == 'unresolved' and reply['label'] != '질문':
             raise ContractError('Unresolved claims may only draft a specific question')
     return result

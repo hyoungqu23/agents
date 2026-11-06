@@ -101,6 +101,11 @@ class EnvelopeTests(unittest.TestCase):
         row['reply'] = {'label': '질문', 'body': '[질문] Empty input is supported by the documented contract.'}
         automation.validate(self.request, self.result)
 
+    def test_state_invariant_applies_without_a_reply(self):
+        self.result['claims'][0]['action'] = 'already-addressed'
+        with self.assertRaises(automation.ContractError):
+            automation.validate(self.request, self.result)
+
 
 if __name__ == '__main__':
     unittest.main()
