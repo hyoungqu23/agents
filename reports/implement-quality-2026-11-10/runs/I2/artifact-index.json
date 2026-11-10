@@ -1,0 +1,74 @@
+[
+  {
+    "original": "state/target.json",
+    "packaged": "state/target.json",
+    "sha256": "87f1b528bd328463c575e6d051c6749892aeb1de8a45fd841a7c7bbd9e0d1e14",
+    "json_packed": false
+  },
+  {
+    "original": "state/assessment.json",
+    "packaged": "state/assessment.json",
+    "sha256": "c0ac4993a150213f658737f1e6008995a40c5c9c6b30e2dd2de6a293e07ff3eb",
+    "json_packed": false
+  },
+  {
+    "original": "state/result.json",
+    "packaged": "state/result.json",
+    "sha256": "f74a1a5d1b1ac660253a0278276ad9280701fd9aeede62871527398878847c50",
+    "json_packed": false
+  },
+  {
+    "original": "state/inputs.json",
+    "packaged": "state/inputs.json",
+    "sha256": "ad70f0ab148a31088c19336535fcccb6b7b8b8bd3ae584318606516efb16d8b2",
+    "json_packed": false
+  },
+  {
+    "original": "state/request.txt",
+    "packaged": "state/request.txt",
+    "sha256": "6fba40bc22a01f7d7555a23da9350c2dd37174cd12ecc2ad062166fea91a599c",
+    "json_packed": false
+  },
+  {
+    "original": "state/verification-target.json",
+    "packaged": "state/verification-target.json",
+    "sha256": "4c3baf650a88666fca35ac2bc197a34f416a905206e6226fc4c60f4df9257bcd",
+    "json_packed": false
+  },
+  {
+    "original": "state/current-diff.patch",
+    "packaged": "state/current-diff.patch.artifact.json",
+    "sha256": "3089a4cb00841ba63dd44d788bb4680aa54c90591fc6c72b5f4285b3902dd828",
+    "json_packed": true
+  },
+  {
+    "original": "state/verify-local.mjs",
+    "packaged": "state/verify-local.mjs",
+    "sha256": "6e45d180341c42664e3e2702eab80cffcb495abba29a3b1b0c5606ecdc1f3e11",
+    "json_packed": false
+  },
+  {
+    "original": "state/evidence/node-tests.txt",
+    "packaged": "state/evidence/node-tests.txt",
+    "sha256": "277303d5ea9cbf43de65f919cb6169249e28a98ee24bfd9d9046af93ae74dc3f",
+    "json_packed": false
+  },
+  {
+    "original": "state/evidence/design-source.txt",
+    "packaged": "state/evidence/design-source.txt.artifact.json",
+    "sha256": "de583d240df6febb9684a73f9f1c66672b6f8bfc8d09a877501fb1f2a26634d4",
+    "json_packed": true
+  },
+  {
+    "original": "state/evidence/local-api.txt",
+    "packaged": "state/evidence/local-api.txt",
+    "sha256": "e01ed7a644188998fbb5a7048b7c30fc81c0cfadce16c545c3733d16b25b678b",
+    "json_packed": false
+  },
+  {
+    "original": "state/evidence/local-api-escalated.txt",
+    "packaged": "state/evidence/local-api-escalated.txt",
+    "sha256": "d9a50392586245becb19ae9c158580050c7c607dad76fa86e728509ee63a0c45",
+    "json_packed": false
+  }
+]

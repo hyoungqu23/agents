@@ -1,0 +1,25 @@
+{
+  "status": "partial",
+  "gaps": [
+    {
+      "check": "actual-app-browser",
+      "reason": "not_run"
+    },
+    {
+      "requirement": "AC-1",
+      "check": "actual-app-browser",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "AC-2",
+      "check": "actual-app-browser",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "AC-3",
+      "check": "actual-app-browser",
+      "reason": "outcome_unverified"
+    }
+  ],
+  "target": "7e50ea2a90d23aea7fa9e6e964c8623ae886c5d41fd83498a31f5a3df8f395a0"
+}

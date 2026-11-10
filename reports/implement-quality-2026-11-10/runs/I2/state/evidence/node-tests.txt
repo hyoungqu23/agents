@@ -1,0 +1,20 @@
+$ npm test
+
+> test
+> node --test tests/*.test.mjs
+
+✔ API client forwards status and rejects a failed response (0.630792ms)
+✔ AC-1/AC-2: labelled filters, counts, persistent selection and successful empty state (3.27925ms)
+✔ AC-3: initial failure and Retry recover using existing alert treatment (1.495167ms)
+✔ AC-3: failure and Retry retain hidden selection and retry the current filter (0.924334ms)
+✔ UX: only latest filter response renders, including obsolete failures (0.702541ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 37.999625
+
+exit_code=0

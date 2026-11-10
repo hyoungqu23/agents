@@ -1,0 +1,366 @@
+{
+  "schema_version": 1,
+  "root": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source",
+  "head": "113e98ff471c0065722d3818d351bdcc34526d06",
+  "inputs": {
+    "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/state/inputs.json",
+    "sha256": "1386c7a3bc841fea586ce56e3036e7b1f6b004ff5756a07356adb18c12927f86",
+    "data": {
+      "schema_version": 1,
+      "task": "Implement projects AC-1–4 while retaining deferred archive decision Q-001",
+      "surface": "ui",
+      "scope": [
+        "src",
+        "tests"
+      ],
+      "preserve": [
+        "AGENTS.md",
+        "spec.md",
+        "QUESTIONS.md",
+        "DESIGN.md",
+        "ux.md",
+        "prototype.html",
+        "server.mjs",
+        "package.json",
+        "index.html",
+        "user-draft.md"
+      ],
+      "sources": [
+        {
+          "id": "request",
+          "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/state/request.md",
+          "locator": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/prompt.txt"
+        },
+        {
+          "id": "spec:projects",
+          "path": "spec.md"
+        },
+        {
+          "id": "questions:projects",
+          "path": "QUESTIONS.md"
+        },
+        {
+          "id": "design",
+          "path": "DESIGN.md"
+        },
+        {
+          "id": "ux",
+          "path": "ux.md"
+        },
+        {
+          "id": "prototype",
+          "path": "prototype.html"
+        },
+        {
+          "id": "repo-instructions",
+          "path": "AGENTS.md"
+        },
+        {
+          "id": "server-contract",
+          "path": "server.mjs"
+        },
+        {
+          "id": "app-entry",
+          "path": "index.html"
+        },
+        {
+          "id": "native-checks",
+          "path": "package.json"
+        }
+      ],
+      "requirements": [
+        {
+          "id": "AC-1",
+          "source": "spec:projects",
+          "description": "Status selection uses GET status and displays matching rows and count.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "app-browser"
+          ]
+        },
+        {
+          "id": "AC-2",
+          "source": "spec:projects",
+          "description": "Keep selected name across hidden rows, restore selected indicator, and distinguish successful empty results.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "app-browser"
+          ]
+        },
+        {
+          "id": "AC-3",
+          "source": "spec:projects",
+          "description": "Retry current filter without losing selection; only the latest request can render success or error.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "app-browser"
+          ]
+        },
+        {
+          "id": "AC-4",
+          "source": "spec:projects",
+          "description": "Actual archive behavior follows resolved permission, confirmation and API contract; Q-001 is currently deferred.",
+          "disposition": "required",
+          "checks": [
+            "archive-decision",
+            "app-browser"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "native-tests",
+          "kind": "command",
+          "required": true,
+          "description": "npm test asserts HTTP contract, filter/count, persistent selection, loading/empty/error/retry and competing success/error outcomes in app state/rendering."
+        },
+        {
+          "id": "app-browser",
+          "kind": "browser",
+          "required": true,
+          "description": "Exercise actual app at wide/narrow viewports for filter results, selection persistence, empty success, error/retry and response races; browser unavailable in this run."
+        },
+        {
+          "id": "archive-decision",
+          "kind": "static",
+          "required": true,
+          "description": "Resolved Q-001 provides archive method/path, permission and confirmation/failure contract before implementation."
+        }
+      ],
+      "editable_dirty": []
+    }
+  },
+  "sources": {
+    "request": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/state/request.md",
+      "sha256": "9c0f338afc48ae0d869af0918405e4a3b06b5b87c076161c68c0898c3f74a5f2"
+    },
+    "spec:projects": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/spec.md",
+      "sha256": "c407aad055955dd250190a63068207679c61f1dea2677639324a4cdf3115940c"
+    },
+    "questions:projects": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/QUESTIONS.md",
+      "sha256": "e7c45c7585f279589f1722b152a1a74c5412507b9e19926140deffd14d6b5b8e"
+    },
+    "design": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/DESIGN.md",
+      "sha256": "ab770e44f3c48c5a1658c40d84519e227f147dfac6ca4c0b6adc81cf3c363b7f"
+    },
+    "ux": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/ux.md",
+      "sha256": "1c928e842ab98616a3dd124bb3396c6e75019be357f106590bc54b4585c2afc1"
+    },
+    "prototype": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/prototype.html",
+      "sha256": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee"
+    },
+    "repo-instructions": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/AGENTS.md",
+      "sha256": "1845ca03e935a008c4976c80ede6a5df49280ffdfcc5cfe9a19c9932cb06bb5f"
+    },
+    "server-contract": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/server.mjs",
+      "sha256": "66a18a14c464000a8b3f86abc603cd9a1c04683a12ab1c3303a2a780482fc1e6"
+    },
+    "app-entry": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/index.html",
+      "sha256": "df2ff6aa8a91cb479bbfccaaed45322489a6ff80ccaa7c4bb3c7c6f4ca56e8aa"
+    },
+    "native-checks": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/package.json",
+      "sha256": "235f362b49114d373c4ddc9eb6075c42a4196ac871870396814b899c4e5d4f68"
+    }
+  },
+  "files": {
+    ".gitignore": {
+      "index": {
+        "mode": "100644",
+        "oid": "b9470778764f72c5257a3361590d2994547f90e1"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+        "executable": false
+      }
+    },
+    "AGENTS.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "51543b009118702e595f637e889d252db639cbbb"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "1845ca03e935a008c4976c80ede6a5df49280ffdfcc5cfe9a19c9932cb06bb5f",
+        "executable": false
+      }
+    },
+    "DESIGN.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "e00659cdd066ea9ee8919eaf14418743e12101fa"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "ab770e44f3c48c5a1658c40d84519e227f147dfac6ca4c0b6adc81cf3c363b7f",
+        "executable": false
+      }
+    },
+    "QUESTIONS.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "3b9c645e06a23a2a4775ff2d4c27b339079f099a"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "e7c45c7585f279589f1722b152a1a74c5412507b9e19926140deffd14d6b5b8e",
+        "executable": false
+      }
+    },
+    "index.html": {
+      "index": {
+        "mode": "100644",
+        "oid": "4d001aff34768c24ad62393f5781781bb0fd5c6f"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "df2ff6aa8a91cb479bbfccaaed45322489a6ff80ccaa7c4bb3c7c6f4ca56e8aa",
+        "executable": false
+      }
+    },
+    "package.json": {
+      "index": {
+        "mode": "100644",
+        "oid": "1086adfa1a62aafc7a8a55b338991a011e08c708"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "235f362b49114d373c4ddc9eb6075c42a4196ac871870396814b899c4e5d4f68",
+        "executable": false
+      }
+    },
+    "prototype.html": {
+      "index": {
+        "mode": "100644",
+        "oid": "40cbac50b4235f4ba5978c7fac472f16dff2e7ec"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee",
+        "executable": false
+      }
+    },
+    "server.mjs": {
+      "index": {
+        "mode": "100644",
+        "oid": "9904fb936543312f153b00a80d3bd3ebcb0b13ee"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "66a18a14c464000a8b3f86abc603cd9a1c04683a12ab1c3303a2a780482fc1e6",
+        "executable": false
+      }
+    },
+    "spec.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "388b42cdf9d0f5ef47ea1a5fd7d2a28782ca7edf"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "c407aad055955dd250190a63068207679c61f1dea2677639324a4cdf3115940c",
+        "executable": false
+      }
+    },
+    "src/api.js": {
+      "index": {
+        "mode": "100644",
+        "oid": "6e6c1dfee130a5b620933d1d669d0a2084591a1d"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "7b5232af77b6d8bdf24bfb9cd88031dae2761d1d3c2473e12bd978ff26f4fad0",
+        "executable": false
+      }
+    },
+    "src/app.js": {
+      "index": {
+        "mode": "100644",
+        "oid": "adf46076d116d68f00878c4d53bfc8b188c008c2"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "ddd6e93584ce108b97112190faf0cfb3e302e5b7ce887daa4ddc03b1c8d2ec78",
+        "executable": false
+      }
+    },
+    "src/theme.css": {
+      "index": {
+        "mode": "100644",
+        "oid": "b2be4a35c15cbdc8f6a2522abf438f473ffae596"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "d3cc3e39dc694de990903e474a384ef5a9df8664f2e0b1f6f0e53bcc04232c43",
+        "executable": false
+      }
+    },
+    "src/ui.js": {
+      "index": {
+        "mode": "100644",
+        "oid": "99e8e1119bef56c16ba79b97d02fcc556660e9ec"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "8c5f2f7af73596d6471bb1d8f907e65d972eff90110e8dfc4e32a2c6ffb24cfa",
+        "executable": false
+      }
+    },
+    "tests/api.test.mjs": {
+      "index": {
+        "mode": "100644",
+        "oid": "79e5287665e26a218df7b3075c99e94f375fa9e8"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "dbdb223e6022936ada468c529f5367fbedcd6c594cf825f645f2e10bc461b83b",
+        "executable": false
+      }
+    },
+    "user-draft.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "87dfc8995b2f4b6e06194a5423e902b35342c7e4"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "ec6c7a1fa655c60320a83e35b7a86c77a59bf1618869ef249860654a573a6428",
+        "executable": false
+      }
+    },
+    "ux.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "54e9ecf27ee40eaf22ba7115279e0b19d97e46cb"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "1c928e842ab98616a3dd124bb3396c6e75019be357f106590bc54b4585c2afc1",
+        "executable": false
+      }
+    }
+  },
+  "dirty": [
+    "user-draft.md"
+  ],
+  "coverage": {
+    "handoffs": [],
+    "errors": [
+      "spec:projects: QUESTIONS backlink points to another SPEC"
+    ]
+  },
+  "digest": "730a6009f48446b19d01203ea83d5bf764c7b0681ac075bcd0b2a55b589ae10b"
+}

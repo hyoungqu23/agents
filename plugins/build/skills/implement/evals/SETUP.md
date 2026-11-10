@@ -33,3 +33,10 @@ This helper does not execute generated code or authenticate observation truth.
 Inspect the actual code and tool traces. The full run needs actual browser evidence,
 not source-keyword grading or the executor's own summary. These two cases do not
 establish all declared scenarios, automatic discovery, or both hosts' behavior.
+
+## Executed quality suite — 2026-11-10
+
+5 independent-context forward tasks were executed with this skill version.
+See [the quality protocol](quality/README.md), prepared input bundles and withheld
+rubric. Existing mechanical tests are reported separately. The repository report is
+`reports/implement-quality-2026-11-10/README.md`; it states what was and was not tested.

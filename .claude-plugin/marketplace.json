@@ -63,8 +63,8 @@
     {
       "name": "build",
       "source": "./plugins/build",
-      "description": "Implement features and apply scoped bug/QA corrections with verification evidence.",
-      "version": "0.3.0",
+      "description": "Implement product features with original SPEC coverage and scoped bug or QA corrections.",
+      "version": "0.3.1",
       "category": "Productivity",
       "keywords": [
         "implementation",

@@ -1,0 +1,39 @@
+Source-bound review for target 70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44
+SPEC revision 2 / QUESTIONS revision 1. All ACs mapped once, none excluded, no active blockers.
+
+AC-1
+condition expected: 프로젝트 목록과 Status가 있고 GET 응답을 제어할 수 있음
+condition comparison: App renders existing StatusField and actual useProjects owner; unchanged local server supplies actual GET responses.
+action expected: All, Active, Archived, Paused를 각각 명시 선택하고 각 요청을 완료
+action comparison: Browser explicitly selected Active/Archived/Paused/All; native API test passed every enum through src/api.ts to the real server.
+outcome expected: 네 선택 항목이 보이며 query는 각각 all/active/archived/paused. 최신 성공 배열의 실제 이름·상태와 length를 표시. 고정 이미지 데이터·고정 개수로 대체하지 않음
+outcome comparison: Browser returned names/statuses/counts: All Tide/Forest/North 3; Active Tide/North 2; Archived Forest 1; Paused empty 0. App uses rows and rows.length.
+interfaces expected: §3.1~3.2 Status 조회, §4 Status·목록, §5.1~5.2 GET
+interfaces comparison: App StatusField onChange -> status state -> useProjects(status) -> api.projects(status) GET query -> ProjectRows. Existing theme owns tokens and 700px boundary.
+verification expected: 구현 후 요청 query와 서로 다른 응답 배열을 대조; 0/1/여러 항목 개수 확인. label/focus, 파란 accent, 700/701px 배치 확인. 배포 확인 Q-001; 초기 관례 Q-002
+verification comparison: Actual-server native test asserts each enum and response. Browser distinguishes 3/2/1/0, label/focus/blue border and 700/701 layout. Only local environment was verified; All initialization preserved.
+
+AC-2
+condition expected: P를 포함한 성공 목록이 있고 사용자가 P를 선택
+condition comparison: Browser selected Forest from successful All result at index 1.
+action expected: P 선택 후 P가 없는 필터, 200+[] 필터, P가 돌아오는 필터를 순서대로 조회
+action comparison: Forest selection -> Active loading/absent -> Paused successful [] -> Archived where Forest returns at index 0.
+outcome expected: 선택 직후 패널에 P.name. P가 목록에 없어도 패널 이름·선택 객체 유지. []는 결과 없음과 0이며 오류가 아님. P가 같은 id로 재등장하면 해당 행 선택 표시 복구
+outcome comparison: Independent selected Project never resets on list updates. Browser retained Forest name, empty displayed 0 without Retry, returned Forest id had aria-pressed=true despite changed index.
+interfaces expected: §3.2 행 선택·필터 밖 선택·성공 empty, §4 선택 패널, §5.1 선택/§5.2 id/name
+interfaces comparison: App.tsx selected object -> ProjectRows selectedId/onSelect and always-present SelectedPanel. Row identity is Project.id and panel shows Project.name; no extra API.
+verification expected: 구현 후 배열 순서·개수를 바꾸어 id 매칭 확인, 빈 성공/로딩 중 패널 유지 확인. 이미지의 주황 대신 시스템 accent 확인. 초기 관례 Q-002
+verification comparison: Browser stages forest-preserved-loading/outside-active/empty and forest-restored-archived-index-0 establish selection retention and id restoration. Existing blue token and initial unselected text retained.
+
+AC-3
+condition expected: P 선택 상태에서 필터 요청과 완료 순서를 제어할 수 있음
+condition comparison: Forest selected; supplied unchanged server delays Active 600ms and others 25ms, with authorized mode PUT controlling actual 503/200 behavior.
+action expected: 현재 요청을 503으로 실패시켜 Retry; A 시작 뒤 새 필터 B 시작. 이전 A의 성공·실패·finally를 B 대기/완료 중 각각 늦게 전달
+action comparison: Active 503 -> current Active Retry recovery; older Active/newer Archived and older Archived/newer Active sequences with real controls and real HTTP timing barriers.
+outcome expected: 실패는 성공 empty와 다른 오류/Retry. Retry query는 실행 시점의 현재 필터. loading·error·Retry에도 P 유지. 최신 B만 성공/실패를 화면에 반영하고 A는 목록·개수·오류·loading 종료를 바꾸지 않음. 동일 필터 Retry의 이전 요청에도 동일 규칙
+outcome comparison: Actual error/Retry differed from empty. Current Active Retry kept Forest and returned 2. Late A success preserved B error, late A failure preserved B success, old completion left newer Active loading. Guard also covers reload replacements; overlapping same-filter Retry is inaccessible while button is hidden.
+interfaces expected: §3.2 실패·Retry·응답 역전, §4 상태/선택, §5.1/5.3
+interfaces comparison: useProjects current flag guards then/catch/finally; cleanup invalidates previous status/reload effect. Request key masks old presentation immediately. Existing ProblemPanel connects Retry, selected object stays independent.
+verification expected: 구현 후 200+[]와 503 비교, Retry query/선택 확인. A성공→B실패, A실패→B성공의 역순 완료와 B 대기 중 A finally를 제어해 최신 상태 확인. 실제 앱 실행은 미수행; 배포 Q-001
+verification comparison: Real 503 vs [] and Retry data distinguished. Race evidence includes latest pending/completed screens and supplied-server timing barriers, without interception/state injection. Retry recovery exercised; shared reload cleanup inspected for inaccessible overlapping same-filter case. No production claim.
+Read current App.tsx lines 7-21, useProjects.ts 5-10, ui.tsx 2-6, api.ts 2-5, theme.css 1 and actual-server API test. Author semantic judgments are supported by actual checks; helper validates bytes/records, not independent semantic correctness or authenticity of claimed execution.

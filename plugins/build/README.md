@@ -65,3 +65,5 @@ Real execution evidence and its limits are recorded in the
 [forward evaluation report](../../reports/implement-evaluation-2026-10-30/README.md).
 Use `python3 scripts/behavioral/implementation.py prepare --case full --output /tmp/new-case`
 to prepare fresh raw inputs; it does not call a model. See [evaluation setup](skills/implement/evals/SETUP.md).
+
+Structured SPEC handoffs activate the bundled original AC/question completion gate. Missing ACs, unresolved blockers, stale originals, absent semantic review and failed behavior remain gaps. Direct requirements remain supported without Product installed.

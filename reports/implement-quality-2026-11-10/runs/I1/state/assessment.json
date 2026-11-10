@@ -1,0 +1,9 @@
+{
+  "status": "invalid",
+  "gaps": [
+    {
+      "reason": "invalid_record",
+      "detail": "Expected a regular file, not a symlink"
+    }
+  ]
+}

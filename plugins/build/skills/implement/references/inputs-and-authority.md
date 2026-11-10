@@ -94,3 +94,15 @@ listed as dirty; inspect the requested overlap rather than clearing user state.
 Git inspection forces GIT_NO_LAZY_FETCH and rejects configured partial/promisor
 clones before object inspection, including on older Git. Do not fetch or clear that
 configuration merely to obtain a pass; report the unavailable assessment.
+
+## Structured SPEC inputs
+
+A `handoff_version: 1` SPEC or `id: spec:*` input automatically activates the bundled
+source gate. Optionally declare `handoffs: ["spec-source-id"]` to require parsing of
+a legacy/unsupported SPEC; parse errors cannot silently fall back to direct input.
+Freeze the SPEC, its local `questions` companion and applied references as sources.
+Never copy only a selected subset of ACs into a new source to claim whole-SPEC coverage.
+Use one requirement per canonical AC, the same source ID, and the original `id`
+(or `source-id:original-id`, or an explicit `ac` field for an existing requirement ID).
+Keep all ACs in the manifest, including explicit exclusions. Additional direct
+requirements may use their own source. See [source-coverage.md](source-coverage.md).

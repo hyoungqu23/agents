@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "task": "Implement projects AC-1–4 while retaining deferred archive decision Q-001",
+  "surface": "ui",
+  "scope": [
+    "src",
+    "tests"
+  ],
+  "preserve": [
+    "AGENTS.md",
+    "spec.md",
+    "QUESTIONS.md",
+    "DESIGN.md",
+    "ux.md",
+    "prototype.html",
+    "server.mjs",
+    "package.json",
+    "index.html",
+    "user-draft.md"
+  ],
+  "sources": [
+    {
+      "id": "request",
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/state/request.md",
+      "locator": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/prompt.txt"
+    },
+    {
+      "id": "spec:projects",
+      "path": "spec.md"
+    },
+    {
+      "id": "questions:projects",
+      "path": "QUESTIONS.md"
+    },
+    {
+      "id": "design",
+      "path": "DESIGN.md"
+    },
+    {
+      "id": "ux",
+      "path": "ux.md"
+    },
+    {
+      "id": "prototype",
+      "path": "prototype.html"
+    },
+    {
+      "id": "repo-instructions",
+      "path": "AGENTS.md"
+    },
+    {
+      "id": "server-contract",
+      "path": "server.mjs"
+    },
+    {
+      "id": "app-entry",
+      "path": "index.html"
+    },
+    {
+      "id": "native-checks",
+      "path": "package.json"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "AC-1",
+      "source": "spec:projects",
+      "description": "Status selection uses GET status and displays matching rows and count.",
+      "disposition": "required",
+      "checks": [
+        "native-tests",
+        "app-browser"
+      ]
+    },
+    {
+      "id": "AC-2",
+      "source": "spec:projects",
+      "description": "Keep selected name across hidden rows, restore selected indicator, and distinguish successful empty results.",
+      "disposition": "required",
+      "checks": [
+        "native-tests",
+        "app-browser"
+      ]
+    },
+    {
+      "id": "AC-3",
+      "source": "spec:projects",
+      "description": "Retry current filter without losing selection; only the latest request can render success or error.",
+      "disposition": "required",
+      "checks": [
+        "native-tests",
+        "app-browser"
+      ]
+    },
+    {
+      "id": "AC-4",
+      "source": "spec:projects",
+      "description": "Actual archive behavior follows resolved permission, confirmation and API contract; Q-001 is currently deferred.",
+      "disposition": "required",
+      "checks": [
+        "archive-decision",
+        "app-browser"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "native-tests",
+      "kind": "command",
+      "required": true,
+      "description": "npm test asserts HTTP contract, filter/count, persistent selection, loading/empty/error/retry and competing success/error outcomes in app state/rendering."
+    },
+    {
+      "id": "app-browser",
+      "kind": "browser",
+      "required": true,
+      "description": "Exercise actual app at wide/narrow viewports for filter results, selection persistence, empty success, error/retry and response races; browser unavailable in this run."
+    },
+    {
+      "id": "archive-decision",
+      "kind": "static",
+      "required": true,
+      "description": "Resolved Q-001 provides archive method/path, permission and confirmation/failure contract before implementation."
+    }
+  ]
+}

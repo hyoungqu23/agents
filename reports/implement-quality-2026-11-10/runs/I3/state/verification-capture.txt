@@ -1,0 +1,472 @@
+{
+  "schema_version": 1,
+  "root": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source",
+  "head": "113e98ff471c0065722d3818d351bdcc34526d06",
+  "inputs": {
+    "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/state/inputs2.json",
+    "sha256": "0993e59f21f7be7aea9da1f0f0af5e50776da6a158752362a66410f08adc2541",
+    "data": {
+      "schema_version": 1,
+      "task": "Implement projects AC-1–4 while retaining deferred archive decision Q-001",
+      "surface": "ui",
+      "scope": [
+        "src",
+        "tests"
+      ],
+      "preserve": [
+        "AGENTS.md",
+        "spec.md",
+        "QUESTIONS.md",
+        "DESIGN.md",
+        "ux.md",
+        "prototype.html",
+        "server.mjs",
+        "package.json",
+        "index.html",
+        "user-draft.md"
+      ],
+      "sources": [
+        {
+          "id": "request",
+          "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/state/request.md",
+          "locator": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/prompt.txt"
+        },
+        {
+          "id": "spec:projects",
+          "path": "SPEC.md"
+        },
+        {
+          "id": "questions:projects",
+          "path": "QUESTIONS.md"
+        },
+        {
+          "id": "design",
+          "path": "DESIGN.md"
+        },
+        {
+          "id": "ux",
+          "path": "ux.md"
+        },
+        {
+          "id": "prototype",
+          "path": "prototype.html"
+        },
+        {
+          "id": "repo-instructions",
+          "path": "AGENTS.md"
+        },
+        {
+          "id": "server-contract",
+          "path": "server.mjs"
+        },
+        {
+          "id": "app-entry",
+          "path": "index.html"
+        },
+        {
+          "id": "native-checks",
+          "path": "package.json"
+        }
+      ],
+      "requirements": [
+        {
+          "id": "AC-1",
+          "source": "spec:projects",
+          "description": "Status selection uses GET status and displays matching rows and count.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "app-browser"
+          ]
+        },
+        {
+          "id": "AC-2",
+          "source": "spec:projects",
+          "description": "Keep selected name across hidden rows, restore selected indicator, and distinguish successful empty results.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "app-browser"
+          ]
+        },
+        {
+          "id": "AC-3",
+          "source": "spec:projects",
+          "description": "Retry current filter without losing selection; only the latest request can render success or error.",
+          "disposition": "required",
+          "checks": [
+            "native-tests",
+            "app-browser"
+          ]
+        },
+        {
+          "id": "AC-4",
+          "source": "spec:projects",
+          "description": "Actual archive behavior follows resolved permission, confirmation and API contract; Q-001 is currently deferred.",
+          "disposition": "required",
+          "checks": [
+            "archive-decision",
+            "app-browser"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "native-tests",
+          "kind": "command",
+          "required": true,
+          "description": "npm test asserts HTTP contract, filter/count, persistent selection, loading/empty/error/retry and competing success/error outcomes in app state/rendering."
+        },
+        {
+          "id": "app-browser",
+          "kind": "browser",
+          "required": true,
+          "description": "Exercise actual app at wide/narrow viewports for filter results, selection persistence, empty success, error/retry and response races; browser unavailable in this run."
+        },
+        {
+          "id": "archive-decision",
+          "kind": "static",
+          "required": true,
+          "description": "Resolved Q-001 provides archive method/path, permission and confirmation/failure contract before implementation."
+        }
+      ],
+      "editable_dirty": []
+    }
+  },
+  "sources": {
+    "request": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/state/request.md",
+      "sha256": "9c0f338afc48ae0d869af0918405e4a3b06b5b87c076161c68c0898c3f74a5f2"
+    },
+    "spec:projects": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/SPEC.md",
+      "sha256": "c407aad055955dd250190a63068207679c61f1dea2677639324a4cdf3115940c"
+    },
+    "questions:projects": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/QUESTIONS.md",
+      "sha256": "e7c45c7585f279589f1722b152a1a74c5412507b9e19926140deffd14d6b5b8e"
+    },
+    "design": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/DESIGN.md",
+      "sha256": "ab770e44f3c48c5a1658c40d84519e227f147dfac6ca4c0b6adc81cf3c363b7f"
+    },
+    "ux": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/ux.md",
+      "sha256": "1c928e842ab98616a3dd124bb3396c6e75019be357f106590bc54b4585c2afc1"
+    },
+    "prototype": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/prototype.html",
+      "sha256": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee"
+    },
+    "repo-instructions": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/AGENTS.md",
+      "sha256": "1845ca03e935a008c4976c80ede6a5df49280ffdfcc5cfe9a19c9932cb06bb5f"
+    },
+    "server-contract": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/server.mjs",
+      "sha256": "66a18a14c464000a8b3f86abc603cd9a1c04683a12ab1c3303a2a780482fc1e6"
+    },
+    "app-entry": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/index.html",
+      "sha256": "df2ff6aa8a91cb479bbfccaaed45322489a6ff80ccaa7c4bb3c7c6f4ca56e8aa"
+    },
+    "native-checks": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source/package.json",
+      "sha256": "235f362b49114d373c4ddc9eb6075c42a4196ac871870396814b899c4e5d4f68"
+    }
+  },
+  "files": {
+    ".gitignore": {
+      "index": {
+        "mode": "100644",
+        "oid": "b9470778764f72c5257a3361590d2994547f90e1"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+        "executable": false
+      }
+    },
+    "AGENTS.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "51543b009118702e595f637e889d252db639cbbb"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "1845ca03e935a008c4976c80ede6a5df49280ffdfcc5cfe9a19c9932cb06bb5f",
+        "executable": false
+      }
+    },
+    "DESIGN.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "e00659cdd066ea9ee8919eaf14418743e12101fa"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "ab770e44f3c48c5a1658c40d84519e227f147dfac6ca4c0b6adc81cf3c363b7f",
+        "executable": false
+      }
+    },
+    "QUESTIONS.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "3b9c645e06a23a2a4775ff2d4c27b339079f099a"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "e7c45c7585f279589f1722b152a1a74c5412507b9e19926140deffd14d6b5b8e",
+        "executable": false
+      }
+    },
+    "index.html": {
+      "index": {
+        "mode": "100644",
+        "oid": "4d001aff34768c24ad62393f5781781bb0fd5c6f"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "df2ff6aa8a91cb479bbfccaaed45322489a6ff80ccaa7c4bb3c7c6f4ca56e8aa",
+        "executable": false
+      }
+    },
+    "package.json": {
+      "index": {
+        "mode": "100644",
+        "oid": "1086adfa1a62aafc7a8a55b338991a011e08c708"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "235f362b49114d373c4ddc9eb6075c42a4196ac871870396814b899c4e5d4f68",
+        "executable": false
+      }
+    },
+    "prototype.html": {
+      "index": {
+        "mode": "100644",
+        "oid": "40cbac50b4235f4ba5978c7fac472f16dff2e7ec"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee",
+        "executable": false
+      }
+    },
+    "server.mjs": {
+      "index": {
+        "mode": "100644",
+        "oid": "9904fb936543312f153b00a80d3bd3ebcb0b13ee"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "66a18a14c464000a8b3f86abc603cd9a1c04683a12ab1c3303a2a780482fc1e6",
+        "executable": false
+      }
+    },
+    "spec.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "388b42cdf9d0f5ef47ea1a5fd7d2a28782ca7edf"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "c407aad055955dd250190a63068207679c61f1dea2677639324a4cdf3115940c",
+        "executable": false
+      }
+    },
+    "src/api.js": {
+      "index": {
+        "mode": "100644",
+        "oid": "6e6c1dfee130a5b620933d1d669d0a2084591a1d"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "7b5232af77b6d8bdf24bfb9cd88031dae2761d1d3c2473e12bd978ff26f4fad0",
+        "executable": false
+      }
+    },
+    "src/app.js": {
+      "index": {
+        "mode": "100644",
+        "oid": "adf46076d116d68f00878c4d53bfc8b188c008c2"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "22160f5c1d0764a754e8eb375679513a66a0c5594b98943910cdf3fefedad8e2",
+        "executable": false
+      }
+    },
+    "src/theme.css": {
+      "index": {
+        "mode": "100644",
+        "oid": "b2be4a35c15cbdc8f6a2522abf438f473ffae596"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "157175df2d9c9aeeb550e426f80c1790439f5cdb8befd2406015bf6c87c6389e",
+        "executable": false
+      }
+    },
+    "src/ui.js": {
+      "index": {
+        "mode": "100644",
+        "oid": "99e8e1119bef56c16ba79b97d02fcc556660e9ec"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "8c5f2f7af73596d6471bb1d8f907e65d972eff90110e8dfc4e32a2c6ffb24cfa",
+        "executable": false
+      }
+    },
+    "tests/api.test.mjs": {
+      "index": {
+        "mode": "100644",
+        "oid": "79e5287665e26a218df7b3075c99e94f375fa9e8"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "dbdb223e6022936ada468c529f5367fbedcd6c594cf825f645f2e10bc461b83b",
+        "executable": false
+      }
+    },
+    "tests/app.test.mjs": {
+      "index": null,
+      "working": {
+        "kind": "file",
+        "sha256": "31714c2c702aac7b87226e81ee04187e1310d69c880a839b7573600007d790b3",
+        "executable": false
+      }
+    },
+    "tests/helpers/dom.mjs": {
+      "index": null,
+      "working": {
+        "kind": "file",
+        "sha256": "b2e765e505089090f1a04f26031b1712aa38ce4fdb5f468af4f8e077c9d5462e",
+        "executable": false
+      }
+    },
+    "tests/http.test.mjs": {
+      "index": null,
+      "working": {
+        "kind": "file",
+        "sha256": "f3fa7e290801fd89270eaaad6daebe4c60150b0a4bcf5e09c87907202cc06492",
+        "executable": false
+      }
+    },
+    "user-draft.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "87dfc8995b2f4b6e06194a5423e902b35342c7e4"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "ec6c7a1fa655c60320a83e35b7a86c77a59bf1618869ef249860654a573a6428",
+        "executable": false
+      }
+    },
+    "ux.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "54e9ecf27ee40eaf22ba7115279e0b19d97e46cb"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "1c928e842ab98616a3dd124bb3396c6e75019be357f106590bc54b4585c2afc1",
+        "executable": false
+      }
+    }
+  },
+  "dirty": [
+    "src/app.js",
+    "src/theme.css",
+    "tests/app.test.mjs",
+    "tests/helpers/dom.mjs",
+    "tests/http.test.mjs",
+    "user-draft.md"
+  ],
+  "coverage": {
+    "handoffs": [
+      {
+        "source": "spec:projects",
+        "questions_source": "questions:projects",
+        "spec": {
+          "metadata": {
+            "id": "spec:projects",
+            "revision": "1",
+            "handoff_version": "1",
+            "status": "blocked",
+            "questions": "./QUESTIONS.md"
+          },
+          "acs": [
+            {
+              "AC ID": "AC-1",
+              "근거": "요청",
+              "사전 조건": "목록 로드",
+              "행동": "Status 선택",
+              "기대 관찰 결과": "실제 해당 상태 결과와 개수 표시",
+              "관련 화면·흐름·API": "GET /api/projects",
+              "확인 방법·미결 참조": "실제 요청/표시 결과 대조"
+            },
+            {
+              "AC ID": "AC-2",
+              "근거": "요청",
+              "사전 조건": "선택한 프로젝트",
+              "행동": "필터로 숨겼다가 복귀",
+              "기대 관찰 결과": "선택 이름 유지·선택 표시 복구, 성공 빈 상태 구분",
+              "관련 화면·흐름·API": "목록·선택 패널",
+              "확인 방법·미결 참조": "선택 유지와 빈 성공 대조"
+            },
+            {
+              "AC ID": "AC-3",
+              "근거": "요청·ux.md",
+              "사전 조건": "현재 필터와 선택",
+              "행동": "오류 후 Retry, 필터 빠른 변경",
+              "기대 관찰 결과": "현재 필터로 회복·선택 유지, 과거 응답/오류는 최신 결과를 덮지 않음",
+              "관련 화면·흐름·API": "오류·Retry·API owner",
+              "확인 방법·미결 참조": "실패/회복/응답 경합 검증"
+            },
+            {
+              "AC ID": "AC-4",
+              "근거": "요청",
+              "사전 조건": "관리자와 보관 대상",
+              "행동": "보관 실행",
+              "기대 관찰 결과": "확정될 권한/확인/API 계약에 따라 실제 보관 결과 반영",
+              "관련 화면·흐름·API": "보관 UI/API Q-001",
+              "확인 방법·미결 참조": "Q-001; 미정 계약 구현을 창작하지 않음"
+            }
+          ]
+        },
+        "questions": {
+          "metadata": {
+            "id": "questions:projects",
+            "revision": "1",
+            "handoff_version": "1",
+            "spec": "./SPEC.md"
+          },
+          "questions": [
+            {
+              "ID": "Q-001",
+              "종류": "계약·결정 필요",
+              "질문 요약": "보관 endpoint·권한·확인 정책은 무엇인가",
+              "영향 절·AC·범위": "AC-4",
+              "미해결 시 차단": "yes",
+              "상태": "deferred"
+            }
+          ]
+        },
+        "active": [
+          {
+            "id": "Q-001",
+            "acs": [
+              "AC-4"
+            ],
+            "state": "deferred"
+          }
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "digest": "471f02ee1222551063cf5515b8a74b9e08c8665988c44ee51b34d7af9024b8cd"
+}

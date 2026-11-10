@@ -1,0 +1,23 @@
+Prior target: 70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44
+Fresh baseline: 16b157c6b30d67a952bf30ceddd8538a7a64e7c0ef520e6e507f8b320a5f6adb
+HEAD: old=282c7ddc01d0f5fad56b358f2d53dde0d30413ed current=282c7ddc01d0f5fad56b358f2d53dde0d30413ed
+SPEC SHA256: old=f5ceaaa4b2cf85b4f02de17a22ae26407b4af2392006595c3107a2b8797f7a7e current=779380dfe0405888dc30c2085f2d56c926494a065b75da33526be141fbf1b4af
+SPEC revision: old=2 current=2
+Current bytes, not unchanged revision/complete note, govern. Do not reuse prior browser/native passes at this changed digest.
+Handoff manifest ACs: ['AC-1', 'AC-2']; missing AC-3 restored in new inputs; all original ACs remain required.
+Input sources changed relative to previous target:
+  spec: 779380dfe0405888dc30c2085f2d56c926494a065b75da33526be141fbf1b4af
+  continuation-request: f696b8a29d125fbd3121378e9e311d3f7a42ac040cbf2a7cbb7300e0b90be7e1
+Current source drift relative to previous target:
+  contract/SPEC.md: {"index": {"mode": "100644", "oid": "a8bdbc9f0a18a40a7fceeff6b94a73701dbe01d7"}, "working": {"kind": "file", "sha256": "779380dfe0405888dc30c2085f2d56c926494a065b75da33526be141fbf1b4af", "executable": false}}
+  src/theme.css: {"index": {"mode": "100644", "oid": "eb02d46cfa9948ac50c283941e328130948f41af"}, "working": {"kind": "file", "sha256": "46923f8568fb2af57c126530763fa3457c502e577ef7fa05da9bf0f4df1338bb", "executable": false}}
+Before editing, semantic AC comparison:
+AC-1: original condition/action/outcome/interfaces/verification retained; App StatusField + useProjects(status) + rows.length + api.projects route + original CSS remain adequate. Do not change.
+AC-2: current outcome adds exact text No matching projects for this status.; current App has No projects found, so replace that text only. Independent selected object, id mapping, persistent SelectedPanel and empty count already meet implementation contract; browser verification unavailable.
+AC-3: canonical row is unchanged and is not excluded. current flag guards then/catch/finally; pending masks prior result before new effect; ProblemPanel invokes current reload. Preserve these code paths; current native API test can recheck actual HTTP failure/recovery but cannot reverify UI races.
+Q-001/Q-002 remain open nonblocking in current canonical QUESTIONS. Existing initialization all/no automatic selection is observed in App, not a newly invented policy.
+Native checks will run anew against the new verification target. Browser status/design/selection/recovery-races will be not_run under explicit user constraint.
+Canonical current ACs:
+{"AC ID": "AC-1", "관련 화면·흐름·API": "§3.1~3.2 Status 조회, §4 Status·목록, §5.1~5.2 GET", "근거": "SRC-001:2; SRC-002:2; 디자인 SRC-003/005", "기대 관찰 결과": "네 선택 항목이 보이며 query는 각각 all/active/archived/paused. 최신 성공 배열의 실제 이름·상태와 length를 표시. 고정 이미지 데이터·고정 개수로 대체하지 않음", "사전 조건": "프로젝트 목록과 Status가 있고 GET 응답을 제어할 수 있음", "행동": "All, Active, Archived, Paused를 각각 명시 선택하고 각 요청을 완료", "확인 방법·미결 참조": "구현 후 요청 query와 서로 다른 응답 배열을 대조; 0/1/여러 항목 개수 확인. label/focus, 파란 accent, 700/701px 배치 확인. 배포 확인 Q-001; 초기 관례 Q-002"}
+{"AC ID": "AC-2", "관련 화면·흐름·API": "§3.2 행 선택·필터 밖 선택·성공 empty, §4 선택 패널, §5.1 선택/§5.2 id/name", "근거": "SRC-001:3; SRC-004:1; 데이터 SRC-002:2", "기대 관찰 결과": "선택 직후 패널에 P.name. P가 목록에 없어도 패널 이름·선택 객체 유지. []는 결과 없음과 0이며 오류가 아님. P가 같은 id로 재등장하면 해당 행 선택 표시 복구; 빈 성공 문구는 정확히 No matching projects for this status. 를 표시한다", "사전 조건": "P를 포함한 성공 목록이 있고 사용자가 P를 선택", "행동": "P 선택 후 P가 없는 필터, 200+[] 필터, P가 돌아오는 필터를 순서대로 조회", "확인 방법·미결 참조": "구현 후 배열 순서·개수를 바꾸어 id 매칭 확인, 빈 성공/로딩 중 패널 유지 확인. 이미지의 주황 대신 시스템 accent 확인. 초기 관례 Q-002"}
+{"AC ID": "AC-3", "관련 화면·흐름·API": "§3.2 실패·Retry·응답 역전, §4 상태/선택, §5.1/5.3", "근거": "SRC-001:4; SRC-002:2; SRC-004:1", "기대 관찰 결과": "실패는 성공 empty와 다른 오류/Retry. Retry query는 실행 시점의 현재 필터. loading·error·Retry에도 P 유지. 최신 B만 성공/실패를 화면에 반영하고 A는 목록·개수·오류·loading 종료를 바꾸지 않음. 동일 필터 Retry의 이전 요청에도 동일 규칙", "사전 조건": "P 선택 상태에서 필터 요청과 완료 순서를 제어할 수 있음", "행동": "현재 요청을 503으로 실패시켜 Retry; A 시작 뒤 새 필터 B 시작. 이전 A의 성공·실패·finally를 B 대기/완료 중 각각 늦게 전달", "확인 방법·미결 참조": "구현 후 200+[]와 503 비교, Retry query/선택 확인. A성공→B실패, A실패→B성공의 역순 완료와 B 대기 중 A finally를 제어해 최신 상태 확인. 실제 앱 실행은 미수행; 배포 Q-001"}

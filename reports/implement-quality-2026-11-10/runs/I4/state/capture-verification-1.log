@@ -1,0 +1,652 @@
+{
+  "schema_version": 1,
+  "root": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+  "head": "282c7ddc01d0f5fad56b358f2d53dde0d30413ed",
+  "inputs": {
+    "path": "/private/tmp/skill-quality-20261110/implement/runs/I4-resume/state/inputs.json",
+    "sha256": "1e0a8f138f68b49a16ac7da0649340aa7885d97a826efb4014a09ac3b9a2a921",
+    "data": {
+      "schema_version": 1,
+      "task": "Resume current AC-2 exact empty-success message while preserving AC-1/AC-3 and user work",
+      "surface": "ui",
+      "scope": [
+        "src",
+        "tests"
+      ],
+      "preserve": [
+        "server.mjs",
+        "package.json",
+        "package-lock.json",
+        "user-draft.md",
+        "AGENTS.md",
+        "DESIGN.md",
+        "ux.md",
+        "prototype.html",
+        "sources",
+        "contract",
+        "index.html",
+        "tsconfig.json",
+        "src/theme.css",
+        "src/ui.tsx",
+        "src/useProjects.ts",
+        "tests/api.test.ts",
+        "src/api.ts",
+        "src/types.ts",
+        "src/main.tsx"
+      ],
+      "sources": [
+        {
+          "id": "spec",
+          "path": "contract/SPEC.md"
+        },
+        {
+          "id": "questions",
+          "path": "contract/QUESTIONS.md"
+        },
+        {
+          "id": "original-request",
+          "path": "sources/request.md"
+        },
+        {
+          "id": "api-contract",
+          "path": "sources/api.md"
+        },
+        {
+          "id": "design",
+          "path": "DESIGN.md"
+        },
+        {
+          "id": "source-design",
+          "path": "sources/DESIGN.md"
+        },
+        {
+          "id": "ux",
+          "path": "ux.md"
+        },
+        {
+          "id": "source-ux",
+          "path": "sources/ux.md"
+        },
+        {
+          "id": "selected-reference",
+          "path": "sources/selected-reference.png"
+        },
+        {
+          "id": "prototype",
+          "path": "prototype.html"
+        },
+        {
+          "id": "project-instructions",
+          "path": "AGENTS.md"
+        },
+        {
+          "id": "package",
+          "path": "package.json"
+        },
+        {
+          "id": "lockfile",
+          "path": "package-lock.json"
+        },
+        {
+          "id": "tsconfig",
+          "path": "tsconfig.json"
+        },
+        {
+          "id": "continuation-request",
+          "path": "/private/tmp/skill-quality-20261110/implement/runs/I4-resume/prompt.txt",
+          "locator": "Current continuation instruction, browser unavailable; preserve USER NOTE I4 and draft"
+        }
+      ],
+      "requirements": [
+        {
+          "id": "AC-1",
+          "source": "spec",
+          "description": "Four labelled statuses send real query and show returned names/statuses/count; system tokens, focus, 700/701 layout",
+          "disposition": "required",
+          "checks": [
+            "typecheck",
+            "tests",
+            "build",
+            "browser-status",
+            "browser-design",
+            "source-comparison"
+          ]
+        },
+        {
+          "id": "AC-2",
+          "source": "spec",
+          "description": "Selected project object/name survives filter, loading and empty and restores by id; exact empty success text: No matching projects for this status.",
+          "disposition": "required",
+          "checks": [
+            "typecheck",
+            "tests",
+            "build",
+            "browser-selection",
+            "source-comparison"
+          ]
+        },
+        {
+          "id": "AC-3",
+          "source": "spec",
+          "description": "Error/Retry differs from empty, uses current filter, preserves selection and rejects stale success/error/finally",
+          "disposition": "required",
+          "checks": [
+            "typecheck",
+            "tests",
+            "build",
+            "browser-recovery-races",
+            "source-comparison"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "id": "typecheck",
+          "kind": "command",
+          "required": true,
+          "description": "Native TypeScript validation"
+        },
+        {
+          "id": "tests",
+          "kind": "command",
+          "required": true,
+          "description": "Native API contract tests"
+        },
+        {
+          "id": "build",
+          "kind": "command",
+          "required": true,
+          "description": "Native production build"
+        },
+        {
+          "id": "browser-status",
+          "kind": "browser",
+          "required": true,
+          "description": "Actual app All/Active/Archived/Paused API queries, response rows/counts 3/2/1/0"
+        },
+        {
+          "id": "browser-design",
+          "kind": "browser",
+          "required": true,
+          "description": "Actual app labelled control, keyboard focus, blue selected border and 700/701 responsive columns"
+        },
+        {
+          "id": "browser-selection",
+          "kind": "browser",
+          "required": true,
+          "description": "Select project, hide via other filter, loading, empty, return and see same id selected"
+        },
+        {
+          "id": "browser-recovery-races",
+          "kind": "browser",
+          "required": true,
+          "description": "Actual server failure/recovery with current-filter Retry, selection preservation and delayed stale success/error/finally ignored"
+        },
+        {
+          "id": "source-comparison",
+          "kind": "static",
+          "required": true,
+          "description": "Current AC-1/2/3 semantic trace, exact AC-2 copy and one-replacement diff; preserve user note, draft, source documents, HEAD/index and prior evidence"
+        }
+      ],
+      "editable_dirty": [
+        "src/App.tsx"
+      ],
+      "source_roots": [
+        "/private/tmp/skill-quality-20261110/implement/runs/I4-resume"
+      ]
+    }
+  },
+  "sources": {
+    "spec": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/contract/SPEC.md",
+      "sha256": "779380dfe0405888dc30c2085f2d56c926494a065b75da33526be141fbf1b4af"
+    },
+    "questions": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/contract/QUESTIONS.md",
+      "sha256": "3f9bc0504360bf46416faa86562e56614a5731d933e6ceb0e237ebf6d2ad5846"
+    },
+    "original-request": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/sources/request.md",
+      "sha256": "61d70c93270372cef43fd7f5ea5c24935d739fc0c46016a252d2e92c61c94ae4"
+    },
+    "api-contract": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/sources/api.md",
+      "sha256": "e88847fcef6fb5f83946cae17b976b386dc2c00d2594230baac313e354efc549"
+    },
+    "design": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/DESIGN.md",
+      "sha256": "c90846b7e49e374d28aa89eb0142eda04ce61e4cc0a3e6b8475ab17d48d4c003"
+    },
+    "source-design": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/sources/DESIGN.md",
+      "sha256": "ea81e69351d02ebea69f9f387aa000c258e4b03ad1c236bd67f42436a8c11b62"
+    },
+    "ux": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/ux.md",
+      "sha256": "e465921736766a99696c3c722547e47da4e28e6183616a11800540d08710d52c"
+    },
+    "source-ux": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/sources/ux.md",
+      "sha256": "ef0a3f407368c3a26a8a52ad010e786865994e975e2e1ed235d22cae7e05dfe0"
+    },
+    "selected-reference": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/sources/selected-reference.png",
+      "sha256": "f9602e1f19caf80a871fb91fb2ea8bb56bae31640e8c656300c6eab3ebdd20fe"
+    },
+    "prototype": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/prototype.html",
+      "sha256": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee"
+    },
+    "project-instructions": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/AGENTS.md",
+      "sha256": "34bd5f4912a5cfeedec9705fb8ec7927bdd262dbd44e40e553667391d98a42ec"
+    },
+    "package": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/package.json",
+      "sha256": "4fd6f6d92787c12f54ffa58850d3c10943ce0ac8c6591fe3b02056c8667b596d"
+    },
+    "lockfile": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/package-lock.json",
+      "sha256": "ba0ab34bddc4fe42ed74fb712f8c0e5907761ac648d798728263efeae55a3789"
+    },
+    "tsconfig": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source/tsconfig.json",
+      "sha256": "cbff16fd74868dfdab49555e07d5bc0e988b5eebb4bcf19fd278092738ad96ab"
+    },
+    "continuation-request": {
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I4-resume/prompt.txt",
+      "sha256": "f696b8a29d125fbd3121378e9e311d3f7a42ac040cbf2a7cbb7300e0b90be7e1"
+    }
+  },
+  "files": {
+    ".gitignore": {
+      "index": {
+        "mode": "100644",
+        "oid": "b9470778764f72c5257a3361590d2994547f90e1"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+        "executable": false
+      }
+    },
+    "AGENTS.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "08a43d0489f85e1ec876a77070a187b4bdb17ed2"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "34bd5f4912a5cfeedec9705fb8ec7927bdd262dbd44e40e553667391d98a42ec",
+        "executable": false
+      }
+    },
+    "DESIGN.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "b3b4f1cfc97ea0ba581d748c86d9112d4fb845e2"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "c90846b7e49e374d28aa89eb0142eda04ce61e4cc0a3e6b8475ab17d48d4c003",
+        "executable": false
+      }
+    },
+    "contract/QUESTIONS.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "453d7507e6bfefae67a88c94bd4f36644e8c1050"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "3f9bc0504360bf46416faa86562e56614a5731d933e6ceb0e237ebf6d2ad5846",
+        "executable": false
+      }
+    },
+    "contract/SPEC.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "a8bdbc9f0a18a40a7fceeff6b94a73701dbe01d7"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "779380dfe0405888dc30c2085f2d56c926494a065b75da33526be141fbf1b4af",
+        "executable": false
+      }
+    },
+    "contract/spec-check.json": {
+      "index": {
+        "mode": "100644",
+        "oid": "ad2be4b238114d343dd020ea1d37aa403457f097"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "76c68139c43742efb23c55e399bda92e8434d8dfdadb49d6f9150783b19fe670",
+        "executable": false
+      }
+    },
+    "index.html": {
+      "index": {
+        "mode": "100644",
+        "oid": "52cc450608542203d090ddf97bbaafde7d6888b9"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "2086ad6ce95678d25daf1ef5babd519df4dc98372ca0313744f185c1e6b1507f",
+        "executable": false
+      }
+    },
+    "node_modules": {
+      "index": {
+        "mode": "120000",
+        "oid": "b45750b03ebf730b2027b987dd1847c9263012d8"
+      },
+      "working": {
+        "kind": "symlink",
+        "sha256": "48f86148ed3d26204ee546c5b075bcfeda15cdc684fbe74eb0cd519401b3f063"
+      }
+    },
+    "package-lock.json": {
+      "index": {
+        "mode": "100644",
+        "oid": "39f638c27742031d3ddc36c43514abcc52b44576"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "ba0ab34bddc4fe42ed74fb712f8c0e5907761ac648d798728263efeae55a3789",
+        "executable": false
+      }
+    },
+    "package.json": {
+      "index": {
+        "mode": "100644",
+        "oid": "59a7b59337a7ace425bffb2306860b289cbfa37a"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "4fd6f6d92787c12f54ffa58850d3c10943ce0ac8c6591fe3b02056c8667b596d",
+        "executable": false
+      }
+    },
+    "prototype.html": {
+      "index": {
+        "mode": "100644",
+        "oid": "40cbac50b4235f4ba5978c7fac472f16dff2e7ec"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee",
+        "executable": false
+      }
+    },
+    "server.mjs": {
+      "index": {
+        "mode": "100644",
+        "oid": "6125de38658e4c0e826aa7dd138e2a1a23492cd4"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "d9649141cf41faccf564188c8eba25f05ce951f9a9ef6bec847b7ec1db234147",
+        "executable": false
+      }
+    },
+    "sources/DESIGN.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "a3bc3a884fc6a3fee5adf162d4c23a394fda98a6"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "ea81e69351d02ebea69f9f387aa000c258e4b03ad1c236bd67f42436a8c11b62",
+        "executable": false
+      }
+    },
+    "sources/api.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "056a18f3922d48215d66c386d1acd45d22258837"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "e88847fcef6fb5f83946cae17b976b386dc2c00d2594230baac313e354efc549",
+        "executable": false
+      }
+    },
+    "sources/request.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "ea83c1705315bcf3e4ade38698c6b89b1f33cebf"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "61d70c93270372cef43fd7f5ea5c24935d739fc0c46016a252d2e92c61c94ae4",
+        "executable": false
+      }
+    },
+    "sources/selected-reference.png": {
+      "index": {
+        "mode": "100644",
+        "oid": "50af29ff72636348f12cf869cafde5dc4d231de3"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "f9602e1f19caf80a871fb91fb2ea8bb56bae31640e8c656300c6eab3ebdd20fe",
+        "executable": false
+      }
+    },
+    "sources/ux.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "06f856b98479e50325cf278944d2a723abc590c2"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "ef0a3f407368c3a26a8a52ad010e786865994e975e2e1ed235d22cae7e05dfe0",
+        "executable": false
+      }
+    },
+    "src/App.tsx": {
+      "index": {
+        "mode": "100644",
+        "oid": "7affc8ee00788e46f7f0dcbc50d5c16e2c126b28"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "08067aef8807a9dea0a5e884f124c58e3387b1255421845afd1985ddee2f2f1c",
+        "executable": false
+      }
+    },
+    "src/api.ts": {
+      "index": {
+        "mode": "100644",
+        "oid": "414eada6f51e13cad1cc424fea67442a20d99c2d"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "d38cc7028c8041e2d6484a04e1e3726909ea31a967c266bf2cc45b35c4369024",
+        "executable": false
+      }
+    },
+    "src/main.tsx": {
+      "index": {
+        "mode": "100644",
+        "oid": "d0c0d8e50bdad8aec16138364048e7baf79ecd5f"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "fed00c9c1fede5e44a5f7e845820e0463304aedfe8dda48b5b34752f3a02fd8a",
+        "executable": false
+      }
+    },
+    "src/theme.css": {
+      "index": {
+        "mode": "100644",
+        "oid": "eb02d46cfa9948ac50c283941e328130948f41af"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "46923f8568fb2af57c126530763fa3457c502e577ef7fa05da9bf0f4df1338bb",
+        "executable": false
+      }
+    },
+    "src/types.ts": {
+      "index": {
+        "mode": "100644",
+        "oid": "8a82f523e8e49365dd012d6ef584aa8be28a921f"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "65d2aaee97fb0081ae0c2473ec764d5d8b097c82f9382af595331951bd354556",
+        "executable": false
+      }
+    },
+    "src/ui.tsx": {
+      "index": {
+        "mode": "100644",
+        "oid": "3e6d95dbc13c0d0921a178f9cce44ccdb37e549e"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "6960dd0e0924f14b71661ead3792cb974ef6ac37c91e5d243b21464d0df50c33",
+        "executable": false
+      }
+    },
+    "src/useProjects.ts": {
+      "index": {
+        "mode": "100644",
+        "oid": "bcb7375801880f5d49c7f8d3bb25c0fce81b343f"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "e2d7053453d3f8fe05f0822413748425016b8ae2d6ea89c43775796676ee5892",
+        "executable": false
+      }
+    },
+    "tests/api.test.ts": {
+      "index": {
+        "mode": "100644",
+        "oid": "5dd6d5d1f810899efa107216de9473349266fc6c"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "460432b8a5412ef762e01483467bab79c6b2e4222c1d7e635dc54ddbf68180e4",
+        "executable": false
+      }
+    },
+    "tsconfig.json": {
+      "index": {
+        "mode": "100644",
+        "oid": "1f771b71886d2ea50d68b37a4a6e20f7eac06f25"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "cbff16fd74868dfdab49555e07d5bc0e988b5eebb4bcf19fd278092738ad96ab",
+        "executable": false
+      }
+    },
+    "user-draft.md": {
+      "index": null,
+      "working": {
+        "kind": "file",
+        "sha256": "1074a4c927a4052a5c6bfd33aad97aa37656d7af98e563dff5adcb0ebc68a507",
+        "executable": false
+      }
+    },
+    "ux.md": {
+      "index": {
+        "mode": "100644",
+        "oid": "c5234c88e162651259868f7b386df239cb31f1e5"
+      },
+      "working": {
+        "kind": "file",
+        "sha256": "e465921736766a99696c3c722547e47da4e28e6183616a11800540d08710d52c",
+        "executable": false
+      }
+    }
+  },
+  "dirty": [
+    "contract/SPEC.md",
+    "src/App.tsx",
+    "src/theme.css",
+    "src/ui.tsx",
+    "src/useProjects.ts",
+    "tests/api.test.ts",
+    "user-draft.md"
+  ],
+  "coverage": {
+    "handoffs": [
+      {
+        "source": "spec",
+        "questions_source": "questions",
+        "spec": {
+          "metadata": {
+            "id": "spec:project-status-selection",
+            "revision": "2",
+            "handoff_version": "1",
+            "status": "ready",
+            "questions": "./QUESTIONS.md"
+          },
+          "acs": [
+            {
+              "AC ID": "AC-1",
+              "근거": "SRC-001:2; SRC-002:2; 디자인 SRC-003/005",
+              "사전 조건": "프로젝트 목록과 Status가 있고 GET 응답을 제어할 수 있음",
+              "행동": "All, Active, Archived, Paused를 각각 명시 선택하고 각 요청을 완료",
+              "기대 관찰 결과": "네 선택 항목이 보이며 query는 각각 all/active/archived/paused. 최신 성공 배열의 실제 이름·상태와 length를 표시. 고정 이미지 데이터·고정 개수로 대체하지 않음",
+              "관련 화면·흐름·API": "§3.1~3.2 Status 조회, §4 Status·목록, §5.1~5.2 GET",
+              "확인 방법·미결 참조": "구현 후 요청 query와 서로 다른 응답 배열을 대조; 0/1/여러 항목 개수 확인. label/focus, 파란 accent, 700/701px 배치 확인. 배포 확인 Q-001; 초기 관례 Q-002"
+            },
+            {
+              "AC ID": "AC-2",
+              "근거": "SRC-001:3; SRC-004:1; 데이터 SRC-002:2",
+              "사전 조건": "P를 포함한 성공 목록이 있고 사용자가 P를 선택",
+              "행동": "P 선택 후 P가 없는 필터, 200+[] 필터, P가 돌아오는 필터를 순서대로 조회",
+              "기대 관찰 결과": "선택 직후 패널에 P.name. P가 목록에 없어도 패널 이름·선택 객체 유지. []는 결과 없음과 0이며 오류가 아님. P가 같은 id로 재등장하면 해당 행 선택 표시 복구; 빈 성공 문구는 정확히 No matching projects for this status. 를 표시한다",
+              "관련 화면·흐름·API": "§3.2 행 선택·필터 밖 선택·성공 empty, §4 선택 패널, §5.1 선택/§5.2 id/name",
+              "확인 방법·미결 참조": "구현 후 배열 순서·개수를 바꾸어 id 매칭 확인, 빈 성공/로딩 중 패널 유지 확인. 이미지의 주황 대신 시스템 accent 확인. 초기 관례 Q-002"
+            },
+            {
+              "AC ID": "AC-3",
+              "근거": "SRC-001:4; SRC-002:2; SRC-004:1",
+              "사전 조건": "P 선택 상태에서 필터 요청과 완료 순서를 제어할 수 있음",
+              "행동": "현재 요청을 503으로 실패시켜 Retry; A 시작 뒤 새 필터 B 시작. 이전 A의 성공·실패·finally를 B 대기/완료 중 각각 늦게 전달",
+              "기대 관찰 결과": "실패는 성공 empty와 다른 오류/Retry. Retry query는 실행 시점의 현재 필터. loading·error·Retry에도 P 유지. 최신 B만 성공/실패를 화면에 반영하고 A는 목록·개수·오류·loading 종료를 바꾸지 않음. 동일 필터 Retry의 이전 요청에도 동일 규칙",
+              "관련 화면·흐름·API": "§3.2 실패·Retry·응답 역전, §4 상태/선택, §5.1/5.3",
+              "확인 방법·미결 참조": "구현 후 200+[]와 503 비교, Retry query/선택 확인. A성공→B실패, A실패→B성공의 역순 완료와 B 대기 중 A finally를 제어해 최신 상태 확인. 실제 앱 실행은 미수행; 배포 Q-001"
+            }
+          ]
+        },
+        "questions": {
+          "metadata": {
+            "id": "questions:project-status-selection",
+            "revision": "1",
+            "handoff_version": "1",
+            "spec": "./SPEC.md"
+          },
+          "questions": [
+            {
+              "ID": "Q-001",
+              "종류": "검증 미완료",
+              "질문 요약": "Target contract v1이 연결할 실제 환경에 배포되어 있는가?",
+              "영향 절·AC·범위": "§5, §6.2; AC-1, AC-2, AC-3의 실서버 통합 검증",
+              "미해결 시 차단": "no",
+              "상태": "open"
+            },
+            {
+              "ID": "Q-002",
+              "종류": "근거 부족",
+              "질문 요약": "기존 화면 진입 시 초기 Status·초기 요청·미선택 패널은 어떤 관례를 사용하는가?",
+              "영향 절·AC·범위": "§2.2, §4, §5.1; AC-1, AC-2의 최초 진입 통합",
+              "미해결 시 차단": "no",
+              "상태": "open"
+            }
+          ]
+        },
+        "active": []
+      }
+    ],
+    "errors": []
+  },
+  "digest": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793"
+}

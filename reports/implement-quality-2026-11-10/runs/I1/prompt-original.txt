@@ -1,0 +1,5 @@
+Use $implement at /private/tmp/skill-quality-20261110/implement/runs/I1-react/implement/SKILL.md.
+기존 React/TypeScript 앱 /private/tmp/skill-quality-20261110/implement/runs/I1-react/source에 contract/SPEC.md와 contract/QUESTIONS.md의 요구를 구현하세요. 원본 명세와 참조 sources를 읽고 prototype.html, DESIGN.md, ux.md 및 기존 API/query/UI owner를 따르세요.
+이번 요청은 실제 구현입니다. 변경은 src/와 tests/만 허용합니다. 서버·package/lockfiles·입력문서·기존 사용자 draft·설치 스킬·Git HEAD/index는 보존하세요. 의존성은 설치돼 있습니다. 추가 패키지·외부 서비스·mock/응답 대체·앱 내부 상태 주입은 사용하지 마세요.
+상태·증거·판정은 /private/tmp/skill-quality-20261110/implement/runs/I1-react/state에 저장하고 실제 앱을 호스트 브라우저로 확인하세요. 먼저 소스 편집과 native check를 진행한 뒤 브라우저 사용 직전에 부모 에이전트에게 준비됐다고 알리고 사용 슬롯 해제를 기다리세요. 이는 동시 조작 방지를 위한 자원 조정일 뿐 요구나 판정 조건은 바꾸지 않습니다.
+읽기는 source/implement/state/현재 prompt만 허용합니다. 다른 사례/oracles/부모 워크트리/평가·채점 코드·정답은 읽지 마세요. 위임·외부 게시·커밋/푸시는 하지 마세요. 실제 변경·검증·계산된 판정과 한계를 정확히 보고하세요.

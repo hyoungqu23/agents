@@ -1,0 +1,122 @@
+[
+  {
+    "original": "state/current-source-trace.txt",
+    "packaged": "state/current-source-trace.txt.artifact.json",
+    "sha256": "e3bc4a5426d11cd6d4ba4b94fefc483f8c3b87c04f2aae088501cf92d69a00eb",
+    "json_packed": true
+  },
+  {
+    "original": "state/assessment.json",
+    "packaged": "state/assessment.json",
+    "sha256": "1e263c995dfebb0206822e9bc15524b3a8c7a7ac8afa91f7263e65f9d464e20b",
+    "json_packed": false
+  },
+  {
+    "original": "state/result.json",
+    "packaged": "state/result.json",
+    "sha256": "814ec15f6814b769146db1e79b0efe3b9672345274f7169cb5aa7f7efd81dd0d",
+    "json_packed": false
+  },
+  {
+    "original": "state/source-review.txt",
+    "packaged": "state/source-review.txt.artifact.json",
+    "sha256": "4bcdc4df585989024b1db21584709b61cebbddee986510307d4838a67dd9aafb",
+    "json_packed": true
+  },
+  {
+    "original": "state/SUMMARY.md",
+    "packaged": "state/SUMMARY.md",
+    "sha256": "7d3039a8d79385477c8e9734e0880cec5692dd395b179825d058b874fd7e82ac",
+    "json_packed": false
+  },
+  {
+    "original": "state/git-status.txt",
+    "packaged": "state/git-status.txt",
+    "sha256": "854a9ebeecbaa456adbba2969b0521d1d714e61845ce0ddb432436de9f4263c5",
+    "json_packed": false
+  },
+  {
+    "original": "state/runtime-note.txt",
+    "packaged": "state/runtime-note.txt",
+    "sha256": "babb9492176cedfb9bec04d0352220ddca2f20f2c92728820205d2314056c55e",
+    "json_packed": false
+  },
+  {
+    "original": "state/inputs2.json",
+    "packaged": "state/inputs2.json",
+    "sha256": "0993e59f21f7be7aea9da1f0f0af5e50776da6a158752362a66410f08adc2541",
+    "json_packed": false
+  },
+  {
+    "original": "state/verification-capture.txt",
+    "packaged": "state/verification-capture.txt",
+    "sha256": "2875d3326f45031e70382d1dd0f22ed28c2d3972e8661fc5a32390ea486d2735",
+    "json_packed": false
+  },
+  {
+    "original": "state/baseline.json",
+    "packaged": "state/baseline.json",
+    "sha256": "94c09bea3c52d193e5d6d6bcb2c42d4e2ae2cd44a1f948db8fe115505e97099e",
+    "json_packed": false
+  },
+  {
+    "original": "state/inputs.json",
+    "packaged": "state/inputs.json",
+    "sha256": "1386c7a3bc841fea586ce56e3036e7b1f6b004ff5756a07356adb18c12927f86",
+    "json_packed": false
+  },
+  {
+    "original": "state/baseline2-capture.txt",
+    "packaged": "state/baseline2-capture.txt",
+    "sha256": "035cd6e2e3ec08570e5e140664f68e4f77e0400eed735fda3135aef094afcad3",
+    "json_packed": false
+  },
+  {
+    "original": "state/baseline2.json",
+    "packaged": "state/baseline2.json",
+    "sha256": "035cd6e2e3ec08570e5e140664f68e4f77e0400eed735fda3135aef094afcad3",
+    "json_packed": false
+  },
+  {
+    "original": "state/npm-test.txt",
+    "packaged": "state/npm-test.txt.artifact.json",
+    "sha256": "b09cc478f8ea81957e3bd52f02f3d854f52caa51da0685a368d61c3852dff318",
+    "json_packed": true
+  },
+  {
+    "original": "state/implementation.diff",
+    "packaged": "state/implementation.diff.artifact.json",
+    "sha256": "7a11664c1866f2c1b3d2c89691475ff5bda2adb3eb092710440b1c1eb0f94e63",
+    "json_packed": true
+  },
+  {
+    "original": "state/baseline-attempt-note.txt",
+    "packaged": "state/baseline-attempt-note.txt",
+    "sha256": "e41ddd61bb19d2c91c5bb2fa42fe62fe51783bbb613c1549345e16f16fad6244",
+    "json_packed": false
+  },
+  {
+    "original": "state/request.md",
+    "packaged": "state/request.md",
+    "sha256": "9c0f338afc48ae0d869af0918405e4a3b06b5b87c076161c68c0898c3f74a5f2",
+    "json_packed": false
+  },
+  {
+    "original": "state/npm-test-2.txt",
+    "packaged": "state/npm-test-2.txt",
+    "sha256": "ac9508254be6e2e890473bbdd06dbffe745a4b1f0463dca1f730017b9fd80ab5",
+    "json_packed": false
+  },
+  {
+    "original": "state/verification-target.json",
+    "packaged": "state/verification-target.json",
+    "sha256": "2875d3326f45031e70382d1dd0f22ed28c2d3972e8661fc5a32390ea486d2735",
+    "json_packed": false
+  },
+  {
+    "original": "state/pre-edit-coverage.txt",
+    "packaged": "state/pre-edit-coverage.txt",
+    "sha256": "107fa4b47bf2d0e5ab92ae9fd2a4e82c4cc9364f761cdd5ec62aad484bb9e187",
+    "json_packed": false
+  }
+]

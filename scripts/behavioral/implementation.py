@@ -38,6 +38,30 @@ def hashes(root):
 
 
 def requirement_coverage(inputs, report, sources, source):
+    structured = {}
+    for key, row in sources.items():
+        raw = Path(row['path']).read_bytes()
+        try:
+            detected = gate.handoff.is_spec(raw)
+        except UnicodeError:
+            detected = False  # Visual/binary source remains frozen, not a SPEC.
+        if detected:
+            structured[key] = gate.handoff.read_spec(raw)['acs']
+    if structured:
+        records = {r.get('id'): r for r in report.get('requirements', [])}
+        for key, acs in structured.items():
+            for ac in acs:
+                matches = [r for r in inputs['requirements'] if r['source'] == key
+                           and r.get('ac', r['id'].removeprefix(key + ':')) == ac['AC ID']]
+                if len(matches) != 1:
+                    return False
+                requirement = matches[0]
+                expected = 'excluded' if requirement['disposition'] == 'excluded' else 'implemented'
+                if records.get(requirement['id'], {}).get('state') != expected:
+                    return False
+        # assess separately verifies exclusion authority, active Qs and semantics.
+        return all(records.get(r['id'], {}).get('state') == ('excluded' if r['disposition'] == 'excluded' else 'implemented')
+                   for r in inputs['requirements'])
     spec_ids = {key for key, row in sources.items() if Path(row['path']) == source / 'spec.md'}
     records = {r.get('id'): r for r in report.get('requirements', [])}
     for anchor in ('AC-1', 'AC-2', 'AC-3'):

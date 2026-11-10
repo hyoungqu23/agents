@@ -1,0 +1,30 @@
+$ node /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/state/verify-local.mjs
+Execution permission: elevated only to allow the authorized loopback listener after sandbox EPERM.
+SERVER PRINTED http://127.0.0.1:61681/ (PORT=0)
+API all: 200, ["tide","forest","north"]
+API active: 200, ["tide","north"]
+API archived: 200, ["forest"]
+API paused: 200, []
+STATIC http://127.0.0.1:61681/: 200, nonempty
+STATIC http://127.0.0.1:61681/src/app.js: 200, nonempty
+STATIC http://127.0.0.1:61681/src/theme.css: 200, nonempty
+STATIC http://127.0.0.1:61681/src/ui.js: 200, nonempty
+STATIC http://127.0.0.1:61681/src/api.js: 200, nonempty
+App scenarios below execute actual app/api/ui modules with a simulated Node DOM. No browser/layout verification.
+APP REQUEST http://127.0.0.1:61681/api/projects?status=all: 200
+APP REQUEST http://127.0.0.1:61681/api/projects?status=archived: 200
+APP REQUEST http://127.0.0.1:61681/api/projects?status=active: 200
+APP REQUEST http://127.0.0.1:61681/api/projects?status=paused: 200
+PASS real API: filter/count, hidden selection, restored highlight, empty success
+FIXTURE mode fail=true: 200
+APP REQUEST http://127.0.0.1:61681/api/projects?status=archived: 503
+FIXTURE mode fail=false: 200
+APP REQUEST http://127.0.0.1:61681/api/projects?status=archived: 200
+PASS real API: 503 alert distinct from empty, current-filter Retry, retained selection
+APP REQUEST http://127.0.0.1:61681/api/projects?status=archived: 200
+APP REQUEST http://127.0.0.1:61681/api/projects?status=active: 200
+PASS real API: slow active response cannot overwrite newer archived response
+PASS all local integration assertions; no browser was opened
+SERVER stopped
+
+exit_code=0
