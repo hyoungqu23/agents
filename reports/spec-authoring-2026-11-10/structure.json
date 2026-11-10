@@ -1,0 +1,15 @@
+{
+  "structure": "valid",
+  "gaps": [],
+  "limitation": "Record checks do not certify semantic correctness or runtime behavior.",
+  "declared_status": "ready",
+  "active_blockers": [],
+  "ac_ids": [
+    "AC-list",
+    "AC-empty"
+  ],
+  "sources": {
+    "spec": "4acab02b81a79a054988f7590b286b794ee702be98490162bb47b91dca473bab",
+    "questions": "df535eb19ef406ec387663e1fd88eeaebc98536e04939549abfcc42d7069893c"
+  }
+}

@@ -138,3 +138,5 @@ and the remaining human evaluation requirements.
 Resolve the public license and third-party attribution requirements before the first public release.
 
 Build 0.3.1: Require direct frozen SPEC/QUESTIONS coverage, source-bound semantic review and behavior evidence before completion; retain source-backed partial scope and direct inputs.
+
+Product 0.5.0: Add product:spec with bundled SPEC/QUESTIONS templates, source authority and readiness guidance, and a standalone handoff record checker.

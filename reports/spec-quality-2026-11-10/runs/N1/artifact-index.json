@@ -1,0 +1,20 @@
+[
+  {
+    "original": "output/SPEC.md",
+    "packaged": "output/SPEC.md",
+    "sha256": "757a1440b07d9a4f888e8971d05c28216fc1cfd7c6f230f4b7d257a5bfdb0360",
+    "json_packed": false
+  },
+  {
+    "original": "output/QUESTIONS.md",
+    "packaged": "output/QUESTIONS.md",
+    "sha256": "4aab9e2b2d7cca1354a8ebef4042797fd243329a5f200c669b852855caa82e1e",
+    "json_packed": false
+  },
+  {
+    "original": "sources/request.md",
+    "packaged": "sources/request.md",
+    "sha256": "54953956a7ac95ec7725b551f33447fb99246e5b4727c7e9d96a8c946b6d2fdb",
+    "json_packed": false
+  }
+]

@@ -111,3 +111,7 @@ inspect branch meaning, policy fidelity, stale-review handling and generated beh
 
 Recorded checks, real model outputs and limitations are in
 [the flow-spec evaluation report](../../reports/flow-spec-2026-10-12/README.md).
+
+### spec
+
+Use `product:spec` to create or update FE development contracts from requirements, APIs, selected visuals and decisions. It bundles SPEC.md and QUESTIONS.md templates and a structural checker; ready describes document preparation, not implementation authority. Direct inputs work without another plugin.

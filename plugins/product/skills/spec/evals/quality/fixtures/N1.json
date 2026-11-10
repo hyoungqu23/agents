@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "N1",
+  "prompt_template": "Use $spec at {{CANDIDATE_DIR}}/SKILL.md.\n{{CASE_DIR}}/sources/request.md 요청을 수행하세요. output은 {{CASE_DIR}}/output입니다. 읽기는 sources/candidate/현재 prompt만, 쓰기는 output만 허용합니다. 다른 사례/oracles/부모 워크트리/평가 코드·정답을 읽지 마세요. 원문·스킬·Git을 보존하고 외부 게시·브라우저·위임은 하지 마세요. 요청하지 않은 기능을 추가하지 말고 실제로 검토한 범위와 한계를 구분하세요.\n",
+  "files": [
+    {
+      "path": "sources/request.md",
+      "encoding": "utf-8",
+      "content": "완료 항목 숨기기 체크박스가 있는 작은 로컬 목록의 FE 명세를 작성해 주세요.\nFR-local / AC-local ID를 유지합니다. 항목은 [{id:\"a\",label:\"Alpha\",done:false},{id:\"b\",label:\"Beta\",done:true},{id:\"c\",label:\"Gamma\",done:false}]입니다. 이 배열은 전달받은 읽기 전용 props이고 별도 서버/API·권한·저장·로딩·오류 단계가 없습니다.\n첫 진입 체크박스는 해제 상태이며 모든 항목을 원래 순서로 표시하고 현재 표시 개수를 보여 줍니다. 레이블은 정확히 '완료 항목 숨기기'입니다. 체크하면 done=true인 항목만 숨기고 개수는 보이는 항목 수입니다. 체크를 풀면 원래 순서를 복구합니다. 새로고침하면 해제 상태로 돌아오며 저장소 영속화는 하지 않습니다. 항목 자체를 편집·삭제·선택하는 기능은 요청하지 않습니다.\n실제 키보드 Space로 토글할 수 있어야 하고 focus가 보여야 합니다. 기존 blue 토큰 --accent를 쓰며 내부 컴포넌트/상태 관리 방식은 개발자 재량입니다. 이번 입력은 텍스트로 확정된 동작 기준이며 이미지나 별도 디자인 파일은 제공하지 않습니다.\nSPEC.md와 QUESTIONS.md를 output에 작성하고 문서 준비 상태와 근거를 알려 주세요.\n",
+      "sha256": "54953956a7ac95ec7725b551f33447fb99246e5b4727c7e9d96a8c946b6d2fdb"
+    }
+  ],
+  "git_baseline_overrides": [],
+  "untracked_source_files": [],
+  "portability_note": "I3 stores the structured SPEC as SPEC.md to avoid the original macOS spec.md/SPEC.md same-file alias on case-sensitive filesystems. Byte contents and historical manifests are retained.",
+  "setup_note": "Prepare dependencies and the real local service before handing prompt.txt to a fresh execution host. For continuation, prefer rerunning the predecessor; historical identities are never relabelled."
+}

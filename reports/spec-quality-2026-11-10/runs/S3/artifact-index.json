@@ -1,0 +1,44 @@
+[
+  {
+    "original": "output/spec-check.json",
+    "packaged": "output/spec-check.json",
+    "sha256": "edf6b486ff2c7e29a6d0c7c8e0e7fa5dfec197eae1baf490254cf6d35c03c6e9",
+    "json_packed": false
+  },
+  {
+    "original": "output/SPEC.md",
+    "packaged": "output/SPEC.md",
+    "sha256": "b132fdbea640ba6dae11aa46556f4d783035ef18af4c28f5ee3d2dcf7451e453",
+    "json_packed": false
+  },
+  {
+    "original": "output/QUESTIONS.md",
+    "packaged": "output/QUESTIONS.md",
+    "sha256": "6204c70e9c4d4faf5dbef85cf29766958c2fc2bb142db4e52756c86e7880b092",
+    "json_packed": false
+  },
+  {
+    "original": "sources/QUESTIONS-old.md",
+    "packaged": "sources/QUESTIONS-old.md",
+    "sha256": "3f8ddcca98cc07909861fb48008d237337ecfcf4c00ab175fe323a2ddf1bf19c",
+    "json_packed": false
+  },
+  {
+    "original": "sources/api-note.md",
+    "packaged": "sources/api-note.md",
+    "sha256": "32b2a741aae784808bcbec12d43b3a1d8eedb729d3d91179d1fa8942679c9479",
+    "json_packed": false
+  },
+  {
+    "original": "sources/request.md",
+    "packaged": "sources/request.md",
+    "sha256": "85f43509cddf59295679ba2df419b7a3fbde6bc061782f929ef08f804dbdaecc",
+    "json_packed": false
+  },
+  {
+    "original": "sources/notes.md",
+    "packaged": "sources/notes.md",
+    "sha256": "872070f390ee6239912380f4f60e4175082f4938aa3f27daf9e80ced7c35a509",
+    "json_packed": false
+  }
+]

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec"
+  short_description: "Write a traceable frontend specification and question history"
+  default_prompt: "Use $spec to turn these sources into SPEC.md and QUESTIONS.md, preserving decisions, unresolved contracts and stable acceptance IDs."

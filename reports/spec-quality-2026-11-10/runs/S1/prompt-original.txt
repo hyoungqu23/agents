@@ -1,0 +1,4 @@
+Use $spec at /private/tmp/skill-quality-20261110/spec/candidate/SKILL.md.
+/private/tmp/skill-quality-20261110/spec/runs/S1-ready/sources/request.md의 요청을 수행하세요. 원자료와 선택된 이미지 파일은 /private/tmp/skill-quality-20261110/spec/runs/S1-ready/sources에 있으며, output은 /private/tmp/skill-quality-20261110/spec/runs/S1-ready/output입니다.
+읽기는 sources와 candidate 스킬, 현재 prompt로 제한하고 쓰기는 output에만 하세요. 다른 워크트리/사례/oracles/평가 코드/채점 자료를 읽지 마세요. 원본과 스킬은 보존하고 외부 게시·메시지·Git 작업·위임은 하지 마세요. 이미지는 로컬 이미지 도구로 직접 확인하세요. 이 문서 작업에는 브라우저를 사용하지 마세요.
+실제 검토 방법과 확인하지 못한 사실을 구분하고, 마지막 응답에는 산출물 경로·상태·한계를 보고하세요.

@@ -1,0 +1,68 @@
+[
+  {
+    "original": "output/spec-check.json",
+    "packaged": "output/spec-check.json",
+    "sha256": "82895fb7d84b663a9044670b3036b75d28a49f1561ce69cb104798aa6cf551e4",
+    "json_packed": false
+  },
+  {
+    "original": "output/SPEC.md",
+    "packaged": "output/SPEC.md",
+    "sha256": "cd62200fc5a07cd7daa459084a8a970c66e749e65f4df48961d14f829f5fb4de",
+    "json_packed": false
+  },
+  {
+    "original": "output/QUESTIONS.md",
+    "packaged": "output/QUESTIONS.md",
+    "sha256": "4fcce8381387840c84bbf0351d7e1a9e07fa5b28e45469e1ecf20c2a7896ba7d",
+    "json_packed": false
+  },
+  {
+    "original": "output/REVIEW.md",
+    "packaged": "output/REVIEW.md",
+    "sha256": "db2a6948d9161ab903ebe826bcbe540846edce67ba612109a7123731134c0a47",
+    "json_packed": false
+  },
+  {
+    "original": "sources/forwarded-notes.md",
+    "packaged": "sources/forwarded-notes.md",
+    "sha256": "94ee3373b8e6051fa474bdc6793acdc313af76cddc801ccfe0d395469de3a321",
+    "json_packed": false
+  },
+  {
+    "original": "sources/slack-thread.md",
+    "packaged": "sources/slack-thread.md",
+    "sha256": "6fd6d8bcdf82568eb332463ea49f898e083a29ad13bcc55ee2ddd6840f852d18",
+    "json_packed": false
+  },
+  {
+    "original": "sources/generated-client.ts",
+    "packaged": "sources/generated-client.ts",
+    "sha256": "1a0111dd3756a33892cccf4608d0a89e0480b3c8b988c6df19c362a0b354e0c9",
+    "json_packed": false
+  },
+  {
+    "original": "sources/request.md",
+    "packaged": "sources/request.md",
+    "sha256": "9f8ae2a20a653e2fc6a974073b968c743e866d0e489ca11cb38833e6f932f9d5",
+    "json_packed": false
+  },
+  {
+    "original": "sources/api-v2.md",
+    "packaged": "sources/api-v2.md",
+    "sha256": "11ebac110cf39b02231604b4f1f469ea081fa6147abe6b7110c9b1b232b84325",
+    "json_packed": false
+  },
+  {
+    "original": "sources/meeting-attachment.md",
+    "packaged": "sources/meeting-attachment.md",
+    "sha256": "bbfcc026796e7683edf7dd1b4b07b543bfdd5328dcc303c8d2d428a838f39208",
+    "json_packed": false
+  },
+  {
+    "original": "sources/decisions.md",
+    "packaged": "sources/decisions.md",
+    "sha256": "9983fbb459b39d66366316d4918f093cdcb0c2761ae5ccd92d1bfbe623315a29",
+    "json_packed": false
+  }
+]

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+- Reject malformed canonical rows instead of omitting ACs/questions; keep frontmatter detection separate from examples and encoding failures.
+
+- Add product:spec with bundled SPEC/QUESTIONS templates, source authority and readiness guidance, and a standalone handoff record checker.
+
 ## 0.4.0 — 2026-10-12
 
 - Add flow-spec for traceable user actions, branches, open decisions and scoped flow updates.
