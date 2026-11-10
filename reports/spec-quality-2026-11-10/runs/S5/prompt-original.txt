@@ -1,0 +1,3 @@
+Use $spec at /private/tmp/skill-quality-20261110/spec/candidate/SKILL.md.
+/private/tmp/skill-quality-20261110/spec/runs/S5-inspect/sources의 기존 SPEC/QUESTIONS가 제공된 계약과 결정에 비추어 FE 개발 기준으로 준비됐는지 검토해 주세요. 이번에는 읽기 전용 검토이며 기존 두 문서나 원자료를 수정하지 마세요. 발견 사항·질문 후보·판정은 /private/tmp/skill-quality-20261110/spec/runs/S5-inspect/output/report.md에만 저장하세요.
+읽기는 sources와 candidate, 현재 prompt로 제한하고 다른 사례/oracles/부모 워크트리/평가 코드·정답은 읽지 마세요. 스킬·원문·Git을 변경하지 않고 외부 게시·위임·브라우저 사용은 하지 마세요.

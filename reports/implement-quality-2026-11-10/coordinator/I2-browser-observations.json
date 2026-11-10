@@ -1,0 +1,39 @@
+{
+  "all_ids": [
+    "tide",
+    "forest",
+    "north"
+  ],
+  "displayed_counts": [
+    3,
+    2,
+    1,
+    0
+  ],
+  "active_ids": [
+    "tide",
+    "north"
+  ],
+  "archived_ids": [
+    "forest"
+  ],
+  "selection_hidden": "Tide",
+  "paused_ids": [],
+  "empty_state_visible": true,
+  "selected_after_return": "tide",
+  "error_distinct": true,
+  "retry_status": "archived",
+  "latest_status": "archived",
+  "wide_columns": 2,
+  "narrow_columns": 1,
+  "focus_visible": {
+    "outline": "solid",
+    "tag": "BUTTON",
+    "text": "Forest — archived"
+  },
+  "latest_rows": [
+    "Forest — archived"
+  ],
+  "target": "7e50ea2a90d23aea7fa9e6e964c8623ae886c5d41fd83498a31f5a3df8f395a0",
+  "method": "Independent parent CUA/IAB browser observation; actual API fixture failure/recovery control, no app state injection or response interception. Native keyboard Tab after focused combobox; no native OS keyboard claim."
+}

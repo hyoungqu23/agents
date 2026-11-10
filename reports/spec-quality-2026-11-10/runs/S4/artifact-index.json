@@ -1,0 +1,122 @@
+[
+  {
+    "original": "output/QUESTIONS.md.before",
+    "packaged": "output/QUESTIONS.md.before",
+    "sha256": "e5d9a6686929704d5aa8e47f2197320412f960a9e343e75d6b06fb396622e7e3",
+    "json_packed": false
+  },
+  {
+    "original": "output/spec-check-current.json",
+    "packaged": "output/spec-check-current.json",
+    "sha256": "bf3f3c7369d148eac3bd4771292fcd03ecba4cc082cb048c35dfffbed0e4cebe",
+    "json_packed": false
+  },
+  {
+    "original": "output/preservation-audit.json",
+    "packaged": "output/preservation-audit.json",
+    "sha256": "bfaec23f9d2821719e5f4ea8304653138b83c981e776577516f3d6620a7a38a0",
+    "json_packed": false
+  },
+  {
+    "original": "output/spec-check-pass1.json",
+    "packaged": "output/spec-check-pass1.json",
+    "sha256": "3b02a1e0b6b65a060b9f23c4c9b113a62dd4e29a68c1c045e1429d43e43bdfb3",
+    "json_packed": false
+  },
+  {
+    "original": "output/SPEC.md.diff",
+    "packaged": "output/SPEC.md.diff.artifact.json",
+    "sha256": "2778e58af4aa3cb2cdfb802e22aacff4b3bafb4826776cabe574b3af1d144e75",
+    "json_packed": true
+  },
+  {
+    "original": "output/SPEC.md.before",
+    "packaged": "output/SPEC.md.before",
+    "sha256": "ccef2d50af5a44505ae96a7156c9b912ac93ead97c51551f37449f0c96e72eed",
+    "json_packed": false
+  },
+  {
+    "original": "output/update_documents.py",
+    "packaged": "output/update_documents.py",
+    "sha256": "1326e08e53ffeee077f87a780cec043ac1c94ee272465bf8614bfbc96f3b145d",
+    "json_packed": false
+  },
+  {
+    "original": "output/inputs-before.json",
+    "packaged": "output/inputs-before.json",
+    "sha256": "b3a97a6a9b1a5432d508b746aeb3c6570ebbe410fd8d4f563e7b15a3f82ac845",
+    "json_packed": false
+  },
+  {
+    "original": "output/preservation-check.json",
+    "packaged": "output/preservation-check.json",
+    "sha256": "edd2a93bff2cc5a074a3b46fee6bf4d8a687a7bd1064e8dbdf1518fa38134363",
+    "json_packed": false
+  },
+  {
+    "original": "output/QUESTIONS.md.diff",
+    "packaged": "output/QUESTIONS.md.diff.artifact.json",
+    "sha256": "dfa60734b39dc86de21978814b9cc357234877d745ec5294b97f6778a9132c21",
+    "json_packed": true
+  },
+  {
+    "original": "output/review.md",
+    "packaged": "output/review.md",
+    "sha256": "9f390d2e13496156feec2599cafd2d5e7cb6f4a7fd2ed1e1add0d196041003af",
+    "json_packed": false
+  },
+  {
+    "original": "documents/spec-check.json",
+    "packaged": "documents/spec-check.json",
+    "sha256": "76c68139c43742efb23c55e399bda92e8434d8dfdadb49d6f9150783b19fe670",
+    "json_packed": false
+  },
+  {
+    "original": "documents/SPEC.md",
+    "packaged": "documents/SPEC.md",
+    "sha256": "5be1366ecfa00dd875d353032f83ca24d4aa42edfc6b487cabb16ddf27c4ef5c",
+    "json_packed": false
+  },
+  {
+    "original": "documents/QUESTIONS.md",
+    "packaged": "documents/QUESTIONS.md",
+    "sha256": "63390fbcdc2fc02d1acbc1175a071d97a663b27d45bc1b4a96140640284fc82f",
+    "json_packed": false
+  },
+  {
+    "original": "sources/update-decision.md",
+    "packaged": "sources/update-decision.md",
+    "sha256": "75a9034a67a080785c4c15e5bcf424e980bbdcc07d0d1cd3089e006231d7926b",
+    "json_packed": false
+  },
+  {
+    "original": "sources/api.md",
+    "packaged": "sources/api.md",
+    "sha256": "ad6418aa051ed61ccf0b666549e240840bceae3a6ffc2219372fb61eb6d813ec",
+    "json_packed": false
+  },
+  {
+    "original": "sources/selected-reference.png",
+    "packaged": "sources/selected-reference.png",
+    "sha256": "f9602e1f19caf80a871fb91fb2ea8bb56bae31640e8c656300c6eab3ebdd20fe",
+    "json_packed": false
+  },
+  {
+    "original": "sources/ux.md",
+    "packaged": "sources/ux.md",
+    "sha256": "ef0a3f407368c3a26a8a52ad010e786865994e975e2e1ed235d22cae7e05dfe0",
+    "json_packed": false
+  },
+  {
+    "original": "sources/DESIGN.md",
+    "packaged": "sources/DESIGN.md",
+    "sha256": "ea81e69351d02ebea69f9f387aa000c258e4b03ad1c236bd67f42436a8c11b62",
+    "json_packed": false
+  },
+  {
+    "original": "sources/request.md",
+    "packaged": "sources/request.md",
+    "sha256": "61d70c93270372cef43fd7f5ea5c24935d739fc0c46016a252d2e92c61c94ae4",
+    "json_packed": false
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "structure": "valid",
+  "gaps": [],
+  "limitation": "Record checks do not certify semantic correctness or runtime behavior.",
+  "declared_status": "blocked",
+  "active_blockers": [
+    {
+      "id": "Q-001",
+      "acs": [
+        "AC-share"
+      ]
+    },
+    {
+      "id": "Q-002",
+      "acs": [
+        "AC-share"
+      ]
+    },
+    {
+      "id": "Q-003",
+      "acs": [
+        "AC-share"
+      ]
+    },
+    {
+      "id": "Q-004",
+      "acs": [
+        "AC-share"
+      ]
+    },
+    {
+      "id": "Q-005",
+      "acs": [
+        "AC-share"
+      ]
+    },
+    {
+      "id": "Q-006",
+      "acs": [
+        "AC-secret"
+      ]
+    }
+  ],
+  "ac_ids": [
+    "AC-share",
+    "AC-secret"
+  ],
+  "sources": {
+    "spec": "cd62200fc5a07cd7daa459084a8a970c66e749e65f4df48961d14f829f5fb4de",
+    "questions": "4fcce8381387840c84bbf0351d7e1a9e07fa5b28e45469e1ecf20c2a7896ba7d"
+  }
+}

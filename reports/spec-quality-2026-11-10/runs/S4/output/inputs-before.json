@@ -1,0 +1,38 @@
+{
+  "sources/DESIGN.md": {
+    "sha256": "ea81e69351d02ebea69f9f387aa000c258e4b03ad1c236bd67f42436a8c11b62",
+    "bytes": 422
+  },
+  "sources/api.md": {
+    "sha256": "ad6418aa051ed61ccf0b666549e240840bceae3a6ffc2219372fb61eb6d813ec",
+    "bytes": 647
+  },
+  "sources/request.md": {
+    "sha256": "61d70c93270372cef43fd7f5ea5c24935d739fc0c46016a252d2e92c61c94ae4",
+    "bytes": 1171
+  },
+  "sources/selected-reference.png": {
+    "sha256": "f9602e1f19caf80a871fb91fb2ea8bb56bae31640e8c656300c6eab3ebdd20fe",
+    "bytes": 30063
+  },
+  "sources/update-decision.md": {
+    "sha256": "75a9034a67a080785c4c15e5bcf424e980bbdcc07d0d1cd3089e006231d7926b",
+    "bytes": 501
+  },
+  "sources/ux.md": {
+    "sha256": "ef0a3f407368c3a26a8a52ad010e786865994e975e2e1ed235d22cae7e05dfe0",
+    "bytes": 339
+  },
+  "documents/QUESTIONS.md": {
+    "sha256": "e5d9a6686929704d5aa8e47f2197320412f960a9e343e75d6b06fb396622e7e3",
+    "bytes": 6094
+  },
+  "documents/SPEC.md": {
+    "sha256": "ccef2d50af5a44505ae96a7156c9b912ac93ead97c51551f37449f0c96e72eed",
+    "bytes": 26408
+  },
+  "documents/spec-check.json": {
+    "sha256": "76c68139c43742efb23c55e399bda92e8434d8dfdadb49d6f9150783b19fe670",
+    "bytes": 424
+  }
+}

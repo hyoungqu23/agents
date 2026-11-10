@@ -1,0 +1,12 @@
+{
+  "helper_matches_final_spec": true,
+  "helper_matches_final_questions": true,
+  "user_edited_exactly_preserved": true,
+  "previous_review_verbatim_preserved": true,
+  "user_spec_memo_exactly_preserved": true,
+  "user_question_memo_exactly_preserved": true,
+  "original_history_rows_preserved": true,
+  "old_ac_ids_preserved": true,
+  "old_q_and_od_ids_preserved": true,
+  "new_helper_valid": true
+}

@@ -49,8 +49,8 @@
     {
       "name": "product",
       "source": "./plugins/product",
-      "description": "Product problem framing, traceable requirements, readiness review and user-flow specifications.",
-      "version": "0.4.0",
+      "description": "Product requirements, user flows and traceable frontend implementation specifications.",
+      "version": "0.5.0",
       "category": "Productivity",
       "keywords": [
         "product",
@@ -63,7 +63,7 @@
     {
       "name": "build",
       "source": "./plugins/build",
-      "description": "Implement features, apply scoped fixes and dogfood real user journeys with visual and persistence evidence.",
+      "description": "Implement features with original SPEC coverage, apply scoped fixes and dogfood real user journeys with visual and persistence evidence.",
       "version": "0.4.0",
       "category": "Productivity",
       "keywords": [

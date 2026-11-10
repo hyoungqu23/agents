@@ -5,6 +5,12 @@
 - Reject mismatched requested/served revisions and contradictory check/issue outcomes; keep deployment IDs separate from source revisions.
 - Add report-only build:dogfood for actual app journeys, visual inspection and real persistence evidence; separate coverage completion from product findings.
 
+## 0.3.1
+
+- Reject malformed canonical rows instead of omitting ACs/questions; keep frontmatter detection separate from examples and encoding failures.
+
+- Require direct frozen SPEC/QUESTIONS coverage, source-bound semantic review and behavior evidence before completion; retain source-backed partial scope and direct inputs.
+
 ## 0.3.0 - 2026-11-06
 
 - Add opt-in local S1 review notification after complete implementation assessment, with an independent delivery receipt. Missing harnesses do not change implementation verification results.

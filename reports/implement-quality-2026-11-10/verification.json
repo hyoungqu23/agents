@@ -1,0 +1,18 @@
+{
+  "model_tasks": 5,
+  "model_task_critical_outcomes": "passed",
+  "existing_native_regressions": "separate from quality scores",
+  "input_preparer_smoke": {
+    "materialized_cases": 18,
+    "exact_input_hashes": "passed",
+    "git_fixture_initialization": "passed for implementation cases",
+    "path_boundary_negative_cases": 5
+  },
+  "runtime_candidate_unchanged": true,
+  "notes": [
+    "No production/private data used.",
+    "No statistical population or cross-model performance claim."
+  ],
+  "official_codex_and_claude_validation": "passed after evaluation artifacts were added",
+  "affected_native_checks": "source coverage/evaluator29 passed"
+}

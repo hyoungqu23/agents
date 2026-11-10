@@ -1,0 +1,17 @@
+
+> build
+> vite build --outDir /private/tmp/skill-quality-20261110/implement/runs/I4-resume/state/build
+
+vite v5.4.21 building for production...
+
+(!) outDir /private/tmp/skill-quality-20261110/implement/runs/I4-resume/state/build is not inside project root and will not be emptied.
+Use --emptyOutDir to override.
+
+transforming...
+✓ 34 modules transformed.
+rendering chunks...
+computing gzip size...
+../../I4-resume/state/build/index.html                   0.32 kB │ gzip:  0.24 kB
+../../I4-resume/state/build/assets/index-gku9SS32.css    0.90 kB │ gzip:  0.47 kB
+../../I4-resume/state/build/assets/index-qWyi448s.js   144.86 kB │ gzip: 46.77 kB
+✓ built in 280ms

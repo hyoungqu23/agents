@@ -1,0 +1,15 @@
+Source comparison at target da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793:
+- All frozen current canonical rows AC-1/AC-2/AC-3 were read before editing; current SPEC SHA256 779380dfe0405888dc30c2085f2d56c926494a065b75da33526be141fbf1b4af. Same revision number 2 as prior does not establish same source identity.
+- Incoming handoff omits AC-3; fresh manifest restores all three. Prior complete assessment/browser/native claims are not used as new passes.
+- AC-1 condition/action/interface: App.tsx:7,9,16 current status -> useProjects(status); ui.tsx:2-3 all four labelled options; api.ts:3 real GET query. App.tsx:17 response rows.length; ui.tsx:4 response names/statuses. No static fixture in production UI. Theme retains blue token/focus/700px boundary. Current API test verifies actual server arrays for 3/2/1/0; browser selection/query/render/focus/layout not exercised.
+- AC-2 condition/action/outcome/interface: App.tsx:8 independent selected Project; App.tsx:19 sets selected from onSelect and passes id; ui.tsx:4 matches by id, ui.tsx:6 selected.name; App.tsx:21 keeps SelectedPanel outside loading/error/empty branches. App.tsx:19 now exactly No matching projects for this status. for successful rows.length===0, following loading/error guards; App.tsx:17 gives 0 on success. New text appears only once. Filter/selection/empty UI behavior is source-traced, not browser-tested this run.
+- AC-3 condition/action/outcome/interface: useProjects.ts:8 masks old result before new effect; :9 guards then/catch/finally with current flag and invalidates prior effect on status/reload changes; :10 Retry increments current reload; api.ts:4 throws on HTTP error; App.tsx:19 chooses existing ui.tsx:5 ProblemPanel+Retry ahead of empty; :21 leaves selected panel mounted. Native test verifies real 503 versus empty and recovery through API owner; browser current-filter retry/selection/races not tested this run.
+- Verification facets remain unreviewed for full UI outcomes: required browser checks are not_run under explicit current instruction. No previous browser evidence is relabelled to target.
+- Existing initial all and No project selected behavior retained. Q-001/Q-002 remain nonblocking open, no production deployment assertion.
+Preservation assertions actually executed:
+- baseline-to-verification changed file list == ['src/App.tsx']; complete App bytes equal pre-edit bytes with exactly one replacement No projects found -> No matching projects for this status.
+- all other captured working/index bytes/modes unchanged, HEAD and every index entry identical; all frozen inputs identical before/after.
+- src/theme.css hash identical, including USER NOTE I4 declaration; user-draft.md identical.
+- native checks end at exact target: post-check digest == verification digest.
+- No reset/stash/commit/push/new worktree/delegation/external publishing. No prior state or original document writes.
+Supplemental failure is pre-existing source whitespace at SPEC:43 and is preserved under read-only instruction.

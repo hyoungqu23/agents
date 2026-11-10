@@ -1,0 +1,89 @@
+{
+  "status": "partial",
+  "gaps": [
+    {
+      "requirement": "AC-1",
+      "facet": "verification",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-1",
+      "reason": "behavior_unverified"
+    },
+    {
+      "requirement": "AC-2",
+      "facet": "verification",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-2",
+      "reason": "behavior_unverified"
+    },
+    {
+      "requirement": "AC-3",
+      "facet": "verification",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-3",
+      "reason": "behavior_unverified"
+    },
+    {
+      "requirement": "AC-4",
+      "facet": "condition",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-4",
+      "facet": "action",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-4",
+      "facet": "outcome",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-4",
+      "facet": "interfaces",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-4",
+      "facet": "verification",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-4",
+      "reason": "behavior_unverified"
+    },
+    {
+      "check": "app-browser",
+      "reason": "not_run"
+    },
+    {
+      "check": "archive-decision",
+      "reason": "not_run"
+    },
+    {
+      "requirement": "AC-1",
+      "check": "app-browser",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "AC-2",
+      "check": "app-browser",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "AC-3",
+      "check": "app-browser",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "AC-4",
+      "reason": "needs_decision"
+    }
+  ],
+  "target": "471f02ee1222551063cf5515b8a74b9e08c8665988c44ee51b34d7af9024b8cd"
+}

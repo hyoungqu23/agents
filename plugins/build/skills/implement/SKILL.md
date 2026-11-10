@@ -28,6 +28,10 @@ to write a small inputs manifest outside the checkout and capture the baseline w
 the trusted bundled `scripts/implementation_state.py`. Include each in-scope
 requirement/source anchor and the checks that distinguish its outcome. Use existing
 IDs; direct-input source anchors are sufficient. Declare intended change paths.
+For structured SPEC inputs, read [source coverage](references/source-coverage.md).
+Capture freezes and directly parses canonical ACs and linked QUESTIONS from the
+original bytes. Compare them before editing; preserve omitted/misparsed inputs as
+gaps while continuing independent work. Final `assess` always recomputes coverage.
 Record explicitly authorized overlap with existing dirty files in `editable_dirty`;
 that declaration does not prove their contents were preserved. Never reset/stash
 user work, clear index flags, or create a new worktree merely to get a clean result.
@@ -73,7 +77,8 @@ against baseline, verification target and result; report its computed status and
 concrete gaps. Do not supply a top-level completion status yourself.
 
 Missing browser access leaves UI verification partial. A required unresolved policy
-or failed/skipped check stays visible. `complete` describes this implementation and
+or failed/skipped check stays visible. Original AC coverage, source-bound semantic
+review and behavioral verification are mandatory completion gates for SPEC handoffs. `complete` describes this implementation and
 its declared checks, not an independent code review, Visual QA or release approval.
 The helper checks records and bytes; it cannot certify semantic correctness or
 whether claimed tool execution really happened. Retain actual tool/command traces.

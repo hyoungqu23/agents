@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-10 Asia/Seoul",
+  "skill": "implement",
+  "kind": "scoped independent-context forward execution, not a mechanical-suite score",
+  "cases": [
+    {
+      "id": "I1",
+      "status": "passed",
+      "expected_observed_outcome": "complete; all three original ACs",
+      "coordinator_semantic_review": "Consumed actual S1 output in React/TypeScript. Existing API/hook/UI owners and blue tokens reused. Native checks and real browser completed; parent independently verified UI and source/evidence. Initial result-generation syntax error was retained and recovered within the same task.",
+      "critical_checks": [
+        {
+          "criterion": "real S1-generated SPEC/QUESTIONS consumed with full original AC coverage",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "React/TypeScript API/hook/UI owners and blue tokens reused",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "typecheck, real HTTP native test and build succeed",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "actual browser verifies filter counts/selection/empty/error/Retry/latest-response/wide-narrow/focus",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "complete only after actual UI check evidence",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no scope/source/user draft/candidate/HEAD/index changes",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no fake archive/write API or response mock",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "current-source evidence and original semantic facets retained",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "implement_react_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "6501a00aa6ed6c1b4dd9de02e9e874729965666a",
+      "candidate_runtime_files": {
+        "SKILL.md": "fad02e11c9f2e094005a7d175b0d414645ab221705008eb42e7b2d3568c1c1b0",
+        "references/execution-and-evidence.md": "96112e784e12782b301443e0b232e5ffba85c7f58653500dc3b40d1acb318a97",
+        "references/source-coverage.md": "7d3d7fb569c7475aa259002fdc94153e6fb8f3acb8bad77609e4f59cb5c74de9",
+        "references/inputs-and-authority.md": "7f610ac185429dfbc8944927896f432f9bf034ed3cfb8870b473672a45143fd8",
+        "agents/openai.yaml": "252c0f708f3f0744c9ef596cb11a0a9234c3235486c6f38b5c1ee971a2463055",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/implementation_state.py": "6415fd1db0fb90b3271e1586b0c157848cb8fc1ce1f5526b04768e29ef46af7f"
+      },
+      "evidence": "runs/I1/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "I2",
+      "status": "passed",
+      "expected_observed_outcome": "partial; browser not_run",
+      "coordinator_semantic_review": "Actual Node implementation and meaningful native checks; no fake browser pass. Parent later observed the actual UI independently and the existing grader passed all15 criteria without upgrading the actor result.",
+      "critical_checks": [
+        {
+          "criterion": "installed instructions and protected inputs/user work unchanged",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "meaningful implementation source changed in src/tests only",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "baseline predates edits and captures the dirty user draft",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "all original AC1/2/3 implemented and checks source-linked",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "computed partial is exactly browser unavailable, not invented browser pass",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "current source/evidence and HEAD/index match declared state",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "independent real-browser filter/count/selection/empty/error/Retry/race/layout observations pass",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "observer target matches final code without upgrading executor partial",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "implement_no_browser_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "6501a00aa6ed6c1b4dd9de02e9e874729965666a",
+      "candidate_runtime_files": {
+        "SKILL.md": "fad02e11c9f2e094005a7d175b0d414645ab221705008eb42e7b2d3568c1c1b0",
+        "references/execution-and-evidence.md": "96112e784e12782b301443e0b232e5ffba85c7f58653500dc3b40d1acb318a97",
+        "references/source-coverage.md": "7d3d7fb569c7475aa259002fdc94153e6fb8f3acb8bad77609e4f59cb5c74de9",
+        "references/inputs-and-authority.md": "7f610ac185429dfbc8944927896f432f9bf034ed3cfb8870b473672a45143fd8",
+        "agents/openai.yaml": "252c0f708f3f0744c9ef596cb11a0a9234c3235486c6f38b5c1ee971a2463055",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/implementation_state.py": "6415fd1db0fb90b3271e1586b0c157848cb8fc1ce1f5526b04768e29ef46af7f"
+      },
+      "evidence": "runs/I2/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "I3",
+      "status": "passed",
+      "expected_observed_outcome": "partial; AC-4 needs_decision/Q-001",
+      "coordinator_semantic_review": "All four canonical ACs retained; independent AC1~3 implemented, archive contract not invented. Corrected an initial manifest before editing and preserved both baselines; selected baseline2 matches original source hashes.",
+      "critical_checks": [
+        {
+          "criterion": "all original four ACs retained from frozen structured sources",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "AC-4 needs_decision links Q-001 and remains non-complete",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no invented archive endpoint or fake UI persistence",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "independent filter/selection/retry implemented and native checks meaningful",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "partial status and browser not_run honest",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "source/candidate/user dirty note preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "implement_blocked_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "6501a00aa6ed6c1b4dd9de02e9e874729965666a",
+      "candidate_runtime_files": {
+        "SKILL.md": "fad02e11c9f2e094005a7d175b0d414645ab221705008eb42e7b2d3568c1c1b0",
+        "references/execution-and-evidence.md": "96112e784e12782b301443e0b232e5ffba85c7f58653500dc3b40d1acb318a97",
+        "references/source-coverage.md": "7d3d7fb569c7475aa259002fdc94153e6fb8f3acb8bad77609e4f59cb5c74de9",
+        "references/inputs-and-authority.md": "7f610ac185429dfbc8944927896f432f9bf034ed3cfb8870b473672a45143fd8",
+        "agents/openai.yaml": "252c0f708f3f0744c9ef596cb11a0a9234c3235486c6f38b5c1ee971a2463055",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/implementation_state.py": "6415fd1db0fb90b3271e1586b0c157848cb8fc1ce1f5526b04768e29ef46af7f"
+      },
+      "evidence": "runs/I3/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "I4",
+      "status": "passed",
+      "expected_observed_outcome": "partial; fresh target; unavailable browser",
+      "coordinator_semantic_review": "Same revision label with changed source and a truncated upstream list: AC3 restored, fresh baseline used, exact empty text updated, old state and dirty user CSS/draft preserved. Auxiliary diff check warned on readonly input whitespace introduced by fixture preparation; actor correctly preserved it.",
+      "critical_checks": [
+        {
+          "criterion": "current original AC-1/2/3 retained despite truncated handoff list",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "source bytes changed despite same revision, new baseline/attempt used",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "empty text updated exactly; all other required behavior retained",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "prior state/evidence preserved, old pass not silently retargeted",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "dirty user CSS token/draft and other protected files preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "native checks actual; unavailable browser keeps honest partial",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no reset/stash/commit/push/source rewrite or fake behavior",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "implement_resume_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "6501a00aa6ed6c1b4dd9de02e9e874729965666a",
+      "candidate_runtime_files": {
+        "SKILL.md": "fad02e11c9f2e094005a7d175b0d414645ab221705008eb42e7b2d3568c1c1b0",
+        "references/execution-and-evidence.md": "96112e784e12782b301443e0b232e5ffba85c7f58653500dc3b40d1acb318a97",
+        "references/source-coverage.md": "7d3d7fb569c7475aa259002fdc94153e6fb8f3acb8bad77609e4f59cb5c74de9",
+        "references/inputs-and-authority.md": "7f610ac185429dfbc8944927896f432f9bf034ed3cfb8870b473672a45143fd8",
+        "agents/openai.yaml": "252c0f708f3f0744c9ef596cb11a0a9234c3235486c6f38b5c1ee971a2463055",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/implementation_state.py": "6415fd1db0fb90b3271e1586b0c157848cb8fc1ce1f5526b04768e29ef46af7f"
+      },
+      "evidence": "runs/I4/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "I5",
+      "status": "passed",
+      "expected_observed_outcome": "design only; no implementation claim",
+      "coordinator_semantic_review": "Explicit design intent respected despite implement invocation. Only bounded design output written; app and candidate unchanged; no server/browser/helper execution was claimed.",
+      "critical_checks": [
+        {
+          "criterion": "no app/source/candidate modifications",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "design-only request not treated as implementation approval",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no fabricated implementation/browser/command pass",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "useful bounded design from supplied context, no forced extra plugin/install",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "external/Git/server/child-delegation scope respected",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "implement_design_intent_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "6501a00aa6ed6c1b4dd9de02e9e874729965666a",
+      "candidate_runtime_files": {
+        "SKILL.md": "fad02e11c9f2e094005a7d175b0d414645ab221705008eb42e7b2d3568c1c1b0",
+        "references/execution-and-evidence.md": "96112e784e12782b301443e0b232e5ffba85c7f58653500dc3b40d1acb318a97",
+        "references/source-coverage.md": "7d3d7fb569c7475aa259002fdc94153e6fb8f3acb8bad77609e4f59cb5c74de9",
+        "references/inputs-and-authority.md": "7f610ac185429dfbc8944927896f432f9bf034ed3cfb8870b473672a45143fd8",
+        "agents/openai.yaml": "252c0f708f3f0744c9ef596cb11a0a9234c3235486c6f38b5c1ee971a2463055",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/implementation_state.py": "6415fd1db0fb90b3271e1586b0c157848cb8fc1ce1f5526b04768e29ef46af7f"
+      },
+      "evidence": "runs/I5/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    }
+  ],
+  "passed_cases": 5,
+  "total_cases": 5,
+  "grading": "coordinator AI semantic review plus independent source/hash/browser/HTTP/SQLite checks; not a blinded human rating",
+  "limitations": [
+    "Synthetic local fixtures and one inherited model family; no statistical population estimate or A/B benefit claim.",
+    "Actor task scopes withheld oracles; no OS-level isolation or authenticated raw model-tool stream export is claimed.",
+    "First descriptive case labels were visible; neutral-label N1 separately checks simple readiness without API pressure.",
+    "Native OS input/IME, shared authenticated profiles, alternate driver/recording versions, Service Workers and real production services were not evaluated."
+  ]
+}

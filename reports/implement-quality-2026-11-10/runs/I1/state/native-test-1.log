@@ -1,0 +1,27 @@
+$ npm run test
+
+> test
+> tsx --test tests/*.test.ts
+
+node:net:2145
+      const error = new UVExceptionWithHostPort(rval, 'listen', address, port);
+                    ^
+
+Error: listen EPERM: operation not permitted /var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tsx-501/58169.pipe
+    at Server.setupListenHandle [as _listen2] (node:net:2145:21)
+    at listenInCluster (node:net:2224:12)
+    at Server.listen (node:net:2361:5)
+    at file:///private/tmp/skill-quality-20261110/implement/fixtures/react-projects/node_modules/tsx/dist/cli.mjs:53:31537
+    at new Promise (<anonymous>)
+    at createIpcServer (file:///private/tmp/skill-quality-20261110/implement/fixtures/react-projects/node_modules/tsx/dist/cli.mjs:53:31515)
+    at async file:///private/tmp/skill-quality-20261110/implement/fixtures/react-projects/node_modules/tsx/dist/cli.mjs:55:459 {
+  code: 'EPERM',
+  errno: -1,
+  syscall: 'listen',
+  address: '/var/folders/yr/5qlyb54s0dj33ls5x3w18tgm0000gn/T/tsx-501/58169.pipe',
+  port: -1
+}
+
+Node.js v24.19.0
+
+exit_code=1

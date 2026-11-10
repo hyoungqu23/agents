@@ -1,0 +1,50 @@
+[
+  {
+    "original": "output/spec-check.json",
+    "packaged": "output/spec-check.json",
+    "sha256": "76c68139c43742efb23c55e399bda92e8434d8dfdadb49d6f9150783b19fe670",
+    "json_packed": false
+  },
+  {
+    "original": "output/SPEC.md",
+    "packaged": "output/SPEC.md",
+    "sha256": "f5ceaaa4b2cf85b4f02de17a22ae26407b4af2392006595c3107a2b8797f7a7e",
+    "json_packed": false
+  },
+  {
+    "original": "output/QUESTIONS.md",
+    "packaged": "output/QUESTIONS.md",
+    "sha256": "3f9bc0504360bf46416faa86562e56614a5731d933e6ceb0e237ebf6d2ad5846",
+    "json_packed": false
+  },
+  {
+    "original": "sources/api.md",
+    "packaged": "sources/api.md",
+    "sha256": "e88847fcef6fb5f83946cae17b976b386dc2c00d2594230baac313e354efc549",
+    "json_packed": false
+  },
+  {
+    "original": "sources/selected-reference.png",
+    "packaged": "sources/selected-reference.png",
+    "sha256": "f9602e1f19caf80a871fb91fb2ea8bb56bae31640e8c656300c6eab3ebdd20fe",
+    "json_packed": false
+  },
+  {
+    "original": "sources/ux.md",
+    "packaged": "sources/ux.md",
+    "sha256": "ef0a3f407368c3a26a8a52ad010e786865994e975e2e1ed235d22cae7e05dfe0",
+    "json_packed": false
+  },
+  {
+    "original": "sources/DESIGN.md",
+    "packaged": "sources/DESIGN.md",
+    "sha256": "ea81e69351d02ebea69f9f387aa000c258e4b03ad1c236bd67f42436a8c11b62",
+    "json_packed": false
+  },
+  {
+    "original": "sources/request.md",
+    "packaged": "sources/request.md",
+    "sha256": "61d70c93270372cef43fd7f5ea5c24935d739fc0c46016a252d2e92c61c94ae4",
+    "json_packed": false
+  }
+]

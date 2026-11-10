@@ -88,3 +88,13 @@ policy wins merely from its filename/version suffix.
 Do not create UI/API/database decisions during problem framing. A supplied constraint
 can be recorded as a decision; an unspecified solution stays an option or open decision.
 Question-budget exhaustion returns a bounded draft rather than invented completeness.
+
+## FE specification consumers
+
+Only `spec:*` documents use `handoff_version: 1` and `draft/blocked/ready` as FE
+specification preparation states. These do not replace upstream product maturity.
+The matching `questions:*` companion preserves Q-IDs and original OD relationships;
+open/deferred + blocking yes remains active. Resolved questions retain their history.
+SPEC §6.1 is the canonical AC table, QUESTIONS §1 the canonical question table.
+Implement consumers extract both originals rather than trust a copied execution list,
+and retain semantic/behavior verification. Ready grants no execution authority.

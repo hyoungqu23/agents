@@ -1,0 +1,17 @@
+
+> test
+> node --test tests/*.test.mjs
+
+✔ API client forwards status and rejects a failed response (0.720667ms)
+✔ AC-1/2: filters request matching data/count, retain selection and distinguish empty success (3.141708ms)
+✔ AC-3: failed current filter retries through the existing problem helper without losing selection (1.301084ms)
+✔ AC-3: outdated success and error cannot replace the latest response, loading or error (1.067583ms)
+✔ real GET contract supports all four filters, empty success and 503 recovery (606.235542ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 646.562

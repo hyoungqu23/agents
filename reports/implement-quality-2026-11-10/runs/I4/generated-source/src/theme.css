@@ -1,0 +1,4 @@
+:root{--accent:#2457c5;--surface:#fff;--line:#d8dee9;--space:24px;color:#182230;font:16px system-ui;background:#f6f7fa}body{margin:32px}header{margin-bottom:var(--space)}.layout{display:grid;grid-template-columns:2fr 1fr;gap:var(--space)}.panel{background:var(--surface);padding:var(--space);border:1px solid var(--line);border-radius:12px}.filter{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space)}button,select{font:inherit;padding:10px;border-radius:6px}button{display:block;margin:12px 0;border:1px solid var(--line);background:var(--surface);width:100%;text-align:left;cursor:pointer}.picked{border:2px solid var(--accent)}:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.problem{color:#8b1c1c;border:1px solid #b43b3b;padding:12px}@media(max-width:700px){.layout{grid-template-columns:1fr}body{margin:16px}}
+
+/* USER NOTE I4: preserve this declaration */
+:root { --user-note-token: 7px; }

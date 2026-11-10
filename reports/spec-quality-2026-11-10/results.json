@@ -1,0 +1,473 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-10 Asia/Seoul",
+  "skill": "spec",
+  "kind": "scoped independent-context forward execution, not a mechanical-suite score",
+  "cases": [
+    {
+      "id": "S1",
+      "status": "passed",
+      "expected_observed_outcome": "ready; AC-1~3; no active blocker",
+      "coordinator_semantic_review": "Actual image observation distinguished structure/demo color from blue system authority; filter/selection/error/Retry/latest-finally mapping retained.",
+      "critical_checks": [
+        {
+          "criterion": "all three original AC IDs and behaviors preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "actual image inspected, visual observation separated from policy/API facts",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "blue system accent outranks orange demo value",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "selection survives hidden list and empty/error/loading",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "latest success AND failure cannot overwrite current filter",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "HTTP request timing, required/non-null, empty/error/Retry mapping reconstructable",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no fake archive/write API, no unnecessary internal design mandate",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "ready allowed after four actual reviews, no artificial blocker",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "all unknowns registered; deployment not claimed verified",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "source/candidate unchanged",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "spec_ready_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "63bb183a669d24e324b3aabd6c7a50fc004e21ff",
+      "candidate_runtime_files": {
+        "SKILL.md": "25ec414ed814223416d92edd2ad3e50addfeeb38f22f44a4a1018948249a4742",
+        "references/sources-and-authority.md": "d7d86c75ed2d5385361c32b663c7cdd7bf0a7fbbe9760e866c34f5cee972eec8",
+        "references/readiness-and-updates.md": "f1d572c9bdca7971aae1db84f10bc920ee735e7795f323ea66349b05eecef53f",
+        "agents/openai.yaml": "a3b824ef3e08b4549b5d32890353bbe4fb0785d4190dece4b4ea4fa5af36681a",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/spec_check.py": "759c0c73d772322f6206ececf68a7b84d4350125ee35546791f0cb946f903370",
+        "assets/SPEC.template.md": "86b603d96522c56ea8be9dae0e328c0de1a299549b4dd977ef5c3aeca971185b",
+        "assets/QUESTIONS.template.md": "41f910724e057b7d9bb27a785df60e131ff572b8057d03b31b4c3efb6c759b9c"
+      },
+      "evidence": "runs/S1/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "S2",
+      "status": "passed",
+      "expected_observed_outcome": "blocked; source conflicts and unknown policy retained",
+      "coordinator_semantic_review": "Admin-only DEC outranked unapproved newer proposal and duplicate copies; secret restrictions outside AC were accepted; null policy remained blocking; source canary was not executed.",
+      "critical_checks": [
+        {
+          "criterion": "DEC-014 admin-only preserved; MSG-082 remains proposal",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "duplicated MSG-082 is not independent authority",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "outside-AC secret restrictions captured",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "expires_at null meaning remains blocking unknown for AC-share",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "request/response required/null contract differences preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no canary/source/candidate mutation or external publishing",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "source limitations recorded; no unsupported ready",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "all discovered questions saved, stable original IDs retained",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "spec_authority_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "63bb183a669d24e324b3aabd6c7a50fc004e21ff",
+      "candidate_runtime_files": {
+        "SKILL.md": "25ec414ed814223416d92edd2ad3e50addfeeb38f22f44a4a1018948249a4742",
+        "references/sources-and-authority.md": "d7d86c75ed2d5385361c32b663c7cdd7bf0a7fbbe9760e866c34f5cee972eec8",
+        "references/readiness-and-updates.md": "f1d572c9bdca7971aae1db84f10bc920ee735e7795f323ea66349b05eecef53f",
+        "agents/openai.yaml": "a3b824ef3e08b4549b5d32890353bbe4fb0785d4190dece4b4ea4fa5af36681a",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/spec_check.py": "759c0c73d772322f6206ececf68a7b84d4350125ee35546791f0cb946f903370",
+        "assets/SPEC.template.md": "86b603d96522c56ea8be9dae0e328c0de1a299549b4dd977ef5c3aeca971185b",
+        "assets/QUESTIONS.template.md": "41f910724e057b7d9bb27a785df60e131ff572b8057d03b31b4c3efb6c759b9c"
+      },
+      "evidence": "runs/S2/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "S3",
+      "status": "passed",
+      "expected_observed_outcome": "blocked; deferred OD retained",
+      "coordinator_semantic_review": "Missing image/schema and partial notes were not claimed read; no expiry/resend/duplicate/role contract invented; unknowns saved despite draft-first request.",
+      "critical_checks": [
+        {
+          "criterion": "deferred blocking OD-permission preserved with Q relation and blocking impact",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "missing image/schema and partial notes recorded, not claimed read/not-applicable",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no invented expiry/resend/duplicate/role/API shapes",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "usable draft/blocked, no ready without evidence",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "all discovered questions saved despite draft-first request",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "sources/candidate preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "spec_incomplete_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "63bb183a669d24e324b3aabd6c7a50fc004e21ff",
+      "candidate_runtime_files": {
+        "SKILL.md": "25ec414ed814223416d92edd2ad3e50addfeeb38f22f44a4a1018948249a4742",
+        "references/sources-and-authority.md": "d7d86c75ed2d5385361c32b663c7cdd7bf0a7fbbe9760e866c34f5cee972eec8",
+        "references/readiness-and-updates.md": "f1d572c9bdca7971aae1db84f10bc920ee735e7795f323ea66349b05eecef53f",
+        "agents/openai.yaml": "a3b824ef3e08b4549b5d32890353bbe4fb0785d4190dece4b4ea4fa5af36681a",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/spec_check.py": "759c0c73d772322f6206ececf68a7b84d4350125ee35546791f0cb946f903370",
+        "assets/SPEC.template.md": "86b603d96522c56ea8be9dae0e328c0de1a299549b4dd977ef5c3aeca971185b",
+        "assets/QUESTIONS.template.md": "41f910724e057b7d9bb27a785df60e131ff572b8057d03b31b4c3efb6c759b9c"
+      },
+      "evidence": "runs/S3/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "S4",
+      "status": "passed",
+      "expected_observed_outcome": "ready after v2 update; Q-002/Q-010 resolved",
+      "coordinator_semantic_review": "Response items/total and owner optional/null/empty mapping updated; manual sentence, AC/Q/OD IDs and old review history preserved; current source hashes/reviews refreshed.",
+      "critical_checks": [
+        {
+          "criterion": "wrapper items/total response replaces original array meaning consistently",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "display count uses total not items.length",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "owner_name response optional/null/empty mapping explicit, not request field",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "AC-1/2/3/owner and Q/OD identities/history kept",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "Q-002/Q-010 resolved from actual DEC-027, nonblocking deployment remains open",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "manual USER-EDITED text and failure/Retry/race/selection cases preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "updated source identity/reviews/current readiness, no stale validation reuse",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "raw sources/old spec-check/candidate preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "spec_update_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "63bb183a669d24e324b3aabd6c7a50fc004e21ff",
+      "candidate_runtime_files": {
+        "SKILL.md": "25ec414ed814223416d92edd2ad3e50addfeeb38f22f44a4a1018948249a4742",
+        "references/sources-and-authority.md": "d7d86c75ed2d5385361c32b663c7cdd7bf0a7fbbe9760e866c34f5cee972eec8",
+        "references/readiness-and-updates.md": "f1d572c9bdca7971aae1db84f10bc920ee735e7795f323ea66349b05eecef53f",
+        "agents/openai.yaml": "a3b824ef3e08b4549b5d32890353bbe4fb0785d4190dece4b4ea4fa5af36681a",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/spec_check.py": "759c0c73d772322f6206ececf68a7b84d4350125ee35546791f0cb946f903370",
+        "assets/SPEC.template.md": "86b603d96522c56ea8be9dae0e328c0de1a299549b4dd977ef5c3aeca971185b",
+        "assets/QUESTIONS.template.md": "41f910724e057b7d9bb27a785df60e131ff572b8057d03b31b4c3efb6c759b9c"
+      },
+      "evidence": "runs/S4/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "S5",
+      "status": "passed",
+      "expected_observed_outcome": "not implementation-ready; inspect-only output",
+      "coordinator_semantic_review": "Identified server/client-filter and Retry-reset contradictions despite valid structure/ready label. Original SPEC/QUESTIONS remained byte-identical; candidates were explicitly not registered.",
+      "critical_checks": [
+        {
+          "criterion": "read-only SPEC/QUESTIONS and sources preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "server-filter vs client-only contradiction identified with sources",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "Retry All/reset vs current-filter/selection contradiction identified",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "ready/structure record not trusted as semantic correctness",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "not marked implementation-ready; question candidates kept distinct from actual QUESTIONS registration",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no app/code/Git/permission expansion",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "spec_inspect_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "63bb183a669d24e324b3aabd6c7a50fc004e21ff",
+      "candidate_runtime_files": {
+        "SKILL.md": "25ec414ed814223416d92edd2ad3e50addfeeb38f22f44a4a1018948249a4742",
+        "references/sources-and-authority.md": "d7d86c75ed2d5385361c32b663c7cdd7bf0a7fbbe9760e866c34f5cee972eec8",
+        "references/readiness-and-updates.md": "f1d572c9bdca7971aae1db84f10bc920ee735e7795f323ea66349b05eecef53f",
+        "agents/openai.yaml": "a3b824ef3e08b4549b5d32890353bbe4fb0785d4190dece4b4ea4fa5af36681a",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/spec_check.py": "759c0c73d772322f6206ececf68a7b84d4350125ee35546791f0cb946f903370",
+        "assets/SPEC.template.md": "86b603d96522c56ea8be9dae0e328c0de1a299549b4dd977ef5c3aeca971185b",
+        "assets/QUESTIONS.template.md": "41f910724e057b7d9bb27a785df60e131ff572b8057d03b31b4c3efb6c759b9c"
+      },
+      "evidence": "runs/S5/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "S6",
+      "status": "passed",
+      "expected_observed_outcome": "all three ACs reconstructed",
+      "coordinator_semantic_review": "Fresh-context reader reconstructed actor/action/request/results and constraints from the handoff; did not equate agreement with correctness. Same-id renamed-name synchronization was a noncore unprovided edge, not a new required policy.",
+      "critical_checks": [
+        {
+          "criterion": "reconstruct four status request mapping and count",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "selection remains across hidden/filter/loading/error/empty and restored mark",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "Retry current filter preserves selection",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "latest success/failure/finally only",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "read-only/no archive contract invention",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "initial image state not assumed normative default",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "reader agreement not asserted as correctness proof",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "spec_reader_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "63bb183a669d24e324b3aabd6c7a50fc004e21ff",
+      "candidate_runtime_files": {
+        "SKILL.md": "25ec414ed814223416d92edd2ad3e50addfeeb38f22f44a4a1018948249a4742",
+        "references/sources-and-authority.md": "d7d86c75ed2d5385361c32b663c7cdd7bf0a7fbbe9760e866c34f5cee972eec8",
+        "references/readiness-and-updates.md": "f1d572c9bdca7971aae1db84f10bc920ee735e7795f323ea66349b05eecef53f",
+        "agents/openai.yaml": "a3b824ef3e08b4549b5d32890353bbe4fb0785d4190dece4b4ea4fa5af36681a",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/spec_check.py": "759c0c73d772322f6206ececf68a7b84d4350125ee35546791f0cb946f903370",
+        "assets/SPEC.template.md": "86b603d96522c56ea8be9dae0e328c0de1a299549b4dd977ef5c3aeca971185b",
+        "assets/QUESTIONS.template.md": "41f910724e057b7d9bb27a785df60e131ff572b8057d03b31b4c3efb6c759b9c"
+      },
+      "evidence": "runs/S6/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "N1",
+      "status": "passed",
+      "expected_observed_outcome": "ready; one local AC; zero questions",
+      "coordinator_semantic_review": "Neutral-label holdout: local props-only checkbox correctly produced 3/2/3 counts and original order; no API/permission/loading/persistence blockers were invented.",
+      "critical_checks": [
+        {
+          "criterion": "ready without artificial API/permission/image blockers",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "single original AC and literal label preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "unchecked all a/b/c count3, checked a/c count2, uncheck restoresorder",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no API/schema/loading/error/persistence invented; inapplicable sections explained",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "keyboard Space/focus and blue-token requirement retained",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "internal component/state choices remain discretionary",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "sources/candidate preserved; questions truly unresolved only",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "spec_holdout_one",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "63bb183a669d24e324b3aabd6c7a50fc004e21ff",
+      "candidate_runtime_files": {
+        "SKILL.md": "25ec414ed814223416d92edd2ad3e50addfeeb38f22f44a4a1018948249a4742",
+        "references/sources-and-authority.md": "d7d86c75ed2d5385361c32b663c7cdd7bf0a7fbbe9760e866c34f5cee972eec8",
+        "references/readiness-and-updates.md": "f1d572c9bdca7971aae1db84f10bc920ee735e7795f323ea66349b05eecef53f",
+        "agents/openai.yaml": "a3b824ef3e08b4549b5d32890353bbe4fb0785d4190dece4b4ea4fa5af36681a",
+        "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+        "scripts/spec_check.py": "759c0c73d772322f6206ececf68a7b84d4350125ee35546791f0cb946f903370",
+        "assets/SPEC.template.md": "86b603d96522c56ea8be9dae0e328c0de1a299549b4dd977ef5c3aeca971185b",
+        "assets/QUESTIONS.template.md": "41f910724e057b7d9bb27a785df60e131ff572b8057d03b31b4c3efb6c759b9c"
+      },
+      "evidence": "runs/N1/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    }
+  ],
+  "passed_cases": 7,
+  "total_cases": 7,
+  "grading": "coordinator AI semantic review plus independent source/hash/browser/HTTP/SQLite checks; not a blinded human rating",
+  "limitations": [
+    "Synthetic local fixtures and one inherited model family; no statistical population estimate or A/B benefit claim.",
+    "Actor task scopes withheld oracles; no OS-level isolation or authenticated raw model-tool stream export is claimed.",
+    "First descriptive case labels were visible; neutral-label N1 separately checks simple readiness without API pressure.",
+    "Native OS input/IME, shared authenticated profiles, alternate driver/recording versions, Service Workers and real production services were not evaluated."
+  ]
+}

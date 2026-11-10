@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "task": "Project status filter and independent selection panel",
+  "surface": "ui",
+  "scope": [
+    "src",
+    "tests"
+  ],
+  "preserve": [
+    "server.mjs",
+    "package.json",
+    "package-lock.json",
+    "user-draft.md",
+    "AGENTS.md",
+    "DESIGN.md",
+    "ux.md",
+    "prototype.html",
+    "sources",
+    "contract",
+    "index.html",
+    "tsconfig.json"
+  ],
+  "sources": [
+    {
+      "id": "spec",
+      "path": "contract/SPEC.md"
+    },
+    {
+      "id": "questions",
+      "path": "contract/QUESTIONS.md"
+    },
+    {
+      "id": "original-request",
+      "path": "sources/request.md"
+    },
+    {
+      "id": "api-contract",
+      "path": "sources/api.md"
+    },
+    {
+      "id": "design",
+      "path": "DESIGN.md"
+    },
+    {
+      "id": "source-design",
+      "path": "sources/DESIGN.md"
+    },
+    {
+      "id": "ux",
+      "path": "ux.md"
+    },
+    {
+      "id": "source-ux",
+      "path": "sources/ux.md"
+    },
+    {
+      "id": "selected-reference",
+      "path": "sources/selected-reference.png"
+    },
+    {
+      "id": "prototype",
+      "path": "prototype.html"
+    },
+    {
+      "id": "project-instructions",
+      "path": "AGENTS.md"
+    },
+    {
+      "id": "package",
+      "path": "package.json"
+    },
+    {
+      "id": "lockfile",
+      "path": "package-lock.json"
+    },
+    {
+      "id": "tsconfig",
+      "path": "tsconfig.json"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "AC-1",
+      "source": "spec",
+      "description": "Four labelled statuses send real query and show returned names/statuses/count; system tokens, focus, 700/701 layout",
+      "disposition": "required",
+      "checks": [
+        "typecheck",
+        "tests",
+        "build",
+        "browser-status",
+        "browser-design"
+      ]
+    },
+    {
+      "id": "AC-2",
+      "source": "spec",
+      "description": "Selected project object/name survives filter, loading and empty and restores by id",
+      "disposition": "required",
+      "checks": [
+        "typecheck",
+        "tests",
+        "build",
+        "browser-selection"
+      ]
+    },
+    {
+      "id": "AC-3",
+      "source": "spec",
+      "description": "Error/Retry differs from empty, uses current filter, preserves selection and rejects stale success/error/finally",
+      "disposition": "required",
+      "checks": [
+        "typecheck",
+        "tests",
+        "build",
+        "browser-recovery-races"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "typecheck",
+      "kind": "command",
+      "required": true,
+      "description": "Native TypeScript validation"
+    },
+    {
+      "id": "tests",
+      "kind": "command",
+      "required": true,
+      "description": "Native API contract tests"
+    },
+    {
+      "id": "build",
+      "kind": "command",
+      "required": true,
+      "description": "Native production build"
+    },
+    {
+      "id": "browser-status",
+      "kind": "browser",
+      "required": true,
+      "description": "Actual app All/Active/Archived/Paused API queries, response rows/counts 3/2/1/0"
+    },
+    {
+      "id": "browser-design",
+      "kind": "browser",
+      "required": true,
+      "description": "Actual app labelled control, keyboard focus, blue selected border and 700/701 responsive columns"
+    },
+    {
+      "id": "browser-selection",
+      "kind": "browser",
+      "required": true,
+      "description": "Select project, hide via other filter, loading, empty, return and see same id selected"
+    },
+    {
+      "id": "browser-recovery-races",
+      "kind": "browser",
+      "required": true,
+      "description": "Actual server failure/recovery with current-filter Retry, selection preservation and delayed stale success/error/finally ignored"
+    }
+  ]
+}
