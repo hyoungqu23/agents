@@ -1,0 +1,16 @@
+Actual cua_repl tool trace excerpts, tab 1, browser IAB 4, URL http://127.0.0.1:63653/
+Initial DOM snapshot:
+- heading "프로젝트 목록" [level=1]
+- paragraph: 프로젝트를 저장하고 다시 불러와 확인하세요.
+- textbox "프로젝트 이름"
+- button "저장"
+- status
+- button "다시 불러오기"
+- button "보관 (미지원)" [disabled]
+- list: 기존 사용자 프로젝트 - 보존 대상; button 삭제
+Read-only DOM metadata: input id=name, required=true, maxLength=-1, minLength=-1, tabIndex=0; buttons 저장/다시 불러오기 enabled, 보관 disabled. Viewport 1280x720, DPR2. Account/org/role not exposed.
+Actual actions, each followed by getAXState and read-only activeElement:
+1. tab.pressKey(null,"Tab") from BODY -> INPUT id=name; AX focused field 프로젝트 이름.
+2. tab.pressKey(null,"Tab") -> BUTTON text 저장; AX focused button 저장.
+3. tab.pressKey(null,"Return") empty -> AX container 이 입력란을 작성하세요.; focus returns INPUT id=name. DOM validity: valid=false,valueMissing=true,validationMessage=이 입력란을 작성하세요.; value="". List remains [{id:"500",text:"기존 사용자 프로젝트 - 보존 대상\n삭제"}], status="".
+No image API used. DOM presence does not establish visual absence of clipping or focus ring quality.

@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-10T01:17:25.130265+00:00",
+  "method": "GET",
+  "url": "http://127.0.0.1:62502/build",
+  "status": 200,
+  "body": {
+    "build": "quality-deployment",
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "backend": "local-sqlite"
+  }
+}

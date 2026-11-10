@@ -1,0 +1,422 @@
+[
+  {
+    "original": "output/failure_race_driver.py",
+    "packaged": "output/failure_race_driver.py",
+    "sha256": "612f293d16d1ae6c3573ab9bb8df57be65c077add8afd62089d04820ffdc8d8e",
+    "json_packed": false
+  },
+  {
+    "original": "output/target-after.json",
+    "packaged": "output/target-after.json",
+    "sha256": "e1d0fa03a895e09754464a462c732adeb8301f8e0ebd9d01cf518276b6af3bc3",
+    "json_packed": false
+  },
+  {
+    "original": "output/target-before.json",
+    "packaged": "output/target-before.json",
+    "sha256": "e1d0fa03a895e09754464a462c732adeb8301f8e0ebd9d01cf518276b6af3bc3",
+    "json_packed": false
+  },
+  {
+    "original": "output/assessment.json",
+    "packaged": "output/assessment.json",
+    "sha256": "9dc5d46cafac7e3c25cf2f6193e3a292498ce41ac8300025c79e76332e172e61",
+    "json_packed": false
+  },
+  {
+    "original": "output/failure_race_driver_3.py",
+    "packaged": "output/failure_race_driver_3.py",
+    "sha256": "ba026b4012d2b61252ac1611fccd0046d9305aa1b48f943d55e5e6a9b8be0e1d",
+    "json_packed": false
+  },
+  {
+    "original": "output/report.md",
+    "packaged": "output/report.md",
+    "sha256": "02886cbb003e8322e131a69e999f406db402cf60236094c2675438fb6c45d1f4",
+    "json_packed": false
+  },
+  {
+    "original": "output/api_probe.py",
+    "packaged": "output/api_probe.py",
+    "sha256": "4950503a3be7ff2c1cf4fcc6b34cb89eb04e0a247b443c248cd770e5487a1288",
+    "json_packed": false
+  },
+  {
+    "original": "output/assessment-record-schema-attempt1.json",
+    "packaged": "output/assessment-record-schema-attempt1.json",
+    "sha256": "057bdf997d5b813a250fe0beb93dc97ea13d7e4ecae5e4fab1d555b8ab32f215",
+    "json_packed": false
+  },
+  {
+    "original": "output/run.json",
+    "packaged": "output/run.json",
+    "sha256": "08546187a7cfcaab01eb54f9baddcfee475554a21c29377075d8df990f05880c",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/23-failure-race-latest.txt",
+    "packaged": "output/evidence/23-failure-race-latest.txt",
+    "sha256": "9fc2358a17e1eb9c8687e01c344df82ba21071eb785ab72e6520170ce654af61",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/37-api-normal-after.json",
+    "packaged": "output/evidence/37-api-normal-after.json",
+    "sha256": "7184a5e0ced519aa77a9dff6512fcf08c751978b32f56f12b28a0113fe49170d",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/33-final-all.jpg",
+    "packaged": "output/evidence/33-final-all.jpg",
+    "sha256": "592aefcbd025175efa4d27df78d08fc41eebc74c28a9a489037315091c740684",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/09-paused.jpg",
+    "packaged": "output/evidence/09-paused.jpg",
+    "sha256": "eb747f83236e906a1ff1a0d3c37aec1bfea86b868b5d16eb1066b3d08f239767",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/07-archived.jpg",
+    "packaged": "output/evidence/07-archived.jpg",
+    "sha256": "8d08d1846626faadde2b6d7bb18d5c166b856c12e90146a29b88b744f9afcf19",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/18-success-race-completion.json",
+    "packaged": "output/evidence/18-success-race-completion.json",
+    "sha256": "5401131353136e7a3165bc1e3e0b5907f5cf334d296515963ad59e1bddd935df",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/01-all-image-trace.txt",
+    "packaged": "output/evidence/01-all-image-trace.txt",
+    "sha256": "bee61a0c0f32237f94fe0c8ce328465ec127931f070f3fb89e20d5cb84bbd66e",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/27-failure-race-2-latest.txt",
+    "packaged": "output/evidence/27-failure-race-2-latest.txt",
+    "sha256": "76477ca5b2d6fcad7a2045afb50e18a8b4d84de82a9b726dbd9a4cb87384258b",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/03-api-active.json",
+    "packaged": "output/evidence/03-api-active.json",
+    "sha256": "1a70f43569bf9eb5b4d5b9898a4f7bb83764934f1648dfb8edb14dfe03f202e4",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/29-failure-race-3-active.txt",
+    "packaged": "output/evidence/29-failure-race-3-active.txt",
+    "sha256": "c9f0c223e40a6bd2ec7c1f14aad480893e864e36dd545f17013dc8fcc2aa23fd",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/06-active-ax.txt",
+    "packaged": "output/evidence/06-active-ax.txt.artifact.json",
+    "sha256": "deb4d86a4cf603481cd789b26908d68ef5489d86e35afa18440080822e07777e",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/04-selected-ax.txt",
+    "packaged": "output/evidence/04-selected-ax.txt.artifact.json",
+    "sha256": "006c8778efa3c1caca5e22621b89f9fff6e9b0f294ebc6cc9042558bc54c3612",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/03-api-archived.json",
+    "packaged": "output/evidence/03-api-archived.json",
+    "sha256": "532c1ba81a342ae382118ab8afeca69fa07e0628125c39e2ea78e5c5cfbe2efa",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/14-retry.jpg",
+    "packaged": "output/evidence/14-retry.jpg",
+    "sha256": "8ae48a227e8ffb81f3d09bdf4d8b39235361be464a9842fc0eee9c912749dce6",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/36-pending-after.json",
+    "packaged": "output/evidence/36-pending-after.json",
+    "sha256": "2bc50b6aa8767e7bcf51673c4741e0f0ea8a0ced20b50543ffc083a025eb011e",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/05-active-loading-ax.txt",
+    "packaged": "output/evidence/05-active-loading-ax.txt.artifact.json",
+    "sha256": "a048351f4833c34efca192ad9bc4502155a86f308cf4585ee2e4ffd23b147e70",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/28-failure-race-http-timeline.json",
+    "packaged": "output/evidence/28-failure-race-http-timeline.json",
+    "sha256": "6f233f3733618c74b2b0e97f2355e0d03438bfa8e00b771313efe04e4ddcf197",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/07-archived-image-trace.txt",
+    "packaged": "output/evidence/07-archived-image-trace.txt",
+    "sha256": "7537d2c0bce26df7fc8a8d71c20d2da578193012f589dd312deb39123008f8fc",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/33-final-all.txt",
+    "packaged": "output/evidence/33-final-all.txt",
+    "sha256": "95314228e56deda4f05f04ad19a50c559444bec6ae87e468a5273de485f75d1d",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/33-final-image-trace.txt",
+    "packaged": "output/evidence/33-final-image-trace.txt",
+    "sha256": "b191ce0adcde14bdbe91f07ce89ebad864c5c9e912fc4433b100320d492ba8d8",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/13-mode-recover.json",
+    "packaged": "output/evidence/13-mode-recover.json",
+    "sha256": "88560cd667840965619c8224c9a12c703f4094729ed127ccf6ba6495c323ddcd",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/02-mode-normal.json",
+    "packaged": "output/evidence/02-mode-normal.json",
+    "sha256": "849365d9273b35a91cab97eff156b89ade36ed6d827ceb6113662feee12db622",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/environment-before.json",
+    "packaged": "output/evidence/environment-before.json",
+    "sha256": "c0b3573831eb7c3747ebcc365c4b56bd21b10b6e24a185f8e7c0ff54ba632822",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/22-mode-latest-success.json",
+    "packaged": "output/evidence/22-mode-latest-success.json",
+    "sha256": "20313cd3abbae382dd1efbd1654c9fb419b4c4d027d9116fb98a65173d2e170e",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/17-success-race-pending.json",
+    "packaged": "output/evidence/17-success-race-pending.json",
+    "sha256": "c67da72ddc8c8562dbe808f07c95de9edeadc604ab8bb6da467b26f7d180185d",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/11-error-image-trace.txt",
+    "packaged": "output/evidence/11-error-image-trace.txt",
+    "sha256": "d0343c1433e63e8bffb0b027cd08fc0b8503891f4cc913cf69ae9a0d038d9dcf",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/25-failure-race-http-timeline.json",
+    "packaged": "output/evidence/25-failure-race-http-timeline.json",
+    "sha256": "1c3a6934a6ee34c47ded179fa0b2eca9176aed481d285b5b089ec3c080a35f52",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/11-error.jpg",
+    "packaged": "output/evidence/11-error.jpg",
+    "sha256": "bd2396c232019c40e7ac887981f21f453fa41e9000b584296390957ed5aacd19",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/01-all.jpg",
+    "packaged": "output/evidence/01-all.jpg",
+    "sha256": "be1104ec4072844beb3b8112982e6e58a01c329f668dae1aef8d35103541f8fd",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/10-mode-fail.json",
+    "packaged": "output/evidence/10-mode-fail.json",
+    "sha256": "4f7b7cdd69689fed80dd53964fad0ff39ad9b596324515dd046307069f9a3a80",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/20-mode-old-failure.json",
+    "packaged": "output/evidence/20-mode-old-failure.json",
+    "sha256": "facbb3a74643ee3a472e844c9dfbb3bfb843c40f262dc2721eec85186478f017",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/09-paused-ax.txt",
+    "packaged": "output/evidence/09-paused-ax.txt.artifact.json",
+    "sha256": "64954af65f04a973fb8be5b2fe05390e3b3e1bebc318b28413f45b966e1d4193",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/09-paused-image-trace.txt",
+    "packaged": "output/evidence/09-paused-image-trace.txt",
+    "sha256": "5b61cf4fdbc99a0bb820950955b3e0b3eda29126400ffd59620a0b97f2ed481c",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/16-success-race-latest.txt",
+    "packaged": "output/evidence/16-success-race-latest.txt",
+    "sha256": "76a51d0d9d5c496ac881b6eea34aa36f936e6dd485da42afb8f6aecb1d3728a6",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/19-success-race-after.txt",
+    "packaged": "output/evidence/19-success-race-after.txt",
+    "sha256": "435dc9368ff3cea04435b0c93ef29b54d664631ab7ef74b60a3e6f06b8dd95e5",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/15-success-race-active.txt",
+    "packaged": "output/evidence/15-success-race-active.txt",
+    "sha256": "3126bde9d67137ddffee86063e8367e893c68890c24970d5d4ce72558a8182e5",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/08-archived-complete-ax.txt",
+    "packaged": "output/evidence/08-archived-complete-ax.txt.artifact.json",
+    "sha256": "9260e5fda2f472300022cc291a547dedd944b5965d801664a40ebc7fede6e5a6",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/31-failure-race-3-after.txt",
+    "packaged": "output/evidence/31-failure-race-3-after.txt",
+    "sha256": "df455aee4a7e06b4dc4c18e1f2a5648e534019f868ff1330931bbb042dc76ccc",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/32-stale-error-retry.txt",
+    "packaged": "output/evidence/32-stale-error-retry.txt",
+    "sha256": "128049f3a5844ca16730d37cce6bea1238c3c15ffdff83694b6f94de768364ac",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/38-capture-metadata.txt",
+    "packaged": "output/evidence/38-capture-metadata.txt",
+    "sha256": "9004a62b228386ed44eb7605b75870880169e116edb6efceaa0df4f10e2a829b",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/21-failure-race-active.txt",
+    "packaged": "output/evidence/21-failure-race-active.txt",
+    "sha256": "37848eab91c423ed2d6055b464e4604a218b1bde0110d1aee3ce54bb2aa3d93d",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/31-failure-race-image-trace.txt",
+    "packaged": "output/evidence/31-failure-race-image-trace.txt",
+    "sha256": "47c3601796d8f5bf757ee0cb18fea7d048af42bac15d00e3ac3042f16b773928",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/07-archived-ax.txt",
+    "packaged": "output/evidence/07-archived-ax.txt.artifact.json",
+    "sha256": "e14f40e4546c1cec69216b90ef1218af9e67759d74d2ffcd99704bc27e9f9c7d",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/34-owned-tab-cleanup.json",
+    "packaged": "output/evidence/34-owned-tab-cleanup.json",
+    "sha256": "2e68e490d0346927e6e523f0dd015744adf9e3ace2b5703f398edb96a1836f22",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/11-error-ax.txt",
+    "packaged": "output/evidence/11-error-ax.txt.artifact.json",
+    "sha256": "9fe17130e048b15d02c0430ba69c6dfdb2825f2ac9b7b91b6bbb906344e7bba9",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/26-failure-race-2-active.txt",
+    "packaged": "output/evidence/26-failure-race-2-active.txt",
+    "sha256": "b052e81ff54602455f31d1540a00978649bc657f808cafc22b47124f3cc922b1",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/19-success-race-image-trace.txt",
+    "packaged": "output/evidence/19-success-race-image-trace.txt",
+    "sha256": "31f4bb65db34d364271459d3c211909ff9c1958e7dfe015b4b37a7e5908fef67",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/04-dom-selector-diagnostics.txt",
+    "packaged": "output/evidence/04-dom-selector-diagnostics.txt",
+    "sha256": "6b187b64932fd01f3c9c0be28ce9347ebcb1039264b4102e631922589a484933",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/01-all-ax.txt",
+    "packaged": "output/evidence/01-all-ax.txt.artifact.json",
+    "sha256": "4ce72fcda3157eadc4da2f4e11bbd50f6231c4d5e326c4946c05a5dcc296e5c1",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/25-mode-normal-ready.json",
+    "packaged": "output/evidence/25-mode-normal-ready.json",
+    "sha256": "ecd1cc09776b7e40275c3fee368dc1f37769a4cd2ada8e82fd1422a773c24804",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/03-api-paused.json",
+    "packaged": "output/evidence/03-api-paused.json",
+    "sha256": "38d39365c3957a91d443bc6e3b1b76986280a35c1435c4db0336471d022ff42f",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/28-mode-normal-ready.json",
+    "packaged": "output/evidence/28-mode-normal-ready.json",
+    "sha256": "a55a5fd478a54e71f7189b8191735ec88283f06110f0d9d650a9988af433ca57",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/03-api-all.json",
+    "packaged": "output/evidence/03-api-all.json",
+    "sha256": "fe781c0e8985bd141b0de6e40bf56f5bffef62828b5df2de5996d24dac5ec531",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/31-failure-race-3-after.jpg",
+    "packaged": "output/evidence/31-failure-race-3-after.jpg",
+    "sha256": "bd2396c232019c40e7ac887981f21f453fa41e9000b584296390957ed5aacd19",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/19-success-race-after.jpg",
+    "packaged": "output/evidence/19-success-race-after.jpg",
+    "sha256": "8ae48a227e8ffb81f3d09bdf4d8b39235361be464a9842fc0eee9c912749dce6",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/30-failure-race-3-latest.txt",
+    "packaged": "output/evidence/30-failure-race-3-latest.txt",
+    "sha256": "33ead6926137762572fcfdb2dc581f2b17eb583c782a7f6a8d368367479d4547",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/14-retry-ax.txt",
+    "packaged": "output/evidence/14-retry-ax.txt.artifact.json",
+    "sha256": "9260e5fda2f472300022cc291a547dedd944b5965d801664a40ebc7fede6e5a6",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/24-failure-race-pending.json",
+    "packaged": "output/evidence/24-failure-race-pending.json",
+    "sha256": "c602400341337e5f40503689e3105229b31f8aba2fca2dc77a39a1f9330b1e0c",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/14-retry-image-trace.txt",
+    "packaged": "output/evidence/14-retry-image-trace.txt",
+    "sha256": "2ec9bc5a46862c0282e4631cb826120ccfffff6d7c9ce7c602c5c5847c969afe",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/35-build-after.json",
+    "packaged": "output/evidence/35-build-after.json",
+    "sha256": "ae8efa338c2088530a05999f305e44263e479f340b1c569918f50dc05e957aee",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/12-pending-error.json",
+    "packaged": "output/evidence/12-pending-error.json",
+    "sha256": "e0db82dceb254f715d4239ef31cbfb9be6514c487943fc85d5278761670aaa3b",
+    "json_packed": false
+  }
+]

@@ -1,7 +1,7 @@
 {
   "skill_name": "dogfood",
   "kind": "behavioral_scenarios",
-  "execution_status": "not_run",
+  "execution_status": "partially_run",
   "evals": [
     {
       "id": "EV-01",
@@ -11,7 +11,15 @@
         "DGF-01",
         "DGF-16"
       ],
-      "status": "not_run"
+      "status": "partial",
+      "forward_coverage": {
+        "level": "partial",
+        "cases": [
+          "D1",
+          "D2"
+        ],
+        "note": "직접 dogfood 요청 실행; fix/review/capture 근접 요청의 라우팅 음성군은 미실행"
+      }
     },
     {
       "id": "EV-02",
@@ -21,7 +29,14 @@
         "DGF-03",
         "DGF-09"
       ],
-      "status": "not_run"
+      "status": "covered",
+      "forward_coverage": {
+        "level": "covered",
+        "cases": [
+          "D2"
+        ],
+        "note": "정상 동선·의도된 비활성 대조군"
+      }
     },
     {
       "id": "EV-03",
@@ -32,7 +47,12 @@
         "DGF-06",
         "DGF-09"
       ],
-      "status": "not_run"
+      "status": "not_run",
+      "forward_coverage": {
+        "level": "not_run",
+        "cases": [],
+        "note": "복합 range/modifier 선택 입력 제품은 이 fixture에 없음"
+      }
     },
     {
       "id": "EV-04",
@@ -42,7 +62,14 @@
         "DGF-07",
         "DGF-08"
       ],
-      "status": "not_run"
+      "status": "covered",
+      "forward_coverage": {
+        "level": "covered",
+        "cases": [
+          "D1"
+        ],
+        "note": "DOM 정상 텍스트와 실제 잘림 구분"
+      }
     },
     {
       "id": "EV-05",
@@ -53,7 +80,14 @@
         "DGF-08",
         "DGF-09"
       ],
-      "status": "not_run"
+      "status": "partial",
+      "forward_coverage": {
+        "level": "partial",
+        "cases": [
+          "D5"
+        ],
+        "note": "늦은 실패 응답·관찰 빈도 검증; 무작위 간헐 결함은 미실행"
+      }
     },
     {
       "id": "EV-06",
@@ -64,7 +98,15 @@
         "DGF-11",
         "DGF-15"
       ],
-      "status": "not_run"
+      "status": "covered",
+      "forward_coverage": {
+        "level": "covered",
+        "cases": [
+          "D1",
+          "D2"
+        ],
+        "note": "실제 HTTP/SQLite 저장·재조회·정확한 정리"
+      }
     },
     {
       "id": "EV-07",
@@ -74,7 +116,14 @@
         "DGF-06",
         "DGF-11"
       ],
-      "status": "not_run"
+      "status": "covered",
+      "forward_coverage": {
+        "level": "covered",
+        "cases": [
+          "D1"
+        ],
+        "note": "저장 뒤 응답 유실, 재조회 전 재전송 없음"
+      }
     },
     {
       "id": "EV-08",
@@ -85,7 +134,12 @@
         "DGF-05",
         "DGF-14"
       ],
-      "status": "not_run"
+      "status": "not_run",
+      "forward_coverage": {
+        "level": "not_run",
+        "cases": [],
+        "note": "인증/조직/역할·로그인 만료·시작 실패 실제 환경 미제공"
+      }
     },
     {
       "id": "EV-09",
@@ -95,7 +149,15 @@
         "DGF-02",
         "DGF-13"
       ],
-      "status": "not_run"
+      "status": "partial",
+      "forward_coverage": {
+        "level": "partial",
+        "cases": [
+          "D3",
+          "D6"
+        ],
+        "note": "요청/제공 revision 불일치와 새 빌드; 누적 PR·오래된 실제 bundle 변형 미실행"
+      }
     },
     {
       "id": "EV-10",
@@ -105,7 +167,12 @@
         "DGF-02",
         "DGF-10"
       ],
-      "status": "not_run"
+      "status": "not_run",
+      "forward_coverage": {
+        "level": "not_run",
+        "cases": [],
+        "note": "Service Worker/PWA/응답 대체 환경은 미실행"
+      }
     },
     {
       "id": "EV-11",
@@ -116,7 +183,14 @@
         "DGF-07",
         "DGF-14"
       ],
-      "status": "not_run"
+      "status": "covered",
+      "forward_coverage": {
+        "level": "covered",
+        "cases": [
+          "D4"
+        ],
+        "note": "이미지 금지 조건에서 필수 visual blocked; 실제 namespace 부재가 아닌 enforced constraint"
+      }
     },
     {
       "id": "EV-12",
@@ -127,7 +201,12 @@
         "DGF-08",
         "DGF-15"
       ],
-      "status": "not_run"
+      "status": "not_run",
+      "forward_coverage": {
+        "level": "not_run",
+        "cases": [],
+        "note": "녹화 context 교체 및 공유 인증 세션 버전 조합 미실행"
+      }
     },
     {
       "id": "EV-13",
@@ -138,7 +217,12 @@
         "DGF-06",
         "DGF-15"
       ],
-      "status": "not_run"
+      "status": "not_run",
+      "forward_coverage": {
+        "level": "not_run",
+        "cases": [],
+        "note": "잘못된 탭/창·stale ref·동일 profile 동시 조작 fault 미실행"
+      }
     },
     {
       "id": "EV-14",
@@ -148,7 +232,14 @@
         "DGF-12",
         "DGF-13"
       ],
-      "status": "not_run"
+      "status": "partial",
+      "forward_coverage": {
+        "level": "partial",
+        "cases": [
+          "D6"
+        ],
+        "note": "완료된 과거 실제 run에서 새 빌드 재검증; 부분 중단 후 재개 변형은 아님"
+      }
     },
     {
       "id": "EV-15",
@@ -158,7 +249,16 @@
         "DGF-12",
         "DGF-14"
       ],
-      "status": "not_run"
+      "status": "partial",
+      "forward_coverage": {
+        "level": "partial",
+        "cases": [
+          "D3",
+          "D4",
+          "D6"
+        ],
+        "note": "필수 검사/대상 미검증 거부; 빈/다른 대상 증거 파일 변형은 기계 검사"
+      }
     },
     {
       "id": "EV-16",
@@ -168,7 +268,15 @@
         "DGF-09",
         "DGF-14"
       ],
-      "status": "not_run"
+      "status": "covered",
+      "forward_coverage": {
+        "level": "covered",
+        "cases": [
+          "D1",
+          "D5"
+        ],
+        "note": "범위 complete와 issues_found 병존"
+      }
     },
     {
       "id": "EV-17",
@@ -178,7 +286,16 @@
         "DGF-03",
         "DGF-17"
       ],
-      "status": "not_run"
+      "status": "partial",
+      "forward_coverage": {
+        "level": "partial",
+        "cases": [
+          "D1",
+          "D2",
+          "D5"
+        ],
+        "note": "독립 계약/정상 대조군으로 실제 결함 판단; 불명확 intent는 관찰로 구분, 별도 intent 충돌 fixture 없음"
+      }
     },
     {
       "id": "EV-18",
@@ -189,7 +306,12 @@
         "DGF-08",
         "DGF-18"
       ],
-      "status": "not_run"
+      "status": "not_run",
+      "forward_coverage": {
+        "level": "not_run",
+        "cases": [],
+        "note": "잘못된 크기/타깃/부분/무효 캡처 fault 미실행"
+      }
     },
     {
       "id": "EV-19",
@@ -200,7 +322,14 @@
         "DGF-12",
         "DGF-14"
       ],
-      "status": "not_run"
+      "status": "covered",
+      "forward_coverage": {
+        "level": "covered",
+        "cases": [
+          "D2"
+        ],
+        "note": "201자 경계 관찰을 근거 없는 확정 결함으로 만들지 않고 보존"
+      }
     },
     {
       "id": "EV-20",
@@ -210,7 +339,30 @@
         "DGF-04",
         "DGF-19"
       ],
-      "status": "not_run"
+      "status": "partial",
+      "forward_coverage": {
+        "level": "partial",
+        "cases": [
+          "D1",
+          "D2",
+          "D5"
+        ],
+        "note": "candidate 자체 bundle+host 도구만 사용; 다른 QA 스킬의 물리적 미설치 host는 아님"
+      }
     }
-  ]
+  ],
+  "behavioral_quality_suite": {
+    "status": "core_forward_tasks_executed",
+    "date": "2026-11-10",
+    "cases": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6"
+    ],
+    "report": "reports/dogfood-quality-2026-11-10/README.md",
+    "scope_note": "Grouped forward tasks do not imply every predeclared scenario or tool combination was executed; see coverage and limitations."
+  }
 }

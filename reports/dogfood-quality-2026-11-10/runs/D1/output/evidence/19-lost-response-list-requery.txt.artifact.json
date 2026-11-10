@@ -1,0 +1,7 @@
+{
+  "original_name": "19-lost-response-list-requery.txt",
+  "encoding": "utf-8",
+  "sha256": "dd8cac0fbaf2b9d71efdf9e3e4e3102bf6810938cfb5a556d57881163f8c7ca0",
+  "content": "Browser tab: 1893495255, Title: \"프로젝트 QA\", URL: \"http://127.0.0.1:61464/\".\n1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:61464/\n\t2 heading 프로젝트 목록, Value: 1\n\t\t3 text 프로젝트 목록\n\t4 text 프로젝트를 저장하고 다시 불러와 확인하세요.\n\t5 container form\n\t\t6 container\n\t\t\t7 text 프로젝트 이름 \n\t\t\t8 text field (settable) 프로젝트 이름, Value: lost-response, ID: name\n\t\t9 button 저장\n\t25 text 저장 결과 미확인. 다시 불러오기로 확인하세요.\n\t10 button 다시 불러오기, ID: refresh\n\t11 button (disabled) 보관 (미지원)\n\t12 content list items\n\t\t26 container\n\t\t\t27 text 기존 사용자 프로젝트 - 보존 대상\n\t\t\t28 button 삭제\n\t\t29 container\n\t\t\t30 text 실제 사용자 동선 검증을 위한 아주 긴 프로젝트 이름\n\t\t\t31 button 삭제\n\t\t32 container\n\t\t\t33 text 가\n\t\t\t34 button 삭제\n\t\t35 container\n\t\t\t36 text 경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경\n\t\t\t37 button 삭제\n\t\t38 container\n\t\t\t39 text lost-response\n\t\t\t40 button 삭제\n\nThe focused UI element is 10 button 다시 불러오기, ID: refresh",
+  "note": "Exact historical bytes, JSON-packed to preserve whitespace. Not rewritten/relabelled evidence."
+}

@@ -1,0 +1,10 @@
+Actual cua_repl trace excerpts, owned IAB tab 1.
+1. From focused INPUT name: tab.typeText(null,"D4-check-keyboard-20261110-0136") -> getAXState value equals input, focus INPUT.
+2. tab.pressKey(null,"Tab") -> getAXState focus BUTTON 저장.
+3. tab.pressKey(null,"Return") -> getAXState and DOM snapshot: status 저장됨; list shows existing project and D4-check-keyboard-20261110-0136.
+4. Actual GET /api/items separately saved in api-after-keyboard.txt: id 501 exact name, id 500 preserved.
+5. tab.pressKey(null,"Tab") -> focus BUTTON id=refresh 다시 불러오기.
+6. tab.pressKey(null,"Return") -> list read-only DOM [{id:"500",name:"기존 사용자 프로젝트 - 보존 대상"},{id:"501",name:"D4-check-keyboard-20261110-0136"}].
+7. tab.pressKey(null,"Tab") -> focus first 삭제; disabled 보관 (미지원) skipped; DOM archiveDisabled=true. No delete activated.
+8. tab.reload() -> getAXState/DOM list retains exact name, textbox empty, status empty, archive disabled.
+Actual key input and DOM/AX observations; no programmatic focus, synthetic DOM dispatch, mocks, or image capture.

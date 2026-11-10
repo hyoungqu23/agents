@@ -1,0 +1,5 @@
+Actual mcp__cua_repl.js calls, own tab 1893495255:
+textbox(name=프로젝트 이름).press(Tab) => AX focused button 저장.
+button(저장).press(Shift+Tab) => AX focused textbox 프로젝트 이름.
+textbox.press(Enter) with empty value => native validation container 이 입력란을 작성하세요. Focus textbox; list remains baseline item only. No save retry.
+No synthetic DOM dispatch or JavaScript focus was used. Documented locator.press focuses its starting element and then sends browser keys; these are browser keyboard actions, not a claim of continuous native OS keyboard input.

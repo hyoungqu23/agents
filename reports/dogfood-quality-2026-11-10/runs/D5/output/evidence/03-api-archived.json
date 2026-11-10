@@ -1,0 +1,16 @@
+{
+  "started": "2026-11-10T01:43:05.701441+00:00",
+  "method": "GET",
+  "url": "http://127.0.0.1:63857/api/projects?status=archived",
+  "request_body": null,
+  "http_status": 200,
+  "body": [
+    {
+      "id": "forest",
+      "name": "Forest",
+      "status": "archived"
+    }
+  ],
+  "finished": "2026-11-10T01:43:05.744551+00:00",
+  "elapsed_seconds": 0.043
+}

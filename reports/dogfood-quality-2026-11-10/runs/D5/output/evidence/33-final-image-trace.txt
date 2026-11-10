@@ -1,0 +1,1 @@
+mcp__cua_repl.js getScreenshot emitted actual JPEG bytes; model inspected All 3 projects and selected Tide after recovery.

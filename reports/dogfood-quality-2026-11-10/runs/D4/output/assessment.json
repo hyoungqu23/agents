@@ -1,0 +1,11 @@
+{
+  "status": "partial",
+  "product_result": "undetermined",
+  "gaps": [
+    {
+      "check": "C-11",
+      "reason": "blocked"
+    }
+  ],
+  "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db"
+}

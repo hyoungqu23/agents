@@ -1,0 +1,5 @@
+Browser tab: 1893495255, Title: "프로젝트 QA", URL: "http://127.0.0.1:61464/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~			8 text field (settable) 프로젝트 이름, Value: lost-response, ID: name
++	25 text 저장 결과 미확인. 다시 불러오기로 확인하세요.
+The focused UI element is 9 button 저장

@@ -1,0 +1,734 @@
+{
+  "schema_version": 1,
+  "attempt": "D6-retest-current-64114",
+  "previous_attempt": {
+    "read_only_path": "/private/tmp/skill-quality-20261110/dogfood/runs/D6-retest/history",
+    "url": "http://127.0.0.1:61464/",
+    "served_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "historical_issue": "I-01 C-03 reproduced twice on old target; current status pending"
+  },
+  "target": {
+    "url": "http://127.0.0.1:64114/",
+    "environment": "local test app; current browser /build observed",
+    "role": "no login presented; anonymous UI",
+    "backend": "http://127.0.0.1:64114/api/items; /build says local-sqlite",
+    "desired_revision": "cccccccccccccccccccccccccccccccccccccccc",
+    "served_revision": "cccccccccccccccccccccccccccccccccccccccc",
+    "served_build": "quality-deployment"
+  },
+  "charter": {
+    "goal": "현재 대상의 build/revision 확인, I-01 재검증, 저장·재조회·이름 경계·전체 표시·키보드·정확한 직접 생성 데이터 정리",
+    "risks": [
+      "과거 증거를 새 대상으로 오인",
+      "새 환경 기존 데이터의 오삭제",
+      "저장값과 표시 불일치",
+      "초과 이름 또는 응답 유실 시 중복 재전송"
+    ],
+    "source": "current prompt plus original history scope retained",
+    "stopping_condition": "필수 체크의 새 증거·판정, 직접 생성 ID 정리, target-after와 recorder assessment"
+  },
+  "journeys": [
+    {
+      "id": "J-1",
+      "goal": "기존 항목 보존 하에 저장→재조회→재진입→삭제→재조회"
+    },
+    {
+      "id": "J-2",
+      "goal": "이름 경계와 목록 전체 표시"
+    },
+    {
+      "id": "J-3",
+      "goal": "키보드와 의도된 비활성 보관"
+    },
+    {
+      "id": "J-4",
+      "goal": "응답 유실 후 안전한 목록 재확인"
+    }
+  ],
+  "checks": [
+    {
+      "id": "C-01",
+      "journey": "J-1",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "정상 저장값이 실제 API와 재진입에서 동일하다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "정상 저장값이 실제 API와 재진입에서 동일하다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "지정29자 이름 UI Enter 저장 후 새 GET API id502 원문 일치, UI 재조회 및 / 재진입에서 동일.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/06-long-save.txt",
+          "sha256": "136ea5e9af89d5142288ffe2980a136f902eba83735024e5df8325b3fbd5977f"
+        },
+        {
+          "path": "evidence/09-ui-refresh.txt",
+          "sha256": "eb770d09f98073ae69ec10fb3884eb9c89a110dccd334e42f339230fb98e33bc"
+        },
+        {
+          "path": "evidence/10-api-after-long.txt",
+          "sha256": "e39122fcedbe140e4edf647e85e3e7b4f9af2da09f65c4dbe97c481b1fac5100"
+        },
+        {
+          "path": "evidence/11-long-reentry.txt",
+          "sha256": "adb47d928a8ab2e71828c7038aa165e7b546028b84ce57f9602bcee726e9324e"
+        }
+      ],
+      "persistence": {
+        "mode": "real_api",
+        "requery_trace": "evidence/10-api-after-long.txt"
+      }
+    },
+    {
+      "id": "C-02",
+      "journey": "J-1",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "생성한 프로젝트를 UI에서 삭제하면 API와 재진입에서 제거된다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "생성한 프로젝트를 UI에서 삭제하면 API와 재진입에서 제거된다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "새로 생성한502를 실제Tab초점 후Enter삭제; 실제GET 및 /재진입에서없음.503/504/505도 각각한번 UI삭제후 최종GET/재진입에서없음.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/28-delete-focus.txt",
+          "sha256": "9335b1f2db0352910b4058753d846e9d46c23fd7580d1797714f9d10d6a2c2a3"
+        },
+        {
+          "path": "evidence/29-delete-own502.txt",
+          "sha256": "308d83c5f296e7923099eddcc28fea665539575420364a88cafddf4d9242b974"
+        },
+        {
+          "path": "evidence/30-api-after-delete502.txt",
+          "sha256": "26e69b13a003818b040a9102f4a012d9f64fac5ccedf7a12596ac11cfd839332"
+        },
+        {
+          "path": "evidence/31-reentry-after-delete502.txt",
+          "sha256": "342617a3ece2317972c2af3d42a23063a04021aaf66fe6290ad59e0877bb2147"
+        },
+        {
+          "path": "evidence/32-cleanup-ui-trace.txt",
+          "sha256": "5016f4d3b47cc42f0455b39fde100695cf5666db7df1f4524ef47c5d16faa96e"
+        },
+        {
+          "path": "evidence/33-final-api.txt",
+          "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83"
+        },
+        {
+          "path": "evidence/35-final-reentry.txt",
+          "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8"
+        }
+      ],
+      "persistence": {
+        "mode": "real_api",
+        "requery_trace": "evidence/33-final-api.txt"
+      }
+    },
+    {
+      "id": "C-03",
+      "journey": "J-2",
+      "required": true,
+      "axis": "visual",
+      "purpose": "지정된 긴 프로젝트 이름을 목록에서 전체 읽을 수 있다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "지정된 긴 프로젝트 이름을 목록에서 전체 읽을 수 있다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "현재 저장 직후와 재진입 새 이미지에서29자 전체 읽기 가능. 200자 이름은6줄로 줄바꿈해 전체 보임. 과거 I-01은 현재 조건에서 재현되지 않음.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/07-long-current.jpg",
+          "sha256": "c1e3b5b6e6e5b0cb6ac1d4ece183d0ee4280ceff1156ccedd8d11ecd7de39de3"
+        },
+        {
+          "path": "evidence/12-long-reentry.jpg",
+          "sha256": "302cf18644d083864108537a5e042bb057ad321b8f0511d90bb80130678902f1"
+        },
+        {
+          "path": "evidence/18-boundary-current.jpg",
+          "sha256": "eddfbbc3230752cb47f9620b0b4acf8c544c921a904efda77332130ee421b435"
+        },
+        {
+          "path": "evidence/18-image-inspection-trace.txt",
+          "sha256": "0288e91241679e78119e6068f934454d3ea2e128506125cfef3f7e49e35ae6b7"
+        }
+      ],
+      "visual": {
+        "image": "evidence/18-boundary-current.jpg",
+        "inspected": true,
+        "inspection_trace": "evidence/18-image-inspection-trace.txt",
+        "observation": "29자 전체 이름과200자 이름의6줄 줄바꿈 전체를 실제 현재 이미지에서 읽을 수 있음. 잘림/삭제버튼 겹침 없음.",
+        "pixels": [
+          2504,
+          1363
+        ],
+        "css_viewport": [
+          2504,
+          1363
+        ],
+        "dpr": 2,
+        "scale": 1,
+        "capture": "viewport",
+        "comparison_scope": "현재 desktop viewport의 앱 x912..1592 y111..847 목록. 사용자 전체 읽기 요구 기반 관찰. 과거 bitmap과 픽셀동일 비교 아님; 변환/리사이즈/마스크 없음."
+      }
+    },
+    {
+      "id": "C-04",
+      "journey": "J-3",
+      "required": true,
+      "axis": "accessibility",
+      "purpose": "실제 Tab/Shift+Tab/Enter로 저장·새로고침·삭제에 접근하고 초점을 볼 수 있다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "실제 Tab/Shift+Tab/Enter로 저장·새로고침·삭제에 접근하고 초점을 볼 수 있다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "실제locator.press: inputTab→저장, 저장Tab→다시불러오기, refreshTab→500삭제(비활성보관건너뜀),500Tab→501삭제,501Tab→own502삭제,502Shift+Tab→501삭제. Enter저장·재조회·own502삭제 완료. 저장/own삭제 보라초점링 실제이미지확인. locator.press는 시작요소포커스; OS연속키보드와IME는미검증.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/04-empty-keyboard.txt",
+          "sha256": "3e11e45a6d29bd334db07bbb3c9218bee6805835687102ccdb0d1ae7442bcb73"
+        },
+        {
+          "path": "evidence/05-save-focus.txt",
+          "sha256": "3aaa3ac500c8b7f912e6838272bf1ccbf085746bc8284e33ea4f9bad6b5900fe"
+        },
+        {
+          "path": "evidence/05-save-focus.jpg",
+          "sha256": "0929a39a5c0e531206e671be398b9cc6c9f8d922ab7dbcbaef3cda841d67f9bc"
+        },
+        {
+          "path": "evidence/08-refresh-focus.txt",
+          "sha256": "dbd616cd7606866b4cdc666bf2913ccd09c91f62cdc5d7bc5423e49263e51da6"
+        },
+        {
+          "path": "evidence/13-keyboard-traversal.txt",
+          "sha256": "88200eb2012f3057e289976fb4b8b99f321e56f9303d668ddb7581e8335d24d4"
+        },
+        {
+          "path": "evidence/28-delete-focus.txt",
+          "sha256": "9335b1f2db0352910b4058753d846e9d46c23fd7580d1797714f9d10d6a2c2a3"
+        },
+        {
+          "path": "evidence/28-delete-focus.jpg",
+          "sha256": "70e3b6b7c323a420ebffdac3a16e1090fe169285accc3eaf28895108fc8246e3"
+        },
+        {
+          "path": "evidence/29-delete-own502.txt",
+          "sha256": "308d83c5f296e7923099eddcc28fea665539575420364a88cafddf4d9242b974"
+        },
+        {
+          "path": "evidence/18-image-inspection-trace.txt",
+          "sha256": "0288e91241679e78119e6068f934454d3ea2e128506125cfef3f7e49e35ae6b7"
+        }
+      ]
+    },
+    {
+      "id": "C-05",
+      "journey": "J-2",
+      "required": true,
+      "axis": "functional",
+      "purpose": "빈 이름(0자)을 저장하지 않는다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "빈 이름(0자)을 저장하지 않는다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "빈 입력 Enter는 required 오류, 초점 입력 유지. 기준선500/501만 있고 빈 항목 생성 없음.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/04-empty-keyboard.txt",
+          "sha256": "3e11e45a6d29bd334db07bbb3c9218bee6805835687102ccdb0d1ae7442bcb73"
+        },
+        {
+          "path": "evidence/10-api-after-long.txt",
+          "sha256": "e39122fcedbe140e4edf647e85e3e7b4f9af2da09f65c4dbe97c481b1fac5100"
+        }
+      ]
+    },
+    {
+      "id": "C-06",
+      "journey": "J-2",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "1자 이름을 정확히 저장·재조회할 수 있다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "1자 이름을 정확히 저장·재조회할 수 있다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "래1자 UI 저장, 실제 GET 새id503 원문 래 length1, 재진입 목록 동일.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/14-one-char-save.txt",
+          "sha256": "a0ebeb425b208034c0853f841072195cfe57217477e8137f1d6b5839dc5edb6a"
+        },
+        {
+          "path": "evidence/16-api-boundaries.txt",
+          "sha256": "6b4829cfddfbc2754967d71db595bf5d08cb52d94a24f647d787557ff9f93c13"
+        },
+        {
+          "path": "evidence/16-api-values-checked.json",
+          "sha256": "d2e8a7689a53fb348558f4f30aea00e2f36d1bbf7853861230123e3b0d8b5af7"
+        },
+        {
+          "path": "evidence/17-boundary-reentry.txt",
+          "sha256": "e84d17999fa10cb4b0acbe8e5eb3c5adce63ede6045b9be60456862e88bb91e0"
+        }
+      ],
+      "persistence": {
+        "mode": "real_api",
+        "requery_trace": "evidence/16-api-boundaries.txt"
+      }
+    },
+    {
+      "id": "C-07",
+      "journey": "J-2",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "200자 이름을 정확히 저장·재조회할 수 있다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "200자 이름을 정확히 저장·재조회할 수 있다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "D6-current- + 경x189 총200자 UI 저장, 실제 GET 새id504 length200 원문 일치, 재진입 목록 동일.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/15-max-char-save.txt",
+          "sha256": "f6f376f5dfd7c8d74b7d3f2a3f208e6ec7e1d1bc5e51d223f41865699cc744ac"
+        },
+        {
+          "path": "evidence/16-api-boundaries.txt",
+          "sha256": "6b4829cfddfbc2754967d71db595bf5d08cb52d94a24f647d787557ff9f93c13"
+        },
+        {
+          "path": "evidence/16-api-values-checked.json",
+          "sha256": "d2e8a7689a53fb348558f4f30aea00e2f36d1bbf7853861230123e3b0d8b5af7"
+        },
+        {
+          "path": "evidence/17-boundary-reentry.txt",
+          "sha256": "e84d17999fa10cb4b0acbe8e5eb3c5adce63ede6045b9be60456862e88bb91e0"
+        }
+      ],
+      "persistence": {
+        "mode": "real_api",
+        "requery_trace": "evidence/16-api-boundaries.txt"
+      }
+    },
+    {
+      "id": "C-08",
+      "journey": "J-2",
+      "required": true,
+      "axis": "functional",
+      "purpose": "201자 이름을 제한하여 200자 초과값이 저장되지 않는다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "201자 이름을 제한하여 200자 초과값이 저장되지 않는다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "Sequential 실제 키67자씩3회로 길이67/134/201 확인. 저장Enter1회 후 결과 미확인. 재전송 없이 UI 재조회→실제 GET과 / 재진입에서201자 초×201 미생성 확인.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/19-201-actual-key-input.txt",
+          "sha256": "cf95b8d404f2cb6fba5890e38ce78000d641ac11d6ebf5dc9df0fe8051f936e9"
+        },
+        {
+          "path": "evidence/20-201-save.txt",
+          "sha256": "951325bfd0c1a7583a680e9d5d2d8c6f6626b8a314ab48f932fc2346877fcf67"
+        },
+        {
+          "path": "evidence/21-201-ui-requery.txt",
+          "sha256": "e94efad442dda94fa6aa7df2b12f49a08aeb3e477d154478c2a6c9c77871d554"
+        },
+        {
+          "path": "evidence/22-api-after-201.txt",
+          "sha256": "6b4829cfddfbc2754967d71db595bf5d08cb52d94a24f647d787557ff9f93c13"
+        },
+        {
+          "path": "evidence/23-201-reentry.txt",
+          "sha256": "e84d17999fa10cb4b0acbe8e5eb3c5adce63ede6045b9be60456862e88bb91e0"
+        }
+      ]
+    },
+    {
+      "id": "C-09",
+      "journey": "J-4",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "lost-response 저장 응답 유실 시 재전송 전에 실제 목록/API를 확인하고 중복 저장하지 않는다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "lost-response 저장 응답 유실 시 재전송 전에 실제 목록/API를 확인하고 중복 저장하지 않는다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "lost-response UI 저장1회 후 저장 결과 미확인. 재전송 없이 refresh→실제 GET에서 새id505 lost-response1개→/ 재진입 확인. 초기 refresh 즉시AX에는 아직 항목 없음이어서 GET으로 확정. 응답유실 원인/HTTP상세 미수집.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/24-lost-save.txt",
+          "sha256": "1b4fca6207b59e28661ba52fa8b699a2cfa1c0af78d22bc0bbc5a55f4edcf4dd"
+        },
+        {
+          "path": "evidence/25-lost-ui-requery.txt",
+          "sha256": "470694376338ecbdb44fef4afa555ee7046cc16a53b2f7e25b384ec278d8279b"
+        },
+        {
+          "path": "evidence/26-lost-api.txt",
+          "sha256": "c8b85ecbe30e20114935f7a32e98ef48e1eb85e83e501ec975d2c38ffce6b918"
+        },
+        {
+          "path": "evidence/27-lost-reentry.txt",
+          "sha256": "28a77c5f69e61bdb5eb9e578c671d7510b0fa9819c09d772f7cb9cf1b614a468"
+        }
+      ],
+      "persistence": {
+        "mode": "real_api",
+        "requery_trace": "evidence/26-lost-api.txt"
+      }
+    },
+    {
+      "id": "C-10",
+      "journey": "J-3",
+      "required": true,
+      "axis": "functional",
+      "purpose": "보관은 명시적 미지원이며 비활성화되어 있다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "보관은 명시적 미지원이며 비활성화되어 있다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "보관(미지원)은 AX disabled 및 실제 회색 비활성. refresh에서Tab은 보관을 건너뛰고 baseline500삭제로 이동. 의도된 동작.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/03-current-entry.txt",
+          "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8"
+        },
+        {
+          "path": "evidence/13-keyboard-traversal.txt",
+          "sha256": "88200eb2012f3057e289976fb4b8b99f321e56f9303d668ddb7581e8335d24d4"
+        },
+        {
+          "path": "evidence/18-boundary-current.jpg",
+          "sha256": "eddfbbc3230752cb47f9620b0b4acf8c544c921a904efda77332130ee421b435"
+        }
+      ]
+    },
+    {
+      "id": "C-11",
+      "journey": "J-1",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "새 환경의 기존 데이터를 보존하고 이번 시도에서 직접 생성한 정확한 ID만 정리한다",
+      "expectation": {
+        "source": "D6-retest/prompt.txt; history/run.json original required scope retained as a new attempt",
+        "text": "새 환경의 기존 데이터를 보존하고 이번 시도에서 직접 생성한 정확한 ID만 정리한다",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "현재API기준선500/501 두항목 id·name최종일치. 이번UI쓰기+GET로확정한502~505만삭제;201자생성없음. 최종GET/재진입에서기존두항목만보존. 과거id501은현재다른팀소유이므로삭제안함. own탭만종료.",
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+      "evidence": [
+        {
+          "path": "evidence/02-api-baseline.txt",
+          "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83"
+        },
+        {
+          "path": "evidence/27-before-cleanup-current-ids.json",
+          "sha256": "023e60c5d1583fe5b70818ef0c54d6c4aa019f2c8305462eeb26b9469c473b38"
+        },
+        {
+          "path": "evidence/32-cleanup-ui-trace.txt",
+          "sha256": "5016f4d3b47cc42f0455b39fde100695cf5666db7df1f4524ef47c5d16faa96e"
+        },
+        {
+          "path": "evidence/33-final-api.txt",
+          "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83"
+        },
+        {
+          "path": "evidence/35-final-reentry.txt",
+          "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8"
+        },
+        {
+          "path": "evidence/36-final-cleaned.jpg",
+          "sha256": "09f03f5b9d6bd2b3f9872b3d07c6b759d7e2b772741d8cb2d2476c72ea54f1d7"
+        },
+        {
+          "path": "evidence/38-resource-cleanup.txt",
+          "sha256": "a41a3bca720345ede09d898a8b3bd43f14eeb6cfa1a618574d54e5eb64dba25d"
+        }
+      ],
+      "persistence": {
+        "mode": "real_api",
+        "requery_trace": "evidence/33-final-api.txt"
+      }
+    }
+  ],
+  "issues": [],
+  "data_operations": [
+    {
+      "id": "D-01",
+      "scenario": "새 대상 긴 이름 UI 저장→재조회→I-01 시각 재검증→삭제",
+      "target": "current 64114 UI POST /api/items",
+      "planned_name": "실제 사용자 동선 검증을 위한 아주 긴 프로젝트 이름",
+      "created_ids": [
+        "502"
+      ],
+      "detail": "현재 baseline GET 이후 실제 UI 입력 한 번과 실제 GET으로 새id 502 이름 원문 확인; 삭제 대기; 직접 생성한 정확한ID만 UI삭제, 최종 실제GET 및 재진입에서없음확인",
+      "outcome": "confirmed",
+      "cleanup": "done",
+      "evidence": [
+        {
+          "path": "evidence/33-final-api.txt",
+          "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83"
+        },
+        {
+          "path": "evidence/35-final-reentry.txt",
+          "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8"
+        },
+        {
+          "path": "evidence/38-resource-cleanup.txt",
+          "sha256": "a41a3bca720345ede09d898a8b3bd43f14eeb6cfa1a618574d54e5eb64dba25d"
+        }
+      ]
+    },
+    {
+      "id": "D-02",
+      "scenario": "1자 경계 UI 저장→재조회→삭제",
+      "target": "current 64114 UI POST /api/items",
+      "planned_name": "래",
+      "created_ids": [
+        "503"
+      ],
+      "detail": "현재 baseline GET 이후 실제 UI 입력 한 번과 실제 GET으로 새id 503 이름 원문 확인; 삭제 대기; 직접 생성한 정확한ID만 UI삭제, 최종 실제GET 및 재진입에서없음확인",
+      "outcome": "confirmed",
+      "cleanup": "done",
+      "evidence": [
+        {
+          "path": "evidence/33-final-api.txt",
+          "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83"
+        },
+        {
+          "path": "evidence/35-final-reentry.txt",
+          "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8"
+        },
+        {
+          "path": "evidence/38-resource-cleanup.txt",
+          "sha256": "a41a3bca720345ede09d898a8b3bd43f14eeb6cfa1a618574d54e5eb64dba25d"
+        }
+      ]
+    },
+    {
+      "id": "D-03",
+      "scenario": "200자 경계 UI 저장→재조회→전체표시→삭제",
+      "target": "current 64114 UI POST /api/items",
+      "planned_name": "D6-current-경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경",
+      "created_ids": [
+        "504"
+      ],
+      "detail": "현재 baseline GET 이후 실제 UI 입력 한 번과 실제 GET으로 새id 504 이름 원문 확인; 삭제 대기; 직접 생성한 정확한ID만 UI삭제, 최종 실제GET 및 재진입에서없음확인",
+      "outcome": "confirmed",
+      "cleanup": "done",
+      "evidence": [
+        {
+          "path": "evidence/33-final-api.txt",
+          "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83"
+        },
+        {
+          "path": "evidence/35-final-reentry.txt",
+          "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8"
+        },
+        {
+          "path": "evidence/38-resource-cleanup.txt",
+          "sha256": "a41a3bca720345ede09d898a8b3bd43f14eeb6cfa1a618574d54e5eb64dba25d"
+        }
+      ]
+    },
+    {
+      "id": "D-04",
+      "scenario": "201자 초과 이름 UI 입력 및 제한 확인",
+      "target": "current 64114 UI POST /api/items if accepted",
+      "planned_name": "초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초",
+      "created_ids": [],
+      "detail": "실제 키입력201자 후 저장1회 결과미확인. 재전송 없이 실제 GET 및 재진입에서없음확정; 생성없음",
+      "outcome": "confirmed",
+      "cleanup": "not_needed",
+      "evidence": [
+        {
+          "path": "evidence/22-api-after-201.txt",
+          "sha256": "6b4829cfddfbc2754967d71db595bf5d08cb52d94a24f647d787557ff9f93c13"
+        },
+        {
+          "path": "evidence/23-201-reentry.txt",
+          "sha256": "e84d17999fa10cb4b0acbe8e5eb3c5adce63ede6045b9be60456862e88bb91e0"
+        }
+      ]
+    },
+    {
+      "id": "D-05",
+      "scenario": "lost-response UI 저장 1회 후 안전한 목록 재조회",
+      "target": "current 64114 UI POST /api/items",
+      "planned_name": "lost-response",
+      "created_ids": [
+        "505"
+      ],
+      "detail": "실제UI저장1회 결과미확인. 재전송 없이 실제GET에서lost-response id505 한개확인; 재진입동일; 정리대기; 직접 생성한 정확한ID만 UI삭제, 최종 실제GET 및 재진입에서없음확인",
+      "outcome": "confirmed",
+      "cleanup": "done",
+      "evidence": [
+        {
+          "path": "evidence/33-final-api.txt",
+          "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83"
+        },
+        {
+          "path": "evidence/35-final-reentry.txt",
+          "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8"
+        },
+        {
+          "path": "evidence/38-resource-cleanup.txt",
+          "sha256": "a41a3bca720345ede09d898a8b3bd43f14eeb6cfa1a618574d54e5eb64dba25d"
+        }
+      ]
+    }
+  ],
+  "prior_issue_retest": {
+    "id": "I-01",
+    "historical_check": "C-03",
+    "current_status": "not_reproduced_in_current_conditions",
+    "historical_evidence_not_current": true,
+    "current_check": "C-03",
+    "current_target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+    "current_evidence": [
+      {
+        "path": "evidence/07-long-current.jpg",
+        "sha256": "c1e3b5b6e6e5b0cb6ac1d4ece183d0ee4280ceff1156ccedd8d11ecd7de39de3"
+      },
+      {
+        "path": "evidence/12-long-reentry.jpg",
+        "sha256": "302cf18644d083864108537a5e042bb057ad321b8f0511d90bb80130678902f1"
+      },
+      {
+        "path": "evidence/18-boundary-current.jpg",
+        "sha256": "eddfbbc3230752cb47f9620b0b4acf8c544c921a904efda77332130ee421b435"
+      },
+      {
+        "path": "evidence/18-image-inspection-trace.txt",
+        "sha256": "0288e91241679e78119e6068f934454d3ea2e128506125cfef3f7e49e35ae6b7"
+      }
+    ],
+    "meaning": "과거 I-01 기록은 보존. 현재build/revision에 대해 새로운 시각 관찰; 근본원인/코드수정 확인 주장은 하지 않음."
+  },
+  "limitations": [
+    "Terminal curl /build and /api/items localhost exit7 connection failure; real endpoints observed by own Chrome tab navigation instead.",
+    "Browser version/profile name not exposed in selected-browser response; anonymous UI only. No account/org/other roles tested.",
+    "Raw POST/DELETE HTTP status/timing/network capture not exposed. Actual UI writes + independent real GET and route reentry establish saved/deleted outcomes; lost-response transport cause is not determined.",
+    "Only current desktop CSS2504x1363 DPR2, capture scale1. No mobile, other viewport/browser/language/role, performance or security promise tested.",
+    "Keyboard tests use DOM browser locator.press, which focuses starting element; no native OS continuous key input or IME test. Actual sequential201 chars observed.",
+    "Build/revision is external /build declaration before/after; helper remote_only cannot authenticate served JavaScript bundle.",
+    "Initial unbound browser variable caused browser-is-not-defined before opening a tab. Then selected same Chrome2 was explicitly bound; no other tab opened or modified.",
+    "No source/DB/oracle/other case/evaluation access; no mocking/state injection/package install/external publish/Git edits/delegation."
+  ],
+  "session": {
+    "tool": "mcp__cua_repl host Chrome extension",
+    "version": "not exposed",
+    "ownership": "new own QA tab; other tabs untouched",
+    "browser_id": "2",
+    "tab_id": "1893495273",
+    "capabilities": {
+      "semantic_input": "runtime observed fill/click",
+      "keyboard": "runtime observed locator.press Tab/Shift+Tab/Enter, pressSequentially67x3; locator focuses starting element",
+      "screenshots": "runtime observed JPEG getScreenshot + nodeRepl.emitImage; tools.view_image original",
+      "network_inspector": "not exposed; GET via own tab navigation",
+      "OS_input": "not used; native continuous input/IME not verified",
+      "console": "runtime observed final error/warn query returned empty"
+    }
+  },
+  "baseline": {
+    "current_ids": [
+      "500",
+      "501"
+    ],
+    "items": [
+      {
+        "id": "500",
+        "name": "기존 사용자 프로젝트 - 보존 대상"
+      },
+      {
+        "id": "501",
+        "name": "다른 팀이 생성한 프로젝트 - 보존 대상"
+      }
+    ],
+    "source": "evidence/02-api-baseline.txt",
+    "history_id_reuse_for_cleanup": false
+  },
+  "cleanup_plan": {
+    "exact_current_created_ids": [
+      "502",
+      "503",
+      "504",
+      "505"
+    ],
+    "preserve_current_baseline_ids": [
+      "500",
+      "501"
+    ],
+    "source": "new current baseline evidence02 plus new UIwrites and GET evidence10/16/26; no historical IDs used as authority",
+    "method": "current rendered data-id + name mapping, UI delete only exact own ID; real GET and reentry afterwards",
+    "state": "done; current baseline500/501 preserved; new created502/503/504/505 removed; own tab closed"
+  },
+  "target_evidence": {
+    "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b",
+    "evidence": [
+      {
+        "path": "evidence/01-build-before.txt",
+        "sha256": "67459a6c492bae8dc57fafe00a1b727143015d4bd3591040980bae2c9d29eb62"
+      },
+      {
+        "path": "evidence/02-api-baseline.txt",
+        "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83"
+      },
+      {
+        "path": "evidence/03-current-entry.txt",
+        "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8"
+      },
+      {
+        "path": "evidence/34-build-after.txt",
+        "sha256": "a9a18e8a8496b090e8e97c8b264227fa57cea278f3854db6333b93e13136fc79"
+      },
+      {
+        "path": "evidence/35-final-reentry.txt",
+        "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8"
+      }
+    ]
+  },
+  "history_preserved": {
+    "files_before": 40,
+    "files_after": 40,
+    "unchanged": true,
+    "changed_paths": []
+  }
+}

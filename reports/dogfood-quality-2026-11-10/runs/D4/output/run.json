@@ -1,0 +1,550 @@
+{
+  "schema_version": 1,
+  "target": {
+    "url": "http://127.0.0.1:63653/",
+    "environment": "provided local QA app",
+    "role": "unknown",
+    "backend": "/api/items; /build reports local-sqlite",
+    "served_build": "quality-deployment",
+    "served_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "charter": {
+    "goal": "프로젝트 저장·재조회·키보드 동선과 표시 상태 검증",
+    "risks": [
+      "성공 표시와 실제 저장 불일치",
+      "Tab/Enter 동선",
+      "1~200자 경계 및 전체 이름 읽기"
+    ],
+    "stopping_condition": "정의된 검사와 실제 가능한 대조를 마치고 생성 데이터만 정리, 이미지 금지 검사는 blocked 보존",
+    "constraints": [
+      "이미지 캡처/보기 금지",
+      "서버 소스/DB/평가 코드 접근 금지",
+      "추가 설치/모킹/상태 주입/외부 게시/위임 금지"
+    ]
+  },
+  "journeys": [
+    {
+      "id": "J-1",
+      "goal": "프로젝트 생성 후 API 재조회 및 재진입"
+    },
+    {
+      "id": "J-2",
+      "goal": "키보드 및 입력 경계 사용"
+    },
+    {
+      "id": "J-3",
+      "goal": "표시 상태와 이름 읽기"
+    }
+  ],
+  "checks": [
+    {
+      "id": "C-01",
+      "journey": "J-1",
+      "required": true,
+      "axis": "functional",
+      "purpose": "Initial list and form",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "목록과 생성 폼이 표시되고 기존 데이터가 유지된다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "목록/폼과 기존 id 500을 DOM 및 실제 API에서 확인.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-initial-keyboard-empty.txt",
+          "sha256": "8a50465b8251853509f6744aa7bf9122a0c239e6d97c483852eb5c953b3eea61"
+        },
+        {
+          "path": "evidence/ui-keyboard-save-reentry.txt",
+          "sha256": "61e65c263527f1fe9e0db58ab69cca70bfd0a5fc9d6aa3738569c60945d68471"
+        },
+        {
+          "path": "evidence/api-baseline.txt",
+          "sha256": "46d33df13587dd8b2cc0048785cab7a754d4645e11a7923cdfb5bcfc64dcac65"
+        },
+        {
+          "path": "evidence/api-after-keyboard.txt",
+          "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037"
+        }
+      ]
+    },
+    {
+      "id": "C-02",
+      "journey": "J-1",
+      "required": true,
+      "axis": "functional",
+      "purpose": "Save via form button",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "유효한 이름으로 저장하면 목록에 생성 결과가 나타난다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "저장 버튼 클릭 후 상태 저장됨 및 실제 목록 id 502,503 확인.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-boundaries.json",
+          "sha256": "b864997eba968ab4495c0f3bc6caf86febbbf4b6dc14ae9822c5f10e84c6f69e"
+        },
+        {
+          "path": "evidence/api-after-boundaries.txt",
+          "sha256": "1f19d42d8325d32b9d94f1e1a9ff179729aa3582944ad2a122075a90f4527331"
+        },
+        {
+          "path": "evidence/api-after-201.txt",
+          "sha256": "7c76151fdb93cf6c42f3edac14e134b6fd24d6493d070fb4e7ccafef259a014a"
+        }
+      ]
+    },
+    {
+      "id": "C-03",
+      "journey": "J-1",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "Real API and reentry",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "저장한 이름과 ID를 실제 GET /api/items 및 reload 후 목록에서 다시 확인한다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "실제 GET에서 id 501 exact name 확인; 다시 불러오기 Enter와 페이지 reload 후 동일 이름 유지.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-initial-keyboard-empty.txt",
+          "sha256": "8a50465b8251853509f6744aa7bf9122a0c239e6d97c483852eb5c953b3eea61"
+        },
+        {
+          "path": "evidence/ui-keyboard-save-reentry.txt",
+          "sha256": "61e65c263527f1fe9e0db58ab69cca70bfd0a5fc9d6aa3738569c60945d68471"
+        },
+        {
+          "path": "evidence/api-baseline.txt",
+          "sha256": "46d33df13587dd8b2cc0048785cab7a754d4645e11a7923cdfb5bcfc64dcac65"
+        },
+        {
+          "path": "evidence/api-after-keyboard.txt",
+          "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037"
+        }
+      ],
+      "persistence": {
+        "mode": "real_api",
+        "requery_trace": "evidence/api-after-keyboard.txt"
+      }
+    },
+    {
+      "id": "C-04",
+      "journey": "J-2",
+      "required": true,
+      "axis": "accessibility",
+      "purpose": "Actual Tab and Enter journey",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "키보드 Tab으로 입력·저장 제어에 접근하고 실제 Enter 입력으로 생성 동작을 마친다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "실제 Tab으로 이름→저장→다시 불러오기→삭제, 비활성 보관 건너뜀. Enter 저장과 재조회 성공. 시각 포커스 표시는 C-11에 미검증.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-initial-keyboard-empty.txt",
+          "sha256": "8a50465b8251853509f6744aa7bf9122a0c239e6d97c483852eb5c953b3eea61"
+        },
+        {
+          "path": "evidence/ui-keyboard-save-reentry.txt",
+          "sha256": "61e65c263527f1fe9e0db58ab69cca70bfd0a5fc9d6aa3738569c60945d68471"
+        },
+        {
+          "path": "evidence/api-baseline.txt",
+          "sha256": "46d33df13587dd8b2cc0048785cab7a754d4645e11a7923cdfb5bcfc64dcac65"
+        },
+        {
+          "path": "evidence/api-after-keyboard.txt",
+          "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037"
+        }
+      ]
+    },
+    {
+      "id": "C-05",
+      "journey": "J-2",
+      "required": true,
+      "axis": "functional",
+      "purpose": "Empty name boundary",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "0자 이름은 생성되지 않는다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "빈 입력 Enter가 native required 검증으로 차단되고 목록은 기존 id 500만 유지했다.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-initial-keyboard-empty.txt",
+          "sha256": "8a50465b8251853509f6744aa7bf9122a0c239e6d97c483852eb5c953b3eea61"
+        },
+        {
+          "path": "evidence/ui-keyboard-save-reentry.txt",
+          "sha256": "61e65c263527f1fe9e0db58ab69cca70bfd0a5fc9d6aa3738569c60945d68471"
+        },
+        {
+          "path": "evidence/api-baseline.txt",
+          "sha256": "46d33df13587dd8b2cc0048785cab7a754d4645e11a7923cdfb5bcfc64dcac65"
+        },
+        {
+          "path": "evidence/api-after-keyboard.txt",
+          "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037"
+        }
+      ]
+    },
+    {
+      "id": "C-06",
+      "journey": "J-2",
+      "required": true,
+      "axis": "functional",
+      "purpose": "One-character name boundary",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "1자 이름은 저장된다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "1자 D를 UI 저장 버튼으로 저장하고 GET id 502 원문 일치 확인.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-boundaries.json",
+          "sha256": "b864997eba968ab4495c0f3bc6caf86febbbf4b6dc14ae9822c5f10e84c6f69e"
+        },
+        {
+          "path": "evidence/api-after-boundaries.txt",
+          "sha256": "1f19d42d8325d32b9d94f1e1a9ff179729aa3582944ad2a122075a90f4527331"
+        },
+        {
+          "path": "evidence/api-after-201.txt",
+          "sha256": "7c76151fdb93cf6c42f3edac14e134b6fd24d6493d070fb4e7ccafef259a014a"
+        }
+      ]
+    },
+    {
+      "id": "C-07",
+      "journey": "J-2",
+      "required": true,
+      "axis": "functional",
+      "purpose": "200-character name boundary",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "200자 이름은 손실 없이 저장된다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "200자 이름 UI 저장 및 실제 GET id 503의 전체 원문이 계획값과 일치.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-boundaries.json",
+          "sha256": "b864997eba968ab4495c0f3bc6caf86febbbf4b6dc14ae9822c5f10e84c6f69e"
+        },
+        {
+          "path": "evidence/api-after-boundaries.txt",
+          "sha256": "1f19d42d8325d32b9d94f1e1a9ff179729aa3582944ad2a122075a90f4527331"
+        },
+        {
+          "path": "evidence/api-after-201.txt",
+          "sha256": "7c76151fdb93cf6c42f3edac14e134b6fd24d6493d070fb4e7ccafef259a014a"
+        }
+      ]
+    },
+    {
+      "id": "C-08",
+      "journey": "J-2",
+      "required": true,
+      "axis": "functional",
+      "purpose": "201-character name boundary",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "201자 입력으로 200자 초과 이름을 저장할 수 없다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "201자 UI 입력은 가능하나 저장 후 일반 미확인 안내. GET 및 다시 불러오기에서 해당 이름 없음; 재시도하지 않음. HTTP 거부 상태는 미관찰.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-boundaries.json",
+          "sha256": "b864997eba968ab4495c0f3bc6caf86febbbf4b6dc14ae9822c5f10e84c6f69e"
+        },
+        {
+          "path": "evidence/api-after-boundaries.txt",
+          "sha256": "1f19d42d8325d32b9d94f1e1a9ff179729aa3582944ad2a122075a90f4527331"
+        },
+        {
+          "path": "evidence/api-after-201.txt",
+          "sha256": "7c76151fdb93cf6c42f3edac14e134b6fd24d6493d070fb4e7ccafef259a014a"
+        }
+      ]
+    },
+    {
+      "id": "C-09",
+      "journey": "J-3",
+      "required": true,
+      "axis": "functional",
+      "purpose": "Intentionally disabled Archive",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "보관 버튼은 비활성이며 생성 동선의 결함으로 보고하지 않는다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "DOM disabled=true 및 AX [disabled], Tab에서 건너뜀. 명시 제품 의도와 일치.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-initial-keyboard-empty.txt",
+          "sha256": "8a50465b8251853509f6744aa7bf9122a0c239e6d97c483852eb5c953b3eea61"
+        },
+        {
+          "path": "evidence/ui-keyboard-save-reentry.txt",
+          "sha256": "61e65c263527f1fe9e0db58ab69cca70bfd0a5fc9d6aa3738569c60945d68471"
+        },
+        {
+          "path": "evidence/api-baseline.txt",
+          "sha256": "46d33df13587dd8b2cc0048785cab7a754d4645e11a7923cdfb5bcfc64dcac65"
+        },
+        {
+          "path": "evidence/api-after-keyboard.txt",
+          "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037"
+        }
+      ]
+    },
+    {
+      "id": "C-10",
+      "journey": "J-3",
+      "required": true,
+      "axis": "accessibility",
+      "purpose": "Complete long name DOM availability",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "200자 전체 이름을 목록의 DOM/접근성 표현에서 읽을 수 있다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "목록의 AX text와 innerText에 200자 원문 전체가 있다. DOM 구조/치수만 확인; 실제 시각 가독성은 C-11 미검증.",
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+      "evidence": [
+        {
+          "path": "evidence/ui-boundaries.json",
+          "sha256": "b864997eba968ab4495c0f3bc6caf86febbbf4b6dc14ae9822c5f10e84c6f69e"
+        },
+        {
+          "path": "evidence/api-after-boundaries.txt",
+          "sha256": "1f19d42d8325d32b9d94f1e1a9ff179729aa3582944ad2a122075a90f4527331"
+        },
+        {
+          "path": "evidence/api-after-201.txt",
+          "sha256": "7c76151fdb93cf6c42f3edac14e134b6fd24d6493d070fb4e7ccafef259a014a"
+        }
+      ]
+    },
+    {
+      "id": "C-11",
+      "journey": "J-3",
+      "required": true,
+      "axis": "visual",
+      "purpose": "Actual visual display",
+      "expectation": {
+        "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+        "text": "실제 이미지에서 전체 이름 가독성·잘림/겹침·포커스 표시를 검사한다.",
+        "certainty": "confirmed"
+      },
+      "status": "blocked",
+      "reason": "현재 prompt가 이미지 캡처·보기 도구를 명시적으로 금지함",
+      "detail": "이미지 도구 0회. 실제 화면의 잘림/겹침/계층/포커스 테두리를 검사하지 못했다. DOM 증거로 시각 통과를 선언하지 않음."
+    }
+  ],
+  "issues": [],
+  "data_operations": [
+    {
+      "id": "D-01",
+      "scenario": "정상 이름 실제 키보드 저장 및 재조회",
+      "target": "POST /api/items via form",
+      "created_data_identification": {
+        "exact_name": "D4-check-keyboard-20261110-0136"
+      },
+      "created_ids": [
+        "501"
+      ],
+      "detail": "실제 UI Enter 저장 후 GET /api/items로 id 501 및 exact unique name 확인. cleanup pending. Exact own-created ID deleted through its UI row; API after cleanup contains only baseline id 500.",
+      "outcome": "confirmed",
+      "cleanup": "done",
+      "evidence": [
+        {
+          "path": "evidence/ui-cleanup.txt",
+          "sha256": "2e93bcaf3ad048da54a90c929c9262593e66c3b99eb5ce40f74920138381082f"
+        },
+        {
+          "path": "evidence/api-after-cleanup.txt",
+          "sha256": "75d58b0d6ffd31df0057e9e1399dc7731115d75cf1d47978c57156cd162bf445"
+        },
+        {
+          "path": "evidence/api-after-keyboard.txt",
+          "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037"
+        },
+        {
+          "path": "evidence/api-after-boundaries.txt",
+          "sha256": "1f19d42d8325d32b9d94f1e1a9ff179729aa3582944ad2a122075a90f4527331"
+        }
+      ]
+    },
+    {
+      "id": "D-02",
+      "scenario": "1자 UI 저장 경계",
+      "target": "POST /api/items via form",
+      "created_data_identification": {
+        "exact_name": "D"
+      },
+      "created_ids": [
+        "502"
+      ],
+      "detail": "Before write: baseline/현재 목록에 D 없음; 1자 D만 생성하고 응답 ID를 GET으로 식별한다. Actual UI/GET confirmed id 502; cleanup pending. Exact own-created ID deleted through its UI row; API after cleanup contains only baseline id 500.",
+      "outcome": "confirmed",
+      "cleanup": "done",
+      "evidence": [
+        {
+          "path": "evidence/ui-cleanup.txt",
+          "sha256": "2e93bcaf3ad048da54a90c929c9262593e66c3b99eb5ce40f74920138381082f"
+        },
+        {
+          "path": "evidence/api-after-cleanup.txt",
+          "sha256": "75d58b0d6ffd31df0057e9e1399dc7731115d75cf1d47978c57156cd162bf445"
+        },
+        {
+          "path": "evidence/api-after-keyboard.txt",
+          "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037"
+        },
+        {
+          "path": "evidence/api-after-boundaries.txt",
+          "sha256": "1f19d42d8325d32b9d94f1e1a9ff179729aa3582944ad2a122075a90f4527331"
+        }
+      ]
+    },
+    {
+      "id": "D-03",
+      "scenario": "200자 UI 저장 및 목록 이름 읽기",
+      "target": "POST /api/items via form",
+      "created_data_identification": {
+        "exact_name": "D4-check-20261110-한글프로젝트-경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이"
+      },
+      "created_ids": [
+        "503"
+      ],
+      "detail": "Before write: exact 200-character name defined here; GET으로 ID 및 이름 일치 확인 예정. Actual UI/GET confirmed id 503; cleanup pending. Exact own-created ID deleted through its UI row; API after cleanup contains only baseline id 500.",
+      "outcome": "confirmed",
+      "cleanup": "done",
+      "evidence": [
+        {
+          "path": "evidence/ui-cleanup.txt",
+          "sha256": "2e93bcaf3ad048da54a90c929c9262593e66c3b99eb5ce40f74920138381082f"
+        },
+        {
+          "path": "evidence/api-after-cleanup.txt",
+          "sha256": "75d58b0d6ffd31df0057e9e1399dc7731115d75cf1d47978c57156cd162bf445"
+        },
+        {
+          "path": "evidence/api-after-keyboard.txt",
+          "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037"
+        },
+        {
+          "path": "evidence/api-after-boundaries.txt",
+          "sha256": "1f19d42d8325d32b9d94f1e1a9ff179729aa3582944ad2a122075a90f4527331"
+        }
+      ]
+    },
+    {
+      "id": "D-04",
+      "scenario": "201자 UI 저장 경계",
+      "target": "POST /api/items via form",
+      "created_data_identification": {
+        "exact_name": "D4-check-201-20261110-초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검사초과검"
+      },
+      "created_ids": [],
+      "detail": "201자 저장 시도 후 GET /api/items와 다시 불러오기에서 exact name 미생성 확인. 재시도하지 않음. 응답 HTTP 상태는 미관찰.",
+      "outcome": "confirmed",
+      "cleanup": "not_needed",
+      "evidence": [
+        {
+          "path": "evidence/ui-boundaries.json",
+          "sha256": "b864997eba968ab4495c0f3bc6caf86febbbf4b6dc14ae9822c5f10e84c6f69e"
+        },
+        {
+          "path": "evidence/api-after-201.txt",
+          "sha256": "7c76151fdb93cf6c42f3edac14e134b6fd24d6493d070fb4e7ccafef259a014a"
+        }
+      ]
+    }
+  ],
+  "session": {
+    "tool": "cua_repl host browser",
+    "provider": "IAB",
+    "browser_id": "4",
+    "tab_id": "1",
+    "version": "unexposed/unknown",
+    "owned": true,
+    "image_tools_used": false,
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 2
+    },
+    "input_method": "cua_repl tab.pressKey/typeText native wrapper; semantic locator if needed",
+    "capabilities": {
+      "dom": "observed",
+      "keyboard": "observed",
+      "api": "real curl HTTP observed",
+      "images": "forbidden",
+      "console": "available, not yet used"
+    },
+    "tab_closed": true,
+    "temporary_servers_started": false,
+    "recordings_started": false,
+    "resources": "Only owned tab1 created and closed; borrowed tabs untouched.",
+    "limitations": [
+      "No image capture or image viewing allowed; required visual check remains blocked.",
+      "Role/account/org not exposed; retained unknown.",
+      "Browser version unexposed; native keyboard and DOM capabilities observed.",
+      "Actual HTTP status for 201-char UI submit unavailable; no invented status claim."
+    ]
+  },
+  "exploration": [
+    {
+      "id": "E-01",
+      "observation": "201자 저장 후 상태가 저장 결과 미확인. 다시 불러오기로 확인하세요.로 표시된다.",
+      "hypothesis": "길이 거부가 일반 저장 오류 안내로 표시될 가능성",
+      "next_check": "실제 GET 및 UI 다시 불러오기, 200자 성공 대조",
+      "result": "201자 생성 없음,200자 저장 성공. 구체적 길이 안내 문구 요구는 제공되지 않아 결함으로 확정하지 않음."
+    }
+  ],
+  "target_evidence": {
+    "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db",
+    "evidence": [
+      {
+        "path": "evidence/build-before.txt",
+        "sha256": "d9d99cc46ede5bafa893067cc4dc3129d99a5ab00379cdafdbc060344be90c95"
+      },
+      {
+        "path": "evidence/build-after.txt",
+        "sha256": "8e4d3226828d18a470669ebf0d74847435e69030662edf6bd56ed07dc7b817a9"
+      },
+      {
+        "path": "evidence/tool-and-target.txt",
+        "sha256": "c10b04304b1a89ba96b25ed840bdbeb19d14f3cd306bce075864c002ddd8d11e"
+      }
+    ]
+  },
+  "recording_notes": "Raw HTTP responses saved. UI evidence is selected faithful tool-output transcription and action records; original host tool outputs are also present in conversation."
+}

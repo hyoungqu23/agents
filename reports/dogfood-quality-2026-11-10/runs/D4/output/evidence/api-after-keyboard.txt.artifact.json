@@ -1,0 +1,7 @@
+{
+  "original_name": "api-after-keyboard.txt",
+  "encoding": "utf-8",
+  "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037",
+  "content": "HTTP/1.0 200 OK\r\nServer: BaseHTTP/0.6 Python/3.14.7\r\nDate: Tue, 10 Nov 2026 01:35:41 GMT\r\nContent-Type: application/json\r\nContent-Length: 141\r\n\r\n{\"items\": [{\"id\": \"500\", \"name\": \"기존 사용자 프로젝트 - 보존 대상\"}, {\"id\": \"501\", \"name\": \"D4-check-keyboard-20261110-0136\"}]}",
+  "note": "Exact historical HTTP wire bytes including CRLF; JSON-packed, never normalized or relabelled."
+}

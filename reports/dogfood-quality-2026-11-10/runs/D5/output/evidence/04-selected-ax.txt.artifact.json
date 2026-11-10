@@ -1,0 +1,7 @@
+{
+  "original_name": "04-selected-ax.txt",
+  "encoding": "utf-8",
+  "sha256": "006c8778efa3c1caca5e22621b89f9fff6e9b0f294ebc6cc9042558bc54c3612",
+  "content": "Browser tab: 1893495269, Title: \"Projects\", URL: \"http://127.0.0.1:63857/\".\n0 AXWebArea Projects, URL: 127.0.0.1:63857/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t5 container\n\t\t6 container toolbar\n\t\t\t7 container\n\t\t\t\t8 text Status \n\t\t\t\t9 pop up button (collapsed, settable) Status, Value: All, Secondary Actions: Expand\n\t\t\t\t\t10 menu\n\t\t\t\t\t\t11 (selected) All\n\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t13 Archived\n\t\t\t\t\t\t14 Paused\n\t\t\t15 text 3 projects\n\t\t16 container rows\n\t\t\t22 checkbox Tide — active, Value: 1\n\t\t\t23 checkbox Forest — archived, Value: 0\n\t\t\t24 checkbox North — active, Value: 0\n\t\t20 heading Selected project, Value: 2\n\t\t\t21 text Selected project\n\t\t25 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:63857/",
+  "note": "Exact historical bytes, JSON-packed to preserve whitespace. Not rewritten/relabelled evidence."
+}

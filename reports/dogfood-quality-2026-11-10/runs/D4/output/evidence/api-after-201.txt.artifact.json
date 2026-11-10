@@ -1,0 +1,7 @@
+{
+  "original_name": "api-after-201.txt",
+  "encoding": "utf-8",
+  "sha256": "7c76151fdb93cf6c42f3edac14e134b6fd24d6493d070fb4e7ccafef259a014a",
+  "content": "HTTP/1.0 200 OK\r\nServer: BaseHTTP/0.6 Python/3.14.7\r\nDate: Tue, 10 Nov 2026 01:37:14 GMT\r\nContent-Type: application/json\r\nContent-Length: 758\r\n\r\n{\"items\": [{\"id\": \"500\", \"name\": \"기존 사용자 프로젝트 - 보존 대상\"}, {\"id\": \"501\", \"name\": \"D4-check-keyboard-20261110-0136\"}, {\"id\": \"502\", \"name\": \"D\"}, {\"id\": \"503\", \"name\": \"D4-check-20261110-한글프로젝트-경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이\"}]}",
+  "note": "Exact historical HTTP wire bytes including CRLF; JSON-packed, never normalized or relabelled."
+}

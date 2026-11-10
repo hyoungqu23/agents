@@ -1,0 +1,5 @@
+Use $dogfood at /private/tmp/skill-quality-20261110/dogfood/candidate/SKILL.md.
+이전 실제 실행의 보고서·run·증거가 /private/tmp/skill-quality-20261110/dogfood/runs/D6-retest/history에 있습니다. 새 검증 대상은 http://127.0.0.1:64114/이며 원하는 revision은 cccccccccccccccccccccccccccccccccccccccc 입니다. /build에서 현재 제공 revision/build를 확인하고, 이전 이슈 I-01을 현재 화면에서 재검증하며 저장·재조회·전체 이름 표시·키보드와 직접 만든 데이터 정리를 다시 확인해 주세요. 새 환경의 기존 데이터는 다른 팀 소유일 수 있으므로 과거 실행의 ID를 정리 대상으로 재사용하지 마세요. 이전 이력/증거는 읽기 전용으로 보존하고 새 시도와 보고서를 /private/tmp/skill-quality-20261110/dogfood/runs/D6-retest/output에 남기세요.
+이름은 1~200자이며 목록에서 전체를 읽을 수 있어야 합니다. 보관 버튼 비활성은 의도된 제품 동작입니다. API는 GET/POST /api/items, DELETE /api/items/:id입니다. 오래된 캡처/입력 참조/검증 판정을 현재 대상으로 다시 붙이지 마세요. 실제 현재 관찰과 과거 이슈의 재검증 관계를 구분하세요.
+먼저 문서·API 기반 준비를 진행하고 브라우저 직전에 부모 에이전트에게 준비됐다고 알린 뒤 슬롯 해제를 기다리세요. 이는 동시 입력 방지를 위한 자원 조정입니다.
+읽기·쓰기는 candidate/output/history/현재 prompt/지정 URL/API만 허용하며 history는 쓰지 마세요. 서버 코드/DB/oracles/다른 사례/부모 워크트리/평가 코드·정답을 읽지 마세요. 소스·스킬·Git 변경/응답 대체/상태 주입/추가 설치/위임/외부 게시를 하지 마세요. 자기 탭·자원만 정리하고 실제 판정과 한계를 보고하세요.

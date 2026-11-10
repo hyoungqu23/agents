@@ -1,0 +1,56 @@
+[
+  {
+    "original": "output/target-after.json",
+    "packaged": "output/target-after.json",
+    "sha256": "d5e38207e7359d3e951e847c0628d6934c17a4c1b45186750fa25e855e7999c5",
+    "json_packed": false
+  },
+  {
+    "original": "output/target-before.json",
+    "packaged": "output/target-before.json",
+    "sha256": "d5e38207e7359d3e951e847c0628d6934c17a4c1b45186750fa25e855e7999c5",
+    "json_packed": false
+  },
+  {
+    "original": "output/assessment.json",
+    "packaged": "output/assessment.json",
+    "sha256": "9ad35f6d8a117151b5b2da4cb997990bb2c1d7ddfc6be6df84aa37ea8e87b539",
+    "json_packed": false
+  },
+  {
+    "original": "output/report.md",
+    "packaged": "output/report.md",
+    "sha256": "756a7ae4fadab2c52e2abc261f47042639c8f75836f9f9b7f183b09f86421d2e",
+    "json_packed": false
+  },
+  {
+    "original": "output/run.json",
+    "packaged": "output/run.json",
+    "sha256": "78c334bf749469fc4c127e98b9a26773f673932d4c363b6b1748e4e1fcbecd89",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/build-before.http.txt",
+    "packaged": "output/evidence/build-before.http.txt",
+    "sha256": "e4e5be7306b6bd1219a1526816af3ee843c9dea0fa83c749fdfa6498f7d5ea83",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/build-before-authorized.http.txt",
+    "packaged": "output/evidence/build-before-authorized.http.txt",
+    "sha256": "33530daec96bc051d22129965f250e4b7ef10c6a23d852abf9a16adb1466fdce",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/recorder-commands.json",
+    "packaged": "output/evidence/recorder-commands.json",
+    "sha256": "9740eb794f654f2fda07158dc21e5ef0f14482b19ca9e10d893360dfe7a995cd",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/build-after.http.txt",
+    "packaged": "output/evidence/build-after.http.txt",
+    "sha256": "51967f8dcabe525e4483b0bb801919adc5a6161d4e94f728f32f2a1a948ac62f",
+    "json_packed": false
+  }
+]

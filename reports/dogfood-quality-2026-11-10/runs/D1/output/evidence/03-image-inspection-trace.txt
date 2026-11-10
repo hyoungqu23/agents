@@ -1,0 +1,13 @@
+Actual tool mcp__cua_repl.js:
+let shot = await tab.getScreenshot({emit:false}); fs.writeFile(evidence/03-long-name.jpg, shot); await nodeRepl.emitImage(shot).
+Tool returned decoded image inline; visually inspected full viewport, app content around x912-1592 y111-542. Save focused ring visible. Long name row visible only as 실제 사용자 동..., remaining name clipped before delete button; no wrapping. Existing row also clipped.
+Read-only DOM metadata from tab.playwright.evaluate: CSS viewport [2504,1363], devicePixelRatio 2, URL http://127.0.0.1:61464/. Saved bytes not resized. Image dimensions verified separately.
+04-delete-focus.jpg captured via same method and emitted inline, visually inspected: purple outline around own second-row 삭제, same clipped label.
+Scope: desktop live rendered app only. No reference image, masks, mobile promise, layout code or state injection. AX full text does not override visual clipping.
+
+Original screenshot bytes are JPEG (ff d8); files renamed from initial .png suffix to .jpg without conversion/resizing. JPEG metadata dimensions verified from actual bytes. Screenshot raster is CSS-pixel sized despite window DPR2; effective capture scale 1 raster pixel per CSS pixel.
+07-reentry-clipping.jpg was captured after actual API navigation and / reentry, emitted inline and inspected, confirming same clipped long row.
+32-cleaned.jpg was captured after cleanup API and reentry, emitted inline and inspected: one existing row remains, none of this run items. Same viewport and app region, no overlap.
+Own tab.close completed; no existing tab closed.
+
+Supplemental actual image tool: functions.exec called tools.view_image({path:".../evidence/07-reentry-clipping.jpg"}) and image(result.image_url). Tool decoded and delivered the local JPEG inline. It displayed at 2048x1115 from source 2504x1363 (viewer resize notice); source file unchanged and not used as a matched-size comparison. Same visible name clipping inspected.

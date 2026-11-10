@@ -1,0 +1,8 @@
+Actual exec_command candidate/scripts/dogfood_result.py capture before: exit0; after: exit0. Both output digest 16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b.
+Actual exec_command assess --run output/run.json --before output/target-before.json --after output/target-after.json --output output/assessment.json: exit0. Stdout:
+{
+  "status": "complete",
+  "product_result": "no_issues_observed",
+  "gaps": [],
+  "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b"
+}

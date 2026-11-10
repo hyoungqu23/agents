@@ -1,0 +1,20 @@
+{
+  "commit": "e7063e222140c5c95f64916245d241c7ec44d271",
+  "files": {
+    "SOURCES.md": "4d85af644172f70df29eed201ff9a75b19ddd61bfb34d814b89e657d2b58f272",
+    "SKILL.md": "fc17b20d3b9e3e3c5ac7683dd0acc6e7668cc70a5ab6c9efad5014943da7ecd3",
+    "references/journeys-and-oracles.md": "1c1a4f25970250724331e60a800a428b7548495646f52ba4d8391cc7c679a489",
+    "references/checklists.md": "2e7143af3e774776d870af14beab2dde202f0df32451200932d89e360117c345",
+    "references/scope-and-intent.md": "782a30857a1bd2060829d83dbbc0ef047d4c681f6de0cb7ca13b2cae9bcfb7f3",
+    "references/session-and-environment.md": "0251a1196d8ee032981a34031703bdac05410f1807c86b041a9b5e4e7686cd42",
+    "references/exploration.md": "eda50ffdb380f97f974275618c6881cb7d19c74320ca7eaaee1142db1f1e2a78",
+    "references/evidence-and-results.md": "4797715d240958322de683b3fb2f3e93d49a3df0f9e57fba6a3908242eb5eee2",
+    "agents/openai.yaml": "4e13db245aa2f89294403d54a52f0de876ebed5b99f3d54ddd99d2a5c85ba70d",
+    "scripts/dogfood_result.py": "b38d883012cd4d1341acd5b9dccf3260bb4a3a4a7b5994ac9bb20492e1c38e6e",
+    "assets/report-template.md": "984be4daad4aa8193e2f4794d1c2d7442b8aaf3c9a8bf62045ab08675a264453",
+    "references/drivers/agent-desktop.md": "f9aee36a2b63ae2acb5b5134b0753b0fc285c410b44ada6a0c84024a0b51bf05",
+    "references/drivers/host-browser.md": "61c07f2bd228d12acbb3117e3636c77376aefeacbe05df938b246c7d744dad2d",
+    "references/drivers/gstack.md": "1e1a2d89f632a9d7a5ff162a85def4094b832f30a13cb8979d85fc4a827aee86",
+    "references/drivers/agent-browser.md": "b2ad66e34eccfd7b9c26fc289649c40aba537702c6a4b495edfa41c25c22bb25"
+  }
+}

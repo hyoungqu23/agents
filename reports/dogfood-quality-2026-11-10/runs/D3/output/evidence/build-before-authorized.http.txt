@@ -1,0 +1,10 @@
+Observed at: 2026-11-10T01:23:45.147390+00:00
+Tool: Python urllib.request (real HTTP)
+Request: GET http://127.0.0.1:63189/build
+HTTP status: 200
+Server: BaseHTTP/0.6 Python/3.14.7
+Date: Tue, 10 Nov 2026 01:23:45 GMT
+Content-Type: application/json
+Content-Length: 114
+
+{"build": "quality-deployment", "revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "backend": "local-sqlite"}

@@ -1,0 +1,7 @@
+{
+  "original_name": "20-201-save.txt",
+  "encoding": "utf-8",
+  "sha256": "951325bfd0c1a7583a680e9d5d2d8c6f6626b8a314ab48f932fc2346877fcf67",
+  "content": "Actual save.Enter once after201 sequential characters\nBrowser tab: 1893495273, Title: \"프로젝트 QA\", URL: \"http://127.0.0.1:64114/\".\n1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:64114/\n\t2 heading 프로젝트 목록, Value: 1\n\t\t3 text 프로젝트 목록\n\t4 text 프로젝트를 저장하고 다시 불러와 확인하세요.\n\t5 container form\n\t\t6 container\n\t\t\t7 text 프로젝트 이름 \n\t\t\t8 text field (settable) 프로젝트 이름, ID: name, Value: 초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초초\n\t\t9 button 저장\n\t10 button 다시 불러오기, ID: refresh\n\t11 button (disabled) 보관 (미지원)\n\t12 content list items\n\t\t13 container\n\t\t\t14 text 기존 사용자 프로젝트 - 보존 대상\n\t\t\t15 button 삭제\n\t\t16 container\n\t\t\t17 text 다른 팀이 생성한 프로젝트 - 보존 대상\n\t\t\t18 button 삭제\n\t\t19 container\n\t\t\t20 text 실제 사용자 동선 검증을 위한 아주 긴 프로젝트 이름\n\t\t\t21 button 삭제\n\t\t22 container\n\t\t\t23 text 래\n\t\t\t24 button 삭제\n\t\t25 container\n\t\t\t26 text D6-current-경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경경\n\t\t\t27 button 삭제\n\nThe focused UI element is 9 button 저장",
+  "note": "Exact historical bytes, JSON-packed to preserve whitespace. Not rewritten/relabelled evidence."
+}

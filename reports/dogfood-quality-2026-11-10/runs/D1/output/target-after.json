@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "plan": {
+    "target": {
+      "url": "http://127.0.0.1:61464/",
+      "environment": "local test app; /build observed",
+      "role": "no login presented; anonymous UI",
+      "backend": "http://127.0.0.1:61464/api/items; /build says local-sqlite",
+      "served_build": "quality-deployment",
+      "served_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "journeys": [
+      {
+        "id": "J-1",
+        "goal": "기존 항목 보존 하에 저장→재조회→재진입→삭제→재조회"
+      },
+      {
+        "id": "J-2",
+        "goal": "이름 경계와 목록 전체 표시"
+      },
+      {
+        "id": "J-3",
+        "goal": "키보드와 의도된 비활성 보관"
+      },
+      {
+        "id": "J-4",
+        "goal": "응답 유실 후 안전한 목록 재확인"
+      }
+    ],
+    "checks": [
+      {
+        "id": "C-01",
+        "journey": "J-1",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "정상 저장값이 실제 API와 재진입에서 동일하다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "정상 저장값이 실제 API와 재진입에서 동일하다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-02",
+        "journey": "J-1",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "생성한 프로젝트를 UI에서 삭제하면 API와 재진입에서 제거된다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "생성한 프로젝트를 UI에서 삭제하면 API와 재진입에서 제거된다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-03",
+        "journey": "J-2",
+        "required": true,
+        "axis": "visual",
+        "purpose": "지정된 긴 프로젝트 이름을 목록에서 전체 읽을 수 있다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "지정된 긴 프로젝트 이름을 목록에서 전체 읽을 수 있다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-04",
+        "journey": "J-3",
+        "required": true,
+        "axis": "accessibility",
+        "purpose": "실제 Tab/Shift+Tab/Enter로 저장·새로고침·삭제에 접근하고 초점을 볼 수 있다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "실제 Tab/Shift+Tab/Enter로 저장·새로고침·삭제에 접근하고 초점을 볼 수 있다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-05",
+        "journey": "J-2",
+        "required": true,
+        "axis": "functional",
+        "purpose": "빈 이름(0자)을 저장하지 않는다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "빈 이름(0자)을 저장하지 않는다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-06",
+        "journey": "J-2",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "1자 이름을 정확히 저장·재조회할 수 있다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "1자 이름을 정확히 저장·재조회할 수 있다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-07",
+        "journey": "J-2",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "200자 이름을 정확히 저장·재조회할 수 있다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "200자 이름을 정확히 저장·재조회할 수 있다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-08",
+        "journey": "J-2",
+        "required": true,
+        "axis": "functional",
+        "purpose": "201자 이름을 제한하여 200자 초과값이 저장되지 않는다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "201자 이름을 제한하여 200자 초과값이 저장되지 않는다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-09",
+        "journey": "J-4",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "lost-response 저장 응답 유실 시 재전송 전에 실제 목록/API를 확인하고 중복 저장하지 않는다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "lost-response 저장 응답 유실 시 재전송 전에 실제 목록/API를 확인하고 중복 저장하지 않는다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-10",
+        "journey": "J-3",
+        "required": true,
+        "axis": "functional",
+        "purpose": "보관은 명시적 미지원이며 비활성화되어 있다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "보관은 명시적 미지원이며 비활성화되어 있다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-11",
+        "journey": "J-1",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "기존 id 500은 보존하고 이번 실행의 정확한 생성 항목만 정리한다",
+        "expectation": {
+          "source": "prompt.txt: 이름 1~200자, 전체 읽기, 실제 사용자 동선, API·재진입·기존 보존 요구",
+          "text": "기존 id 500은 보존하고 이번 실행의 정확한 생성 항목만 정리한다",
+          "certainty": "confirmed"
+        }
+      }
+    ]
+  },
+  "local_source": {
+    "mode": "remote_only",
+    "limitation": "External served build is observed through tool traces, not authenticated by this helper."
+  },
+  "digest": "21403e0d27187787642a1d081be42d766fe122d50abc5816350378ddc7850f76"
+}

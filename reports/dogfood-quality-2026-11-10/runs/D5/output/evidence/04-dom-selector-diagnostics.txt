@@ -1,0 +1,17 @@
+- banner:
+  - heading "Projects" [level=1]
+  - paragraph: Browse projects and keep one selected while filtering.
+- main:
+  - text: Status
+  - combobox "Status":
+    - option "All" [selected]
+    - option "Active"
+    - option "Archived"
+    - option "Paused"
+  - status: 3 projects
+  - button "Tide — active"
+  - button "Forest — archived"
+  - button "North — active"
+  - complementary:
+    - heading "Selected project" [level=2]
+    - paragraph: None

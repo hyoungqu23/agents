@@ -1,0 +1,10 @@
+Actual tool: mcp__cua_repl.js
+Own browser 2, Chrome extension, own tab 1893495255, profile aents.co. Version not exposed.
+createBrowserTab iab failed (unavailable); Chrome create succeeded, assignment initially failed, rebound only created tab by id.
+GET http://127.0.0.1:61464/build via tab.goto + getAXState:
+{"build": "quality-deployment", "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "backend": "local-sqlite"}
+GET http://127.0.0.1:61464/api/items via tab.goto + getAXState:
+{"items": [{"id": "500", "name": "기존 사용자 프로젝트 - 보존 대상"}]}
+Initial UI: 프로젝트 목록; labelled name input; 저장; 다시 불러오기; disabled 보관 (미지원); existing item id 500 name above and 삭제.
+Terminal curl GET /build and /api/items could not connect (exit 7); no terminal API mutation attempted.
+No source or DB read. No mocks or app state injection.

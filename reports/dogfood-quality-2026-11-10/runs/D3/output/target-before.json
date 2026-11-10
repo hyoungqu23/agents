@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "plan": {
+    "target": {
+      "url": "http://127.0.0.1:63189/",
+      "environment": "provided local QA environment; deployment identity observed at /build",
+      "role": "unknown; no authenticated browser session accessed",
+      "backend": "local-sqlite (reported by /build; not independently authenticated)",
+      "served_build": "quality-deployment",
+      "desired_revision": "commit:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "served_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "journeys": [
+      {
+        "id": "J-1",
+        "goal": "Save a project on the requested revision and inspect its persistent result after requery/reentry."
+      },
+      {
+        "id": "J-2",
+        "goal": "Inspect the requested revision visual journey using actual application screenshots."
+      }
+    ],
+    "checks": [
+      {
+        "id": "C-1",
+        "journey": "J-1",
+        "required": true,
+        "axis": "functional",
+        "purpose": "Exercise the project save journey on the requested target",
+        "expectation": {
+          "source": "Current prompt: requested commit and project save QA",
+          "text": "The save journey can be exercised on commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa with an observable outcome.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-2",
+        "journey": "J-1",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "Requery/reenter and verify the actual saved project outcome",
+        "expectation": {
+          "source": "Current prompt: project save and requery QA",
+          "text": "The project saved on the requested commit can be requeried and the saved values verified through the real backend.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-3",
+        "journey": "J-2",
+        "required": true,
+        "axis": "visual",
+        "purpose": "Inspect the application save/requery visual journey",
+        "expectation": {
+          "source": "Current prompt: visual journey QA; dogfood required visual check",
+          "text": "Actual captures from the requested revision can be inspected for visibility, hierarchy, overlap and clipping in the relevant journey.",
+          "certainty": "confirmed"
+        }
+      }
+    ]
+  },
+  "local_source": {
+    "mode": "remote_only",
+    "limitation": "External served build is observed through tool traces, not authenticated by this helper."
+  },
+  "digest": "fbe5b75c96f145c5b43730adb7155dec5b79f93c2db35ac14fd3b0055ba8b030"
+}

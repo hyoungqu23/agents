@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "plan": {
+    "target": {
+      "url": "http://127.0.0.1:63857/",
+      "environment": "provided local QA fixture",
+      "role": "no login/organization/role shown (anonymous fixture)",
+      "backend": "http://127.0.0.1:63857/api/projects",
+      "served_build": "quality-async-deployment",
+      "served_revision": "dddddddddddddddddddddddddddddddddddddddd"
+    },
+    "journeys": [
+      {
+        "id": "J-1",
+        "goal": "네 필터의 실제 결과/개수와 empty 표시 확인"
+      },
+      {
+        "id": "J-2",
+        "goal": "필터·실패/Retry에서 선택 유지"
+      },
+      {
+        "id": "J-3",
+        "goal": "겹친 요청에서 최신 결과 유지"
+      }
+    ],
+    "checks": [
+      {
+        "id": "C-01",
+        "journey": "J-1",
+        "required": true,
+        "axis": "functional",
+        "purpose": "All 결과/개수",
+        "expectation": {
+          "source": "current prompt.txt: 확정 요구 및 실행 지시",
+          "text": "Status All은 실제 GET /api/projects?status=all 결과/개수와 일치한다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-02",
+        "journey": "J-1",
+        "required": true,
+        "axis": "functional",
+        "purpose": "Active 결과/개수",
+        "expectation": {
+          "source": "current prompt.txt: 확정 요구 및 실행 지시",
+          "text": "Status Active는 실제 GET /api/projects?status=active 결과/개수와 일치한다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-03",
+        "journey": "J-1",
+        "required": true,
+        "axis": "functional",
+        "purpose": "Archived 결과/개수",
+        "expectation": {
+          "source": "current prompt.txt: 확정 요구 및 실행 지시",
+          "text": "Status Archived는 실제 GET /api/projects?status=archived 결과/개수와 일치한다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-04",
+        "journey": "J-1",
+        "required": true,
+        "axis": "functional",
+        "purpose": "Paused 성공 empty",
+        "expectation": {
+          "source": "current prompt.txt: 확정 요구 및 실행 지시",
+          "text": "Status Paused는 실제 GET /api/projects?status=paused 결과/개수와 일치하고 성공 empty는 오류와 구분된다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-05",
+        "journey": "J-2",
+        "required": true,
+        "axis": "functional",
+        "purpose": "필터 간 선택 보존",
+        "expectation": {
+          "source": "current prompt.txt: 확정 요구 및 실행 지시",
+          "text": "선택은 필터 전환에서 유지된다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-06",
+        "journey": "J-2",
+        "required": true,
+        "axis": "functional",
+        "purpose": "실패와 Retry에서 선택 보존",
+        "expectation": {
+          "source": "current prompt.txt: 확정 요구 및 실행 지시",
+          "text": "실제 backend 실패를 오류로 표시하고 Retry로 회복하며 선택을 유지한다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-07",
+        "journey": "J-3",
+        "required": true,
+        "axis": "functional",
+        "purpose": "오래된 성공 응답",
+        "expectation": {
+          "source": "current prompt.txt: 확정 요구 및 실행 지시",
+          "text": "앞선 Active 성공이 최신 Archived 필터 결과를 덮지 않는다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-08",
+        "journey": "J-3",
+        "required": true,
+        "axis": "functional",
+        "purpose": "오래된 실패 응답",
+        "expectation": {
+          "source": "current prompt.txt: 확정 요구 및 실행 지시",
+          "text": "앞선 Active 실패가 최신 Archived 성공 결과를 덮지 않는다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-09",
+        "journey": "J-1",
+        "required": true,
+        "axis": "visual",
+        "purpose": "실제 화면 가독성",
+        "expectation": {
+          "source": "current prompt.txt: 확정 요구 및 실행 지시",
+          "text": "프로젝트 목록·필터·선택·오류/empty 화면에 겹침/잘림이 없고 상태를 식별할 수 있다.",
+          "certainty": "confirmed"
+        }
+      }
+    ]
+  },
+  "local_source": {
+    "mode": "remote_only",
+    "limitation": "External served build is observed through tool traces, not authenticated by this helper."
+  },
+  "digest": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f"
+}

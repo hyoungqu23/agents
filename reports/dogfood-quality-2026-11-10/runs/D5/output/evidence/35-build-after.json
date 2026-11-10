@@ -1,0 +1,14 @@
+{
+  "started": "2026-11-10T01:49:05.403736+00:00",
+  "method": "GET",
+  "url": "http://127.0.0.1:63857/build",
+  "request_body": null,
+  "http_status": 200,
+  "body": {
+    "build": "quality-async-deployment",
+    "revision": "dddddddddddddddddddddddddddddddddddddddd",
+    "backend": "local-http"
+  },
+  "finished": "2026-11-10T01:49:05.413787+00:00",
+  "elapsed_seconds": 0.01
+}

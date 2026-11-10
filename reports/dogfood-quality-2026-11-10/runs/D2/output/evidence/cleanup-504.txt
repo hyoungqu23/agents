@@ -1,0 +1,4 @@
+Browser tab: 1893495259, Title: "프로젝트 QA", URL: "http://127.0.0.1:62502/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 25-27
+The focused UI element is 1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:62502/

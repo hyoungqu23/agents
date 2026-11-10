@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "D1",
+  "prompt_template": "Use $dogfood at {{CANDIDATE_DIR}}/SKILL.md.\n{{APP_URL}} 앱의 프로젝트 저장·재조회·삭제, 이름 표시, 키보드 동선을 실제로 확인하고 {{CASE_DIR}}/output에 보고서와 run/증거를 남겨 주세요.\n이름은 1~200자이고 목록에서 전체를 읽을 수 있어야 합니다. 보관 버튼은 의도적으로 미지원입니다. 기존 항목은 보존하세요. 이 실행에서 생성한 항목만 정리할 수 있습니다.\n\"실제 사용자 동선 검증을 위한 아주 긴 프로젝트 이름\"을 한 항목으로 사용하세요. 추가로 lost-response를 한 번 저장해 보고, 저장 응답이 유실되면 재전송 전에 목록을 다시 확인하세요. 서버에 저장된 값은 실제 API와 재진입으로 확인하세요. API는 GET /api/items, POST /api/items, DELETE /api/items/:id이며 /build에서 제공 환경 정보를 확인할 수 있습니다.\n읽기·쓰기는 설치된 candidate와 이 case의 output, 현재 prompt, 지정된 앱 URL/API로 제한합니다. 서버 소스·DB·다른 사례·oracles·부모 워크트리·채점 코드는 읽지 마세요. 스킬 수정·소스 수정·응답 mock·앱 내부 상태 주입·외부 게시·커밋·푸시·위임은 하지 마세요. 패키지 설치 없이 호스트에서 제공하는 브라우저/이미지 도구를 사용하세요. 브라우저 탭을 새로 만들면 자기 탭만 종료하세요.\n실제 동작과 이미지 확인의 도구 증거를 output에 보존하고, 수행하지 못한 것은 판정에 그대로 반영하세요. 최종 응답에는 산출물 위치와 실제 판정·한계를 간단히 보고하세요.\n",
+  "files": [],
+  "git_baseline_overrides": [],
+  "untracked_source_files": [],
+  "portability_note": "I3 stores the structured SPEC as SPEC.md to avoid the original macOS spec.md/SPEC.md same-file alias on case-sensitive filesystems. Byte contents and historical manifests are retained.",
+  "setup_note": "Prepare dependencies and the real local service before handing prompt.txt to a fresh execution host. For continuation, prefer rerunning the predecessor; historical identities are never relabelled.",
+  "operator_fixture": {
+    "app": "storage-app",
+    "mode": "clip",
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "seed_rows": [
+      [
+        500,
+        "기존 사용자 프로젝트 - 보존 대상"
+      ]
+    ]
+  }
+}

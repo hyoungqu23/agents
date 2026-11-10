@@ -1,0 +1,13 @@
+{
+  "target": "http://127.0.0.1:62502/",
+  "exact_ids": [
+    "501",
+    "502",
+    "503",
+    "504"
+  ],
+  "method": "UI row deletion; before each use fresh AX binding; reverse creation order",
+  "protected_ids": [
+    "500"
+  ]
+}

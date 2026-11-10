@@ -1,0 +1,42 @@
+{"event":"request","id":1,"status":"all","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794274898457}
+{"event":"response","id":1,"status":"all","httpStatus":200,"time":1794274898491}
+{"event":"request","id":2,"status":"all","failed":false,"agent":"Python-urllib/3.14","time":1794274977550}
+{"event":"response","id":2,"status":"all","httpStatus":200,"time":1794274977583}
+{"event":"request","id":3,"status":"active","failed":false,"agent":"Python-urllib/3.14","time":1794274977637}
+{"event":"response","id":3,"status":"active","httpStatus":200,"time":1794274985637}
+{"event":"request","id":4,"status":"archived","failed":false,"agent":"Python-urllib/3.14","time":1794274985711}
+{"event":"response","id":4,"status":"archived","httpStatus":200,"time":1794274985744}
+{"event":"request","id":5,"status":"paused","failed":false,"agent":"Python-urllib/3.14","time":1794274985794}
+{"event":"response","id":5,"status":"paused","httpStatus":200,"time":1794274985826}
+{"event":"request","id":6,"status":"active","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275009403}
+{"event":"response","id":6,"status":"active","httpStatus":200,"time":1794275017405}
+{"event":"request","id":7,"status":"archived","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275018879}
+{"event":"response","id":7,"status":"archived","httpStatus":200,"time":1794275018911}
+{"event":"request","id":8,"status":"paused","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275027610}
+{"event":"response","id":8,"status":"paused","httpStatus":200,"time":1794275027643}
+{"event":"request","id":9,"status":"archived","failed":true,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275040803}
+{"event":"response","id":9,"status":"archived","httpStatus":503,"time":1794275040835}
+{"event":"request","id":10,"status":"archived","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275059138}
+{"event":"response","id":10,"status":"archived","httpStatus":200,"time":1794275059171}
+{"event":"request","id":11,"status":"active","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275069834}
+{"event":"request","id":12,"status":"archived","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275069861}
+{"event":"response","id":12,"status":"archived","httpStatus":200,"time":1794275069894}
+{"event":"response","id":11,"status":"active","httpStatus":200,"time":1794275077836}
+{"event":"request","id":13,"status":"active","failed":true,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275110923}
+{"event":"response","id":13,"status":"active","httpStatus":503,"time":1794275118926}
+{"event":"request","id":14,"status":"archived","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275125425}
+{"event":"response","id":14,"status":"archived","httpStatus":200,"time":1794275125457}
+{"event":"request","id":15,"status":"active","failed":true,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275190953}
+{"event":"response","id":15,"status":"active","httpStatus":503,"time":1794275198955}
+{"event":"request","id":16,"status":"archived","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275200692}
+{"event":"response","id":16,"status":"archived","httpStatus":200,"time":1794275200725}
+{"event":"request","id":17,"status":"active","failed":true,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275235813}
+{"event":"request","id":18,"status":"archived","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275235883}
+{"event":"response","id":18,"status":"archived","httpStatus":200,"time":1794275235915}
+{"event":"response","id":17,"status":"active","httpStatus":503,"time":1794275243816}
+{"event":"request","id":19,"status":"archived","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275328650}
+{"event":"response","id":19,"status":"archived","httpStatus":200,"time":1794275328681}
+{"event":"request","id":20,"status":"all","failed":false,"agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36","time":1794275328931}
+{"event":"response","id":20,"status":"all","httpStatus":200,"time":1794275328964}
+{"event":"request","id":21,"status":"all","failed":false,"agent":"Python-urllib/3.14","time":1794275345501}
+{"event":"response","id":21,"status":"all","httpStatus":200,"time":1794275345533}

@@ -1,0 +1,1 @@
+mcp__cua_repl.js getScreenshot emitted actual JPEG to model; image directly inspected in this invocation.

@@ -1,0 +1,110 @@
+[
+  {
+    "original": "output/target-after.json",
+    "packaged": "output/target-after.json",
+    "sha256": "0eb124dc37c20d6243fc8849c79d4dc4931a9c601123465f9b4b8b417222031d",
+    "json_packed": false
+  },
+  {
+    "original": "output/target-before.json",
+    "packaged": "output/target-before.json",
+    "sha256": "0eb124dc37c20d6243fc8849c79d4dc4931a9c601123465f9b4b8b417222031d",
+    "json_packed": false
+  },
+  {
+    "original": "output/assessment.json",
+    "packaged": "output/assessment.json",
+    "sha256": "5d4e99a9bd4de55d3ed9666408b96f8f6b573258cc5b3140e1dd07b77c53e89d",
+    "json_packed": false
+  },
+  {
+    "original": "output/report.md",
+    "packaged": "output/report.md",
+    "sha256": "d6a4a9b25aff37e4f96ec9e55d08dac0a35fa648541d58397905459f0708468c",
+    "json_packed": false
+  },
+  {
+    "original": "output/run.json",
+    "packaged": "output/run.json",
+    "sha256": "4577f9d14c512748371749a3bba163460051dc6e4b6930efd81fd021c86074f0",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/build-before.txt",
+    "packaged": "output/evidence/build-before.txt",
+    "sha256": "d9d99cc46ede5bafa893067cc4dc3129d99a5ab00379cdafdbc060344be90c95",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/api-after-201.txt",
+    "packaged": "output/evidence/api-after-201.txt.artifact.json",
+    "sha256": "7c76151fdb93cf6c42f3edac14e134b6fd24d6493d070fb4e7ccafef259a014a",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/ui-initial-keyboard-empty.txt",
+    "packaged": "output/evidence/ui-initial-keyboard-empty.txt",
+    "sha256": "8a50465b8251853509f6744aa7bf9122a0c239e6d97c483852eb5c953b3eea61",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/ui-keyboard-save-reentry.txt",
+    "packaged": "output/evidence/ui-keyboard-save-reentry.txt",
+    "sha256": "61e65c263527f1fe9e0db58ab69cca70bfd0a5fc9d6aa3738569c60945d68471",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/api-after-cleanup.txt",
+    "packaged": "output/evidence/api-after-cleanup.txt.artifact.json",
+    "sha256": "75d58b0d6ffd31df0057e9e1399dc7731115d75cf1d47978c57156cd162bf445",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/ui-cleanup.txt",
+    "packaged": "output/evidence/ui-cleanup.txt",
+    "sha256": "2e93bcaf3ad048da54a90c929c9262593e66c3b99eb5ce40f74920138381082f",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/ui-boundaries.json",
+    "packaged": "output/evidence/ui-boundaries.json",
+    "sha256": "b864997eba968ab4495c0f3bc6caf86febbbf4b6dc14ae9822c5f10e84c6f69e",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/api-after-keyboard.txt",
+    "packaged": "output/evidence/api-after-keyboard.txt.artifact.json",
+    "sha256": "ec15f8300221d2998acacf584c4696438f34d919d8e5c781064ee1fe90cdc037",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/response-consistency.txt",
+    "packaged": "output/evidence/response-consistency.txt",
+    "sha256": "a0a1c558ea882469ed5743424f57e5b1996ebcaaf37c7eb0c298cb2e02b7f343",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/api-after-boundaries.txt",
+    "packaged": "output/evidence/api-after-boundaries.txt.artifact.json",
+    "sha256": "1f19d42d8325d32b9d94f1e1a9ff179729aa3582944ad2a122075a90f4527331",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/build-after.txt",
+    "packaged": "output/evidence/build-after.txt.artifact.json",
+    "sha256": "8e4d3226828d18a470669ebf0d74847435e69030662edf6bd56ed07dc7b817a9",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/api-baseline.txt",
+    "packaged": "output/evidence/api-baseline.txt",
+    "sha256": "46d33df13587dd8b2cc0048785cab7a754d4645e11a7923cdfb5bcfc64dcac65",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/tool-and-target.txt",
+    "packaged": "output/evidence/tool-and-target.txt",
+    "sha256": "c10b04304b1a89ba96b25ed840bdbeb19d14f3cd306bce075864c002ddd8d11e",
+    "json_packed": false
+  }
+]

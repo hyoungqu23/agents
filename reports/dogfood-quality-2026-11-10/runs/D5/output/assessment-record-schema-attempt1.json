@@ -1,0 +1,10 @@
+{
+  "status": "invalid",
+  "product_result": "undetermined",
+  "gaps": [
+    {
+      "reason": "invalid_record",
+      "detail": "Issue needs target/check, conditions, expectation, observation, impact and actual attempts"
+    }
+  ]
+}

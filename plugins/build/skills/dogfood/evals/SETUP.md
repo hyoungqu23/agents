@@ -16,3 +16,10 @@ Start with the local supplied fixture, then cover the listed conflicts, stale-in
 partial-scope and unavailable-capability cases. GUI/profile/native input and real
 product environments need separate authorized runs; unexecuted combinations remain
 untested. Keep run artifacts outside the inspected source and do not publish issues.
+
+## Executed quality suite — 2026-11-10
+
+6 independent-context forward tasks were executed with this skill version.
+See [the quality protocol](quality/README.md), prepared input bundles and withheld
+rubric. Existing mechanical tests are reported separately. The repository report is
+`reports/dogfood-quality-2026-11-10/README.md`; it states what was and was not tested.
