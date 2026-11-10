@@ -1,0 +1,258 @@
+{
+  "I2-no-browser": {
+    "assessment": {
+      "status": "partial",
+      "gaps": [
+        {
+          "check": "actual-app-browser",
+          "reason": "not_run"
+        },
+        {
+          "requirement": "AC-1",
+          "check": "actual-app-browser",
+          "reason": "outcome_unverified"
+        },
+        {
+          "requirement": "AC-2",
+          "check": "actual-app-browser",
+          "reason": "outcome_unverified"
+        },
+        {
+          "requirement": "AC-3",
+          "check": "actual-app-browser",
+          "reason": "outcome_unverified"
+        }
+      ],
+      "target": "7e50ea2a90d23aea7fa9e6e964c8623ae886c5d41fd83498a31f5a3df8f395a0"
+    },
+    "requirements": [
+      {
+        "id": "AC-1",
+        "state": "implemented",
+        "questions": []
+      },
+      {
+        "id": "AC-2",
+        "state": "implemented",
+        "questions": []
+      },
+      {
+        "id": "AC-3",
+        "state": "implemented",
+        "questions": []
+      }
+    ]
+  },
+  "I3-blocked": {
+    "assessment": {
+      "status": "partial",
+      "gaps": [
+        {
+          "requirement": "AC-1",
+          "facet": "verification",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-1",
+          "reason": "behavior_unverified"
+        },
+        {
+          "requirement": "AC-2",
+          "facet": "verification",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-2",
+          "reason": "behavior_unverified"
+        },
+        {
+          "requirement": "AC-3",
+          "facet": "verification",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-3",
+          "reason": "behavior_unverified"
+        },
+        {
+          "requirement": "AC-4",
+          "facet": "condition",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-4",
+          "facet": "action",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-4",
+          "facet": "outcome",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-4",
+          "facet": "interfaces",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-4",
+          "facet": "verification",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-4",
+          "reason": "behavior_unverified"
+        },
+        {
+          "check": "app-browser",
+          "reason": "not_run"
+        },
+        {
+          "check": "archive-decision",
+          "reason": "not_run"
+        },
+        {
+          "requirement": "AC-1",
+          "check": "app-browser",
+          "reason": "outcome_unverified"
+        },
+        {
+          "requirement": "AC-2",
+          "check": "app-browser",
+          "reason": "outcome_unverified"
+        },
+        {
+          "requirement": "AC-3",
+          "check": "app-browser",
+          "reason": "outcome_unverified"
+        },
+        {
+          "requirement": "AC-4",
+          "reason": "needs_decision"
+        }
+      ],
+      "target": "471f02ee1222551063cf5515b8a74b9e08c8665988c44ee51b34d7af9024b8cd"
+    },
+    "requirements": [
+      {
+        "id": "AC-1",
+        "state": "implemented",
+        "questions": []
+      },
+      {
+        "id": "AC-2",
+        "state": "implemented",
+        "questions": []
+      },
+      {
+        "id": "AC-3",
+        "state": "implemented",
+        "questions": []
+      },
+      {
+        "id": "AC-4",
+        "state": "needs_decision",
+        "questions": [
+          "Q-001"
+        ]
+      }
+    ]
+  },
+  "I4-resume": {
+    "assessment": {
+      "status": "partial",
+      "gaps": [
+        {
+          "requirement": "AC-1",
+          "facet": "verification",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-1",
+          "reason": "behavior_unverified"
+        },
+        {
+          "requirement": "AC-2",
+          "facet": "verification",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-2",
+          "reason": "behavior_unverified"
+        },
+        {
+          "requirement": "AC-3",
+          "facet": "verification",
+          "reason": "semantic_mismatch_or_unreviewed"
+        },
+        {
+          "requirement": "AC-3",
+          "reason": "behavior_unverified"
+        },
+        {
+          "check": "browser-status",
+          "reason": "not_run"
+        },
+        {
+          "check": "browser-design",
+          "reason": "not_run"
+        },
+        {
+          "check": "browser-selection",
+          "reason": "not_run"
+        },
+        {
+          "check": "browser-recovery-races",
+          "reason": "not_run"
+        },
+        {
+          "requirement": "AC-1",
+          "check": "browser-status",
+          "reason": "outcome_unverified"
+        },
+        {
+          "requirement": "AC-1",
+          "check": "browser-design",
+          "reason": "outcome_unverified"
+        },
+        {
+          "requirement": "AC-2",
+          "check": "browser-selection",
+          "reason": "outcome_unverified"
+        },
+        {
+          "requirement": "AC-3",
+          "check": "browser-recovery-races",
+          "reason": "outcome_unverified"
+        }
+      ],
+      "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793"
+    },
+    "requirements": [
+      {
+        "id": "AC-1",
+        "state": "implemented",
+        "questions": []
+      },
+      {
+        "id": "AC-2",
+        "state": "implemented",
+        "questions": []
+      },
+      {
+        "id": "AC-3",
+        "state": "implemented",
+        "questions": []
+      }
+    ]
+  },
+  "I1-react": {
+    "assessment": {
+      "status": "complete",
+      "gaps": [],
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44"
+    },
+    "frozen_source_matches_verification": true,
+    "independent_browser_observations": "I1-browser-observations.json"
+  }
+}

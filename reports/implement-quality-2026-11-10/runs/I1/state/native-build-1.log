@@ -1,0 +1,16 @@
+$ npm run build
+
+> build
+> vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 34 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.32 kB │ gzip:  0.24 kB
+dist/assets/index-DKWe3aku.css    0.87 kB │ gzip:  0.45 kB
+dist/assets/index-B7V5mRzj.js   144.84 kB │ gzip: 46.77 kB
+✓ built in 249ms
+
+exit_code=0

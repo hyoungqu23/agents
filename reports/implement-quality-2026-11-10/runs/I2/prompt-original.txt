@@ -1,0 +1,14 @@
+Use $implement at /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/implement/SKILL.md.
+Implement the project-list requirements in /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/source/spec.md in the existing app /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/source.
+The selected prototype is /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/source/prototype.html. Follow /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/source/DESIGN.md and /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/source/ux.md.
+Browser access is unavailable for this task. Do not use a browser or invent browser evidence; deliver the useful implementation and accurately record remaining checks.
+The trusted source scope is src/ and tests/ only. Preserve supplied documents, server and user-draft.md.
+The fixture needs only the installed Node runtime; no packages, credentials or external services are needed.
+For browser runs start the provided server with PORT=0 and use its actual printed loopback URL.
+Changing only the synthetic server's /__fixture__/mode via the documented local request is allowed for testing.
+Use the bundled helper with all task inputs and meaningful outcome checks. Store inputs.json, target.json,
+verification-target.json, result.json, assessment.json and evidence in /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/state, outside the source checkout.
+No commit, push, deployment, work outside this prepared scratch directory, grading-source inspection, or edits to installed skill files.
+Finish with a concise Korean report of actual changes, checks, computed status and remaining gaps.
+
+읽기·쓰기는 위에서 지정한 source, implement, state 범위로 제한합니다. 다른 사례, oracles, 부모 워크트리, 평가 코드나 채점 자료를 읽지 마세요. 위임하지 마세요.

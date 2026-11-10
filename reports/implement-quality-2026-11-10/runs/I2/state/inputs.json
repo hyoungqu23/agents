@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "task": "Project list filtering and persistent selection",
+  "surface": "ui",
+  "scope": [
+    "src",
+    "tests"
+  ],
+  "preserve": [
+    "AGENTS.md",
+    "DESIGN.md",
+    "spec.md",
+    "ux.md",
+    "prototype.html",
+    "server.mjs",
+    "package.json",
+    "index.html",
+    "user-draft.md"
+  ],
+  "sources": [
+    {
+      "id": "request",
+      "path": "/private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/state/request.txt",
+      "locator": "/private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/prompt.txt"
+    },
+    {
+      "id": "requirements",
+      "path": "spec.md"
+    },
+    {
+      "id": "design",
+      "path": "DESIGN.md"
+    },
+    {
+      "id": "ux",
+      "path": "ux.md"
+    },
+    {
+      "id": "prototype",
+      "path": "prototype.html"
+    },
+    {
+      "id": "rules",
+      "path": "AGENTS.md"
+    },
+    {
+      "id": "runtime",
+      "path": "package.json"
+    },
+    {
+      "id": "server-contract",
+      "path": "server.mjs"
+    },
+    {
+      "id": "app-shell",
+      "path": "index.html"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "AC-1",
+      "source": "requirements",
+      "description": "A visible Status label and All/Active/Archived/Paused selector above the list call the existing API and display matching rows and count; selected reference structure and DESIGN tokens apply.",
+      "disposition": "required",
+      "checks": [
+        "node-behavior",
+        "local-api",
+        "actual-app-browser",
+        "design-source"
+      ]
+    },
+    {
+      "id": "AC-2",
+      "source": "requirements",
+      "description": "Selecting a project updates its panel; hidden selection survives filtering and regains selected appearance; empty successful results have a distinct visible state.",
+      "disposition": "required",
+      "checks": [
+        "node-behavior",
+        "actual-app-browser"
+      ]
+    },
+    {
+      "id": "AC-3",
+      "source": "requirements",
+      "description": "Errors use existing showProblem and Retry; retry uses current filter and keeps selection; loading is separate and only latest response renders. Do not claim browser verification without opening actual app.",
+      "disposition": "required",
+      "checks": [
+        "node-behavior",
+        "local-api",
+        "actual-app-browser"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "node-behavior",
+      "kind": "command",
+      "required": true,
+      "description": "Node tests execute actual app handlers with an explicitly simulated DOM: status requests/counts, selection persistence, empty/loading/error/retry and latest-response behavior."
+    },
+    {
+      "id": "local-api",
+      "kind": "command",
+      "required": true,
+      "description": "Start provided server at PORT=0 and use printed URL to verify all four API statuses, failure/recovery and served implementation entrypoints."
+    },
+    {
+      "id": "actual-app-browser",
+      "kind": "browser",
+      "required": true,
+      "description": "Open actual implementation; exercise filter, selection, empty/error/retry, keyboard focus and wide/narrow layout. Browser is unavailable in this task."
+    },
+    {
+      "id": "design-source",
+      "kind": "static",
+      "required": true,
+      "description": "Inspect current source against selected structure, existing UI helpers, blue system tokens and responsive rules; record source trace without claiming visual verification."
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "target": "7e50ea2a90d23aea7fa9e6e964c8623ae886c5d41fd83498a31f5a3df8f395a0",
+  "changes": [
+    {
+      "path": "src/app.js",
+      "reason": "Use existing API/UI helpers for labelled filtering/counts, persistent selection, distinct loading/empty/error/Retry states and latest-response guard."
+    },
+    {
+      "path": "src/theme.css",
+      "reason": "Add token-based filter/count row, wrapping and selector surface/border while preserving blue accent and existing responsive layout."
+    },
+    {
+      "path": "tests/app.test.mjs",
+      "reason": "Execute actual app/api/ui modules with explicitly simulated DOM to assert all requested behaviors, initial failure, retry and out-of-order responses."
+    },
+    {
+      "path": "tests/dom.mjs",
+      "reason": "Minimal Node-only DOM simulation for app behavior tests; does not establish browser or layout verification."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "AC-1",
+      "state": "implemented",
+      "reason": "The real status control calls the existing API client; matching rows and count render. Node behavior and real fixture integration passed. Actual browser verification remains unavailable.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 18,
+          "quote": "toolbar.append(selectField({"
+        },
+        {
+          "path": "src/app.js",
+          "line": 20,
+          "quote": "  options: [['all', 'All'], ['active', 'Active'], ['archived', 'Archived'], ['paused', 'Paused']],"
+        },
+        {
+          "path": "src/app.js",
+          "line": 46,
+          "quote": "    const result = await projects(status);"
+        },
+        {
+          "path": "src/app.js",
+          "line": 49,
+          "quote": "    count.textContent = `${visible.length} ${visible.length === 1 ? 'project' : 'projects'}`;"
+        },
+        {
+          "path": "src/theme.css",
+          "line": 4,
+          "quote": ".filter{display:flex;align-items:center;justify-content:space-between;gap:var(--space);flex-wrap:wrap;margin-bottom:calc(var(--space)*2)}"
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "state": "implemented",
+      "reason": "Selected project lives independently of visible rows; selection panel and highlight recover after hidden filters. Empty success is visible and distinct. Assertions passed under Node DOM simulation and actual API; browser UI remains unchecked.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 13,
+          "quote": "let selected = null;"
+        },
+        {
+          "path": "src/app.js",
+          "line": 30,
+          "quote": "    rows.textContent = 'No projects found.';"
+        },
+        {
+          "path": "src/app.js",
+          "line": 33,
+          "quote": "  renderRows(rows, visible, selected?.id, project => {"
+        },
+        {
+          "path": "src/app.js",
+          "line": 35,
+          "quote": "    selection.textContent = project.name;"
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "state": "implemented",
+      "reason": "Original showProblem/Retry treatment handles failed requests and retries current status while preserving selected project; latest-request checks suppress stale success/error/finally. Node and real fixture 503/recovery passed. No browser verification is claimed.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 41,
+          "quote": "  const request = ++latestRequest;"
+        },
+        {
+          "path": "src/app.js",
+          "line": 43,
+          "quote": "  rows.textContent = 'Loading projects…';"
+        },
+        {
+          "path": "src/app.js",
+          "line": 47,
+          "quote": "    if (request !== latestRequest) return;"
+        },
+        {
+          "path": "src/app.js",
+          "line": 52,
+          "quote": "    if (request !== latestRequest) return;"
+        },
+        {
+          "path": "src/app.js",
+          "line": 54,
+          "quote": "    showProblem(rows, () => { void load(); });"
+        },
+        {
+          "path": "src/app.js",
+          "line": 56,
+          "quote": "    if (request === latestRequest) rows.setAttribute('aria-busy', 'false');"
+        }
+      ]
+    }
+  ],
+  "verification": [
+    {
+      "id": "node-behavior",
+      "status": "passed",
+      "target": "7e50ea2a90d23aea7fa9e6e964c8623ae886c5d41fd83498a31f5a3df8f395a0",
+      "detail": "npm test passed 5/5 tests: API forwarding/rejection; all labelled filters, counts, selection/empty; initial error Retry; current-filter Retry with selection; stale success/failure/loading. Executes real modules with a simulated DOM, not a browser.",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/source",
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "evidence/node-tests.txt",
+          "sha256": "277303d5ea9cbf43de65f919cb6169249e28a98ee24bfd9d9046af93ae74dc3f"
+        }
+      ]
+    },
+    {
+      "id": "local-api",
+      "status": "passed",
+      "target": "7e50ea2a90d23aea7fa9e6e964c8623ae886c5d41fd83498a31f5a3df8f395a0",
+      "detail": "Provided server started with PORT=0 at its printed http://127.0.0.1:61681/. All four real API results and static entrypoints passed; actual app/api/ui modules under simulated DOM passed selection/filter/count/empty, real HTTP 503 Retry and response ordering. First sandbox attempt failed EPERM; authorized loopback execution then passed and server was stopped.",
+      "command": [
+        "node",
+        "/private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/state/verify-local.mjs"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/source",
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "evidence/local-api-escalated.txt",
+          "sha256": "d9a50392586245becb19ae9c158580050c7c607dad76fa86e728509ee63a0c45"
+        },
+        {
+          "path": "verify-local.mjs",
+          "sha256": "6e45d180341c42664e3e2702eab80cffcb495abba29a3b1b0c5606ecdc1f3e11"
+        },
+        {
+          "path": "evidence/local-api.txt",
+          "sha256": "e01ed7a644188998fbb5a7048b7c30fc81c0cfadce16c545c3733d16b25b678b"
+        }
+      ]
+    },
+    {
+      "id": "actual-app-browser",
+      "status": "not_run",
+      "detail": "No browser tool or browser package was used; there is no actual-app browser URL/viewport/screenshot evidence.",
+      "reason": "User explicitly states browser access is unavailable. Actual rendered wide/narrow layout, keyboard interaction/focus and browser user scenarios remain required checks."
+    },
+    {
+      "id": "design-source",
+      "status": "passed",
+      "target": "7e50ea2a90d23aea7fa9e6e964c8623ae886c5d41fd83498a31f5a3df8f395a0",
+      "detail": "Compared actual source against spec, chosen prototype, DESIGN, UX and unchanged API/UI/shell. Existing helpers, labelled native control, blue tokens, filter row, selection and 700px responsive structure are present; static inspection cannot certify rendered appearance. git diff --check passed.",
+      "evidence": [
+        {
+          "path": "evidence/design-source.txt",
+          "sha256": "de583d240df6febb9684a73f9f1c66672b6f8bfc8d09a877501fb1f2a26634d4"
+        },
+        {
+          "path": "current-diff.patch",
+          "sha256": "3089a4cb00841ba63dd44d788bb4680aa54c90591fc6c72b5f4285b3902dd828"
+        }
+      ]
+    }
+  ],
+  "differences": [
+    "Use DESIGN.md blue system accent rather than the selected prototype orange demo accent, as explicitly instructed.",
+    "Filter toolbar may wrap on narrow screens to keep label/control and result count usable; rendered layout remains unverified.",
+    "Retain initial None selection until the user selects a real project, as the existing application does."
+  ],
+  "handoff": [
+    "App: cwd /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/source; run PORT=0 npm start; use actual printed loopback URL at route /. No packages or external services required. Integration server was stopped after verification.",
+    "Data: Tide active, Forest archived, North active; paused is successful empty. To test error use ONLY documented local PUT /__fixture__/mode with JSON {\"fail\":true}; restore {\"fail\":false} before Retry.",
+    "Inputs frozen in inputs.json/target.json; source checked against verification-target.json digest 7e50ea2a90d23aea7fa9e6e964c8623ae886c5d41fd83498a31f5a3df8f395a0. Direct spec AC-1/AC-2/AC-3 reviewed; this spec is prose, not a structured handoff.",
+    "Actual evidence: evidence/node-tests.txt, evidence/local-api-escalated.txt, evidence/design-source.txt; initial EPERM attempt is retained in evidence/local-api.txt. Reproducer: node /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/state/verify-local.mjs (loopback listener permission needed).",
+    "Remaining: actual browser on current implementation at wide/narrow viewports, keyboard focus/select/Retry, all user scenarios and accessibility announcements. No screenshot or browser verification exists. No independent code review or Visual QA was run.",
+    "Current diff including added tests: /private/tmp/skill-quality-20261110/implement/runs/I2-no-browser/state/current-diff.patch. Supplied docs/server/user draft and installed skill were preserved. No commit, push, package install, deployment, external message or delegation."
+  ]
+}

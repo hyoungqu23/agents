@@ -1,0 +1,12 @@
+{"id": "1794273766742-1", "command": {"id": "1794273766742-1", "path": "/__fixture__/mode", "method": "PUT", "body": {"fail": true}}, "status": 200, "response": "{}", "elapsed_ms": 16}
+{"id": "1794273767528-2", "command": {"id": "1794273767528-2", "path": "/__fixture__/mode", "method": "PUT", "body": {"fail": false}}, "status": 200, "response": "{}", "elapsed_ms": 2}
+{"id": "1794273793656-3", "command": {"id": "1794273793656-3", "path": "/__fixture__/mode", "method": "PUT", "body": {"fail": true}}, "status": 200, "response": "{}", "elapsed_ms": 1}
+{"id": "1794273793879-4", "command": {"id": "1794273793879-4", "path": "/__fixture__/mode", "method": "PUT", "body": {"fail": false}}, "status": 200, "response": "{}", "elapsed_ms": 1}
+{"id": "1794273793892-5", "command": {"id": "1794273793892-5", "path": "/api/projects?status=active", "method": "GET"}, "status": 200, "response": "[{\"id\":\"tide\",\"name\":\"Tide\",\"status\":\"active\"},{\"id\":\"north\",\"name\":\"North\",\"status\":\"active\"}]", "elapsed_ms": 603}
+{"id": "1794273794927-6", "command": {"id": "1794273794927-6", "path": "/__fixture__/mode", "method": "PUT", "body": {"fail": true}}, "status": 200, "response": "{}", "elapsed_ms": 2}
+{"id": "1794273794934-7", "command": {"id": "1794273794934-7", "path": "/api/projects?status=active", "method": "GET"}, "error": "HTTP Error 503: Service Unavailable", "elapsed_ms": 603}
+{"id": "1794273795606-8", "command": {"id": "1794273795606-8", "path": "/__fixture__/mode", "method": "PUT", "body": {"fail": false}}, "status": 200, "response": "{}", "elapsed_ms": 1}
+{"id": "1794273818847-9", "command": {"id": "1794273818847-9", "path": "/api/projects?status=paused", "method": "GET"}, "status": 200, "response": "[]", "elapsed_ms": 28}
+{"id": "1794273819524-10", "command": {"id": "1794273819524-10", "path": "/__fixture__/mode", "method": "PUT", "body": {"fail": true}}, "status": 200, "response": "{}", "elapsed_ms": 1}
+{"id": "1794273819567-11", "command": {"id": "1794273819567-11", "path": "/api/projects?status=paused", "method": "GET"}, "error": "HTTP Error 503: Service Unavailable", "elapsed_ms": 27}
+{"id": "1794273819605-12", "command": {"id": "1794273819605-12", "path": "/__fixture__/mode", "method": "PUT", "body": {"fail": false}}, "status": 200, "response": "{}", "elapsed_ms": 1}

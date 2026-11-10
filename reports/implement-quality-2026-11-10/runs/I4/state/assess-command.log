@@ -1,0 +1,69 @@
+{
+  "status": "partial",
+  "gaps": [
+    {
+      "requirement": "AC-1",
+      "facet": "verification",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-1",
+      "reason": "behavior_unverified"
+    },
+    {
+      "requirement": "AC-2",
+      "facet": "verification",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-2",
+      "reason": "behavior_unverified"
+    },
+    {
+      "requirement": "AC-3",
+      "facet": "verification",
+      "reason": "semantic_mismatch_or_unreviewed"
+    },
+    {
+      "requirement": "AC-3",
+      "reason": "behavior_unverified"
+    },
+    {
+      "check": "browser-status",
+      "reason": "not_run"
+    },
+    {
+      "check": "browser-design",
+      "reason": "not_run"
+    },
+    {
+      "check": "browser-selection",
+      "reason": "not_run"
+    },
+    {
+      "check": "browser-recovery-races",
+      "reason": "not_run"
+    },
+    {
+      "requirement": "AC-1",
+      "check": "browser-status",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "AC-1",
+      "check": "browser-design",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "AC-2",
+      "check": "browser-selection",
+      "reason": "outcome_unverified"
+    },
+    {
+      "requirement": "AC-3",
+      "check": "browser-recovery-races",
+      "reason": "outcome_unverified"
+    }
+  ],
+  "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793"
+}

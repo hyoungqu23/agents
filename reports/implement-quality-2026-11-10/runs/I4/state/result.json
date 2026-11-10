@@ -1,0 +1,432 @@
+{
+  "schema_version": 1,
+  "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793",
+  "changes": [
+    {
+      "path": "src/App.tsx",
+      "reason": "Replace only successful empty result message with exact current AC-2 text No matching projects for this status.; preserve all existing logic and user edits."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "AC-1",
+      "state": "implemented",
+      "reason": "Existing four-option Status -> current-status real API -> response rows/count path retained. Actual API arrays reverified natively; UI interactions/design not reverified.",
+      "code": [
+        {
+          "path": "src/App.tsx",
+          "line": 9,
+          "quote": " const {rows, loading, error, retry} = useProjects(status);"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 16,
+          "quote": "     <StatusField value={status} onChange={setStatus}/>"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 17,
+          "quote": "     {!loading && !error && <span aria-live=\"polite\">{rows.length} {rows.length === 1 ? 'project' : 'projects'}</span>}"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 2,
+          "quote": "const options: Status[] = ['all','active','archived','paused'];"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 3,
+          "quote": "export function StatusField({value,onChange}:{value:Status;onChange:(value:Status)=>void}) {return <label>Status <select value={value} onChange={event=>onChange(event.target.value as Status)}>{options.map(option=><option key={option} value={option}>{option[0].toUpperCase()+option.slice(1)}</option>)}</select></label>;}"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 4,
+          "quote": "export function ProjectRows({rows,selectedId,onSelect}:{rows:Project[];selectedId:string|null;onSelect:(project:Project)=>void}) {return <div className=\"rows\">{rows.map(project=><button type=\"button\" key={project.id} data-project-id={project.id} aria-pressed={selectedId===project.id} className={selectedId===project.id?'picked':''} onClick={()=>onSelect(project)}>{project.name} — {project.status[0].toUpperCase()+project.status.slice(1)}</button>)}</div>;}"
+        },
+        {
+          "path": "src/api.ts",
+          "line": 3,
+          "quote": " const response = await fetch(`${base}/api/projects?status=${encodeURIComponent(status)}`);"
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "state": "implemented",
+      "reason": "Exact current empty-success message now implemented by one text replacement. Independent selected Project, persistent panel and id-based restoration remain byte-identical; UI not reverified.",
+      "code": [
+        {
+          "path": "src/App.tsx",
+          "line": 8,
+          "quote": " const [selected, setSelected] = useState<Project | null>(null);"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 19,
+          "quote": "    {loading ? <p role=\"status\">Loading projects…</p> : error ? <ProblemPanel message={error} retry={retry}/> : rows.length === 0 ? <p role=\"status\">No matching projects for this status.</p> : <ProjectRows rows={rows} selectedId={selected?.id ?? null} onSelect={setSelected}/>}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 21,
+          "quote": "   <SelectedPanel project={selected}/>"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 4,
+          "quote": "export function ProjectRows({rows,selectedId,onSelect}:{rows:Project[];selectedId:string|null;onSelect:(project:Project)=>void}) {return <div className=\"rows\">{rows.map(project=><button type=\"button\" key={project.id} data-project-id={project.id} aria-pressed={selectedId===project.id} className={selectedId===project.id?'picked':''} onClick={()=>onSelect(project)}>{project.name} — {project.status[0].toUpperCase()+project.status.slice(1)}</button>)}</div>;}"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 6,
+          "quote": "export function SelectedPanel({project}:{project:Project|null}) {return <aside className=\"panel\"><h2>Selected project</h2><p>{project?.name??'No project selected'}</p></aside>;}"
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "state": "implemented",
+      "reason": "Existing distinct loading/error/empty branches, current status/reload owner and stale then/catch/finally invalidation retained. Actual HTTP 503 vs empty/recovery passed natively; UI Retry/selection/race behavior not reverified.",
+      "code": [
+        {
+          "path": "src/useProjects.ts",
+          "line": 8,
+          "quote": " const pending = request.status !== status || request.reload !== reload;"
+        },
+        {
+          "path": "src/useProjects.ts",
+          "line": 9,
+          "quote": " useEffect(()=>{let current=true;setRequest({status,reload});setLoading(true);setError(null);projects(status).then(value=>{if(current)setRows(value)}).catch(reason=>{if(current)setError(String(reason.message))}).finally(()=>{if(current)setLoading(false)});return ()=>{current=false}},[status,reload]);"
+        },
+        {
+          "path": "src/useProjects.ts",
+          "line": 10,
+          "quote": " return {rows,error:pending ? null : error,loading:pending || loading,retry:()=>setReload(value=>value+1)};"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 19,
+          "quote": "    {loading ? <p role=\"status\">Loading projects…</p> : error ? <ProblemPanel message={error} retry={retry}/> : rows.length === 0 ? <p role=\"status\">No matching projects for this status.</p> : <ProjectRows rows={rows} selectedId={selected?.id ?? null} onSelect={setSelected}/>}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 21,
+          "quote": "   <SelectedPanel project={selected}/>"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 5,
+          "quote": "export function ProblemPanel({message,retry}:{message:string;retry:()=>void}) {return <div role=\"alert\" className=\"problem\">{message}<button type=\"button\" onClick={retry}>Retry</button></div>;}"
+        },
+        {
+          "path": "src/api.ts",
+          "line": 4,
+          "quote": " if (!response.ok) throw new Error('Could not load projects');"
+        }
+      ]
+    }
+  ],
+  "verification": [
+    {
+      "id": "typecheck",
+      "status": "passed",
+      "detail": "Native TypeScript noEmit exited 0.",
+      "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "native-typecheck-1.log",
+          "sha256": "8fa1cf5506304e8abac55868e7f1a136c9b1dde57a3981a382da4c21ea129a6f"
+        },
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "5d96f579b6f63a3b0ae32b4ca3b8136b778fd81e761345726bb84f322f3a64b1"
+        }
+      ]
+    },
+    {
+      "id": "tests",
+      "status": "passed",
+      "detail": "Existing actual-server API test passed 1/1, no skips. Sandbox tsx IPC EPERM attempt retained; loopback/IPC escalation retried same native command with exit 0.",
+      "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "native-test-2.log",
+          "sha256": "dac810f8cdee02b376687d3b009d1597e8f7a2acf18085a0152e9694bdd6ec1d"
+        },
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "5d96f579b6f63a3b0ae32b4ca3b8136b778fd81e761345726bb84f322f3a64b1"
+        },
+        {
+          "path": "native-test-1.log",
+          "sha256": "eaf73484d6376f38dd07c55ed4c3ae8ddbe2f0be9efd7184ef2ea49c38de8b3c"
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "status": "passed",
+      "detail": "Native Vite build passed, 34 modules. Build artifacts directed to authorized state, no app dist mutation.",
+      "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793",
+      "command": [
+        "npm",
+        "run",
+        "build",
+        "--",
+        "--outDir",
+        "/private/tmp/skill-quality-20261110/implement/runs/I4-resume/state/build"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "native-build-1.log",
+          "sha256": "11f4219ca7b459a905b1cf48dbab2e8108a081c416baa0c962c164a367b078d3"
+        },
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "5d96f579b6f63a3b0ae32b4ca3b8136b778fd81e761345726bb84f322f3a64b1"
+        }
+      ]
+    },
+    {
+      "id": "browser-status",
+      "status": "not_run",
+      "detail": "Four-status rendering/query and counts in actual mounted app were not exercised.",
+      "reason": "Current continuation prompt explicitly makes browser use unavailable. Prior browser records refer to changed SPEC/theme/source target and cannot establish this target."
+    },
+    {
+      "id": "browser-design",
+      "status": "not_run",
+      "detail": "700/701px responsive layouts, focus and visible selection appearance were not exercised.",
+      "reason": "Current continuation prompt explicitly makes browser use unavailable. Prior browser records refer to changed SPEC/theme/source target and cannot establish this target."
+    },
+    {
+      "id": "browser-selection",
+      "status": "not_run",
+      "detail": "Selected project through hidden/loading/empty/return scenarios, including exact new visible empty copy, were not exercised.",
+      "reason": "Current continuation prompt explicitly makes browser use unavailable. Prior browser records refer to changed SPEC/theme/source target and cannot establish this target."
+    },
+    {
+      "id": "browser-recovery-races",
+      "status": "not_run",
+      "detail": "Mounted UI error/current-filter Retry/selection preservation and late success/error/finally ordering were not exercised.",
+      "reason": "Current continuation prompt explicitly makes browser use unavailable. Prior browser records refer to changed SPEC/theme/source target and cannot establish this target."
+    },
+    {
+      "id": "source-comparison",
+      "status": "passed",
+      "detail": "Read every current canonical AC and traced actual owners; exact one replacement confirmed; all other working/index bytes and frozen inputs preserved; post-check capture equals target. Full browser behavior is explicitly unreviewed.",
+      "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793",
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "a2e78840a86ee70c08551b0fb4ede9428f95e806b4fce046ef0794489475c4ea"
+        },
+        {
+          "path": "pre-edit-source-comparison.txt",
+          "sha256": "677340a6d0661aec6175635bc86ad8e2b8780987b19f8e07ce65be0eddfff629"
+        },
+        {
+          "path": "implementation-resume.diff",
+          "sha256": "7c28b17e090fa18d0c95183cda0984c081d18ad2483ad0152157374258878c2b"
+        }
+      ]
+    }
+  ],
+  "source_review": [
+    {
+      "id": "AC-1",
+      "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793",
+      "ac_digest": "53c3fc039ba2166446e13cee4b88c0073aea3424b1870335c40db0724c47f94d",
+      "facets": {
+        "condition": {
+          "expected": "프로젝트 목록과 Status가 있고 GET 응답을 제어할 수 있음",
+          "verdict": "matched",
+          "detail": "Existing App/status and unchanged supplied real server implement the stated precondition; actual native server test starts at PORT=0."
+        },
+        "action": {
+          "expected": "All, Active, Archived, Paused를 각각 명시 선택하고 각 요청을 완료",
+          "verdict": "matched",
+          "detail": "StatusField declares all four values and forwards the selected enum into useProjects(status). Native API owner test actually sends all/active/archived/paused; no UI selection claimed."
+        },
+        "outcome": {
+          "expected": "네 선택 항목이 보이며 query는 각각 all/active/archived/paused. 최신 성공 배열의 실제 이름·상태와 length를 표시. 고정 이미지 데이터·고정 개수로 대체하지 않음",
+          "verdict": "matched",
+          "detail": "App response rows and rows.length plus ProjectRows names/statuses trace to real API. Actual API tests passed distinct arrays including 0/1/many; UI presentation not directly observed."
+        },
+        "interfaces": {
+          "expected": "§3.1~3.2 Status 조회, §4 Status·목록, §5.1~5.2 GET",
+          "verdict": "matched",
+          "detail": "App.tsx:7/9/16/17 -> useProjects.ts:9 -> api.ts:3 -> ProjectRows; original CSS blue/focus/700px rules are unchanged."
+        },
+        "verification": {
+          "expected": "구현 후 요청 query와 서로 다른 응답 배열을 대조; 0/1/여러 항목 개수 확인. label/focus, 파란 accent, 700/701px 배치 확인. 배포 확인 Q-001; 초기 관례 Q-002",
+          "verdict": "unreviewed",
+          "detail": "Native contract test passed actual server arrays and typecheck/build passed. Actual-app control/render/focus/700/701 verification is unperformed due browser constraint; production Q-001 remains unverified, initial all preserved."
+        }
+      },
+      "behavior_checks": [
+        "tests",
+        "browser-status",
+        "browser-design"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "a2e78840a86ee70c08551b0fb4ede9428f95e806b4fce046ef0794489475c4ea"
+        },
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "5d96f579b6f63a3b0ae32b4ca3b8136b778fd81e761345726bb84f322f3a64b1"
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793",
+      "ac_digest": "60263a59b3b0d35a0d6b60a4a5c1e71392405dce420dd362ca14e4b8877be152",
+      "facets": {
+        "condition": {
+          "expected": "P를 포함한 성공 목록이 있고 사용자가 P를 선택",
+          "verdict": "matched",
+          "detail": "App independent selected Project supports selecting P from successful rows, with no array-dependent reset."
+        },
+        "action": {
+          "expected": "P 선택 후 P가 없는 필터, 200+[] 필터, P가 돌아오는 필터를 순서대로 조회",
+          "verdict": "matched",
+          "detail": "ProjectRows onSelect sets selected; current status replaces filtered rows without clearing selected. No simulated state or browser execution claimed."
+        },
+        "outcome": {
+          "expected": "선택 직후 패널에 P.name. P가 목록에 없어도 패널 이름·선택 객체 유지. []는 결과 없음과 0이며 오류가 아님. P가 같은 id로 재등장하면 해당 행 선택 표시 복구; 빈 성공 문구는 정확히 No matching projects for this status. 를 표시한다",
+          "verdict": "matched",
+          "detail": "Current exact AC-2 text matches App.tsx:19 in the successful zero-length branch. App.tsx:8/21 and ui.tsx:4/6 retain name/object and match reappearing id; only text changed relative to baseline."
+        },
+        "interfaces": {
+          "expected": "§3.2 행 선택·필터 밖 선택·성공 empty, §4 선택 패널, §5.1 선택/§5.2 id/name",
+          "verdict": "matched",
+          "detail": "App independent selected object -> ProjectRows selectedId/onSelect + always-present SelectedPanel. All actual owners preserved, no new API."
+        },
+        "verification": {
+          "expected": "구현 후 배열 순서·개수를 바꾸어 id 매칭 확인, 빈 성공/로딩 중 패널 유지 확인. 이미지의 주황 대신 시스템 accent 확인. 초기 관례 Q-002",
+          "verdict": "unreviewed",
+          "detail": "Source comparison establishes exact replacement/preservation; API test confirms paused [] only. Selected P hide/loading/empty/return, actual visible new copy, id restoration and visual blue accent remain browser-unverified."
+        }
+      },
+      "behavior_checks": [
+        "browser-selection"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "a2e78840a86ee70c08551b0fb4ede9428f95e806b4fce046ef0794489475c4ea"
+        },
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "5d96f579b6f63a3b0ae32b4ca3b8136b778fd81e761345726bb84f322f3a64b1"
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "target": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793",
+      "ac_digest": "d313cdcaf395d36d14c6c29d673e2ac9702cfbc2defa7715876baf833592d19b",
+      "facets": {
+        "condition": {
+          "expected": "P 선택 상태에서 필터 요청과 완료 순서를 제어할 수 있음",
+          "verdict": "matched",
+          "detail": "Existing independent selected object and actual server response/failure/delay contracts support the specified scenarios."
+        },
+        "action": {
+          "expected": "현재 요청을 503으로 실패시켜 Retry; A 시작 뒤 새 필터 B 시작. 이전 A의 성공·실패·finally를 B 대기/완료 중 각각 늦게 전달",
+          "verdict": "matched",
+          "detail": "ProblemPanel retry -> reload dependency/current status request. Cleanup current=false rejects earlier request handlers. Current run performs real 503/recovery via API test only, not UI/races."
+        },
+        "outcome": {
+          "expected": "실패는 성공 empty와 다른 오류/Retry. Retry query는 실행 시점의 현재 필터. loading·error·Retry에도 P 유지. 최신 B만 성공/실패를 화면에 반영하고 A는 목록·개수·오류·loading 종료를 바꾸지 않음. 동일 필터 Retry의 이전 요청에도 동일 규칙",
+          "verdict": "matched",
+          "detail": "App branches put error before successful empty and preserve SelectedPanel; hook guards then/catch/finally and pending masks prior presentation. Actual HTTP empty versus 503/recovery is reverified; native test does not test mounted Retry/selection/race results."
+        },
+        "interfaces": {
+          "expected": "§3.2 실패·Retry·응답 역전, §4 상태/선택, §5.1/5.3",
+          "verdict": "matched",
+          "detail": "App.tsx:19/21, useProjects.ts:8-10, ui.tsx:5 and api.ts:3-4 match current §3/4/5 owners; all preserved byte-for-byte except AC-2 copy."
+        },
+        "verification": {
+          "expected": "구현 후 200+[]와 503 비교, Retry query/선택 확인. A성공→B실패, A실패→B성공의 역순 완료와 B 대기 중 A finally를 제어해 최신 상태 확인. 실제 앱 실행은 미수행; 배포 Q-001",
+          "verdict": "unreviewed",
+          "detail": "Actual native API failure/recovery passed. Requested current-filter UI Retry, retained selection and reordered success/error/finally are unperformed at this target; browser unavailable and Q-001 deployment remains unverified."
+        }
+      },
+      "behavior_checks": [
+        "tests",
+        "browser-recovery-races"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "a2e78840a86ee70c08551b0fb4ede9428f95e806b4fce046ef0794489475c4ea"
+        },
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "5d96f579b6f63a3b0ae32b4ca3b8136b778fd81e761345726bb84f322f3a64b1"
+        }
+      ]
+    }
+  ],
+  "differences": [
+    "Preserved current existing UI/system blue token; selected reference orange remains demo only.",
+    "Build output directory moved to current authorized state; source/package script unchanged."
+  ],
+  "supplemental_checks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+      "exit_code": 2,
+      "detail": "Pre-existing trailing whitespace in read-only contract/SPEC.md:43; baseline/current SPEC hash identical, outside requested src/tests edit.",
+      "evidence": [
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "5d96f579b6f63a3b0ae32b4ca3b8136b778fd81e761345726bb84f322f3a64b1"
+        }
+      ]
+    }
+  ],
+  "handoff": {
+    "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+    "start_command": "PORT=0 npm start",
+    "route": "/",
+    "url": "No app browser URL opened in this run; startup prints a free loopback URL.",
+    "scenario_data": "Unchanged local server: All Tide(active), Forest(archived), North(active), Active Tide/North, Archived Forest, Paused []; authorized existing fixture PUT /__fixture__/mode {fail:true|false} used only by native API test.",
+    "input_identity": {
+      "spec_sha256": "779380dfe0405888dc30c2085f2d56c926494a065b75da33526be141fbf1b4af",
+      "questions_sha256": "3f9bc0504360bf46416faa86562e56614a5731d933e6ceb0e237ebf6d2ad5846",
+      "head": "282c7ddc01d0f5fad56b358f2d53dde0d30413ed",
+      "verification_digest": "da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793"
+    },
+    "incremental_diff": "implementation-resume.diff",
+    "current_src_tests_diff": "current-src-tests.diff",
+    "limitations": [
+      "All required browser checks are not_run by explicit current constraint. Prior complete/native/browser evidence is not reused for current target.",
+      "Original AC-3 restored despite omission from incoming simple handoff list.",
+      "No independent code review, Visual QA, production deployment verification, commit, push or publication.",
+      "Full UI semantic verification facets remain unreviewed; native API test does not establish mounted UI behavior."
+    ]
+  }
+}

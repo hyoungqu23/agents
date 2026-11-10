@@ -1,0 +1,10 @@
+Target: da32e68fc7d04aaf1cb111104e488c74dc22635a542166746852fc325ec8e793
+Native command traces, all run after verification target capture:
+1. npm run typecheck -> exit 0; native-typecheck-1.log.
+2. npm test -> exit 1 before test entry; tsx IPC listen EPERM in sandbox. native-test-1.log preserved.
+3. Same npm test with local IPC/loopback escalation -> exit 0; 1 test passed, 0 skipped; native-test-2.log. Existing test starts unchanged server and sends real HTTP through src/api.ts. No mock, response interception, state injection or package installation.
+4. npm run build -- --outDir /private/tmp/skill-quality-20261110/implement/runs/I4-resume/state/build -> exit 0, 34 modules. Only output directory relocated to authorized state; package script/source unchanged.
+Environment: npm_config_cache=/private/tmp/skill-quality-20261110/implement/runs/I4-resume/state/npm-cache; test TMPDIR=/private/tmp/skill-quality-20261110/implement/runs/I4-resume/state/runtime, TSX_DISABLE_CACHE=1. No browser tool invoked by current request.
+Supplemental git diff --check -> exit 2; existing contract/SPEC.md:43 trailing whitespace. Baseline and target have identical SPEC SHA256 779380dfe0405888dc30c2085f2d56c926494a065b75da33526be141fbf1b4af. Read-only source whitespace is outside requested edit; retained, not corrected.
+Native tests assert four real API statuses (all Tide/Forest/North, active Tide/North, archived Forest, paused empty), actual 503 rejection, actual recovery. They do not mount or exercise App/selection/loading/retry/races or responsive layout. Typecheck/build do not establish browser behavior.
+Post-check capture digest equals verification target. No source or input drift during checks.

@@ -1,0 +1,7 @@
+{
+  "original_name": "implementation-resume.diff",
+  "encoding": "utf-8",
+  "sha256": "7c28b17e090fa18d0c95183cda0984c081d18ad2483ad0152157374258878c2b",
+  "content": "--- before/src/App.tsx\n+++ after/src/App.tsx\n@@ -16,7 +16,7 @@\n      <StatusField value={status} onChange={setStatus}/>\n      {!loading && !error && <span aria-live=\"polite\">{rows.length} {rows.length === 1 ? 'project' : 'projects'}</span>}\n     </div>\n-    {loading ? <p role=\"status\">Loading projects…</p> : error ? <ProblemPanel message={error} retry={retry}/> : rows.length === 0 ? <p role=\"status\">No projects found</p> : <ProjectRows rows={rows} selectedId={selected?.id ?? null} onSelect={setSelected}/>}\n+    {loading ? <p role=\"status\">Loading projects…</p> : error ? <ProblemPanel message={error} retry={retry}/> : rows.length === 0 ? <p role=\"status\">No matching projects for this status.</p> : <ProjectRows rows={rows} selectedId={selected?.id ?? null} onSelect={setSelected}/>}\n    </section>\n    <SelectedPanel project={selected}/>\n   </main>\n",
+  "note": "Exact historical bytes, JSON-packed to preserve whitespace. Not rewritten/relabelled evidence."
+}

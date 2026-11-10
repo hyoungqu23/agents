@@ -1,0 +1,3 @@
+Use $implement at /private/tmp/skill-quality-20261110/implement/candidate/SKILL.md.
+이번에는 /private/tmp/skill-quality-20261110/implement/runs/I5-design/source의 기능을 구현하지 말고, 해당 구현 작업을 검증·재개할 하네스 설계만 /private/tmp/skill-quality-20261110/implement/runs/I5-design/output/design.md에 정리하세요. 원본 요구→작업 목록→실제 코드/행동 증거가 어떻게 연결되고, 미결·브라우저 미수행·입력 변경을 어떻게 구분할지 설명해 주세요. 앱 코드나 기존 문서 변경은 요청하지 않습니다.
+읽기는 source와 candidate, 현재 prompt만 허용하고 쓰기는 output만 허용합니다. 다른 사례/oracles/부모 워크트리/평가 코드·정답을 읽지 마세요. 브라우저·서버 실행·의존성 설치·Git 변경·외부 게시·위임은 하지 마세요. 구현 완료/실제 검증으로 표시하지 말고 설계와 그 한계를 구분하세요.

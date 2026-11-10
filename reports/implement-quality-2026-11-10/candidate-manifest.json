@@ -1,0 +1,12 @@
+{
+  "commit": "6501a00aa6ed6c1b4dd9de02e9e874729965666a",
+  "files": {
+    "SKILL.md": "fad02e11c9f2e094005a7d175b0d414645ab221705008eb42e7b2d3568c1c1b0",
+    "references/execution-and-evidence.md": "96112e784e12782b301443e0b232e5ffba85c7f58653500dc3b40d1acb318a97",
+    "references/source-coverage.md": "7d3d7fb569c7475aa259002fdc94153e6fb8f3acb8bad77609e4f59cb5c74de9",
+    "references/inputs-and-authority.md": "7f610ac185429dfbc8944927896f432f9bf034ed3cfb8870b473672a45143fd8",
+    "agents/openai.yaml": "252c0f708f3f0744c9ef596cb11a0a9234c3235486c6f38b5c1ee971a2463055",
+    "scripts/spec_handoff.py": "7cb32eacab58ee21468e2d2119693c975c78db394799e1b16ea76c26fc33bd2c",
+    "scripts/implementation_state.py": "6415fd1db0fb90b3271e1586b0c157848cb8fc1ce1f5526b04768e29ef46af7f"
+  }
+}

@@ -1,0 +1,498 @@
+{
+  "schema_version": 1,
+  "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+  "changes": [
+    {
+      "path": "src/App.tsx",
+      "reason": "Connect current query, actual count, independent selection and distinct loading/error/empty via existing owners."
+    },
+    {
+      "path": "src/useProjects.ts",
+      "reason": "Immediately mark stale presentation pending on status/reload while retaining latest-only effect guard."
+    },
+    {
+      "path": "src/ui.tsx",
+      "reason": "Title-case contract project status labels to match chosen reference."
+    },
+    {
+      "path": "tests/api.test.ts",
+      "reason": "Use unchanged actual app server rather than synthetic per-test responses for all filters and failure/recovery."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "AC-1",
+      "state": "implemented",
+      "reason": "Status/API/query/row owners drive actual filtered rows and length count. Browser verified all options, system accent, keyboard focus and breakpoint.",
+      "code": [
+        {
+          "path": "src/App.tsx",
+          "line": 16,
+          "quote": "     <StatusField value={status} onChange={setStatus}/>"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 17,
+          "quote": "     {!loading && !error && <span aria-live=\"polite\">{rows.length} {rows.length === 1 ? 'project' : 'projects'}</span>}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 19,
+          "quote": "    {loading ? <p role=\"status\">Loading projects…</p> : error ? <ProblemPanel message={error} retry={retry}/> : rows.length === 0 ? <p role=\"status\">No projects found</p> : <ProjectRows rows={rows} selectedId={selected?.id ?? null} onSelect={setSelected}/>}"
+        },
+        {
+          "path": "src/api.ts",
+          "line": 3,
+          "quote": " const response = await fetch(`${base}/api/projects?status=${encodeURIComponent(status)}`);"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 3,
+          "quote": "export function StatusField({value,onChange}:{value:Status;onChange:(value:Status)=>void}) {return <label>Status <select value={value} onChange={event=>onChange(event.target.value as Status)}>{options.map(option=><option key={option} value={option}>{option[0].toUpperCase()+option.slice(1)}</option>)}</select></label>;}"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 4,
+          "quote": "export function ProjectRows({rows,selectedId,onSelect}:{rows:Project[];selectedId:string|null;onSelect:(project:Project)=>void}) {return <div className=\"rows\">{rows.map(project=><button type=\"button\" key={project.id} data-project-id={project.id} aria-pressed={selectedId===project.id} className={selectedId===project.id?'picked':''} onClick={()=>onSelect(project)}>{project.name} — {project.status[0].toUpperCase()+project.status.slice(1)}</button>)}</div>;}"
+        },
+        {
+          "path": "src/theme.css",
+          "line": 1,
+          "quote": ":root{--accent:#2457c5;--surface:#fff;--line:#d8dee9;--space:24px;color:#182230;font:16px system-ui;background:#f6f7fa}body{margin:32px}header{margin-bottom:var(--space)}.layout{display:grid;grid-template-columns:2fr 1fr;gap:var(--space)}.panel{background:var(--surface);padding:var(--space);border:1px solid var(--line);border-radius:12px}.filter{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space)}button,select{font:inherit;padding:10px;border-radius:6px}button{display:block;margin:12px 0;border:1px solid var(--line);background:var(--surface);width:100%;text-align:left;cursor:pointer}.picked{border:2px solid var(--accent)}:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.problem{color:#8b1c1c;border:1px solid #b43b3b;padding:12px}@media(max-width:700px){.layout{grid-template-columns:1fr}body{margin:16px}}"
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "state": "implemented",
+      "reason": "Independent selected object survives pending/error/empty/filtering; rows compare selected id. Browser verified Forest moves index 1 to index 0 with selection restored.",
+      "code": [
+        {
+          "path": "src/App.tsx",
+          "line": 8,
+          "quote": " const [selected, setSelected] = useState<Project | null>(null);"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 19,
+          "quote": "    {loading ? <p role=\"status\">Loading projects…</p> : error ? <ProblemPanel message={error} retry={retry}/> : rows.length === 0 ? <p role=\"status\">No projects found</p> : <ProjectRows rows={rows} selectedId={selected?.id ?? null} onSelect={setSelected}/>}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 21,
+          "quote": "   <SelectedPanel project={selected}/>"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 4,
+          "quote": "export function ProjectRows({rows,selectedId,onSelect}:{rows:Project[];selectedId:string|null;onSelect:(project:Project)=>void}) {return <div className=\"rows\">{rows.map(project=><button type=\"button\" key={project.id} data-project-id={project.id} aria-pressed={selectedId===project.id} className={selectedId===project.id?'picked':''} onClick={()=>onSelect(project)}>{project.name} — {project.status[0].toUpperCase()+project.status.slice(1)}</button>)}</div>;}"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 6,
+          "quote": "export function SelectedPanel({project}:{project:Project|null}) {return <aside className=\"panel\"><h2>Selected project</h2><p>{project?.name??'No project selected'}</p></aside>;}"
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "state": "implemented",
+      "reason": "Query owner retains latest-only success/error/finally guard and immediately masks old query. Error/current Retry connected. Actual browser failure/recovery and timing reversals passed with selection retained.",
+      "code": [
+        {
+          "path": "src/useProjects.ts",
+          "line": 8,
+          "quote": " const pending = request.status !== status || request.reload !== reload;"
+        },
+        {
+          "path": "src/useProjects.ts",
+          "line": 9,
+          "quote": " useEffect(()=>{let current=true;setRequest({status,reload});setLoading(true);setError(null);projects(status).then(value=>{if(current)setRows(value)}).catch(reason=>{if(current)setError(String(reason.message))}).finally(()=>{if(current)setLoading(false)});return ()=>{current=false}},[status,reload]);"
+        },
+        {
+          "path": "src/useProjects.ts",
+          "line": 10,
+          "quote": " return {rows,error:pending ? null : error,loading:pending || loading,retry:()=>setReload(value=>value+1)};"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 19,
+          "quote": "    {loading ? <p role=\"status\">Loading projects…</p> : error ? <ProblemPanel message={error} retry={retry}/> : rows.length === 0 ? <p role=\"status\">No projects found</p> : <ProjectRows rows={rows} selectedId={selected?.id ?? null} onSelect={setSelected}/>}"
+        },
+        {
+          "path": "src/ui.tsx",
+          "line": 5,
+          "quote": "export function ProblemPanel({message,retry}:{message:string;retry:()=>void}) {return <div role=\"alert\" className=\"problem\">{message}<button type=\"button\" onClick={retry}>Retry</button></div>;}"
+        },
+        {
+          "path": "src/api.ts",
+          "line": 4,
+          "quote": " if (!response.ok) throw new Error('Could not load projects');"
+        }
+      ]
+    }
+  ],
+  "verification": [
+    {
+      "id": "typecheck",
+      "status": "passed",
+      "detail": "Native TypeScript check exited 0.",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "native-typecheck-1.log",
+          "sha256": "ffbbaafcbfa22e8ae1d4cdb9f82400fedcc86ef11f31e69436c04b47eb974888"
+        },
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "a0cc77f0639e2c589ef0683861ecaf94f71d846985d6c1c0faa15b27eaa531aa"
+        }
+      ]
+    },
+    {
+      "id": "tests",
+      "status": "passed",
+      "detail": "Actual unchanged server integration test passed all statuses, empty, 503 and recovery. Initial sandbox IPC EPERM retained; escalated retry exited 0, no skips.",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "native-test-2.log",
+          "sha256": "acd129cbb96af70f9b2e40f5b43c1c786acf902a41482b7fa0f56002614e6220"
+        },
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "a0cc77f0639e2c589ef0683861ecaf94f71d846985d6c1c0faa15b27eaa531aa"
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "status": "passed",
+      "detail": "Native production build exited 0, 34 modules transformed.",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "native-build-1.log",
+          "sha256": "10bcd2b964b267fb9dcb0f266836034cec53463bae648f0851967b974dfb6dc1"
+        },
+        {
+          "path": "native-verification-notes.txt",
+          "sha256": "a0cc77f0639e2c589ef0683861ecaf94f71d846985d6c1c0faa15b27eaa531aa"
+        }
+      ]
+    },
+    {
+      "id": "browser-status",
+      "status": "passed",
+      "detail": "Explicit four statuses in actual app returned distinct names/statuses and 3/2/1/0 counts. Native API test supplies real query/response contract evidence.",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "tool": "mcp__cua_repl.js (Chrome)",
+      "url": "http://127.0.0.1:62963/",
+      "scenario": "Explicit four statuses in actual app returned distinct names/statuses and 3/2/1/0 counts. Native API test supplies real query/response contract evidence.",
+      "viewport": {
+        "width": 2504,
+        "height": 1363
+      },
+      "evidence": [
+        {
+          "path": "browser-evidence.json",
+          "sha256": "00c0084e5842de243ceb2a1f9b641486935a6d149974a11cf251731e2cd2d02a"
+        },
+        {
+          "path": "native-test-2.log",
+          "sha256": "acd129cbb96af70f9b2e40f5b43c1c786acf902a41482b7fa0f56002614e6220"
+        },
+        {
+          "path": "browser-verification-notes.txt",
+          "sha256": "d7c208ba82be8c1372757d6c6fe45138c97b99211dc3d456900fc74f6ee9c1f0"
+        }
+      ]
+    },
+    {
+      "id": "browser-design",
+      "status": "passed",
+      "detail": "700x800 single column with selected panel below; 701x800 two columns, no horizontal overflow. Native Tab reached visible labelled Status select with blue 3px focus outline; selected border blue.",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "tool": "mcp__cua_repl.js (Chrome)",
+      "url": "http://127.0.0.1:62963/",
+      "scenario": "700x800 single column with selected panel below; 701x800 two columns, no horizontal overflow. Native Tab reached visible labelled Status select with blue 3px focus outline; selected border blue.",
+      "viewport": {
+        "width": 701,
+        "height": 800
+      },
+      "evidence": [
+        {
+          "path": "browser-evidence.json",
+          "sha256": "00c0084e5842de243ceb2a1f9b641486935a6d149974a11cf251731e2cd2d02a"
+        },
+        {
+          "path": "browser-700.png",
+          "sha256": "c3d7281cd226c1cb8cb1742799993ad09b72bc054b338551be9e7539901fc51c"
+        },
+        {
+          "path": "browser-701.png",
+          "sha256": "d55a8fd76b32b044ae70df6c0b819c5e57a4c9ba84154333839fa7d93e1d81f8"
+        },
+        {
+          "path": "browser-final.png",
+          "sha256": "9a0acf94fc0d513a8b596e1bb3b504182c9c2a5dbcb618cbfd1dae9c59559660"
+        },
+        {
+          "path": "browser-verification-notes.txt",
+          "sha256": "d7c208ba82be8c1372757d6c6fe45138c97b99211dc3d456900fc74f6ee9c1f0"
+        }
+      ]
+    },
+    {
+      "id": "browser-selection",
+      "status": "passed",
+      "detail": "Forest All index 1 -> Active loading/absent -> Paused empty -> Archived index 0; panel retains Forest and returned id is pressed.",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "tool": "mcp__cua_repl.js (Chrome)",
+      "url": "http://127.0.0.1:62963/",
+      "scenario": "Forest All index 1 -> Active loading/absent -> Paused empty -> Archived index 0; panel retains Forest and returned id is pressed.",
+      "viewport": {
+        "width": 2504,
+        "height": 1363
+      },
+      "evidence": [
+        {
+          "path": "browser-evidence.json",
+          "sha256": "00c0084e5842de243ceb2a1f9b641486935a6d149974a11cf251731e2cd2d02a"
+        },
+        {
+          "path": "browser-verification-notes.txt",
+          "sha256": "d7c208ba82be8c1372757d6c6fe45138c97b99211dc3d456900fc74f6ee9c1f0"
+        }
+      ]
+    },
+    {
+      "id": "browser-recovery-races",
+      "status": "passed",
+      "detail": "Real Active 503 vs Paused empty, current Active Retry loading/recovery with Forest. Delayed older success preserves latest error, older failure preserves latest success, older finally leaves newest request loading; server timing barriers retained.",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "tool": "mcp__cua_repl.js (Chrome)",
+      "url": "http://127.0.0.1:62963/",
+      "scenario": "Real Active 503 vs Paused empty, current Active Retry loading/recovery with Forest. Delayed older success preserves latest error, older failure preserves latest success, older finally leaves newest request loading; server timing barriers retained.",
+      "viewport": {
+        "width": 701,
+        "height": 800
+      },
+      "evidence": [
+        {
+          "path": "browser-evidence.json",
+          "sha256": "00c0084e5842de243ceb2a1f9b641486935a6d149974a11cf251731e2cd2d02a"
+        },
+        {
+          "path": "fixture-control-trace.jsonl",
+          "sha256": "c72a1760c9ed79c7ed4d48849ac2faa17939fbf4466883e247d1ebafcb7dd522"
+        },
+        {
+          "path": "fixture_control.py",
+          "sha256": "f5f4fdfccf1f762680d112637163182fbf7b76159980b1b7c8f3529b246cb575"
+        },
+        {
+          "path": "browser-error.png",
+          "sha256": "e21556941caa8a518fd2636db9c7d96d7f92eaf6e703a7cef15a3658705d4218"
+        },
+        {
+          "path": "browser-verification-notes.txt",
+          "sha256": "d7c208ba82be8c1372757d6c6fe45138c97b99211dc3d456900fc74f6ee9c1f0"
+        }
+      ]
+    }
+  ],
+  "source_review": [
+    {
+      "id": "AC-1",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "ac_digest": "53c3fc039ba2166446e13cee4b88c0073aea3424b1870335c40db0724c47f94d",
+      "facets": {
+        "condition": {
+          "expected": "프로젝트 목록과 Status가 있고 GET 응답을 제어할 수 있음",
+          "verdict": "matched",
+          "detail": "App renders existing StatusField and actual useProjects owner; unchanged local server supplies actual GET responses."
+        },
+        "action": {
+          "expected": "All, Active, Archived, Paused를 각각 명시 선택하고 각 요청을 완료",
+          "verdict": "matched",
+          "detail": "Browser explicitly selected Active/Archived/Paused/All; native API test passed every enum through src/api.ts to the real server."
+        },
+        "outcome": {
+          "expected": "네 선택 항목이 보이며 query는 각각 all/active/archived/paused. 최신 성공 배열의 실제 이름·상태와 length를 표시. 고정 이미지 데이터·고정 개수로 대체하지 않음",
+          "verdict": "matched",
+          "detail": "Browser returned names/statuses/counts: All Tide/Forest/North 3; Active Tide/North 2; Archived Forest 1; Paused empty 0. App uses rows and rows.length."
+        },
+        "interfaces": {
+          "expected": "§3.1~3.2 Status 조회, §4 Status·목록, §5.1~5.2 GET",
+          "verdict": "matched",
+          "detail": "App StatusField onChange -> status state -> useProjects(status) -> api.projects(status) GET query -> ProjectRows. Existing theme owns tokens and 700px boundary."
+        },
+        "verification": {
+          "expected": "구현 후 요청 query와 서로 다른 응답 배열을 대조; 0/1/여러 항목 개수 확인. label/focus, 파란 accent, 700/701px 배치 확인. 배포 확인 Q-001; 초기 관례 Q-002",
+          "verdict": "matched",
+          "detail": "Actual-server native test asserts each enum and response. Browser distinguishes 3/2/1/0, label/focus/blue border and 700/701 layout. Only local environment was verified; All initialization preserved."
+        }
+      },
+      "behavior_checks": [
+        "tests",
+        "browser-status",
+        "browser-design"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "c15b859d7319201fb8c1945f59742bfbcc633105aa974e26ed3b692403f84695"
+        },
+        {
+          "path": "browser-evidence.json",
+          "sha256": "00c0084e5842de243ceb2a1f9b641486935a6d149974a11cf251731e2cd2d02a"
+        },
+        {
+          "path": "browser-verification-notes.txt",
+          "sha256": "d7c208ba82be8c1372757d6c6fe45138c97b99211dc3d456900fc74f6ee9c1f0"
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "ac_digest": "2f965ebf49e25f33aede4e7d98f7a3be6170ab4ba67905915a111673ee030c97",
+      "facets": {
+        "condition": {
+          "expected": "P를 포함한 성공 목록이 있고 사용자가 P를 선택",
+          "verdict": "matched",
+          "detail": "Browser selected Forest from successful All result at index 1."
+        },
+        "action": {
+          "expected": "P 선택 후 P가 없는 필터, 200+[] 필터, P가 돌아오는 필터를 순서대로 조회",
+          "verdict": "matched",
+          "detail": "Forest selection -> Active loading/absent -> Paused successful [] -> Archived where Forest returns at index 0."
+        },
+        "outcome": {
+          "expected": "선택 직후 패널에 P.name. P가 목록에 없어도 패널 이름·선택 객체 유지. []는 결과 없음과 0이며 오류가 아님. P가 같은 id로 재등장하면 해당 행 선택 표시 복구",
+          "verdict": "matched",
+          "detail": "Independent selected Project never resets on list updates. Browser retained Forest name, empty displayed 0 without Retry, returned Forest id had aria-pressed=true despite changed index."
+        },
+        "interfaces": {
+          "expected": "§3.2 행 선택·필터 밖 선택·성공 empty, §4 선택 패널, §5.1 선택/§5.2 id/name",
+          "verdict": "matched",
+          "detail": "App.tsx selected object -> ProjectRows selectedId/onSelect and always-present SelectedPanel. Row identity is Project.id and panel shows Project.name; no extra API."
+        },
+        "verification": {
+          "expected": "구현 후 배열 순서·개수를 바꾸어 id 매칭 확인, 빈 성공/로딩 중 패널 유지 확인. 이미지의 주황 대신 시스템 accent 확인. 초기 관례 Q-002",
+          "verdict": "matched",
+          "detail": "Browser stages forest-preserved-loading/outside-active/empty and forest-restored-archived-index-0 establish selection retention and id restoration. Existing blue token and initial unselected text retained."
+        }
+      },
+      "behavior_checks": [
+        "browser-selection"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "c15b859d7319201fb8c1945f59742bfbcc633105aa974e26ed3b692403f84695"
+        },
+        {
+          "path": "browser-evidence.json",
+          "sha256": "00c0084e5842de243ceb2a1f9b641486935a6d149974a11cf251731e2cd2d02a"
+        },
+        {
+          "path": "browser-verification-notes.txt",
+          "sha256": "d7c208ba82be8c1372757d6c6fe45138c97b99211dc3d456900fc74f6ee9c1f0"
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44",
+      "ac_digest": "d313cdcaf395d36d14c6c29d673e2ac9702cfbc2defa7715876baf833592d19b",
+      "facets": {
+        "condition": {
+          "expected": "P 선택 상태에서 필터 요청과 완료 순서를 제어할 수 있음",
+          "verdict": "matched",
+          "detail": "Forest selected; supplied unchanged server delays Active 600ms and others 25ms, with authorized mode PUT controlling actual 503/200 behavior."
+        },
+        "action": {
+          "expected": "현재 요청을 503으로 실패시켜 Retry; A 시작 뒤 새 필터 B 시작. 이전 A의 성공·실패·finally를 B 대기/완료 중 각각 늦게 전달",
+          "verdict": "matched",
+          "detail": "Active 503 -> current Active Retry recovery; older Active/newer Archived and older Archived/newer Active sequences with real controls and real HTTP timing barriers."
+        },
+        "outcome": {
+          "expected": "실패는 성공 empty와 다른 오류/Retry. Retry query는 실행 시점의 현재 필터. loading·error·Retry에도 P 유지. 최신 B만 성공/실패를 화면에 반영하고 A는 목록·개수·오류·loading 종료를 바꾸지 않음. 동일 필터 Retry의 이전 요청에도 동일 규칙",
+          "verdict": "matched",
+          "detail": "Actual error/Retry differed from empty. Current Active Retry kept Forest and returned 2. Late A success preserved B error, late A failure preserved B success, old completion left newer Active loading. Guard also covers reload replacements; overlapping same-filter Retry is inaccessible while button is hidden."
+        },
+        "interfaces": {
+          "expected": "§3.2 실패·Retry·응답 역전, §4 상태/선택, §5.1/5.3",
+          "verdict": "matched",
+          "detail": "useProjects current flag guards then/catch/finally; cleanup invalidates previous status/reload effect. Request key masks old presentation immediately. Existing ProblemPanel connects Retry, selected object stays independent."
+        },
+        "verification": {
+          "expected": "구현 후 200+[]와 503 비교, Retry query/선택 확인. A성공→B실패, A실패→B성공의 역순 완료와 B 대기 중 A finally를 제어해 최신 상태 확인. 실제 앱 실행은 미수행; 배포 Q-001",
+          "verdict": "matched",
+          "detail": "Real 503 vs [] and Retry data distinguished. Race evidence includes latest pending/completed screens and supplied-server timing barriers, without interception/state injection. Retry recovery exercised; shared reload cleanup inspected for inaccessible overlapping same-filter case. No production claim."
+        }
+      },
+      "behavior_checks": [
+        "browser-recovery-races"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "c15b859d7319201fb8c1945f59742bfbcc633105aa974e26ed3b692403f84695"
+        },
+        {
+          "path": "browser-evidence.json",
+          "sha256": "00c0084e5842de243ceb2a1f9b641486935a6d149974a11cf251731e2cd2d02a"
+        },
+        {
+          "path": "browser-verification-notes.txt",
+          "sha256": "d7c208ba82be8c1372757d6c6fe45138c97b99211dc3d456900fc74f6ee9c1f0"
+        }
+      ]
+    }
+  ],
+  "differences": [
+    "Prototype orange uses existing system blue accent. Existing theme typography, spacing, radius and 700px boundary retained.",
+    "Existing all initial query and No project selected owner text retained; no automatic project selection or storage persistence."
+  ],
+  "handoff": {
+    "start_command": "PORT=0 npm start",
+    "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I1-react/source",
+    "url": "http://127.0.0.1:62963/",
+    "scenario_data": "Tide(active), Forest(archived), North(active); paused empty. Existing synthetic PUT /__fixture__/mode fail true/false; final fail=false.",
+    "input_identity": {
+      "spec_sha256": "f5ceaaa4b2cf85b4f02de17a22ae26407b4af2392006595c3107a2b8797f7a7e",
+      "questions_sha256": "3f9bc0504360bf46416faa86562e56614a5731d933e6ceb0e237ebf6d2ad5846",
+      "head": "282c7ddc01d0f5fad56b358f2d53dde0d30413ed"
+    },
+    "diff": "implementation.diff",
+    "limitations": [
+      "Local supplied server verified; production deployment Q-001 remains unverified.",
+      "No independent code review, independent Visual QA or release workflow ran.",
+      "Browser network/performance capture unavailable; query traced through unchanged API owner and actual-server native test.",
+      "Concurrent overlapping same-filter Retry is inaccessible while loading; shared reload cleanup inspected and current-filter recovery exercised."
+    ]
+  }
+}
