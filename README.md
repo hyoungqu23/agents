@@ -136,3 +136,5 @@ and the remaining human evaluation requirements.
 ## Publishing note
 
 Resolve the public license and third-party attribution requirements before the first public release.
+
+Build 0.3.1: Require direct frozen SPEC/QUESTIONS coverage, source-bound semantic review and behavior evidence before completion; retain source-backed partial scope and direct inputs.

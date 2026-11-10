@@ -13,6 +13,11 @@ import stat
 import subprocess
 import sys
 import shutil
+import importlib.util
+
+_spec = importlib.util.spec_from_file_location('implement_handoff', Path(__file__).with_name('spec_handoff.py'))
+handoff = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(handoff)
 
 
 class StateError(RuntimeError):
@@ -230,7 +235,7 @@ def capture(worktree, inputs):
     inputs = Path(inputs).absolute()
     raw = file_bytes(inputs)
     data = validate_inputs(json.loads(raw))
-    sources = {}
+    sources, contents_by_id = {}, {}
     for row in data['sources']:
         path = Path(row['path'])
         if not path.is_absolute():
@@ -246,6 +251,7 @@ def capture(worktree, inputs):
             selected = max(candidates, key=lambda r: len(r.parts))
             path = inside_file(selected.resolve(), str(path.relative_to(selected)))
         contents = file_bytes(path)
+        contents_by_id[row['id']] = contents
         sources[row['id']] = {'path': str(path.resolve()), 'sha256': hashlib.sha256(contents).hexdigest()}
     before = git(root, 'rev-parse', 'HEAD').strip()
     state = source_state(root)
@@ -254,8 +260,136 @@ def capture(worktree, inputs):
         raise StateError('Source changed during capture; capture a fresh snapshot')
     value = {'schema_version': 1, 'root': str(root), 'head': before,
              'inputs': {'path': str(inputs), 'sha256': hashlib.sha256(raw).hexdigest(), 'data': data},
-             'sources': sources, 'files': state, 'dirty': dirty}
+             'sources': sources, 'files': state, 'dirty': dirty,
+             'coverage': source_catalog(data, sources, contents_by_id)}
     return {**value, 'digest': digest(value)}
+
+
+def source_catalog(data, sources, contents):
+    """Read canonical lists from original frozen source bytes, never the manifest."""
+    value = {'handoffs': [], 'errors': []}
+    explicit = data.get('handoffs', [])
+    if not isinstance(explicit, list) or any(not isinstance(x, str) or x not in sources for x in explicit):
+        value['errors'].append('handoffs must list frozen SPEC source IDs')
+        explicit = []
+    for key, raw in contents.items():
+        try:
+            detected = handoff.is_spec(raw)
+        except (ValueError, UnicodeError) as error:
+            value['errors'].append(key + ': ' + str(error))
+            continue
+        # Frozen Markdown is text even when its identity cannot be decoded.
+        # Keep binary visual inputs supported without silently accepting an
+        # unreadable SPEC/QUESTIONS or direct requirement document.
+        if Path(sources[key]['path']).suffix.lower() in ('.md', '.markdown'):
+            try:
+                raw.decode('utf-8')
+            except UnicodeError as error:
+                value['errors'].append(key + ': ' + str(error))
+                continue
+        if key not in explicit and not detected:
+            continue
+        try:
+            spec = handoff.read_spec(raw)
+            spec_path = Path(sources[key]['path'])
+            companion = (spec_path.parent / spec['metadata']['questions']).resolve()
+            qkeys = [k for k, s in sources.items() if Path(s['path']) == companion]
+            if len(qkeys) != 1:
+                raise handoff.HandoffError('QUESTIONS companion must be frozen exactly once')
+            qkey = qkeys[0]
+            questions = handoff.read_questions(contents[qkey])
+            if (companion.parent / questions['metadata']['spec']).resolve() != spec_path:
+                raise handoff.HandoffError('QUESTIONS backlink points to another SPEC')
+            if spec['metadata']['id'].split(':', 1)[1] != questions['metadata']['id'].split(':', 1)[1]:
+                raise handoff.HandoffError('SPEC and QUESTIONS identities disagree')
+            acs = {row['AC ID']: row for row in spec['acs']}
+            active = []
+            for row in questions['questions']:
+                if row['미해결 시 차단'] == 'yes' and row['상태'] in ('open', 'deferred'):
+                    active.append({'id': row['ID'], 'acs': sorted(handoff.affected_ids(row, acs)), 'state': row['상태']})
+            value['handoffs'].append({'source': key, 'questions_source': qkey,
+                                      'spec': spec, 'questions': questions, 'active': active})
+        except (ValueError, UnicodeError) as error:
+            value['errors'].append(key + ': ' + str(error))
+    return value
+
+
+def coverage_gaps(verified, result, state_root):
+    catalog = verified.get('coverage')
+    if not isinstance(catalog, dict):
+        return [{'reason': 'coverage_not_run'}]
+    gaps = [{'reason': 'unsupported_handoff', 'detail': e} for e in catalog['errors']]
+    data = verified['inputs']['data']
+    reqs = rows_by_id(data['requirements'], 'requirements')
+    definitions = rows_by_id(data['checks'], 'checks')
+    states = rows_by_id(result.get('requirements'), 'result requirements')
+    checks = rows_by_id(result.get('verification'), 'verification')
+    reviews = rows_by_id(result.get('source_review', []), 'source_review')
+    expected_reviews = set()
+    for bundle in catalog['handoffs']:
+        source = bundle['source']
+        acs = {r['AC ID']: r for r in bundle['spec']['acs']}
+        mapping = {}
+        for ac, original in acs.items():
+            matches = [r for r in reqs.values() if r['source'] == source
+                       and r.get('ac', r['id'].removeprefix(source + ':')) == ac]
+            if len(matches) != 1:
+                gaps.append({'source': source, 'ac': ac, 'reason': 'missing_or_ambiguous_ac'})
+                continue
+            requirement = matches[0]
+            key = requirement['id']
+            mapping[ac] = key
+            expected_reviews.add(key)
+            if requirement['disposition'] == 'excluded':
+                authority = requirement.get('exclusion', {})
+                sid, quote = authority.get('source'), authority.get('quote')
+                definition = next((s for s in data['sources'] if s['id'] == sid), {})
+                if (sid not in verified['sources'] or definition.get('role') != 'scope_authority'
+                        or not text(quote) or ac not in quote
+                        or quote not in file_bytes(Path(verified['sources'][sid]['path'])).decode('utf-8')):
+                    gaps.append({'requirement': key, 'reason': 'unsupported_scope_exclusion'})
+                continue
+            review = reviews.get(key, {})
+            if not isinstance(review.get('facets', {}), dict):
+                raise StateError('Semantic facets must be an object')
+            if review.get('target') != verified['digest'] or review.get('ac_digest') != digest(original):
+                gaps.append({'requirement': key, 'reason': 'missing_or_stale_semantic_review'})
+                continue
+            # All facets are required even if the reviewer records a reason why a
+            # particular contract is not applicable. No general pass boolean.
+            facets = {'condition': '사전 조건', 'action': '행동', 'outcome': '기대 관찰 결과',
+                      'interfaces': '관련 화면·흐름·API', 'verification': '확인 방법·미결 참조'}
+            for facet, column in facets.items():
+                row = review.get('facets', {}).get(facet, {})
+                if not isinstance(row, dict):
+                    raise StateError('Each semantic facet must be an object')
+                if (row.get('expected') != original[column] or row.get('verdict') != 'matched'
+                        or not text(row.get('detail'))):
+                    gaps.append({'requirement': key, 'facet': facet, 'reason': 'semantic_mismatch_or_unreviewed'})
+            evidence_files(state_root, review.get('evidence'))
+            behavior = review.get('behavior_checks')
+            if (not isinstance(behavior, list) or not behavior
+                    or any(c not in requirement['checks'] or c not in definitions
+                           or definitions[c]['kind'] not in ('command', 'browser')
+                           or not definitions[c]['required'] or checks.get(c, {}).get('status') != 'passed'
+                           for c in behavior)):
+                gaps.append({'requirement': key, 'reason': 'behavior_unverified'})
+        for requirement in reqs.values():
+            if requirement['source'] == source and requirement.get('ac', requirement['id'].removeprefix(source + ':')) not in acs:
+                gaps.append({'requirement': requirement['id'], 'reason': 'unknown_canonical_ac'})
+        for question in bundle['active']:
+            for ac in question['acs']:
+                key = mapping.get(ac)
+                if key is None:
+                    gaps.append({'question': question['id'], 'ac': ac, 'reason': 'unmapped_blocker'})
+                elif reqs[key]['disposition'] != 'excluded':
+                    row = states.get(key, {})
+                    linked = row.get('questions', [])
+                    if row.get('state') != 'needs_decision' or not isinstance(linked, list) or question['id'] not in linked:
+                        gaps.append({'question': question['id'], 'requirement': key, 'reason': 'blocker_not_preserved'})
+    if set(reviews) - expected_reviews:
+        gaps.append({'reason': 'unknown_semantic_requirement', 'detail': 'Review references an unknown canonical requirement'})
+    return gaps
 
 
 def snapshot(path):
@@ -327,6 +461,7 @@ def assess(worktree, baseline_path, verification_path, result_path):
         if actual & protected or any(in_scope(p, data.get('preserve', [])) for p in actual):
             raise StateError('Pre-existing or explicitly preserved work changed')
         gaps = verdict['gaps']
+        gaps.extend(coverage_gaps(verified, result, Path(baseline_path).resolve().parent))
         for key, definition in expected_checks.items():
             check = checks.get(key)
             if check is None:
