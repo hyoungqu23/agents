@@ -34,20 +34,26 @@ python3 /installed/dogfood/scripts/dogfood_result.py capture --run /state/run.js
 python3 /installed/dogfood/scripts/dogfood_result.py assess --run /state/run.json --before /state/target-before.json --after /state/target-after.json --output /state/assessment.json
 ```
 
-Capture before and after execution. Capture hashes plan and source, not mutable
-observation fields, so unchanged checks can target its digest throughout the run.
-If exploration adds definitions, recapture and rerun affected checks; never reassign
-old observations to the new digest. For changed source/target begin a new attempt,
+Capture before and after execution. `digest` identifies the entire scope snapshot.
+Use `observation_target` for run-level target evidence and `check_targets[check_id]`
+for each completed check and its issues. These bind observations to the actual
+source/target, check expectation and journey without including unrelated checks.
+If exploration adds definitions, recapture and execute the added checks; retain
+unchanged observations, issues and target evidence verbatim. A changed check or
+journey needs fresh evidence under its new check target. Never reassign old
+observations to a new target. Legacy full-snapshot targets remain readable for
+their captured definitions; a new check cannot borrow an earlier scope's digest.
+For changed source/target begin a new attempt,
 retain old records and revalidate affected assumptions. The helper does not execute
 commands, apps, URLs, browser input, install, authenticate or write external systems.
 Its only writes are explicitly requested new output files.
 
 Checks use passed/failed/blocked/skipped plus concrete detail; blocked/skipped need
 reason and required ones remain gaps. Completed observations need `target` equal
-to the after digest and nonempty `evidence: [{path, sha256}]` relative to the run
+to their captured `check_targets[check_id]` and nonempty `evidence: [{path, sha256}]` relative to the run
 folder. Evidence cannot traverse symlinks or escape the folder. Preserve actual
 tool output/trace, captures and only necessary logs. `target_evidence: {target,
-evidence}` at run level records actual URL/role/environment/build observations.
+evidence}` at run level uses `observation_target` and records actual URL/role/environment/build observations.
 Missing target evidence leaves a gap even if check records look complete.
 
 For visual completed checks add `visual`: `image` (PNG/JPEG evidence path), `inspected:

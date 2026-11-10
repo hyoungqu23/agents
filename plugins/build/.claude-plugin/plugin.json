@@ -1,7 +1,7 @@
 {
   "name": "build",
   "displayName": "Build",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Implement features with original SPEC coverage, apply scoped fixes and dogfood real user journeys with visual and persistence evidence.",
   "author": {
     "name": "HM2"

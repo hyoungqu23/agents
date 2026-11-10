@@ -124,6 +124,17 @@ def local_source(target):
             'excluded_runtime': sorted(ignored)}
 
 
+def observation_targets(value):
+    """Bind observations to their source and definition, not unrelated scope."""
+    definition = value['plan']
+    target = digest({'target': definition['target'], 'local_source': value['local_source']})
+    journeys = rows(definition['journeys'], 'journeys')
+    return {'observation_target': target,
+            'check_targets': {check['id']: digest({'target': target, 'check': check,
+                                                  'journey': journeys[check['journey']]})
+                              for check in definition['checks']}}
+
+
 def capture(run_path):
     run_path = Path(run_path).absolute()
     run = load(run_path)
@@ -132,6 +143,7 @@ def capture(run_path):
     if local['mode'] == 'local' and run_path.resolve().is_relative_to(Path(local['root'])):
         raise RecordError('Keep QA artifacts outside the inspected source tree')
     value = {'schema_version': 1, 'plan': definition, 'local_source': local}
+    value.update(observation_targets(value))
     return {**value, 'digest': digest(value)}
 
 
@@ -141,6 +153,9 @@ def snapshot(path):
         raise RecordError('Invalid capture digest')
     if not isinstance(value.get('plan'), dict) or not isinstance(value.get('local_source'), dict):
         raise RecordError('Incomplete capture')
+    if 'observation_target' in value or 'check_targets' in value:
+        if any(value.get(k) != v for k, v in observation_targets(value).items()):
+            raise RecordError('Observation targets disagree with captured definitions')
     return value
 
 
@@ -214,6 +229,11 @@ def assess(run_path, before_path, after_path):
         run = load(run_path)
         before, after = snapshot(before_path), snapshot(after_path)
         current = capture(run_path)
+        if 'observation_target' not in after:
+            # Compare old captures in their original shape without rewriting them.
+            for field in ('digest', 'observation_target', 'check_targets'):
+                current.pop(field)
+            current['digest'] = digest(current)
         if current != after or before['local_source'] != after['local_source'] or before['plan']['target'] != after['plan']['target']:
             raise RecordError('Source/target changed; reconcile and reverify under a new run')
         # Exploration can append checks, but cannot erase or weaken the initial scope.
@@ -223,9 +243,19 @@ def assess(run_path, before_path, after_path):
                 raise RecordError('Initial scope was removed or changed')
         checks = rows(run['checks'], 'checks')
         issues = rows(run.get('issues', []), 'issues')
+        targets = observation_targets(after)
+        prior_checks = rows(before['plan']['checks'], 'checks')
+
+        def check_targets(key):
+            allowed = {targets['check_targets'][key], after['digest']}
+            # Legacy evidence belongs only to definitions present in its capture.
+            if 'observation_target' not in before and key in prior_checks:
+                allowed.add(before['digest'])
+            return allowed
+
         gaps = value['gaps']
         target_evidence = run.get('target_evidence', {})
-        if target_evidence.get('target') != after['digest']:
+        if target_evidence.get('target') not in {targets['observation_target'], before['digest'], after['digest']}:
             gaps.append({'reason': 'target_unverified'})
         else:
             evidence(run_path.parent, target_evidence.get('evidence'))
@@ -246,7 +276,7 @@ def assess(run_path, before_path, after_path):
                 if check['required']:
                     gaps.append({'check': key, 'reason': status})
                 continue
-            if check.get('target') != after['digest']:
+            if check.get('target') not in check_targets(key):
                 raise RecordError('Observation targets another capture')
             if check['expectation']['certainty'] != 'confirmed':
                 gaps.append({'check': key, 'reason': 'needs_intent'})
@@ -260,7 +290,7 @@ def assess(run_path, before_path, after_path):
             if status == 'failed' and not any(i.get('check') == key and i.get('classification') in ('reproduced', 'observed_once', 'intermittent') for i in issues.values()):
                 raise RecordError('Failed check needs an observed issue')
         for key, issue in issues.items():
-            if (issue.get('check') not in checks or issue.get('target') != after['digest']
+            if (issue.get('check') not in checks or issue.get('target') not in check_targets(issue['check'])
                     or issue.get('classification') not in ('reproduced', 'observed_once', 'intermittent', 'unverified', 'needs_intent')
                     or any(not text(issue.get(k)) for k in ('expected', 'actual', 'steps', 'impact'))
                     or type(issue.get('attempts')) is not int or issue['attempts'] < 1):

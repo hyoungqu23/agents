@@ -14,7 +14,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | [`review`](plugins/review) | `review-pr`, `review-code`, `review-respond`, `review-check` | Evidence-backed review, resumable Pending drafts, claim verification, author responses, and draft-only automation contracts. |
 | [`design`](plugins/design) | `design-brief`, `prototype-explore`, `prototype-promote` | Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references. |
 | [`product`](plugins/product) | `problem-frame`, `prd-write`, `prd-gate`, `flow-spec` | Problem framing, traceable requirements, readiness review and user-flow specifications. |
-| [`build`](plugins/build) | `implement`, `fix` | Implement features and make scoped bug/QA corrections with current-source verification evidence. |
+| [`build`](plugins/build) | `implement`, `fix`, `dogfood` | Implement features, apply scoped corrections and dogfood real app journeys with current-source evidence. |
 | [`learn`](plugins/learn) | `study-loop` | Resumable tutoring that diagnoses, plans, teaches, waits for real answers and keeps the learning record in a local folder that Claude Code and Codex can both continue. Needs Python 3.10+. |
 
 ## Repository layout
