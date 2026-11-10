@@ -1,0 +1,6 @@
+import type {Project, Status} from './types';
+const options: Status[] = ['all','active','archived','paused'];
+export function StatusField({value,onChange}:{value:Status;onChange:(value:Status)=>void}) {return <label>Status <select value={value} onChange={event=>onChange(event.target.value as Status)}>{options.map(option=><option key={option} value={option}>{option[0].toUpperCase()+option.slice(1)}</option>)}</select></label>;}
+export function ProjectRows({rows,selectedId,onSelect}:{rows:Project[];selectedId:string|null;onSelect:(project:Project)=>void}) {return <div className="rows">{rows.map(project=><button type="button" key={project.id} data-project-id={project.id} aria-pressed={selectedId===project.id} className={selectedId===project.id?'picked':''} onClick={()=>onSelect(project)}>{project.name} — {project.status[0].toUpperCase()+project.status.slice(1)}</button>)}</div>;}
+export function ProblemPanel({message,retry}:{message:string;retry:()=>void}) {return <div role="alert" className="problem">{message}<button type="button" onClick={retry}>Retry</button></div>;}
+export function SelectedPanel({project}:{project:Project|null}) {return <aside className="panel"><h2>Selected project</h2><p>{project?.name??'No project selected'}</p></aside>;}

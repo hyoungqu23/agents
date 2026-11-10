@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "id": "I3",
+  "prompt_template": "Use $implement at {{CANDIDATE_DIR}}/SKILL.md.\n{{CASE_DIR}}/source 앱에 SPEC.md와 QUESTIONS.md의 현재 요구를 구현하세요. 선택된 prototype.html, DESIGN.md, ux.md와 기존 API/UI owner를 따르세요. 전체 요구는 유지하되 독립적으로 진행 가능한 작업은 해주세요.\n이 실행에서는 브라우저를 사용할 수 없습니다. 패키지 설치·서버/계약/입력문서/사용자 초안/스킬 수정·커밋·푸시·위임·외부 게시를 하지 마세요. 앱 수정 범위는 src/와 tests/뿐이며 상태·증거는 {{CASE_DIR}}/state에 저장하세요.\n읽기는 source와 implement 및 state, 현재 prompt로 제한하고 다른 사례/oracles/부모 워크트리/평가 코드·정답은 읽지 마세요. 추가 결정은 주어지지 않습니다. 수행한 작업과 남은 결과를 정확히 기록하고 마무리하세요.\n",
+  "files": [
+    {
+      "path": "source/.gitignore",
+      "encoding": "utf-8",
+      "content": "node_modules/\ndist/\n",
+      "sha256": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910"
+    },
+    {
+      "path": "source/AGENTS.md",
+      "encoding": "utf-8",
+      "content": "# Fixture application\n\nUse the components in src/ui.js and tokens in src/theme.css. API access belongs to\nsrc/api.js. `npm test` runs existing contract tests; `npm start` starts this local\napplication. The server prints its actual loopback URL. `PORT=0` selects a free port.\nThe real fixture API is GET /api/projects?status=all|active|archived|paused.\nOnly src/ and tests/ are implementation scope. Preserve all supplied documents,\nthe server, and the existing user draft. No dependencies or external services are needed.\n",
+      "sha256": "1845ca03e935a008c4976c80ede6a5df49280ffdfcc5cfe9a19c9932cb06bb5f"
+    },
+    {
+      "path": "source/DESIGN.md",
+      "encoding": "utf-8",
+      "content": "# Project workspace\n\nUse the existing --accent, --surface, --line and --space tokens. The app accent is\nblue. The selected reference governs structure; its orange demo accent is not a\nsystem-token override. On wide screens, show the list and selected-project panel\nside by side; on narrow screens, put the selected-project panel below the list.\nControls need visible labels and keyboard focus. Preserve existing UI helpers.\n",
+      "sha256": "ab770e44f3c48c5a1658c40d84519e227f147dfac6ca4c0b6adc81cf3c363b7f"
+    },
+    {
+      "path": "source/QUESTIONS.md",
+      "encoding": "utf-8",
+      "content": "---\nid: \"questions:projects\"\nrevision: 1\nhandoff_version: 1\nspec: ./SPEC.md\n---\n## 1. 질문 목록\n| ID | 종류 | 질문 요약 | 영향 절·AC·범위 | 미해결 시 차단 | 상태 |\n| --- | --- | --- | --- | --- | --- |\n| Q-001 | 계약·결정 필요 | 보관 endpoint·권한·확인 정책은 무엇인가 | AC-4 | yes | deferred |\n## 2. 질문 상세\nQ-001: GET 계약만 제공됐다. 보관 method/path, 권한 판정, 확인/실패 정책은 아직 결정되지 않았다. 보류는 승인/해결이 아니며 답변은 아직 없다.\n",
+      "sha256": "e7c45c7585f279589f1722b152a1a74c5412507b9e19926140deffd14d6b5b8e"
+    },
+    {
+      "path": "source/SPEC.md",
+      "encoding": "utf-8",
+      "content": "---\nid: \"spec:projects\"\nrevision: 1\nhandoff_version: 1\nstatus: blocked\nquestions: ./QUESTIONS.md\n---\n# 프로젝트 목록\n## 1. 목표·범위·제약\n필터/선택/오류 회복과 관리자의 보관 동작을 구현한다. 전체 요구는 유지한다. Q-001이 AC-4를 막지만 독립적인 읽기 흐름은 진행할 수 있다.\n## 2. 근거 자료·확정된 결정\n현재 요청, DESIGN.md, ux.md, 기존 GET /api/projects 계약. 보관 API/권한은 Q-001.\n## 3. 화면·사용자 흐름·상태 전이\nAll/Active/Archived/Paused 필터에서 현재 응답과 개수를 표시한다. 선택은 목록에서 숨겨져도 유지한다.\n## 4. UI 규칙·입력 검증·권한\n앱의 파란 토큰을 사용하고 선택된 prototype 구조를 따른다. 보관 버튼 조건과 확인 동작은 Q-001.\n## 5. API 계약·데이터 매핑·오류 처리\nGET /api/projects?status=all|active|archived|paused → Project[]; id/name/status는 필수·non-null. 성공 []와 503 오류를 구분. 현재 필터로 Retry. 보관 endpoint와 성공/실패 계약은 미정.\n## 6. AC·검증 시나리오\n### 6.1 AC 연결\n| AC ID | 근거 | 사전 조건 | 행동 | 기대 관찰 결과 | 관련 화면·흐름·API | 확인 방법·미결 참조 |\n| --- | --- | --- | --- | --- | --- | --- |\n| AC-1 | 요청 | 목록 로드 | Status 선택 | 실제 해당 상태 결과와 개수 표시 | GET /api/projects | 실제 요청/표시 결과 대조 |\n| AC-2 | 요청 | 선택한 프로젝트 | 필터로 숨겼다가 복귀 | 선택 이름 유지·선택 표시 복구, 성공 빈 상태 구분 | 목록·선택 패널 | 선택 유지와 빈 성공 대조 |\n| AC-3 | 요청·ux.md | 현재 필터와 선택 | 오류 후 Retry, 필터 빠른 변경 | 현재 필터로 회복·선택 유지, 과거 응답/오류는 최신 결과를 덮지 않음 | 오류·Retry·API owner | 실패/회복/응답 경합 검증 |\n| AC-4 | 요청 | 관리자와 보관 대상 | 보관 실행 | 확정될 권한/확인/API 계약에 따라 실제 보관 결과 반영 | 보관 UI/API Q-001 | Q-001; 미정 계약 구현을 창작하지 않음 |\n",
+      "sha256": "c407aad055955dd250190a63068207679c61f1dea2677639324a4cdf3115940c"
+    },
+    {
+      "path": "source/index.html",
+      "encoding": "utf-8",
+      "content": "<!doctype html>\n<html lang=\"en\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Projects</title><link rel=\"stylesheet\" href=\"/src/theme.css\">\n<header><h1>Projects</h1><p>Browse projects and keep one selected while filtering.</p></header>\n<main class=\"layout\"><section class=\"panel\"><div id=\"toolbar\"></div><div id=\"rows\"></div></section>\n<aside class=\"panel\"><h2>Selected project</h2><p id=\"selection\">None</p></aside></main>\n<script type=\"module\" src=\"/src/app.js\"></script></html>\n",
+      "sha256": "df2ff6aa8a91cb479bbfccaaed45322489a6ff80ccaa7c4bb3c7c6f4ca56e8aa"
+    },
+    {
+      "path": "source/package.json",
+      "encoding": "utf-8",
+      "content": "{\n  \"name\": \"implement-fixture\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"scripts\": { \"start\": \"node server.mjs\", \"test\": \"node --test tests/*.test.mjs\" }\n}\n",
+      "sha256": "235f362b49114d373c4ddc9eb6075c42a4196ac871870396814b899c4e5d4f68"
+    },
+    {
+      "path": "source/prototype.html",
+      "encoding": "utf-8",
+      "content": "<!doctype html>\n<html lang=\"en\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Selected project reference</title>\n<style>\nbody{font:16px system-ui;margin:32px;background:#f6f7fa;color:#182230}header{margin-bottom:24px}\n.layout{display:grid;grid-template-columns:2fr 1fr;gap:24px}.panel{background:white;padding:24px;border:1px solid #d8dee9;border-radius:12px}\n.filter{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}button,select{font:inherit;padding:10px;border-radius:6px}\nbutton{display:block;margin:12px 0;border:1px solid #d8dee9;background:white;width:100%;text-align:left}.picked{border:2px solid #d56812}\n@media(max-width:700px){.layout{grid-template-columns:1fr}body{margin:16px}}\n</style>\n<header><h1>Projects</h1><p>Browse projects and keep one selected while filtering.</p></header>\n<main class=\"layout\"><section class=\"panel\"><div class=\"filter\"><label>Status <select><option>All</option><option>Active</option><option>Archived</option><option>Paused</option></select></label><span>3 projects</span></div>\n<button class=\"picked\">Tide — Active</button><button>Forest — Archived</button><button>North — Active</button></section>\n<aside class=\"panel\"><h2>Selected project</h2><p>Tide</p></aside></main>\n</html>\n",
+      "sha256": "6f80160df6ae88744b770287f5b481556b99ac07c424a45a75ff1df23a0399ee"
+    },
+    {
+      "path": "source/server.mjs",
+      "encoding": "utf-8",
+      "content": "// Synthetic local API and static server. No external credentials or dependencies.\nimport { createServer } from 'node:http';\nimport { readFile } from 'node:fs/promises';\nimport { fileURLToPath } from 'node:url';\nimport { resolve, relative, extname } from 'node:path';\n\nconst root = fileURLToPath(new URL('.', import.meta.url));\nconst rows = [{ id: 'tide', name: 'Tide', status: 'active' }, { id: 'forest', name: 'Forest', status: 'archived' }, { id: 'north', name: 'North', status: 'active' }];\nlet fail = false;\nconst server = createServer(async (request, response) => {\n  const url = new URL(request.url, 'http://127.0.0.1');\n  if (url.pathname === '/__fixture__/mode' && request.method === 'PUT') {\n    let body = ''; for await (const chunk of request) body += chunk;\n    try { fail = JSON.parse(body).fail === true; response.end('{}'); } catch { response.writeHead(400).end(); }\n    return;\n  }\n  if (request.method !== 'GET') { response.writeHead(405).end(); return; }\n  if (url.pathname === '/api/projects') {\n    const status = url.searchParams.get('status') || 'all';\n    if (!['all', 'active', 'archived', 'paused'].includes(status)) { response.writeHead(400).end(); return; }\n    await new Promise(resolve => setTimeout(resolve, status === 'active' ? 150 : 20));\n    response.setHeader('Content-Type', 'application/json');\n    if (fail) { response.writeHead(503).end('{\"error\":\"fixture failure\"}'); return; }\n    response.end(JSON.stringify(status === 'all' ? rows : rows.filter(row => row.status === status)));\n    return;\n  }\n  const path = resolve(root, '.' + decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname));\n  const name = relative(root, path);\n  if (name.startsWith('..') || name.startsWith('.git') || name.includes('\\0')) { response.writeHead(404).end(); return; }\n  try {\n    response.setHeader('Content-Type', ({ '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css' })[extname(path)] || 'text/plain');\n    response.end(await readFile(path));\n  } catch { response.writeHead(404).end(); }\n});\nserver.listen(Number(process.env.PORT || 0), '127.0.0.1', () => console.log(`http://127.0.0.1:${server.address().port}/`));\n",
+      "sha256": "66a18a14c464000a8b3f86abc603cd9a1c04683a12ab1c3303a2a780482fc1e6"
+    },
+    {
+      "path": "source/src/api.js",
+      "encoding": "utf-8",
+      "content": "export async function projects(status = 'all') {\n  const response = await fetch(`/api/projects?status=${encodeURIComponent(status)}`);\n  if (!response.ok) throw new Error('Could not load projects');\n  return response.json();\n}\n",
+      "sha256": "7b5232af77b6d8bdf24bfb9cd88031dae2761d1d3c2473e12bd978ff26f4fad0"
+    },
+    {
+      "path": "source/src/app.js",
+      "encoding": "utf-8",
+      "content": "import { projects } from './api.js';\nimport { renderRows } from './ui.js';\n\nconst rows = document.querySelector('#rows');\nconst selection = document.querySelector('#selection');\nlet selected = null;\nlet visible = await projects();\nfunction render() {\n  renderRows(rows, visible, selected?.id, project => {\n    selected = project;\n    selection.textContent = project.name;\n    render();\n  });\n}\nrender();\n",
+      "sha256": "ddd6e93584ce108b97112190faf0cfb3e302e5b7ce887daa4ddc03b1c8d2ec78"
+    },
+    {
+      "path": "source/src/theme.css",
+      "encoding": "utf-8",
+      "content": ":root{--accent:#2053e8;--surface:#fff;--line:#d8dee9;--space:12px}\nbody{font:16px system-ui;margin:32px;background:#f6f7fa;color:#182230}header{margin-bottom:24px}\n.layout{display:grid;grid-template-columns:2fr 1fr;gap:24px}.panel{background:var(--surface);padding:24px;border:1px solid var(--line);border-radius:12px}\nbutton,select{font:inherit;padding:10px;border-radius:6px}button{border:1px solid var(--line);background:var(--surface);cursor:pointer}\n.project{display:block;margin:var(--space) 0;width:100%;text-align:left}.project[aria-pressed=true]{border:2px solid var(--accent)}\n:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.problem{border-left:3px solid var(--accent);padding:var(--space)}\n@media(max-width:700px){.layout{grid-template-columns:1fr}body{margin:16px}}\n",
+      "sha256": "d3cc3e39dc694de990903e474a384ef5a9df8664f2e0b1f6f0e53bcc04232c43"
+    },
+    {
+      "path": "source/src/ui.js",
+      "encoding": "utf-8",
+      "content": "export function selectField({ label, options, value, onChange }) {\n  const wrapper = document.createElement('label');\n  wrapper.append(document.createTextNode(`${label} `));\n  const select = document.createElement('select');\n  for (const [key, title] of options) select.add(new Option(title, key));\n  select.value = value;\n  select.addEventListener('change', () => onChange(select.value));\n  wrapper.append(select);\n  return wrapper;\n}\n\nexport function renderRows(container, rows, selectedId, onSelect) {\n  container.replaceChildren();\n  for (const row of rows) {\n    const button = document.createElement('button');\n    button.className = 'project'; button.dataset.projectId = row.id;\n    button.setAttribute('aria-pressed', String(selectedId === row.id));\n    button.textContent = `${row.name} — ${row.status}`;\n    button.addEventListener('click', () => onSelect(row));\n    container.append(button);\n  }\n}\n\nexport function showProblem(container, retry) {\n  const problem = document.createElement('div'); problem.className = 'problem';\n  problem.setAttribute('role', 'alert'); problem.append('Could not load projects. ');\n  const button = document.createElement('button'); button.textContent = 'Retry';\n  button.addEventListener('click', retry); problem.append(button);\n  container.replaceChildren(problem);\n}\n",
+      "sha256": "8c5f2f7af73596d6471bb1d8f907e65d972eff90110e8dfc4e32a2c6ffb24cfa"
+    },
+    {
+      "path": "source/tests/api.test.mjs",
+      "encoding": "utf-8",
+      "content": "import assert from 'node:assert/strict';\nimport test from 'node:test';\nimport { projects } from '../src/api.js';\n\ntest('API client forwards status and rejects a failed response', async () => {\n  const original = globalThis.fetch;\n  try {\n    globalThis.fetch = async url => { assert.equal(url, '/api/projects?status=archived'); return { ok: true, json: async () => [] }; };\n    assert.deepEqual(await projects('archived'), []);\n    globalThis.fetch = async () => ({ ok: false });\n    await assert.rejects(() => projects('active'), /Could not load/);\n  } finally { globalThis.fetch = original; }\n});\n",
+      "sha256": "dbdb223e6022936ada468c529f5367fbedcd6c594cf825f645f2e10bc461b83b"
+    },
+    {
+      "path": "source/user-draft.md",
+      "encoding": "utf-8",
+      "content": "USER DRAFT: preserve this sentence verbatim.\nUncommitted user note: do not replace.\n",
+      "sha256": "ec6c7a1fa655c60320a83e35b7a86c77a59bf1618869ef249860654a573a6428"
+    },
+    {
+      "path": "source/ux.md",
+      "encoding": "utf-8",
+      "content": "# Existing list patterns\n\nUse selectField for a labelled selector, renderRows for project rows, and\nshowProblem for the error/retry treatment. Keep the selected project in application\nstate independently of the currently visible list. Show loading separately from\nempty/error; do not clear the selected-project panel on a request or an error.\nIf filters change during loading, only the latest selection's response may render.\n\nThe server's PUT /__fixture__/mode endpoint controls only this synthetic fixture:\nJSON {\"fail\":true} makes subsequent API requests fail; {\"fail\":false} restores them.\nThis endpoint is evaluation infrastructure, not a production feature or UI control.\n",
+      "sha256": "1c928e842ab98616a3dd124bb3396c6e75019be357f106590bc54b4585c2afc1"
+    }
+  ],
+  "git_baseline_overrides": [
+    {
+      "path": "source/user-draft.md",
+      "encoding": "utf-8",
+      "content": "USER DRAFT: preserve this sentence verbatim.\n",
+      "sha256": "9fe9e825e7e0cc5bea818c19b963f156f350815e101a778948d53b2f24afb607"
+    }
+  ],
+  "untracked_source_files": [],
+  "portability_note": "I3 stores the structured SPEC as SPEC.md to avoid the original macOS spec.md/SPEC.md same-file alias on case-sensitive filesystems. Byte contents and historical manifests are retained.",
+  "setup_note": "Prepare dependencies and the real local service before handing prompt.txt to a fresh execution host. For continuation, prefer rerunning the predecessor; historical identities are never relabelled."
+}

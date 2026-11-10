@@ -1,0 +1,143 @@
+{
+  "all": {
+    "accent": "#2457c5",
+    "columns": 2,
+    "count": "3 projects",
+    "overflow": false,
+    "rows": [
+      {
+        "id": "tide",
+        "selected": "false",
+        "text": "Tide — Active"
+      },
+      {
+        "id": "forest",
+        "selected": "false",
+        "text": "Forest — Archived"
+      },
+      {
+        "id": "north",
+        "selected": "false",
+        "text": "North — Active"
+      }
+    ],
+    "selected": "No project selected"
+  },
+  "active": {
+    "accent": "#2457c5",
+    "columns": 2,
+    "count": "2 projects",
+    "overflow": false,
+    "rows": [
+      {
+        "id": "tide",
+        "selected": "true",
+        "text": "Tide — Active"
+      },
+      {
+        "id": "north",
+        "selected": "false",
+        "text": "North — Active"
+      }
+    ],
+    "selected": "Tide"
+  },
+  "archived": {
+    "accent": "#2457c5",
+    "columns": 2,
+    "count": "1 project",
+    "overflow": false,
+    "rows": [
+      {
+        "id": "forest",
+        "selected": "false",
+        "text": "Forest — Archived"
+      }
+    ],
+    "selected": "Tide"
+  },
+  "paused": {
+    "accent": "#2457c5",
+    "columns": 2,
+    "count": "0 projects",
+    "overflow": false,
+    "rows": [],
+    "selected": "Tide"
+  },
+  "error": {
+    "state": {
+      "accent": "#2457c5",
+      "columns": 2,
+      "overflow": false,
+      "rows": [],
+      "selected": "Tide"
+    },
+    "alert": "Could not load projects\nRetry",
+    "emptyVisible": false
+  },
+  "retry": {
+    "state": {
+      "accent": "#2457c5",
+      "columns": 2,
+      "count": "1 project",
+      "overflow": false,
+      "rows": [
+        {
+          "id": "forest",
+          "selected": "false",
+          "text": "Forest — Archived"
+        }
+      ],
+      "selected": "Tide"
+    },
+    "status": "archived"
+  },
+  "at701": {
+    "accent": "#2457c5",
+    "columns": 2,
+    "count": "1 project",
+    "overflow": false,
+    "rows": [
+      {
+        "id": "forest",
+        "selected": "false",
+        "text": "Forest — Archived"
+      }
+    ],
+    "selected": "Tide"
+  },
+  "at700": {
+    "accent": "#2457c5",
+    "columns": 1,
+    "count": "1 project",
+    "overflow": false,
+    "rows": [
+      {
+        "id": "forest",
+        "selected": "false",
+        "text": "Forest — Archived"
+      }
+    ],
+    "selected": "Tide"
+  },
+  "focus": {
+    "outline": "solid",
+    "tag": "BUTTON",
+    "text": "Forest — Archived"
+  },
+  "after_old_success": {
+    "accent": "#2457c5",
+    "columns": 1,
+    "count": "1 project",
+    "overflow": false,
+    "rows": [
+      {
+        "id": "forest",
+        "selected": "false",
+        "text": "Forest — Archived"
+      }
+    ],
+    "selected": "Tide"
+  },
+  "target": "70b405b1f3aa74e224fb14ceaf9b0dba73a235f13672ac80ed3b35912bb31c44"
+}

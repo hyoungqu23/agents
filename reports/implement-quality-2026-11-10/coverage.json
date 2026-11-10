@@ -1,0 +1,45 @@
+{
+  "note": "covered is the stated core variation, not all possible environment combinations. partial and not_run are not counted as model passes of that whole definition.",
+  "scenarios": [
+    {
+      "scenario": 1,
+      "level": "covered",
+      "cases": [
+        "I1"
+      ],
+      "note": "실제 grouped forward run, 세부 변형과 관찰 범위는 case 기록 참고"
+    },
+    {
+      "scenario": 2,
+      "level": "covered",
+      "cases": [
+        "I2"
+      ],
+      "note": "실제 grouped forward run, 세부 변형과 관찰 범위는 case 기록 참고"
+    },
+    {
+      "scenario": 3,
+      "level": "covered",
+      "cases": [
+        "I4"
+      ],
+      "note": "실제 grouped forward run, 세부 변형과 관찰 범위는 case 기록 참고"
+    },
+    {
+      "scenario": 4,
+      "level": "covered",
+      "cases": [
+        "I5"
+      ],
+      "note": "실제 grouped forward run, 세부 변형과 관찰 범위는 case 기록 참고"
+    },
+    {
+      "scenario": 5,
+      "level": "covered",
+      "cases": [
+        "I3"
+      ],
+      "note": "실제 grouped forward run, 세부 변형과 관찰 범위는 case 기록 참고"
+    }
+  ]
+}

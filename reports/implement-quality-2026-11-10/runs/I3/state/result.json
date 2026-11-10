@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "target": "471f02ee1222551063cf5515b8a74b9e08c8665988c44ee51b34d7af9024b8cd",
+  "changes": [
+    {
+      "path": "src/app.js",
+      "reason": "Wire real GET filter/count, independent selection, distinct loading/empty/error, current-filter Retry and latest-request rendering through existing API/UI owners."
+    },
+    {
+      "path": "src/theme.css",
+      "reason": "Add wrapping prototype-style labelled filter/count toolbar using app spacing tokens; preserve blue accent, focus rule and wide/narrow layout."
+    },
+    {
+      "path": "tests/app.test.mjs",
+      "reason": "Exercise real app module and UI helpers through a minimal Node DOM stand-in, including selection persistence, error recovery and delayed success/error races."
+    },
+    {
+      "path": "tests/helpers/dom.mjs",
+      "reason": "Dependency-free test-only DOM stand-in; excluded from production entrypoint and not browser evidence."
+    },
+    {
+      "path": "tests/http.test.mjs",
+      "reason": "Exercise unchanged API client against isolated unchanged fixture server for four statuses, empty response, 503 and recovery; restore failure mode and terminate child."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "AC-1",
+      "state": "implemented",
+      "reason": "Status selector calls existing projects(status); matching latest response drives rows and response-length count. Native behavior/HTTP tests passed; browser verification remains missing.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 13,
+          "quote": "  options: [['all', 'All'], ['active', 'Active'], ['archived', 'Archived'], ['paused', 'Paused']],"
+        },
+        {
+          "path": "src/app.js",
+          "line": 32,
+          "quote": "    const result = await projects(status);"
+        },
+        {
+          "path": "src/app.js",
+          "line": 56,
+          "quote": "  count.textContent = `${visible.length} ${visible.length === 1 ? 'project' : 'projects'}`;"
+        },
+        {
+          "path": "src/app.js",
+          "line": 61,
+          "quote": "  renderRows(rows, visible, selected?.id, project => {"
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "state": "implemented",
+      "reason": "Selected object is independent of visible rows and survives filtering/loading/errors; returned row restores aria-pressed and successful [] has its own empty state. Native app tests passed; actual browser remains unverified.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 21,
+          "quote": "let selected = null;"
+        },
+        {
+          "path": "src/app.js",
+          "line": 44,
+          "quote": "  selection.textContent = selected?.name ?? 'None';"
+        },
+        {
+          "path": "src/app.js",
+          "line": 58,
+          "quote": "    rows.textContent = 'No projects match this status.';"
+        },
+        {
+          "path": "src/app.js",
+          "line": 61,
+          "quote": "  renderRows(rows, visible, selected?.id, project => {"
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "state": "implemented",
+      "reason": "Existing showProblem retries current status while preserving selection; both success and error ignore outdated request IDs. Native recovery/race tests and HTTP 503 recovery passed; browser remains unverified.",
+      "code": [
+        {
+          "path": "src/app.js",
+          "line": 28,
+          "quote": "  const request = ++latestRequest;"
+        },
+        {
+          "path": "src/app.js",
+          "line": 32,
+          "quote": "    const result = await projects(status);"
+        },
+        {
+          "path": "src/app.js",
+          "line": 33,
+          "quote": "    if (request !== latestRequest) return;"
+        },
+        {
+          "path": "src/app.js",
+          "line": 37,
+          "quote": "    if (request !== latestRequest) return;"
+        },
+        {
+          "path": "src/app.js",
+          "line": 53,
+          "quote": "    showProblem(rows, () => void load());"
+        }
+      ]
+    },
+    {
+      "id": "AC-4",
+      "state": "needs_decision",
+      "questions": [
+        "Q-001"
+      ],
+      "reason": "Q-001 remains deferred and blocking: archive method/path/schema, permission source and confirmation/failure policy are not provided. No archive contract or demo success was invented; scope is retained."
+    }
+  ],
+  "verification": [
+    {
+      "id": "native-tests",
+      "status": "passed",
+      "detail": "npm test passed 5/5. Actual API-client request/503 rejection; app module with Node DOM stand-in asserts filter/count, selection, empty/loading/error, Retry and competing responses; isolated real HTTP API verifies all/active/archived/paused and 503 recovery. First attempt failed only at local port bind (EPERM); sandbox permission adjustment allowed unchanged-target rerun. Not browser evidence.",
+      "target": "471f02ee1222551063cf5515b8a74b9e08c8665988c44ee51b34d7af9024b8cd",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source",
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "npm-test-2.txt",
+          "sha256": "ac9508254be6e2e890473bbdd06dbffe745a4b1f0463dca1f730017b9fd80ab5"
+        }
+      ]
+    },
+    {
+      "id": "app-browser",
+      "status": "not_run",
+      "detail": "No browser tool invoked. No actual-app viewport, keyboard, layout, screenshots or interactive browser scenario was observed.",
+      "reason": "Current prompt explicitly states that a browser cannot be used in this run. Native DOM and HTTP tests do not replace this required UI verification."
+    },
+    {
+      "id": "archive-decision",
+      "status": "not_run",
+      "detail": "Original QUESTIONS.md Q-001 is yes/deferred and linked to AC-4 in original coverage and the result.",
+      "reason": "No additional decisions are supplied. Archive endpoint/method, permission, confirmation and failure policy remain unresolved."
+    }
+  ],
+  "source_review": [
+    {
+      "id": "AC-1",
+      "target": "471f02ee1222551063cf5515b8a74b9e08c8665988c44ee51b34d7af9024b8cd",
+      "ac_digest": "94d3ed8e277a747b4e8c418dc83ce26756bfeeaa21eb2d1f279fbceb82d54a52",
+      "facets": {
+        "condition": {
+          "expected": "목록 로드",
+          "verdict": "matched",
+          "detail": "On module start, load() starts with status all; app.js:23,67. Loading has separate rendering at 46–49."
+        },
+        "action": {
+          "expected": "Status 선택",
+          "verdict": "matched",
+          "detail": "The retained selectField owner renders labelled All/Active/Archived/Paused choices; onChange updates status and calls load at app.js:11–19."
+        },
+        "outcome": {
+          "expected": "실제 해당 상태 결과와 개수 표시",
+          "verdict": "matched",
+          "detail": "app.js:32–35 accepts latest API rows; 56 displays response length and 61 delegates rows. app.test.mjs:44–79 checks each requested status plus matching count/text; http.test.mjs:32–35 checks real server results."
+        },
+        "interfaces": {
+          "expected": "GET /api/projects",
+          "verdict": "matched",
+          "detail": "No new endpoint. Existing api.js:2 sends GET /api/projects?status=encoded current status; app.js:32 uses that owner. HTTP test uses the unchanged server in a private child instance."
+        },
+        "verification": {
+          "expected": "실제 요청/표시 결과 대조",
+          "verdict": "unreviewed",
+          "detail": "Node app assertions compare real app-module requests/rendering through a minimal DOM stand-in; the actual HTTP client/server contract passed. Actual-app browser request/display comparison and responsive verification were not run because browser use is explicitly unavailable."
+        }
+      },
+      "behavior_checks": [
+        "native-tests",
+        "app-browser"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "4bcdc4df585989024b1db21584709b61cebbddee986510307d4838a67dd9aafb"
+        },
+        {
+          "path": "current-source-trace.txt",
+          "sha256": "e3bc4a5426d11cd6d4ba4b94fefc483f8c3b87c04f2aae088501cf92d69a00eb"
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "target": "471f02ee1222551063cf5515b8a74b9e08c8665988c44ee51b34d7af9024b8cd",
+      "ac_digest": "e5539e3840454c6417e03ab3c1380b90498ca4391e0d08cbd76945df213bdaa1",
+      "facets": {
+        "condition": {
+          "expected": "선택한 프로젝트",
+          "verdict": "matched",
+          "detail": "The real renderRows click handler sets selected at app.js:61–63 independently of visible."
+        },
+        "action": {
+          "expected": "필터로 숨겼다가 복귀",
+          "verdict": "matched",
+          "detail": "Tests select Tide, switch to archived where Tide is absent, then return to active and finally paused; app.test.mjs:54–79."
+        },
+        "outcome": {
+          "expected": "선택 이름 유지·선택 표시 복구, 성공 빈 상태 구분",
+          "verdict": "matched",
+          "detail": "app.js:44 always renders selected name. selected is not cleared by load. renderRows receives selected.id at 61; empty success branches separately at 57–59. Native assertions show retained Tide, restored aria-pressed, 0 projects and empty message."
+        },
+        "interfaces": {
+          "expected": "목록·선택 패널",
+          "verdict": "matched",
+          "detail": "Existing #rows/#selection owners and renderRows are reused; index.html remains unchanged. No selection lookup from currently visible array."
+        },
+        "verification": {
+          "expected": "선택 유지와 빈 성공 대조",
+          "verdict": "unreviewed",
+          "detail": "Native app-module assertions distinguish hidden selection, restored row marker, successful empty response, error and loading. Browser behavior, keyboard focus and actual layout remain unreviewed under the explicit no-browser condition."
+        }
+      },
+      "behavior_checks": [
+        "native-tests",
+        "app-browser"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "4bcdc4df585989024b1db21584709b61cebbddee986510307d4838a67dd9aafb"
+        },
+        {
+          "path": "current-source-trace.txt",
+          "sha256": "e3bc4a5426d11cd6d4ba4b94fefc483f8c3b87c04f2aae088501cf92d69a00eb"
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "target": "471f02ee1222551063cf5515b8a74b9e08c8665988c44ee51b34d7af9024b8cd",
+      "ac_digest": "a53a3332e65f02cb7c732c1537b712c0e3547ba2f739b229996543a0559dca9e",
+      "facets": {
+        "condition": {
+          "expected": "현재 필터와 선택",
+          "verdict": "matched",
+          "detail": "status and selected are application-level state at app.js:21–25, separate from request results."
+        },
+        "action": {
+          "expected": "오류 후 Retry, 필터 빠른 변경",
+          "verdict": "matched",
+          "detail": "showProblem(rows, () => void load()) at app.js:53 reuses Retry; load calls projects(status). app.test.mjs:82–99 drives real helper Retry; 102–134 drives rapid changes with controllable promises."
+        },
+        "outcome": {
+          "expected": "현재 필터로 회복·선택 유지, 과거 응답/오류는 최신 결과를 덮지 않음",
+          "verdict": "matched",
+          "detail": "app.js:28,33,37 guards both success and catch by latest request identity; only current result/error renders. Tests cover old success after latest success/error, old error during latest loading/after latest success, current-filter Retry, selected panel during failure/loading and recovered aria-pressed."
+        },
+        "interfaces": {
+          "expected": "오류·Retry·API owner",
+          "verdict": "matched",
+          "detail": "Existing api.js request owner and ui.js showProblem remain unchanged; loading, success-empty and error have separate branches, with aria-busy and count status."
+        },
+        "verification": {
+          "expected": "실패/회복/응답 경합 검증",
+          "verdict": "unreviewed",
+          "detail": "Five native tests passed including real HTTP 503 recovery and app-module deferred request races. Actual browser failure/Retry and quick-filter interaction are not verified; the DOM stand-in is explicitly not browser evidence."
+        }
+      },
+      "behavior_checks": [
+        "native-tests",
+        "app-browser"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "4bcdc4df585989024b1db21584709b61cebbddee986510307d4838a67dd9aafb"
+        },
+        {
+          "path": "current-source-trace.txt",
+          "sha256": "e3bc4a5426d11cd6d4ba4b94fefc483f8c3b87c04f2aae088501cf92d69a00eb"
+        }
+      ]
+    },
+    {
+      "id": "AC-4",
+      "target": "471f02ee1222551063cf5515b8a74b9e08c8665988c44ee51b34d7af9024b8cd",
+      "ac_digest": "e561f89982653508406e278b361afa8cfb4dcae57bc1094ded6cee5b8004a626",
+      "facets": {
+        "condition": {
+          "expected": "관리자와 보관 대상",
+          "verdict": "unreviewed",
+          "detail": "Admin permission source and eligible-target policy are absent; Q-001 is yes/deferred. No administrator identity is invented."
+        },
+        "action": {
+          "expected": "보관 실행",
+          "verdict": "unreviewed",
+          "detail": "Archive action cannot be wired without the endpoint/method, permission and confirmation/failure policy. No mutation control or fake local success was added."
+        },
+        "outcome": {
+          "expected": "확정될 권한/확인/API 계약에 따라 실제 보관 결과 반영",
+          "verdict": "unreviewed",
+          "detail": "Actual archive outcome is unimplemented pending Q-001. Full scope remains required; deferred is not resolved or excluded."
+        },
+        "interfaces": {
+          "expected": "보관 UI/API Q-001",
+          "verdict": "unreviewed",
+          "detail": "Only GET /api/projects is provided. No archive API/type/permission/confirmation contract exists in supplied files."
+        },
+        "verification": {
+          "expected": "Q-001; 미정 계약 구현을 창작하지 않음",
+          "verdict": "unreviewed",
+          "detail": "No valid archive behavior assertion or browser scenario can be executed until Q-001 is resolved. Needs endpoint+method+schema, permission judgment, confirmation and failure policies."
+        }
+      },
+      "behavior_checks": [
+        "app-browser"
+      ],
+      "evidence": [
+        {
+          "path": "source-review.txt",
+          "sha256": "4bcdc4df585989024b1db21584709b61cebbddee986510307d4838a67dd9aafb"
+        },
+        {
+          "path": "current-source-trace.txt",
+          "sha256": "e3bc4a5426d11cd6d4ba4b94fefc483f8c3b87c04f2aae088501cf92d69a00eb"
+        }
+      ]
+    }
+  ],
+  "differences": [
+    "Selected prototype structure is preserved through existing index.html list/aside layout and added filter/count toolbar. App blue --accent is retained; orange reference demo selection is not applied. Toolbar wraps with existing --space token.",
+    "No archive UI/API behavior is implemented while Q-001 is deferred. Full AC-4 stays required and needs_decision.",
+    "First baseline lexical spec.md vs existing SPEC.md backlink mismatch is preserved in baseline.json; baseline2.json uses the current prompt/backlink spelling, yielding full canonical AC/Q coverage without changing inputs."
+  ],
+  "handoff": {
+    "app_cwd": "/private/tmp/skill-quality-20261110/implement/runs/I3-blocked/source",
+    "app_command": [
+      "npm",
+      "start"
+    ],
+    "app_port": "PORT=0 chooses a free port; use the actual loopback URL printed by server.mjs and route /. No server remains running from this execution.",
+    "native_check": [
+      "npm",
+      "test"
+    ],
+    "scenario_data": "Tide(active), Forest(archived), North(active); all=3, active=2, archived=1, paused=0. Select Tide → archived → active → paused; selection name persists and aria-pressed returns. Private fixture mode fail:true causes 503; fail:false restores. Test-only mode was never added to UI.",
+    "browser_remaining": "Open actual route / at wide and <=700px narrow viewports; verify labelled filter/count, matching API responses, hidden/restored selection, empty success, current-status Retry, delayed active vs archived races and both outdated success/error. Capture real browser tool/route/data/viewport evidence.",
+    "remaining_decision": "Resolve Q-001 archive method/path, request/response/error schema, permissions and confirmation/failure policy, then implement AC-4 and actual integration verification.",
+    "reviews": "No independent code review, Visual QA, self-review delegation, commit/push or external publication ran.",
+    "inputs": "inputs2.json and baseline2.json freeze original sources. verification-target.json binds all tests and source quotations.",
+    "diff": "implementation.diff includes tracked changes and all added test files; user-draft.md is unchanged from baseline.",
+    "evidence_notes": "npm-test.txt retains initial sandbox failure. npm-test-2.txt is successful rerun at identical source target. Both attempts use the same declared npm test command. source-review.txt and current-source-trace.txt record current source semantic comparison."
+  }
+}

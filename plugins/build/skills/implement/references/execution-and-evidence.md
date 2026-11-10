@@ -107,8 +107,11 @@ nonzero result as the same failure.
 | `blocked` | No deliverable changes and all in-scope requirements need a decision. Other environmental gaps remain explicit partial records. |
 | `invalid` | Stale/mismatched source or inputs, malformed/contradictory records, evidence mismatch, or violated scope/preservation rules. |
 
-The helper cannot authenticate a model's claimed command execution, infer omitted
-requirements from prose, judge visual similarity, or prove semantic correctness.
+For structured SPEC handoffs, [source-coverage.md](source-coverage.md) defines the
+mandatory original AC/active-question comparison and per-AC semantic review. The
+helper extracts canonical rows directly; unsupported versions/formats remain gaps.
+The helper cannot authenticate a model's claimed command execution, recover missing
+requirements from arbitrary prose, judge visual similarity, or prove semantic correctness.
 It detects recorded coverage and byte-level inconsistencies. Real tool traces,
 behavioral evaluation and later independent review remain necessary evidence.
 Completion here is not an independent review, Visual QA pass, or release approval.

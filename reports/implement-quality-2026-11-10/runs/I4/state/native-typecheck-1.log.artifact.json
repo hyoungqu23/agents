@@ -1,0 +1,7 @@
+{
+  "original_name": "native-typecheck-1.log",
+  "encoding": "utf-8",
+  "sha256": "8fa1cf5506304e8abac55868e7f1a136c9b1dde57a3981a382da4c21ea129a6f",
+  "content": "\n> typecheck\n> tsc --noEmit\n\n",
+  "note": "Exact historical bytes, JSON-packed to preserve whitespace. Not rewritten/relabelled evidence."
+}

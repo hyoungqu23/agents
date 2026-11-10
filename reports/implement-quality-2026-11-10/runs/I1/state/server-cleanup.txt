@@ -1,0 +1,1 @@
+After parent confirmed independent browser observations were complete, sent Ctrl-C to owned app exec session 12317. Tool returned exit_code=0. Fixture control exec session 22672 had already exited 0 after stop command. Agent browser tab closed and viewport override reset. No source changed after final assessment.

@@ -1,7 +1,7 @@
 {
   "name": "build",
-  "version": "0.3.0",
-  "description": "Implement product features and make scoped bug or QA corrections with verification evidence.",
+  "version": "0.3.1",
+  "description": "Implement product features with original SPEC coverage and scoped bug or QA corrections.",
   "author": {
     "name": "HM2"
   },
@@ -15,7 +15,7 @@
   "interface": {
     "displayName": "Build",
     "shortDescription": "Implement features and fix bugs or QA issues",
-    "longDescription": "Implement requested features and make the smallest complete bug or QA correction in existing code, preserving product patterns, user edits and actual verification evidence.",
+    "longDescription": "Implement product features with original SPEC coverage and scoped bug or QA corrections.",
     "developerName": "HM2",
     "category": "Productivity",
     "capabilities": [

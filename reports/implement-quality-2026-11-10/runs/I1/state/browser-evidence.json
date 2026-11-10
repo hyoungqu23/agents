@@ -1,0 +1,716 @@
+[
+  {
+    "stage": "initial",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\" [selected]\n      - option \"Active\"\n      - option \"Archived\"\n      - option \"Paused\"\n    - generic: 3 projects\n    - button \"Tide — Active\"\n    - button \"Forest — Archived\"\n    - button \"North — Active\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: No project selected",
+    "metrics": {
+      "height": 1363,
+      "options": [
+        {
+          "label": "All",
+          "value": "all"
+        },
+        {
+          "label": "Active",
+          "value": "active"
+        },
+        {
+          "label": "Archived",
+          "value": "archived"
+        },
+        {
+          "label": "Paused",
+          "value": "paused"
+        }
+      ],
+      "width": 2504
+    }
+  },
+  {
+    "stage": "active-pending",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - status: Loading projects…\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: No project selected"
+  },
+  {
+    "stage": "active-complete",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - generic: 2 projects\n    - button \"Tide — Active\"\n    - button \"North — Active\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: No project selected"
+  },
+  {
+    "stage": "archived-complete",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\" [selected]\n      - option \"Paused\"\n    - generic: 1 project\n    - button \"Forest — Archived\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: No project selected",
+    "ui": {
+      "busy": "false",
+      "height": 1363,
+      "rows": [
+        {
+          "id": "forest",
+          "name": "Forest — Archived",
+          "pressed": "false"
+        }
+      ],
+      "selected": "No project selected",
+      "status": "archived",
+      "width": 2504
+    }
+  },
+  {
+    "stage": "paused-empty",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\"\n      - option \"Paused\" [selected]\n    - generic: 0 projects\n    - status: No projects found\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: No project selected",
+    "ui": {
+      "busy": "false",
+      "height": 1363,
+      "rows": [],
+      "selected": "No project selected",
+      "status": "paused",
+      "width": 2504
+    }
+  },
+  {
+    "stage": "all-explicit-complete",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\" [selected]\n      - option \"Active\"\n      - option \"Archived\"\n      - option \"Paused\"\n    - generic: 3 projects\n    - button \"Tide — Active\"\n    - button \"Forest — Archived\"\n    - button \"North — Active\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: No project selected",
+    "ui": {
+      "busy": "false",
+      "height": 1363,
+      "rows": [
+        {
+          "id": "tide",
+          "name": "Tide — Active",
+          "pressed": "false"
+        },
+        {
+          "id": "forest",
+          "name": "Forest — Archived",
+          "pressed": "false"
+        },
+        {
+          "id": "north",
+          "name": "North — Active",
+          "pressed": "false"
+        }
+      ],
+      "selected": "No project selected",
+      "status": "all",
+      "width": 2504
+    }
+  },
+  {
+    "stage": "forest-selected-all-index-1",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\" [selected]\n      - option \"Active\"\n      - option \"Archived\"\n      - option \"Paused\"\n    - generic: 3 projects\n    - button \"Tide — Active\"\n    - button \"Forest — Archived\" [active] [pressed]\n    - button \"North — Active\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 1363,
+      "rows": [
+        {
+          "id": "tide",
+          "name": "Tide — Active",
+          "pressed": "false"
+        },
+        {
+          "id": "forest",
+          "name": "Forest — Archived",
+          "pressed": "true"
+        },
+        {
+          "id": "north",
+          "name": "North — Active",
+          "pressed": "false"
+        }
+      ],
+      "selected": "Forest",
+      "status": "all",
+      "width": 2504
+    }
+  },
+  {
+    "stage": "forest-preserved-loading",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - status: Loading projects…\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "true",
+      "height": 1363,
+      "rows": [],
+      "selected": "Forest",
+      "status": "active",
+      "width": 2504
+    }
+  },
+  {
+    "stage": "forest-preserved-outside-active",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - generic: 2 projects\n    - button \"Tide — Active\"\n    - button \"North — Active\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 1363,
+      "rows": [
+        {
+          "id": "tide",
+          "name": "Tide — Active",
+          "pressed": "false"
+        },
+        {
+          "id": "north",
+          "name": "North — Active",
+          "pressed": "false"
+        }
+      ],
+      "selected": "Forest",
+      "status": "active",
+      "width": 2504
+    }
+  },
+  {
+    "stage": "forest-preserved-empty",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\"\n      - option \"Paused\" [selected]\n    - generic: 0 projects\n    - status: No projects found\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 1363,
+      "rows": [],
+      "selected": "Forest",
+      "status": "paused",
+      "width": 2504
+    }
+  },
+  {
+    "stage": "forest-restored-archived-index-0",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\" [selected]\n      - option \"Paused\"\n    - generic: 1 project\n    - button \"Forest — Archived\" [pressed]\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 1363,
+      "rows": [
+        {
+          "id": "forest",
+          "name": "Forest — Archived",
+          "pressed": "true"
+        }
+      ],
+      "selected": "Forest",
+      "status": "archived",
+      "width": 2504
+    }
+  },
+  {
+    "stage": "keyboard-focus-blue",
+    "observation": {
+      "focusVisible": false,
+      "outline": "rgb(24, 34, 48) none 3px",
+      "selectedBorder": "rgb(36, 87, 197)",
+      "tag": "BODY"
+    }
+  },
+  {
+    "stage": "native-tab-focus",
+    "observation": {
+      "focusVisible": true,
+      "label": "Status AllActiveArchivedPaused",
+      "outline": "rgb(36, 87, 197) solid 3px",
+      "selectedBorder": "rgb(36, 87, 197)",
+      "tag": "SELECT"
+    }
+  },
+  {
+    "stage": "viewport-700",
+    "observation": {
+      "columns": "668px",
+      "height": 800,
+      "list": {
+        "bottom": 295.875,
+        "height": 172,
+        "left": 16,
+        "right": 684,
+        "top": 123.875,
+        "width": 668,
+        "x": 16,
+        "y": 123.875
+      },
+      "scrollWidth": 700,
+      "selected": {
+        "bottom": 472.703125,
+        "height": 152.828125,
+        "left": 16,
+        "right": 684,
+        "top": 319.875,
+        "width": 668,
+        "x": 16,
+        "y": 319.875
+      },
+      "width": 700
+    }
+  },
+  {
+    "stage": "viewport-701",
+    "observation": {
+      "columns": "408.664px 204.328px",
+      "height": 800,
+      "list": {
+        "bottom": 315.265625,
+        "height": 180.828125,
+        "left": 32,
+        "right": 440.6640625,
+        "top": 134.4375,
+        "width": 408.6640625,
+        "x": 32,
+        "y": 134.4375
+      },
+      "scrollWidth": 701,
+      "selected": {
+        "bottom": 315.265625,
+        "height": 180.828125,
+        "left": 464.6640625,
+        "right": 668.9921875,
+        "top": 134.4375,
+        "width": 204.328125,
+        "x": 464.6640625,
+        "y": 134.4375
+      },
+      "width": 701
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273766742-1",
+      "command": {
+        "id": "1794273766742-1",
+        "path": "/__fixture__/mode",
+        "method": "PUT",
+        "body": {
+          "fail": true
+        }
+      },
+      "status": 200,
+      "response": "{}",
+      "elapsed_ms": 16
+    }
+  },
+  {
+    "stage": "current-active-503-error",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\" [active]:\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - alert:\n      - text: Could not load projects\n      - button \"Retry\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 800,
+      "rows": [],
+      "selected": "Forest",
+      "status": "active",
+      "width": 701
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273767528-2",
+      "command": {
+        "id": "1794273767528-2",
+        "path": "/__fixture__/mode",
+        "method": "PUT",
+        "body": {
+          "fail": false
+        }
+      },
+      "status": 200,
+      "response": "{}",
+      "elapsed_ms": 2
+    }
+  },
+  {
+    "stage": "active-retry-loading-selection-retained",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - status: Loading projects…\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "true",
+      "height": 800,
+      "rows": [],
+      "selected": "Forest",
+      "status": "active",
+      "width": 701
+    }
+  },
+  {
+    "stage": "active-retry-recovered-current-filter",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - generic: 2 projects\n    - button \"Tide — Active\"\n    - button \"North — Active\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 800,
+      "rows": [
+        {
+          "id": "tide",
+          "name": "Tide — Active",
+          "pressed": "false"
+        },
+        {
+          "id": "north",
+          "name": "North — Active",
+          "pressed": "false"
+        }
+      ],
+      "selected": "Forest",
+      "status": "active",
+      "width": 701
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273793656-3",
+      "command": {
+        "id": "1794273793656-3",
+        "path": "/__fixture__/mode",
+        "method": "PUT",
+        "body": {
+          "fail": true
+        }
+      },
+      "status": 200,
+      "response": "{}",
+      "elapsed_ms": 1
+    }
+  },
+  {
+    "stage": "race-1-older-A-active-pending",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - status: Loading projects…\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "true",
+      "height": 800,
+      "rows": [],
+      "selected": "Forest",
+      "status": "active",
+      "width": 701
+    }
+  },
+  {
+    "stage": "race-1-latest-B-archived-error",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\" [selected]\n      - option \"Paused\"\n    - alert:\n      - text: Could not load projects\n      - button \"Retry\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 800,
+      "rows": [],
+      "selected": "Forest",
+      "status": "archived",
+      "width": 701
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273793879-4",
+      "command": {
+        "id": "1794273793879-4",
+        "path": "/__fixture__/mode",
+        "method": "PUT",
+        "body": {
+          "fail": false
+        }
+      },
+      "status": 200,
+      "response": "{}",
+      "elapsed_ms": 1
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273793892-5",
+      "command": {
+        "id": "1794273793892-5",
+        "path": "/api/projects?status=active",
+        "method": "GET"
+      },
+      "status": 200,
+      "response": "[{\"id\":\"tide\",\"name\":\"Tide\",\"status\":\"active\"},{\"id\":\"north\",\"name\":\"North\",\"status\":\"active\"}]",
+      "elapsed_ms": 603
+    }
+  },
+  {
+    "stage": "race-1-late-A-success-ignored-B-error-retained",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\" [selected]\n      - option \"Paused\"\n    - alert:\n      - text: Could not load projects\n      - button \"Retry\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 800,
+      "rows": [],
+      "selected": "Forest",
+      "status": "archived",
+      "width": 701
+    }
+  },
+  {
+    "stage": "race-2-older-A-active-pending",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - status: Loading projects…\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "true",
+      "height": 800,
+      "rows": [],
+      "selected": "Forest",
+      "status": "active",
+      "width": 701
+    }
+  },
+  {
+    "stage": "race-2-latest-B-archived-success",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\" [selected]\n      - option \"Paused\"\n    - generic: 1 project\n    - button \"Forest — Archived\" [pressed]\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 800,
+      "rows": [
+        {
+          "id": "forest",
+          "name": "Forest — Archived",
+          "pressed": "true"
+        }
+      ],
+      "selected": "Forest",
+      "status": "archived",
+      "width": 701
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273794927-6",
+      "command": {
+        "id": "1794273794927-6",
+        "path": "/__fixture__/mode",
+        "method": "PUT",
+        "body": {
+          "fail": true
+        }
+      },
+      "status": 200,
+      "response": "{}",
+      "elapsed_ms": 2
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273794934-7",
+      "command": {
+        "id": "1794273794934-7",
+        "path": "/api/projects?status=active",
+        "method": "GET"
+      },
+      "error": "HTTP Error 503: Service Unavailable",
+      "elapsed_ms": 603
+    }
+  },
+  {
+    "stage": "race-2-late-A-failure-ignored-B-success-retained",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\" [selected]\n      - option \"Paused\"\n    - generic: 1 project\n    - button \"Forest — Archived\" [pressed]\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 800,
+      "rows": [
+        {
+          "id": "forest",
+          "name": "Forest — Archived",
+          "pressed": "true"
+        }
+      ],
+      "selected": "Forest",
+      "status": "archived",
+      "width": 701
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273795606-8",
+      "command": {
+        "id": "1794273795606-8",
+        "path": "/__fixture__/mode",
+        "method": "PUT",
+        "body": {
+          "fail": false
+        }
+      },
+      "status": 200,
+      "response": "{}",
+      "elapsed_ms": 1
+    }
+  },
+  {
+    "stage": "race-3-transition",
+    "elapsed_ms": 29,
+    "olderPending": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\" [selected]\n      - option \"Paused\"\n    - status: Loading projects…\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest"
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273818847-9",
+      "command": {
+        "id": "1794273818847-9",
+        "path": "/api/projects?status=paused",
+        "method": "GET"
+      },
+      "status": 200,
+      "response": "[]",
+      "elapsed_ms": 28
+    }
+  },
+  {
+    "stage": "race-3-older-success-finally-while-latest-active-pending",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - status: Loading projects…\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "true",
+      "height": 800,
+      "rows": [],
+      "selected": "Forest",
+      "status": "active",
+      "width": 701
+    }
+  },
+  {
+    "stage": "race-3-latest-active-completes",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - generic: 2 projects\n    - button \"Tide — Active\"\n    - button \"North — Active\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 800,
+      "rows": [
+        {
+          "id": "tide",
+          "name": "Tide — Active",
+          "pressed": "false"
+        },
+        {
+          "id": "north",
+          "name": "North — Active",
+          "pressed": "false"
+        }
+      ],
+      "selected": "Forest",
+      "status": "active",
+      "width": 701
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273819524-10",
+      "command": {
+        "id": "1794273819524-10",
+        "path": "/__fixture__/mode",
+        "method": "PUT",
+        "body": {
+          "fail": true
+        }
+      },
+      "status": 200,
+      "response": "{}",
+      "elapsed_ms": 1
+    }
+  },
+  {
+    "stage": "race-4-transition",
+    "elapsed_ms": 19,
+    "olderPending": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\"\n      - option \"Archived\" [selected]\n      - option \"Paused\"\n    - status: Loading projects…\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest"
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273819567-11",
+      "command": {
+        "id": "1794273819567-11",
+        "path": "/api/projects?status=paused",
+        "method": "GET"
+      },
+      "error": "HTTP Error 503: Service Unavailable",
+      "elapsed_ms": 27
+    }
+  },
+  {
+    "stage": "actual-server-fixture-control-or-barrier",
+    "response": {
+      "id": "1794273819605-12",
+      "command": {
+        "id": "1794273819605-12",
+        "path": "/__fixture__/mode",
+        "method": "PUT",
+        "body": {
+          "fail": false
+        }
+      },
+      "status": 200,
+      "response": "{}",
+      "elapsed_ms": 1
+    }
+  },
+  {
+    "stage": "race-4-older-failure-finally-while-latest-active-pending",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - status: Loading projects…\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "true",
+      "height": 800,
+      "rows": [],
+      "selected": "Forest",
+      "status": "active",
+      "width": 701
+    }
+  },
+  {
+    "stage": "race-4-latest-active-completes",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\"\n      - option \"Active\" [selected]\n      - option \"Archived\"\n      - option \"Paused\"\n    - generic: 2 projects\n    - button \"Tide — Active\"\n    - button \"North — Active\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 800,
+      "rows": [
+        {
+          "id": "tide",
+          "name": "Tide — Active",
+          "pressed": "false"
+        },
+        {
+          "id": "north",
+          "name": "North — Active",
+          "pressed": "false"
+        }
+      ],
+      "selected": "Forest",
+      "status": "active",
+      "width": 701
+    }
+  },
+  {
+    "stage": "final-all-forest-selected",
+    "url": "http://127.0.0.1:62963/",
+    "dom": "- banner:\n  - heading \"Projects\" [level=1]\n  - paragraph: Browse projects and keep one selected while filtering.\n- main:\n  - region \"Project list\":\n    - text: Status\n    - combobox \"Status\":\n      - option \"All\" [selected]\n      - option \"Active\"\n      - option \"Archived\"\n      - option \"Paused\"\n    - generic: 3 projects\n    - button \"Tide — Active\"\n    - button \"Forest — Archived\" [pressed]\n    - button \"North — Active\"\n  - complementary:\n    - heading \"Selected project\" [level=2]\n    - paragraph: Forest",
+    "ui": {
+      "busy": "false",
+      "height": 800,
+      "rows": [
+        {
+          "id": "tide",
+          "name": "Tide — Active",
+          "pressed": "false"
+        },
+        {
+          "id": "forest",
+          "name": "Forest — Archived",
+          "pressed": "true"
+        },
+        {
+          "id": "north",
+          "name": "North — Active",
+          "pressed": "false"
+        }
+      ],
+      "selected": "Forest",
+      "status": "all",
+      "width": 701
+    }
+  }
+]

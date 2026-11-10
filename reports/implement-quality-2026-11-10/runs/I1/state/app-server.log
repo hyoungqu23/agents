@@ -1,0 +1,5 @@
+
+> start
+> node server.mjs
+
+http://127.0.0.1:62963/

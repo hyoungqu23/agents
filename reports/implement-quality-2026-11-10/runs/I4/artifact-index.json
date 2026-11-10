@@ -1,0 +1,116 @@
+[
+  {
+    "original": "state/post-check-target.json",
+    "packaged": "state/post-check-target.json",
+    "sha256": "3f4fb6df611e77e41db4a62354cf19cf1b10abffa0e5ec88ee7e6dc51f2eaf53",
+    "json_packed": false
+  },
+  {
+    "original": "state/pre-edit-source-comparison.txt",
+    "packaged": "state/pre-edit-source-comparison.txt",
+    "sha256": "677340a6d0661aec6175635bc86ad8e2b8780987b19f8e07ce65be0eddfff629",
+    "json_packed": false
+  },
+  {
+    "original": "state/capture-verification-1.log",
+    "packaged": "state/capture-verification-1.log",
+    "sha256": "3f4fb6df611e77e41db4a62354cf19cf1b10abffa0e5ec88ee7e6dc51f2eaf53",
+    "json_packed": false
+  },
+  {
+    "original": "state/current-src-tests.diff",
+    "packaged": "state/current-src-tests.diff.artifact.json",
+    "sha256": "b43577d5cfb7d0b164b3abeac48f633c7d4bb330885e75d9351a14671592f471",
+    "json_packed": true
+  },
+  {
+    "original": "state/native-test-1.log",
+    "packaged": "state/native-test-1.log",
+    "sha256": "eaf73484d6376f38dd07c55ed4c3ae8ddbe2f0be9efd7184ef2ea49c38de8b3c",
+    "json_packed": false
+  },
+  {
+    "original": "state/assessment.json",
+    "packaged": "state/assessment.json",
+    "sha256": "975faa2f58a1e64c8c286e22771512c04bd66b64f891eea9cff4d3113a5d6e78",
+    "json_packed": false
+  },
+  {
+    "original": "state/native-verification-notes.txt",
+    "packaged": "state/native-verification-notes.txt",
+    "sha256": "5d96f579b6f63a3b0ae32b4ca3b8136b778fd81e761345726bb84f322f3a64b1",
+    "json_packed": false
+  },
+  {
+    "original": "state/result.json",
+    "packaged": "state/result.json",
+    "sha256": "5f7857fdd2bb0a974e2827bf0a32422909dd89ab874b42ff81653e7410ad5b79",
+    "json_packed": false
+  },
+  {
+    "original": "state/source-review.txt",
+    "packaged": "state/source-review.txt",
+    "sha256": "a2e78840a86ee70c08551b0fb4ede9428f95e806b4fce046ef0794489475c4ea",
+    "json_packed": false
+  },
+  {
+    "original": "state/pre-edit-App.tsx.txt",
+    "packaged": "state/pre-edit-App.tsx.txt",
+    "sha256": "2c2cef9032980874bdc8430a399f329000467244d3a88ed8cb908c8d62e45866",
+    "json_packed": false
+  },
+  {
+    "original": "state/native-test-2.log",
+    "packaged": "state/native-test-2.log",
+    "sha256": "dac810f8cdee02b376687d3b009d1597e8f7a2acf18085a0152e9694bdd6ec1d",
+    "json_packed": false
+  },
+  {
+    "original": "state/native-build-1.log",
+    "packaged": "state/native-build-1.log",
+    "sha256": "11f4219ca7b459a905b1cf48dbab2e8108a081c416baa0c962c164a367b078d3",
+    "json_packed": false
+  },
+  {
+    "original": "state/baseline.json",
+    "packaged": "state/baseline.json",
+    "sha256": "4a26eee9e619bc62f060897ba0a2684b2f5b9ae07ff9aaa867e42d2b2aca1c6a",
+    "json_packed": false
+  },
+  {
+    "original": "state/verification-target-1.json",
+    "packaged": "state/verification-target-1.json",
+    "sha256": "3f4fb6df611e77e41db4a62354cf19cf1b10abffa0e5ec88ee7e6dc51f2eaf53",
+    "json_packed": false
+  },
+  {
+    "original": "state/inputs.json",
+    "packaged": "state/inputs.json",
+    "sha256": "1e0a8f138f68b49a16ac7da0649340aa7885d97a826efb4014a09ac3b9a2a921",
+    "json_packed": false
+  },
+  {
+    "original": "state/native-typecheck-1.log",
+    "packaged": "state/native-typecheck-1.log.artifact.json",
+    "sha256": "8fa1cf5506304e8abac55868e7f1a136c9b1dde57a3981a382da4c21ea129a6f",
+    "json_packed": true
+  },
+  {
+    "original": "state/capture-post-check.log",
+    "packaged": "state/capture-post-check.log",
+    "sha256": "3f4fb6df611e77e41db4a62354cf19cf1b10abffa0e5ec88ee7e6dc51f2eaf53",
+    "json_packed": false
+  },
+  {
+    "original": "state/assess-command.log",
+    "packaged": "state/assess-command.log",
+    "sha256": "975faa2f58a1e64c8c286e22771512c04bd66b64f891eea9cff4d3113a5d6e78",
+    "json_packed": false
+  },
+  {
+    "original": "state/implementation-resume.diff",
+    "packaged": "state/implementation-resume.diff.artifact.json",
+    "sha256": "7c28b17e090fa18d0c95183cda0984c081d18ad2483ad0152157374258878c2b",
+    "json_packed": true
+  }
+]
