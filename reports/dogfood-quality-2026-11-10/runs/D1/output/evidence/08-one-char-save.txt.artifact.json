@@ -1,0 +1,7 @@
+{
+  "original_name": "08-one-char-save.txt",
+  "encoding": "utf-8",
+  "sha256": "ea8387d1e6073c257fbfc7fcc4e465d3b916065f41d21ae049ab43bcbfc16cb1",
+  "content": "Browser tab: 1893495255, Title: \"프로젝트 QA\", URL: \"http://127.0.0.1:61464/\".\n1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:61464/\n\t2 heading 프로젝트 목록, Value: 1\n\t\t3 text 프로젝트 목록\n\t4 text 프로젝트를 저장하고 다시 불러와 확인하세요.\n\t5 container form\n\t\t6 container\n\t\t\t7 text 프로젝트 이름 \n\t\t\t8 text field (settable) 프로젝트 이름, Value: 가, ID: name\n\t\t9 button 저장\n\t13 text 저장됨\n\t10 button 다시 불러오기, ID: refresh\n\t11 button (disabled) 보관 (미지원)\n\t12 content list items\n\t\t14 container\n\t\t\t15 text 기존 사용자 프로젝트 - 보존 대상\n\t\t\t16 button 삭제\n\t\t17 container\n\t\t\t18 text 실제 사용자 동선 검증을 위한 아주 긴 프로젝트 이름\n\t\t\t19 button 삭제\n\t\t20 container\n\t\t\t21 text 가\n\t\t\t22 button 삭제\n\nThe focused UI element is 9 button 저장",
+  "note": "Exact historical bytes, JSON-packed to preserve whitespace. Not rewritten/relabelled evidence."
+}

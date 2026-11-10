@@ -1,0 +1,4 @@
+{
+  "time": "2026-11-10T01:47:30.432Z",
+  "state": "Browser tab: 1893495269, Title: \"Projects\", URL: \"http://127.0.0.1:63857/\".\n0 AXWebArea Projects, URL: 127.0.0.1:63857/\n\t1 container\n\t\t2 heading Projects, Value: 1\n\t\t\t3 text Projects\n\t\t4 text Browse projects and keep one selected while filtering.\n\t5 container\n\t\t6 container toolbar\n\t\t\t7 container\n\t\t\t\t8 text Status \n\t\t\t\t9 pop up button (collapsed, settable) Status, Value: Archived, Secondary Actions: Expand\n\t\t\t\t\t10 menu\n\t\t\t\t\t\t11 All\n\t\t\t\t\t\t12 Active\n\t\t\t\t\t\t13 (selected) Archived\n\t\t\t\t\t\t14 Paused\n\t\t26 container\n\t\t\t27 text Could not load projects. \n\t\t\t28 button Retry\n\t\t20 heading Selected project, Value: 2\n\t\t\t21 text Selected project\n\t\t25 text Tide\n\nThe focused UI element is 0 AXWebArea Projects, URL: 127.0.0.1:63857/"
+}

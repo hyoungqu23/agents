@@ -1,0 +1,21 @@
+{
+  "started": "2026-11-10T01:42:57.628654+00:00",
+  "method": "GET",
+  "url": "http://127.0.0.1:63857/api/projects?status=active",
+  "request_body": null,
+  "http_status": 200,
+  "body": [
+    {
+      "id": "tide",
+      "name": "Tide",
+      "status": "active"
+    },
+    {
+      "id": "north",
+      "name": "North",
+      "status": "active"
+    }
+  ],
+  "finished": "2026-11-10T01:43:05.640667+00:00",
+  "elapsed_seconds": 8.014
+}

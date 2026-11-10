@@ -1,0 +1,12 @@
+Actual tools and externally observed target:
+- cua.getBrowser({url:"http://127.0.0.1:63653/"}) selected ChatGPT in-app browser, type iab, ID4; browser version unexposed.
+- cua.createBrowserTab(browser.browserId,"http://127.0.0.1:63653/",{visible:false}) created owned tab 1, title 프로젝트 QA.
+- Actual current location observed via read-only DOM: http://127.0.0.1:63653/; CSS viewport1280x720,DPR2. No viewport override made.
+- /build before and after: quality-deployment; revision aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; backend local-sqlite. No specific desired revision requested; role/org/account unknown and not exposed in observed form/list.
+- Shell default-sandbox curl first failed connection; permitted network escalation then succeeded. No auto-review rejection occurred.
+- Existing browser library attempts: node_repl import(playwright) and import(playwright-core) errored export default; Python playwright absent; shell Node require(playwright) absent. Nothing installed. Used existing host CUA DOM/AX/input capabilities.
+- Native key wrappers observed: pressKey(null,Tab/Return), typeText(null,name). Semantic Playwright fill/click used for boundary tests. Read-only evaluate inspected DOM, focus, validation and layout metadata; no app state injection, programmatic focus, fake events, mocking or interception.
+- dev.logs errors/warns returned []; this does not establish zero network errors or expose response statuses.
+- All UI evidence files are selected actual tool-output transcriptions, not full host raw logs. HTTP evidence files are actual curl -i response bytes.
+- No server-source, DB, other case, oracle, parent-worktree content or evaluation code read. Browser initial activeElement text accidentally included served inline script text as part of BODY textContent; no source conclusions used and later observations restrict to innerText/form/list.
+- No screenshot/getScreenshot/getAXStateAndScreenshot/view_image or other image capture/viewing API called.

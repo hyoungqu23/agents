@@ -1,0 +1,7 @@
+Browser tab: 1893495273, Title: "127.0.0.1:64114/build", URL: "http://127.0.0.1:64114/build".
+0 AXWebArea 127.0.0.1:64114/build
+	1 text {"build": "quality-deployment", "revision": "cccccccccccccccccccccccccccccccccccccccc", "backend": "local-sqlite"}
+	2 container
+		3 checkbox 0
+
+The focused UI element is 0 AXWebArea 127.0.0.1:64114/build

@@ -1,0 +1,6 @@
+Browser tab: 1893495259, Title: "프로젝트 QA", URL: "http://127.0.0.1:62502/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 13
+~			8 text field (settable) 프로젝트 이름, ID: name, Value: D2-20261110-나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나나
++	26 text 저장 결과 미확인. 다시 불러오기로 확인하세요.
+The focused UI element is 9 button 저장

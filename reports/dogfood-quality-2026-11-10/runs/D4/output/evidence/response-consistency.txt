@@ -1,0 +1,1 @@
+Python assertions over saved real HTTP response bodies passed: ids501/502/503 exact planned names; lengths1/200; 201-char name absent; final API equals preserved baseline id500 only. These are evidence consistency checks, not application unit or browser automated test execution.

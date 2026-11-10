@@ -1,0 +1,29 @@
+[
+  {
+    "time": "2026-11-10T01:42:03.236974+00:00",
+    "method": "GET",
+    "url": "http://127.0.0.1:63857/build",
+    "http_status": 200,
+    "body": {
+      "build": "quality-async-deployment",
+      "revision": "dddddddddddddddddddddddddddddddddddddddd",
+      "backend": "local-http"
+    }
+  },
+  {
+    "time": "2026-11-10T01:42:03.237507+00:00",
+    "method": "GET",
+    "url": "http://127.0.0.1:63857/__fixture__/pending",
+    "http_status": 200,
+    "body": {
+      "pending": [],
+      "completed": [
+        {
+          "id": 1,
+          "status": "all",
+          "httpStatus": 200
+        }
+      ]
+    }
+  }
+]

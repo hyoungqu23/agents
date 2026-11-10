@@ -1,0 +1,36 @@
+[
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/private/tmp/skill-quality-20261110/dogfood/candidate/scripts/dogfood_result.py",
+      "capture",
+      "--run",
+      "/private/tmp/skill-quality-20261110/dogfood/runs/D3-target/output/run.json",
+      "--output",
+      "/private/tmp/skill-quality-20261110/dogfood/runs/D3-target/output/target-after.json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"schema_version\": 1,\n  \"plan\": {\n    \"target\": {\n      \"url\": \"http://127.0.0.1:63189/\",\n      \"environment\": \"provided local QA environment; deployment identity observed at /build\",\n      \"role\": \"unknown; no authenticated browser session accessed\",\n      \"backend\": \"local-sqlite (reported by /build; not independently authenticated)\",\n      \"served_build\": \"quality-deployment\",\n      \"desired_revision\": \"commit:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n      \"served_revision\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n    },\n    \"journeys\": [\n      {\n        \"id\": \"J-1\",\n        \"goal\": \"Save a project on the requested revision and inspect its persistent result after requery/reentry.\"\n      },\n      {\n        \"id\": \"J-2\",\n        \"goal\": \"Inspect the requested revision visual journey using actual application screenshots.\"\n      }\n    ],\n    \"checks\": [\n      {\n        \"id\": \"C-1\",\n        \"journey\": \"J-1\",\n        \"required\": true,\n        \"axis\": \"functional\",\n        \"purpose\": \"Exercise the project save journey on the requested target\",\n        \"expectation\": {\n          \"source\": \"Current prompt: requested commit and project save QA\",\n          \"text\": \"The save journey can be exercised on commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa with an observable outcome.\",\n          \"certainty\": \"confirmed\"\n        }\n      },\n      {\n        \"id\": \"C-2\",\n        \"journey\": \"J-1\",\n        \"required\": true,\n        \"axis\": \"persistence\",\n        \"purpose\": \"Requery/reenter and verify the actual saved project outcome\",\n        \"expectation\": {\n          \"source\": \"Current prompt: project save and requery QA\",\n          \"text\": \"The project saved on the requested commit can be requeried and the saved values verified through the real backend.\",\n          \"certainty\": \"confirmed\"\n        }\n      },\n      {\n        \"id\": \"C-3\",\n        \"journey\": \"J-2\",\n        \"required\": true,\n        \"axis\": \"visual\",\n        \"purpose\": \"Inspect the application save/requery visual journey\",\n        \"expectation\": {\n          \"source\": \"Current prompt: visual journey QA; dogfood required visual check\",\n          \"text\": \"Actual captures from the requested revision can be inspected for visibility, hierarchy, overlap and clipping in the relevant journey.\",\n          \"certainty\": \"confirmed\"\n        }\n      }\n    ]\n  },\n  \"local_source\": {\n    \"mode\": \"remote_only\",\n    \"limitation\": \"External served build is observed through tool traces, not authenticated by this helper.\"\n  },\n  \"digest\": \"fbe5b75c96f145c5b43730adb7155dec5b79f93c2db35ac14fd3b0055ba8b030\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/private/tmp/skill-quality-20261110/dogfood/candidate/scripts/dogfood_result.py",
+      "assess",
+      "--run",
+      "/private/tmp/skill-quality-20261110/dogfood/runs/D3-target/output/run.json",
+      "--before",
+      "/private/tmp/skill-quality-20261110/dogfood/runs/D3-target/output/target-before.json",
+      "--after",
+      "/private/tmp/skill-quality-20261110/dogfood/runs/D3-target/output/target-after.json",
+      "--output",
+      "/private/tmp/skill-quality-20261110/dogfood/runs/D3-target/output/assessment.json"
+    ],
+    "exit_code": 2,
+    "stdout": "{\n  \"status\": \"invalid\",\n  \"product_result\": \"undetermined\",\n  \"gaps\": [\n    {\n      \"reason\": \"invalid_record\",\n      \"detail\": \"Served revision does not match the requested revision\"\n    }\n  ]\n}\n",
+    "stderr": ""
+  }
+]

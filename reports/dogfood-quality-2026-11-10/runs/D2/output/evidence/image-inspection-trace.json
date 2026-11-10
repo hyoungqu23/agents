@@ -1,0 +1,21 @@
+{
+  "tool": "functions.exec -> tools.view_image",
+  "input": {
+    "path": "/private/tmp/skill-quality-20261110/dogfood/runs/D2-check/output/evidence/all-reentry.png"
+  },
+  "actual_result": {
+    "detail": "high",
+    "image_delivered": true,
+    "source_pixels": [
+      2504,
+      1363
+    ],
+    "display_pixels": [
+      2048,
+      1115
+    ],
+    "display_resize_disclosed": true
+  },
+  "inspection": "실제 이미지를 열어 지정 긴 이름의 끝인 전체 내용 확인까지 모두 보이고, 200자 이름은 6줄로 줄바꿈되며 삭제 버튼과 겹치지 않음을 확인. 동일 디자인 기준 이미지나 픽셀 비교는 사용하지 않음.",
+  "cua_capture_trace": "mcp__cua_repl.js title 전체 저장 항목 재진입 검증: getScreenshot emitted actual PNG; screenshot saved unchanged"
+}

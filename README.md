@@ -140,3 +140,5 @@ Resolve the public license and third-party attribution requirements before the f
 Build 0.3.1: Require direct frozen SPEC/QUESTIONS coverage, source-bound semantic review and behavior evidence before completion; retain source-backed partial scope and direct inputs.
 
 Product 0.5.0: Add product:spec with bundled SPEC/QUESTIONS templates, source authority and readiness guidance, and a standalone handoff record checker.
+
+Build 0.4.0: Add report-only build:dogfood for actual app journeys, visual inspection and real persistence evidence; separate coverage completion from product findings.

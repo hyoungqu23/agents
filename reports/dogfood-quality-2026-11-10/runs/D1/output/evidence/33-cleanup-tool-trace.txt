@@ -1,0 +1,5 @@
+Actual cua tools, own tab1893495255:
+li[data-id="501"] delete.press(Enter) returned unchanged immediate AX; no retry. Actual GET /api/items then confirmed id501 absent; / reentry confirmed same.
+li[data-id="502"] delete.click -> AX no 가; li[data-id="503"] delete.click -> AX no 경×200; li[data-id="504"] delete.click -> AX no lost-response.
+GET /api/items exact final JSON {"items": [{"id": "500", "name": "기존 사용자 프로젝트 - 보존 대상"}]} preserved at 29-clean-api.txt. /build unchanged at30; / reentry baseline only at31.
+getScreenshot bytes saved32-cleaned.jpg and nodeRepl.emitImage delivered decoded image inline. Visually inspected baseline row only. tab.close() succeeded, then cua completion_summary received. No existing tabs touched/closed, no servers/recordings started.

@@ -1,0 +1,12 @@
+{
+  "focus": {
+    "id": "name",
+    "tag": "INPUT"
+  },
+  "input": {
+    "message": "이 입력란을 작성하세요.",
+    "valid": false,
+    "value": ""
+  },
+  "items": "기존 사용자 프로젝트 - 보존 대상삭제"
+}

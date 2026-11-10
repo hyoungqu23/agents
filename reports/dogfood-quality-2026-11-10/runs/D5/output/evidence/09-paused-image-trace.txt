@@ -1,0 +1,1 @@
+mcp__cua_repl.js getScreenshot emitted actual JPEG and model inspected Paused successful empty, 0 projects and Tide selection.

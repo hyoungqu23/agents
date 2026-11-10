@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-10 Asia/Seoul",
+  "branch": "codex/dogfood",
+  "base_commit": "f7f7da032fd5b1ce53606de440e0c4ecc1340cb2",
+  "full_python_suite": {
+    "tests": 356,
+    "skipped": 1,
+    "seconds": 166.381
+  },
+  "full_suite_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests -p 'test_*.py' -q",
+  "skip_reason": "Existing optional study-loop local design-note schema is not checked out.",
+  "last_affected_suite": {
+    "tests": 30,
+    "status": "passed",
+    "note": "dogfood target/issue suite after the final revision-placeholder normalization"
+  },
+  "previously_failing_guard_cases": {
+    "tests": 8,
+    "status": "all passed after fixes; isolated production-helper executions, not real-app/model claims"
+  },
+  "codex_and_claude_plugin_validation": "passed via scripts/validate.sh",
+  "official_validator": {
+    "repository": "openai/codex",
+    "commit": "5c5308fc9a9ee789049d646ef11e5400384b9c6f",
+    "path": "codex-rs/skills/src/assets/samples/plugin-creator/scripts/validate_plugin.py",
+    "acquisition": "read from the exact CI-pinned upstream version; no repository CI config or dependency changes"
+  },
+  "scratch_plugin_load": "passed, all six plugins enabled with their skill inventories",
+  "environment": {
+    "python": "3.14.7",
+    "node": "24.19.0"
+  },
+  "independent_model_evaluation": "not_run",
+  "new_live_product_or_browser_test": "not_run",
+  "plans": "not copied or included in the commit file list",
+  "historical_smoke_reassessment": "Current helper rechecks original self-run records as complete + issues_found; not a new GUI/API run."
+}

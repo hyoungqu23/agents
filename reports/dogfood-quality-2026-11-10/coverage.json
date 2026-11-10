@@ -1,0 +1,163 @@
+{
+  "note": "covered is the stated core variation, not all possible environment combinations. partial and not_run are not counted as model passes of that whole definition.",
+  "scenarios": [
+    {
+      "scenario": "EV-01",
+      "level": "partial",
+      "cases": [
+        "D1",
+        "D2"
+      ],
+      "note": "직접 dogfood 요청 실행; fix/review/capture 근접 요청의 라우팅 음성군은 미실행"
+    },
+    {
+      "scenario": "EV-02",
+      "level": "covered",
+      "cases": [
+        "D2"
+      ],
+      "note": "정상 동선·의도된 비활성 대조군"
+    },
+    {
+      "scenario": "EV-03",
+      "level": "not_run",
+      "cases": [],
+      "note": "복합 range/modifier 선택 입력 제품은 이 fixture에 없음"
+    },
+    {
+      "scenario": "EV-04",
+      "level": "covered",
+      "cases": [
+        "D1"
+      ],
+      "note": "DOM 정상 텍스트와 실제 잘림 구분"
+    },
+    {
+      "scenario": "EV-05",
+      "level": "partial",
+      "cases": [
+        "D5"
+      ],
+      "note": "늦은 실패 응답·관찰 빈도 검증; 무작위 간헐 결함은 미실행"
+    },
+    {
+      "scenario": "EV-06",
+      "level": "covered",
+      "cases": [
+        "D1",
+        "D2"
+      ],
+      "note": "실제 HTTP/SQLite 저장·재조회·정확한 정리"
+    },
+    {
+      "scenario": "EV-07",
+      "level": "covered",
+      "cases": [
+        "D1"
+      ],
+      "note": "저장 뒤 응답 유실, 재조회 전 재전송 없음"
+    },
+    {
+      "scenario": "EV-08",
+      "level": "not_run",
+      "cases": [],
+      "note": "인증/조직/역할·로그인 만료·시작 실패 실제 환경 미제공"
+    },
+    {
+      "scenario": "EV-09",
+      "level": "partial",
+      "cases": [
+        "D3",
+        "D6"
+      ],
+      "note": "요청/제공 revision 불일치와 새 빌드; 누적 PR·오래된 실제 bundle 변형 미실행"
+    },
+    {
+      "scenario": "EV-10",
+      "level": "not_run",
+      "cases": [],
+      "note": "Service Worker/PWA/응답 대체 환경은 미실행"
+    },
+    {
+      "scenario": "EV-11",
+      "level": "covered",
+      "cases": [
+        "D4"
+      ],
+      "note": "이미지 금지 조건에서 필수 visual blocked; 실제 namespace 부재가 아닌 enforced constraint"
+    },
+    {
+      "scenario": "EV-12",
+      "level": "not_run",
+      "cases": [],
+      "note": "녹화 context 교체 및 공유 인증 세션 버전 조합 미실행"
+    },
+    {
+      "scenario": "EV-13",
+      "level": "not_run",
+      "cases": [],
+      "note": "잘못된 탭/창·stale ref·동일 profile 동시 조작 fault 미실행"
+    },
+    {
+      "scenario": "EV-14",
+      "level": "partial",
+      "cases": [
+        "D6"
+      ],
+      "note": "완료된 과거 실제 run에서 새 빌드 재검증; 부분 중단 후 재개 변형은 아님"
+    },
+    {
+      "scenario": "EV-15",
+      "level": "partial",
+      "cases": [
+        "D3",
+        "D4",
+        "D6"
+      ],
+      "note": "필수 검사/대상 미검증 거부; 빈/다른 대상 증거 파일 변형은 기계 검사"
+    },
+    {
+      "scenario": "EV-16",
+      "level": "covered",
+      "cases": [
+        "D1",
+        "D5"
+      ],
+      "note": "범위 complete와 issues_found 병존"
+    },
+    {
+      "scenario": "EV-17",
+      "level": "partial",
+      "cases": [
+        "D1",
+        "D2",
+        "D5"
+      ],
+      "note": "독립 계약/정상 대조군으로 실제 결함 판단; 불명확 intent는 관찰로 구분, 별도 intent 충돌 fixture 없음"
+    },
+    {
+      "scenario": "EV-18",
+      "level": "not_run",
+      "cases": [],
+      "note": "잘못된 크기/타깃/부분/무효 캡처 fault 미실행"
+    },
+    {
+      "scenario": "EV-19",
+      "level": "covered",
+      "cases": [
+        "D2"
+      ],
+      "note": "201자 경계 관찰을 근거 없는 확정 결함으로 만들지 않고 보존"
+    },
+    {
+      "scenario": "EV-20",
+      "level": "partial",
+      "cases": [
+        "D1",
+        "D2",
+        "D5"
+      ],
+      "note": "candidate 자체 bundle+host 도구만 사용; 다른 QA 스킬의 물리적 미설치 host는 아님"
+    }
+  ]
+}

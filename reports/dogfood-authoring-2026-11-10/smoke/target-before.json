@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "plan": {
+    "target": {
+      "url": "http://127.0.0.1:64230/",
+      "environment": "loopback fixture",
+      "role": "anonymous",
+      "backend": "local SQLite via /api/items",
+      "served_build": "dogfood-fixture-v1",
+      "local_root": "/private/tmp/agents-skill-authoring-20261110/dogfood/plugins/build/skills/dogfood/evals/files/live-app"
+    },
+    "journeys": [
+      {
+        "id": "J-1",
+        "goal": "Save, inspect, requery and clean own project data"
+      }
+    ],
+    "checks": [
+      {
+        "id": "C-save",
+        "journey": "J-1",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "Save and requery",
+        "expectation": {
+          "source": "evals/files/live-app/request.md",
+          "text": "Saved item persists with its exact full name",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-visual",
+        "journey": "J-1",
+        "required": true,
+        "axis": "visual",
+        "purpose": "Inspect readable name",
+        "expectation": {
+          "source": "evals/files/live-app/request.md",
+          "text": "The full requested name can be read",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-loss",
+        "journey": "J-1",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "Resolve uncertain write",
+        "expectation": {
+          "source": "evals/files/live-app/request.md",
+          "text": "After lost response, requery shows exactly one saved item before retry",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-keyboard",
+        "journey": "J-1",
+        "required": true,
+        "axis": "accessibility",
+        "purpose": "Inspect keyboard and intended disabled control",
+        "expectation": {
+          "source": "evals/files/live-app/request.md",
+          "text": "Tab moves focus through supported controls and archive remains disabled",
+          "certainty": "confirmed"
+        }
+      }
+    ]
+  },
+  "local_source": {
+    "mode": "local",
+    "root": "/private/tmp/agents-skill-authoring-20261110/dogfood/plugins/build/skills/dogfood/evals/files/live-app",
+    "files": {
+      "request.md": {
+        "kind": "file",
+        "sha256": "4a2a1201a0050c58cbfc682ea03991ab41530493f101df63fd3326227b36029e",
+        "mode": 420
+      },
+      "server.py": {
+        "kind": "file",
+        "sha256": "5b7cbbec5297f87ee97e3222e340fca4a9a8928a5ce75b8410bae626af1c60cc",
+        "mode": 420
+      }
+    },
+    "excluded_runtime": [
+      ".git",
+      ".next",
+      "__pycache__",
+      "dist",
+      "node_modules"
+    ]
+  },
+  "digest": "0a63e52a373e37e3baecdeceee77ddbe941765de95f1f2fc4b996e7020766107"
+}

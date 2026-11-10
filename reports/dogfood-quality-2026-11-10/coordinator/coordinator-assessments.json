@@ -1,0 +1,168 @@
+{
+  "D1-journey": {
+    "assessment": {
+      "status": "complete",
+      "product_result": "issues_found",
+      "gaps": [],
+      "target": "21403e0d27187787642a1d081be42d766fe122d50abc5816350378ddc7850f76"
+    },
+    "check_statuses": {
+      "C-01": "passed",
+      "C-02": "passed",
+      "C-03": "failed",
+      "C-04": "passed",
+      "C-05": "passed",
+      "C-06": "passed",
+      "C-07": "passed",
+      "C-08": "passed",
+      "C-09": "passed",
+      "C-10": "passed",
+      "C-11": "passed"
+    },
+    "remaining_rows": [
+      [
+        500,
+        "기존 사용자 프로젝트 - 보존 대상"
+      ]
+    ]
+  },
+  "D2-check": {
+    "assessment": {
+      "status": "complete",
+      "product_result": "no_issues_observed",
+      "gaps": [],
+      "target": "39cdf1719170db64c8f945b41e810b662b69c01444ef7941d79d46a6ec0fa24f"
+    },
+    "check_statuses": {
+      "C-01": "passed",
+      "C-02": "passed",
+      "C-03": "passed",
+      "C-04": "passed",
+      "C-05": "passed",
+      "C-06": "passed",
+      "C-07": "passed",
+      "C-08": "passed",
+      "C-09": "passed"
+    },
+    "remaining_rows": [
+      [
+        500,
+        "기존 사용자 프로젝트 - 보존 대상"
+      ]
+    ]
+  },
+  "D3-target": {
+    "assessment": {
+      "status": "invalid",
+      "product_result": "undetermined",
+      "gaps": [
+        {
+          "reason": "invalid_record",
+          "detail": "Served revision does not match the requested revision"
+        }
+      ]
+    },
+    "check_statuses": {
+      "C-1": "blocked",
+      "C-2": "blocked",
+      "C-3": "blocked"
+    },
+    "remaining_rows": [
+      [
+        500,
+        "기존 사용자 프로젝트 - 보존 대상"
+      ]
+    ]
+  },
+  "D4-check": {
+    "assessment": {
+      "status": "partial",
+      "product_result": "undetermined",
+      "gaps": [
+        {
+          "check": "C-11",
+          "reason": "blocked"
+        }
+      ],
+      "target": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db"
+    },
+    "check_statuses": {
+      "C-01": "passed",
+      "C-02": "passed",
+      "C-03": "passed",
+      "C-04": "passed",
+      "C-05": "passed",
+      "C-06": "passed",
+      "C-07": "passed",
+      "C-08": "passed",
+      "C-09": "passed",
+      "C-10": "passed",
+      "C-11": "blocked"
+    },
+    "remaining_rows": [
+      [
+        500,
+        "기존 사용자 프로젝트 - 보존 대상"
+      ]
+    ]
+  },
+  "D5-timing": {
+    "assessment": {
+      "status": "complete",
+      "product_result": "issues_found",
+      "gaps": [],
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f"
+    },
+    "check_statuses": {
+      "C-01": "passed",
+      "C-02": "passed",
+      "C-03": "passed",
+      "C-04": "passed",
+      "C-05": "passed",
+      "C-06": "passed",
+      "C-07": "passed",
+      "C-08": "failed",
+      "C-09": "passed"
+    },
+    "corroborated_browser_failure_overlaps": [
+      {
+        "old": 17,
+        "new": 18,
+        "old_http": 503,
+        "new_http": 200,
+        "old_finished_ms_after_new": 7901
+      }
+    ]
+  },
+  "D6-retest": {
+    "assessment": {
+      "status": "complete",
+      "product_result": "no_issues_observed",
+      "gaps": [],
+      "target": "16f65053c53155ad4d341f379ce777667bdd97a57e6c5e7199cb27164d26d71b"
+    },
+    "check_statuses": {
+      "C-01": "passed",
+      "C-02": "passed",
+      "C-03": "passed",
+      "C-04": "passed",
+      "C-05": "passed",
+      "C-06": "passed",
+      "C-07": "passed",
+      "C-08": "passed",
+      "C-09": "passed",
+      "C-10": "passed",
+      "C-11": "passed"
+    },
+    "remaining_rows": [
+      [
+        500,
+        "기존 사용자 프로젝트 - 보존 대상"
+      ],
+      [
+        501,
+        "다른 팀이 생성한 프로젝트 - 보존 대상"
+      ]
+    ]
+  }
+}

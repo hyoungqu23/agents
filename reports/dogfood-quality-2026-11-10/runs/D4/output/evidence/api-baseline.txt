@@ -1,0 +1,3 @@
+Actual exec_command curl GET http://127.0.0.1:63653/api/items, 2026-11-10 01:33:50 UTC
+HTTP/1.0 200 OK
+{"items": [{"id": "500", "name": "기존 사용자 프로젝트 - 보존 대상"}]}

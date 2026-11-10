@@ -1,0 +1,60 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "name",
+      "maxLength": -1,
+      "minLength": -1,
+      "required": true,
+      "tag": "INPUT",
+      "text": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "minLength": -1,
+      "required": false,
+      "tag": "BUTTON",
+      "text": "저장"
+    },
+    {
+      "disabled": false,
+      "id": "refresh",
+      "maxLength": -1,
+      "minLength": -1,
+      "required": false,
+      "tag": "BUTTON",
+      "text": "다시 불러오기"
+    },
+    {
+      "disabled": true,
+      "id": "",
+      "maxLength": -1,
+      "minLength": -1,
+      "required": false,
+      "tag": "BUTTON",
+      "text": "보관 (미지원)"
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "minLength": -1,
+      "required": false,
+      "tag": "BUTTON",
+      "text": "삭제"
+    }
+  ],
+  "dpr": 2,
+  "focus": {
+    "id": "",
+    "tag": "BODY"
+  },
+  "lang": "ko",
+  "url": "http://127.0.0.1:62502/",
+  "viewport": [
+    2504,
+    1363
+  ]
+}

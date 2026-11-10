@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-10T01:12:26.664842+00:00",
+  "method": "GET",
+  "url": "http://127.0.0.1:62502/api/items",
+  "status": 200,
+  "headers": {
+    "Server": "BaseHTTP/0.6 Python/3.14.7",
+    "Date": "Tue, 10 Nov 2026 01:12:26 GMT",
+    "Content-Type": "application/json",
+    "Content-Length": "83"
+  },
+  "body": {
+    "items": [
+      {
+        "id": "500",
+        "name": "기존 사용자 프로젝트 - 보존 대상"
+      }
+    ]
+  }
+}

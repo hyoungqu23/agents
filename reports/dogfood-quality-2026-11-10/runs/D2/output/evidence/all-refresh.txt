@@ -1,0 +1,3 @@
+Browser tab: 1893495259, Title: "프로젝트 QA", URL: "http://127.0.0.1:62502/".
+There has been no change in the accessibility tree.
+The focused UI element is 10 button 다시 불러오기, ID: refresh

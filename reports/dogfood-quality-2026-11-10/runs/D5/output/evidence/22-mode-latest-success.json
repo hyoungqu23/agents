@@ -1,0 +1,12 @@
+{
+  "started": "2026-11-10T01:45:18.299286+00:00",
+  "method": "PUT",
+  "url": "http://127.0.0.1:63857/__fixture__/mode",
+  "request_body": {
+    "fail": false
+  },
+  "http_status": 200,
+  "body": {},
+  "finished": "2026-11-10T01:45:18.309272+00:00",
+  "elapsed_seconds": 0.01
+}

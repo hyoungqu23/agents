@@ -1,0 +1,7 @@
+{
+  "original_name": "api-after-cleanup.txt",
+  "encoding": "utf-8",
+  "sha256": "75d58b0d6ffd31df0057e9e1399dc7731115d75cf1d47978c57156cd162bf445",
+  "content": "HTTP/1.0 200 OK\r\nServer: BaseHTTP/0.6 Python/3.14.7\r\nDate: Tue, 10 Nov 2026 01:38:30 GMT\r\nContent-Type: application/json\r\nContent-Length: 83\r\n\r\n{\"items\": [{\"id\": \"500\", \"name\": \"기존 사용자 프로젝트 - 보존 대상\"}]}",
+  "note": "Exact historical HTTP wire bytes including CRLF; JSON-packed, never normalized or relabelled."
+}

@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "plan": {
+    "target": {
+      "url": "http://127.0.0.1:62502/",
+      "environment": "local QA application; /build observed",
+      "role": "unauthenticated UI session; no account/org/role exposed",
+      "backend": "http://127.0.0.1:62502/api/items; /build reports local-sqlite",
+      "served_build": "quality-deployment",
+      "served_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "journeys": [
+      {
+        "id": "J-01",
+        "goal": "새 프로젝트 저장과 실제 재조회/재진입"
+      },
+      {
+        "id": "J-02",
+        "goal": "이름 1~200자 경계"
+      },
+      {
+        "id": "J-03",
+        "goal": "목록 전체 이름과 데스크톱 화면 가독성"
+      },
+      {
+        "id": "J-04",
+        "goal": "키보드와 의도된 비활성 보관"
+      },
+      {
+        "id": "J-05",
+        "goal": "직접 생성한 데이터 정리와 기존 항목 보존"
+      }
+    ],
+    "checks": [
+      {
+        "id": "C-01",
+        "journey": "J-01",
+        "required": true,
+        "axis": "functional",
+        "purpose": "유효한 새 이름을 저장하면 목록에 나타난다",
+        "expectation": {
+          "source": "prompt.txt: 새 항목 저장",
+          "text": "유효한 새 이름을 저장하면 목록에 나타난다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-02",
+        "journey": "J-01",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "GET 재조회, 다시 불러오기와 재진입 후 같은 이름과 ID가 남는다",
+        "expectation": {
+          "source": "prompt.txt: 재조회/재진입; 실통신은 GET/POST /api/items",
+          "text": "GET 재조회, 다시 불러오기와 재진입 후 같은 이름과 ID가 남는다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-03",
+        "journey": "J-02",
+        "required": true,
+        "axis": "functional",
+        "purpose": "이름 1자와 200자를 저장할 수 있다",
+        "expectation": {
+          "source": "prompt.txt: 요구: 이름은 1~200자",
+          "text": "이름 1자와 200자를 저장할 수 있다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-04",
+        "journey": "J-02",
+        "required": true,
+        "axis": "functional",
+        "purpose": "빈 이름과 201자 이름은 저장되지 않고 오류를 전달한다",
+        "expectation": {
+          "source": "prompt.txt: 요구: 이름은 1~200자",
+          "text": "빈 이름과 201자 이름은 저장되지 않고 오류를 전달한다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-05",
+        "journey": "J-03",
+        "required": true,
+        "axis": "visual",
+        "purpose": "지정한 긴 프로젝트 이름의 전체 내용을 목록에서 읽을 수 있다",
+        "expectation": {
+          "source": "prompt.txt: 요구: 목록에서 전체를 읽을 수 있어야 함; 지정 문자열 저장 확인",
+          "text": "지정한 긴 프로젝트 이름의 전체 내용을 목록에서 읽을 수 있다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-06",
+        "journey": "J-04",
+        "required": true,
+        "axis": "accessibility",
+        "purpose": "키보드 Tab 이동과 Enter 저장/재조회가 가능하고 포커스가 보인다",
+        "expectation": {
+          "source": "prompt.txt: 키보드 조작 점검",
+          "text": "키보드 Tab 이동과 Enter 저장/재조회가 가능하고 포커스가 보인다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-07",
+        "journey": "J-03",
+        "required": true,
+        "axis": "visual",
+        "purpose": "관찰한 데스크톱 화면에서 입력과 목록, 버튼이 겹치거나 잘리지 않는다",
+        "expectation": {
+          "source": "prompt.txt: 지원 화면 배치 점검; 명시된 모바일 지원 약속 없음",
+          "text": "관찰한 데스크톱 화면에서 입력과 목록, 버튼이 겹치거나 잘리지 않는다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-08",
+        "journey": "J-04",
+        "required": true,
+        "axis": "functional",
+        "purpose": "보관 (미지원) 버튼은 비활성이고 활성 동작으로 오해하지 않는다",
+        "expectation": {
+          "source": "prompt.txt: 보관 버튼 미지원 비활성이 의도",
+          "text": "보관 (미지원) 버튼은 비활성이고 활성 동작으로 오해하지 않는다",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-09",
+        "journey": "J-05",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "직접 만든 정확한 ID만 삭제하고 기존 ID 500은 보존한다",
+        "expectation": {
+          "source": "prompt.txt: 자신이 생성한 데이터만 정리; 기존 데이터 보존",
+          "text": "직접 만든 정확한 ID만 삭제하고 기존 ID 500은 보존한다",
+          "certainty": "confirmed"
+        }
+      }
+    ]
+  },
+  "local_source": {
+    "mode": "remote_only",
+    "limitation": "External served build is observed through tool traces, not authenticated by this helper."
+  },
+  "digest": "39cdf1719170db64c8f945b41e810b662b69c01444ef7941d79d46a6ec0fa24f"
+}

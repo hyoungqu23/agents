@@ -1,0 +1,9 @@
+Selected actual cua_repl tool-output transcription; owned IAB browser 4/tab 1 only.
+Before cleanup: exact created IDs 501,502,503 identified via real GET /api/items and matching names.
+1. locator(li[data-id="501"]).getByRole(button,삭제).click(); getAXState; read-only remainingIds=[500,502,503].
+2. locator(li[data-id="502"]).getByRole(button,삭제).click(); getAXState; read-only remainingIds=[500,503].
+3. locator(li[data-id="503"]).getByRole(button,삭제).click(); getAXState; read-only remaining=[{id:"500",name:"기존 사용자 프로젝트 - 보존 대상"}].
+4. tab.reload(); getAXState and domSnapshot: empty textbox, empty status, existing project only, 보관 (미지원) disabled.
+5. tab.close() completed; only owned tab 1 closed. cua_repl completion_summary submitted.
+6. Real GET /api/items after cleanup independently saved api-after-cleanup.txt shows only unchanged id 500.
+No existing delete button activated. No servers or recordings started. No image API used.

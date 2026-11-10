@@ -1,0 +1,427 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-10 Asia/Seoul",
+  "skill": "dogfood",
+  "kind": "scoped independent-context forward execution, not a mechanical-suite score",
+  "cases": [
+    {
+      "id": "D1",
+      "status": "passed",
+      "expected_observed_outcome": "complete + issues_found",
+      "coordinator_semantic_review": "Actual image clipping found; intentional disabled archive not a defect; real SQLite save/requery and one lost-response POST corroborated; only own501~504 removed, original500 retained.",
+      "critical_checks": [
+        {
+          "criterion": "actual browser image inspection finds name clipping",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "disabled archive is not a defect",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "save/requery actual DB match",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "lost-response saved exactly once before requery, no duplicate POST",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "only own IDs cleaned; row 500 unchanged",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "valid evidence for actual UI outcomes; capture/meta coherent",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "coverage/product result separated; issues_found allowed with complete",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "candidate/source preserved; no mocking/state injection",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "dogfood_journey_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "e7063e222140c5c95f64916245d241c7ec44d271",
+      "candidate_runtime_files": {
+        "SOURCES.md": "4d85af644172f70df29eed201ff9a75b19ddd61bfb34d814b89e657d2b58f272",
+        "SKILL.md": "fc17b20d3b9e3e3c5ac7683dd0acc6e7668cc70a5ab6c9efad5014943da7ecd3",
+        "references/journeys-and-oracles.md": "1c1a4f25970250724331e60a800a428b7548495646f52ba4d8391cc7c679a489",
+        "references/checklists.md": "2e7143af3e774776d870af14beab2dde202f0df32451200932d89e360117c345",
+        "references/scope-and-intent.md": "782a30857a1bd2060829d83dbbc0ef047d4c681f6de0cb7ca13b2cae9bcfb7f3",
+        "references/session-and-environment.md": "0251a1196d8ee032981a34031703bdac05410f1807c86b041a9b5e4e7686cd42",
+        "references/exploration.md": "eda50ffdb380f97f974275618c6881cb7d19c74320ca7eaaee1142db1f1e2a78",
+        "references/evidence-and-results.md": "4797715d240958322de683b3fb2f3e93d49a3df0f9e57fba6a3908242eb5eee2",
+        "agents/openai.yaml": "4e13db245aa2f89294403d54a52f0de876ebed5b99f3d54ddd99d2a5c85ba70d",
+        "scripts/dogfood_result.py": "b38d883012cd4d1341acd5b9dccf3260bb4a3a4a7b5994ac9bb20492e1c38e6e",
+        "assets/report-template.md": "984be4daad4aa8193e2f4794d1c2d7442b8aaf3c9a8bf62045ab08675a264453",
+        "references/drivers/agent-desktop.md": "f9aee36a2b63ae2acb5b5134b0753b0fc285c410b44ada6a0c84024a0b51bf05",
+        "references/drivers/host-browser.md": "61c07f2bd228d12acbb3117e3636c77376aefeacbe05df938b246c7d744dad2d",
+        "references/drivers/gstack.md": "1e1a2d89f632a9d7a5ff162a85def4094b832f30a13cb8979d85fc4a827aee86",
+        "references/drivers/agent-browser.md": "b2ad66e34eccfd7b9c26fc289649c40aba537702c6a4b495edfa41c25c22bb25"
+      },
+      "evidence": "runs/D1/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "D2",
+      "status": "passed",
+      "expected_observed_outcome": "complete + no_issues_observed",
+      "coordinator_semantic_review": "Healthy positive counterpart; real journeys/images; own501~504 cleaned. 201-char rejection message ambiguity was an observation, not an invented confirmed defect. Desktop scope only.",
+      "critical_checks": [
+        {
+          "criterion": "real journeys and images actually observed",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no confirmed defect invented in the healthy fixture",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "intentional disabled archive not flagged",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "saved full names and requery match DB",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "only created IDs cleaned; original 500 remains",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "complete + no_issues_observed only if required checks have evidence",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "candidate/source and original session preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "dogfood_session_two",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "e7063e222140c5c95f64916245d241c7ec44d271",
+      "candidate_runtime_files": {
+        "SOURCES.md": "4d85af644172f70df29eed201ff9a75b19ddd61bfb34d814b89e657d2b58f272",
+        "SKILL.md": "fc17b20d3b9e3e3c5ac7683dd0acc6e7668cc70a5ab6c9efad5014943da7ecd3",
+        "references/journeys-and-oracles.md": "1c1a4f25970250724331e60a800a428b7548495646f52ba4d8391cc7c679a489",
+        "references/checklists.md": "2e7143af3e774776d870af14beab2dde202f0df32451200932d89e360117c345",
+        "references/scope-and-intent.md": "782a30857a1bd2060829d83dbbc0ef047d4c681f6de0cb7ca13b2cae9bcfb7f3",
+        "references/session-and-environment.md": "0251a1196d8ee032981a34031703bdac05410f1807c86b041a9b5e4e7686cd42",
+        "references/exploration.md": "eda50ffdb380f97f974275618c6881cb7d19c74320ca7eaaee1142db1f1e2a78",
+        "references/evidence-and-results.md": "4797715d240958322de683b3fb2f3e93d49a3df0f9e57fba6a3908242eb5eee2",
+        "agents/openai.yaml": "4e13db245aa2f89294403d54a52f0de876ebed5b99f3d54ddd99d2a5c85ba70d",
+        "scripts/dogfood_result.py": "b38d883012cd4d1341acd5b9dccf3260bb4a3a4a7b5994ac9bb20492e1c38e6e",
+        "assets/report-template.md": "984be4daad4aa8193e2f4794d1c2d7442b8aaf3c9a8bf62045ab08675a264453",
+        "references/drivers/agent-desktop.md": "f9aee36a2b63ae2acb5b5134b0753b0fc285c410b44ada6a0c84024a0b51bf05",
+        "references/drivers/host-browser.md": "61c07f2bd228d12acbb3117e3636c77376aefeacbe05df938b246c7d744dad2d",
+        "references/drivers/gstack.md": "1e1a2d89f632a9d7a5ff162a85def4094b832f30a13cb8979d85fc4a827aee86",
+        "references/drivers/agent-browser.md": "b2ad66e34eccfd7b9c26fc289649c40aba537702c6a4b495edfa41c25c22bb25"
+      },
+      "evidence": "runs/D2/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "D3",
+      "status": "passed",
+      "expected_observed_outcome": "invalid + undetermined",
+      "coordinator_semantic_review": "Actual /build reported b*40 versus desired a*40. No browser/data writes or requested-revision pass. Initial sandbox GET failure retained, successful escalated observation followed.",
+      "critical_checks": [
+        {
+          "criterion": "actual GET /build observation identifies served b... vs desired a...",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no requested-revision complete or no_issues_observed claim",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "target/environment mismatch separate from product defect",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no data mutations or source/candidate changes",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "evidence and remaining target/UI conditions honest",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "dogfood_target_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "e7063e222140c5c95f64916245d241c7ec44d271",
+      "candidate_runtime_files": {
+        "SOURCES.md": "4d85af644172f70df29eed201ff9a75b19ddd61bfb34d814b89e657d2b58f272",
+        "SKILL.md": "fc17b20d3b9e3e3c5ac7683dd0acc6e7668cc70a5ab6c9efad5014943da7ecd3",
+        "references/journeys-and-oracles.md": "1c1a4f25970250724331e60a800a428b7548495646f52ba4d8391cc7c679a489",
+        "references/checklists.md": "2e7143af3e774776d870af14beab2dde202f0df32451200932d89e360117c345",
+        "references/scope-and-intent.md": "782a30857a1bd2060829d83dbbc0ef047d4c681f6de0cb7ca13b2cae9bcfb7f3",
+        "references/session-and-environment.md": "0251a1196d8ee032981a34031703bdac05410f1807c86b041a9b5e4e7686cd42",
+        "references/exploration.md": "eda50ffdb380f97f974275618c6881cb7d19c74320ca7eaaee1142db1f1e2a78",
+        "references/evidence-and-results.md": "4797715d240958322de683b3fb2f3e93d49a3df0f9e57fba6a3908242eb5eee2",
+        "agents/openai.yaml": "4e13db245aa2f89294403d54a52f0de876ebed5b99f3d54ddd99d2a5c85ba70d",
+        "scripts/dogfood_result.py": "b38d883012cd4d1341acd5b9dccf3260bb4a3a4a7b5994ac9bb20492e1c38e6e",
+        "assets/report-template.md": "984be4daad4aa8193e2f4794d1c2d7442b8aaf3c9a8bf62045ab08675a264453",
+        "references/drivers/agent-desktop.md": "f9aee36a2b63ae2acb5b5134b0753b0fc285c410b44ada6a0c84024a0b51bf05",
+        "references/drivers/host-browser.md": "61c07f2bd228d12acbb3117e3636c77376aefeacbe05df938b246c7d744dad2d",
+        "references/drivers/gstack.md": "1e1a2d89f632a9d7a5ff162a85def4094b832f30a13cb8979d85fc4a827aee86",
+        "references/drivers/agent-browser.md": "b2ad66e34eccfd7b9c26fc289649c40aba537702c6a4b495edfa41c25c22bb25"
+      },
+      "evidence": "runs/D3/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "D4",
+      "status": "passed",
+      "expected_observed_outcome": "partial + undetermined",
+      "coordinator_semantic_review": "Enforced no-image condition: useful DOM/keyboard/API checks ran, required visual remained blocked, no visual pass/evidence fabricated. Own501~503 cleaned, original500 retained. Tool namespace physically remained available; this tests a task capability constraint.",
+      "critical_checks": [
+        {
+          "criterion": "image restriction honored; no invented visual/image pass",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "required visual remains blocked with reason, final partial not complete",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "useful DOM/keyboard/real persistence checks still execute",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "all own data cleaned; original preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "no extra tool install/mock/state injection/source changes",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "limitation labeled a constrained condition, not a real missing-tool claim",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "dogfood_limited_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "e7063e222140c5c95f64916245d241c7ec44d271",
+      "candidate_runtime_files": {
+        "SOURCES.md": "4d85af644172f70df29eed201ff9a75b19ddd61bfb34d814b89e657d2b58f272",
+        "SKILL.md": "fc17b20d3b9e3e3c5ac7683dd0acc6e7668cc70a5ab6c9efad5014943da7ecd3",
+        "references/journeys-and-oracles.md": "1c1a4f25970250724331e60a800a428b7548495646f52ba4d8391cc7c679a489",
+        "references/checklists.md": "2e7143af3e774776d870af14beab2dde202f0df32451200932d89e360117c345",
+        "references/scope-and-intent.md": "782a30857a1bd2060829d83dbbc0ef047d4c681f6de0cb7ca13b2cae9bcfb7f3",
+        "references/session-and-environment.md": "0251a1196d8ee032981a34031703bdac05410f1807c86b041a9b5e4e7686cd42",
+        "references/exploration.md": "eda50ffdb380f97f974275618c6881cb7d19c74320ca7eaaee1142db1f1e2a78",
+        "references/evidence-and-results.md": "4797715d240958322de683b3fb2f3e93d49a3df0f9e57fba6a3908242eb5eee2",
+        "agents/openai.yaml": "4e13db245aa2f89294403d54a52f0de876ebed5b99f3d54ddd99d2a5c85ba70d",
+        "scripts/dogfood_result.py": "b38d883012cd4d1341acd5b9dccf3260bb4a3a4a7b5994ac9bb20492e1c38e6e",
+        "assets/report-template.md": "984be4daad4aa8193e2f4794d1c2d7442b8aaf3c9a8bf62045ab08675a264453",
+        "references/drivers/agent-desktop.md": "f9aee36a2b63ae2acb5b5134b0753b0fc285c410b44ada6a0c84024a0b51bf05",
+        "references/drivers/host-browser.md": "61c07f2bd228d12acbb3117e3636c77376aefeacbe05df938b246c7d744dad2d",
+        "references/drivers/gstack.md": "1e1a2d89f632a9d7a5ff162a85def4094b832f30a13cb8979d85fc4a827aee86",
+        "references/drivers/agent-browser.md": "b2ad66e34eccfd7b9c26fc289649c40aba537702c6a4b495edfa41c25c22bb25"
+      },
+      "evidence": "runs/D4/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "D5",
+      "status": "passed",
+      "expected_observed_outcome": "complete + issues_found",
+      "coordinator_semantic_review": "Old Active503 overwrote newer Archived200. Real browser request/response ordering corroborated; one valid overlap out of three attempts reported as observed_once, not three reproductions. Normal contrasts remained separate.",
+      "critical_checks": [
+        {
+          "criterion": "actual overlapping old active failure and newer archived success exercised",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "pending-old completion observed before final latest-state assertion",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "late error overwriting latest success detected and reported with actual evidence",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "normal filter/empty/selection/Retry contrasts not falsely classified",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "classification/attempts honest; no erased one-off observations",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "real app input/backend; no state injection or response replacement",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "candidate/source preserved; own resources cleaned",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "dogfood_timing_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "e7063e222140c5c95f64916245d241c7ec44d271",
+      "candidate_runtime_files": {
+        "SOURCES.md": "4d85af644172f70df29eed201ff9a75b19ddd61bfb34d814b89e657d2b58f272",
+        "SKILL.md": "fc17b20d3b9e3e3c5ac7683dd0acc6e7668cc70a5ab6c9efad5014943da7ecd3",
+        "references/journeys-and-oracles.md": "1c1a4f25970250724331e60a800a428b7548495646f52ba4d8391cc7c679a489",
+        "references/checklists.md": "2e7143af3e774776d870af14beab2dde202f0df32451200932d89e360117c345",
+        "references/scope-and-intent.md": "782a30857a1bd2060829d83dbbc0ef047d4c681f6de0cb7ca13b2cae9bcfb7f3",
+        "references/session-and-environment.md": "0251a1196d8ee032981a34031703bdac05410f1807c86b041a9b5e4e7686cd42",
+        "references/exploration.md": "eda50ffdb380f97f974275618c6881cb7d19c74320ca7eaaee1142db1f1e2a78",
+        "references/evidence-and-results.md": "4797715d240958322de683b3fb2f3e93d49a3df0f9e57fba6a3908242eb5eee2",
+        "agents/openai.yaml": "4e13db245aa2f89294403d54a52f0de876ebed5b99f3d54ddd99d2a5c85ba70d",
+        "scripts/dogfood_result.py": "b38d883012cd4d1341acd5b9dccf3260bb4a3a4a7b5994ac9bb20492e1c38e6e",
+        "assets/report-template.md": "984be4daad4aa8193e2f4794d1c2d7442b8aaf3c9a8bf62045ab08675a264453",
+        "references/drivers/agent-desktop.md": "f9aee36a2b63ae2acb5b5134b0753b0fc285c410b44ada6a0c84024a0b51bf05",
+        "references/drivers/host-browser.md": "61c07f2bd228d12acbb3117e3636c77376aefeacbe05df938b246c7d744dad2d",
+        "references/drivers/gstack.md": "1e1a2d89f632a9d7a5ff162a85def4094b832f30a13cb8979d85fc4a827aee86",
+        "references/drivers/agent-browser.md": "b2ad66e34eccfd7b9c26fc289649c40aba537702c6a4b495edfa41c25c22bb25"
+      },
+      "evidence": "runs/D5/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    },
+    {
+      "id": "D6",
+      "status": "passed",
+      "expected_observed_outcome": "complete + no_issues_observed",
+      "coordinator_semantic_review": "New c*40 target observed; prior I-01 retained as a retest reference but not reasserted from old images. New502~505 cleaned; protected500 and colliding old-ID501 preserved; all40 history hashes unchanged.",
+      "critical_checks": [
+        {
+          "criterion": "new URL/build/revision observed; old captures not retargeted",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "historical issue ID preserved as a retest reference with honest current result",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "full name clipping no longer asserted without current observation in fixed fixture",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "old history/evidence unchanged, new attempt captures/evidence exist",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "old created IDs not reused to delete new environment data; original 500/501 preserved",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "new own IDs accurately cleaned",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        },
+        {
+          "criterion": "coverage completion/product result and limitations honest",
+          "verdict": "pass",
+          "method": "coordinator source/artifact review, corroborated by independent checks where available"
+        }
+      ],
+      "actor": {
+        "host": "Codex collaboration subagent",
+        "task": "dogfood_retest_eval",
+        "fork_turns": "none",
+        "exact_model_id": null,
+        "model_note": "Inherited session model; exact provider/model version not exposed. No cross-model independence claim."
+      },
+      "candidate_commit": "e7063e222140c5c95f64916245d241c7ec44d271",
+      "candidate_runtime_files": {
+        "SOURCES.md": "4d85af644172f70df29eed201ff9a75b19ddd61bfb34d814b89e657d2b58f272",
+        "SKILL.md": "fc17b20d3b9e3e3c5ac7683dd0acc6e7668cc70a5ab6c9efad5014943da7ecd3",
+        "references/journeys-and-oracles.md": "1c1a4f25970250724331e60a800a428b7548495646f52ba4d8391cc7c679a489",
+        "references/checklists.md": "2e7143af3e774776d870af14beab2dde202f0df32451200932d89e360117c345",
+        "references/scope-and-intent.md": "782a30857a1bd2060829d83dbbc0ef047d4c681f6de0cb7ca13b2cae9bcfb7f3",
+        "references/session-and-environment.md": "0251a1196d8ee032981a34031703bdac05410f1807c86b041a9b5e4e7686cd42",
+        "references/exploration.md": "eda50ffdb380f97f974275618c6881cb7d19c74320ca7eaaee1142db1f1e2a78",
+        "references/evidence-and-results.md": "4797715d240958322de683b3fb2f3e93d49a3df0f9e57fba6a3908242eb5eee2",
+        "agents/openai.yaml": "4e13db245aa2f89294403d54a52f0de876ebed5b99f3d54ddd99d2a5c85ba70d",
+        "scripts/dogfood_result.py": "b38d883012cd4d1341acd5b9dccf3260bb4a3a4a7b5994ac9bb20492e1c38e6e",
+        "assets/report-template.md": "984be4daad4aa8193e2f4794d1c2d7442b8aaf3c9a8bf62045ab08675a264453",
+        "references/drivers/agent-desktop.md": "f9aee36a2b63ae2acb5b5134b0753b0fc285c410b44ada6a0c84024a0b51bf05",
+        "references/drivers/host-browser.md": "61c07f2bd228d12acbb3117e3636c77376aefeacbe05df938b246c7d744dad2d",
+        "references/drivers/gstack.md": "1e1a2d89f632a9d7a5ff162a85def4094b832f30a13cb8979d85fc4a827aee86",
+        "references/drivers/agent-browser.md": "b2ad66e34eccfd7b9c26fc289649c40aba537702c6a4b495edfa41c25c22bb25"
+      },
+      "evidence": "runs/D6/artifact-index.json",
+      "rubric_frozen_before_execution": true
+    }
+  ],
+  "passed_cases": 6,
+  "total_cases": 6,
+  "grading": "coordinator AI semantic review plus independent source/hash/browser/HTTP/SQLite checks; not a blinded human rating",
+  "limitations": [
+    "Synthetic local fixtures and one inherited model family; no statistical population estimate or A/B benefit claim.",
+    "Actor task scopes withheld oracles; no OS-level isolation or authenticated raw model-tool stream export is claimed.",
+    "First descriptive case labels were visible; neutral-label N1 separately checks simple readiness without API pressure.",
+    "Native OS input/IME, shared authenticated profiles, alternate driver/recording versions, Service Workers and real production services were not evaluated."
+  ]
+}

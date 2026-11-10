@@ -1,0 +1,320 @@
+[
+  {
+    "original": "output/target-after.json",
+    "packaged": "output/target-after.json",
+    "sha256": "8bf22d35d26de3f62d25ecd00ec9ad5c1882c339715365f42f41b3536c05f75d",
+    "json_packed": false
+  },
+  {
+    "original": "output/target-before.json",
+    "packaged": "output/target-before.json",
+    "sha256": "8bf22d35d26de3f62d25ecd00ec9ad5c1882c339715365f42f41b3536c05f75d",
+    "json_packed": false
+  },
+  {
+    "original": "output/assessment.json",
+    "packaged": "output/assessment.json",
+    "sha256": "48dcb9c884cf90fc7159a9e7ab9f274a57bf0f161340654f8e26b910196b764c",
+    "json_packed": false
+  },
+  {
+    "original": "output/report.md",
+    "packaged": "output/report.md",
+    "sha256": "d6c971520dc06b313e82734873b96a0714bb901c00609c12008ac6cfa9811fbe",
+    "json_packed": false
+  },
+  {
+    "original": "output/run.json",
+    "packaged": "output/run.json",
+    "sha256": "f4cc8f85233f3f2a6f1f6719b1702215d8328e5ae85b0695477ff21d7bcc44d2",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/16-api-boundaries.txt",
+    "packaged": "output/evidence/16-api-boundaries.txt",
+    "sha256": "6b4829cfddfbc2754967d71db595bf5d08cb52d94a24f647d787557ff9f93c13",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/05-save-focus.jpg",
+    "packaged": "output/evidence/05-save-focus.jpg",
+    "sha256": "0929a39a5c0e531206e671be398b9cc6c9f8d922ab7dbcbaef3cda841d67f9bc",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/40-recorder-tool-trace.txt",
+    "packaged": "output/evidence/40-recorder-tool-trace.txt",
+    "sha256": "af5d63cdc601fbc17f9c73c285a220ce79ab7ab82b4498e46b6a983fb16dce2f",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/39-history-preserved.json",
+    "packaged": "output/evidence/39-history-preserved.json",
+    "sha256": "e66515eac328df0c9f46c3ec111ebb8afc95b8e769a5566a7818e16fd6d88e6d",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/21-201-ui-requery.txt",
+    "packaged": "output/evidence/21-201-ui-requery.txt.artifact.json",
+    "sha256": "e94efad442dda94fa6aa7df2b12f49a08aeb3e477d154478c2a6c9c77871d554",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/28-delete-focus.txt",
+    "packaged": "output/evidence/28-delete-focus.txt.artifact.json",
+    "sha256": "9335b1f2db0352910b4058753d846e9d46c23fd7580d1797714f9d10d6a2c2a3",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/25-lost-ui-requery.txt",
+    "packaged": "output/evidence/25-lost-ui-requery.txt.artifact.json",
+    "sha256": "470694376338ecbdb44fef4afa555ee7046cc16a53b2f7e25b384ec278d8279b",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/14-one-char-save.txt",
+    "packaged": "output/evidence/14-one-char-save.txt.artifact.json",
+    "sha256": "a0ebeb425b208034c0853f841072195cfe57217477e8137f1d6b5839dc5edb6a",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/history-before-sha256.json",
+    "packaged": "output/evidence/history-before-sha256.json",
+    "sha256": "6cc5ad60c735f25314910adebac0f6460627748f450ea571012657110e0e24a2",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/36-final-cleaned.jpg",
+    "packaged": "output/evidence/36-final-cleaned.jpg",
+    "sha256": "09f03f5b9d6bd2b3f9872b3d07c6b759d7e2b772741d8cb2d2476c72ea54f1d7",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/00-preparation.txt",
+    "packaged": "output/evidence/00-preparation.txt",
+    "sha256": "f901e91da393d5a021286edb6146a931ba1c5a4a14cc8ba5ab7ba4d9fe458f95",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/22-api-after-201.txt",
+    "packaged": "output/evidence/22-api-after-201.txt",
+    "sha256": "6b4829cfddfbc2754967d71db595bf5d08cb52d94a24f647d787557ff9f93c13",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/29-delete-own502.txt",
+    "packaged": "output/evidence/29-delete-own502.txt.artifact.json",
+    "sha256": "308d83c5f296e7923099eddcc28fea665539575420364a88cafddf4d9242b974",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/05-save-focus.txt",
+    "packaged": "output/evidence/05-save-focus.txt.artifact.json",
+    "sha256": "3aaa3ac500c8b7f912e6838272bf1ccbf085746bc8284e33ea4f9bad6b5900fe",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/27-lost-reentry.txt",
+    "packaged": "output/evidence/27-lost-reentry.txt.artifact.json",
+    "sha256": "28a77c5f69e61bdb5eb9e578c671d7510b0fa9819c09d772f7cb9cf1b614a468",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/34-build-after.txt",
+    "packaged": "output/evidence/34-build-after.txt",
+    "sha256": "a9a18e8a8496b090e8e97c8b264227fa57cea278f3854db6333b93e13136fc79",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/11-long-reentry.txt",
+    "packaged": "output/evidence/11-long-reentry.txt.artifact.json",
+    "sha256": "adb47d928a8ab2e71828c7038aa165e7b546028b84ce57f9602bcee726e9324e",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/28-delete-focus.jpg",
+    "packaged": "output/evidence/28-delete-focus.jpg",
+    "sha256": "70e3b6b7c323a420ebffdac3a16e1090fe169285accc3eaf28895108fc8246e3",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/07-long-current.jpg",
+    "packaged": "output/evidence/07-long-current.jpg",
+    "sha256": "c1e3b5b6e6e5b0cb6ac1d4ece183d0ee4280ceff1156ccedd8d11ecd7de39de3",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/20-201-save.txt",
+    "packaged": "output/evidence/20-201-save.txt.artifact.json",
+    "sha256": "951325bfd0c1a7583a680e9d5d2d8c6f6626b8a314ab48f932fc2346877fcf67",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/08-refresh-focus.txt",
+    "packaged": "output/evidence/08-refresh-focus.txt.artifact.json",
+    "sha256": "dbd616cd7606866b4cdc666bf2913ccd09c91f62cdc5d7bc5423e49263e51da6",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/18-image-inspection-trace.txt",
+    "packaged": "output/evidence/18-image-inspection-trace.txt",
+    "sha256": "0288e91241679e78119e6068f934454d3ea2e128506125cfef3f7e49e35ae6b7",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/04-empty-keyboard.txt",
+    "packaged": "output/evidence/04-empty-keyboard.txt.artifact.json",
+    "sha256": "3e11e45a6d29bd334db07bbb3c9218bee6805835687102ccdb0d1ae7442bcb73",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/11-long-current-dom.txt",
+    "packaged": "output/evidence/11-long-current-dom.txt",
+    "sha256": "b0e22c03e0faf509301c440f76094c34517f09079e18092a5cc988a0aafbd952",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/37-console-observation.txt",
+    "packaged": "output/evidence/37-console-observation.txt",
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/18-boundary-current.jpg",
+    "packaged": "output/evidence/18-boundary-current.jpg",
+    "sha256": "eddfbbc3230752cb47f9620b0b4acf8c544c921a904efda77332130ee421b435",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/30-api-after-delete502.txt",
+    "packaged": "output/evidence/30-api-after-delete502.txt",
+    "sha256": "26e69b13a003818b040a9102f4a012d9f64fac5ccedf7a12596ac11cfd839332",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/13-keyboard-traversal.txt",
+    "packaged": "output/evidence/13-keyboard-traversal.txt",
+    "sha256": "88200eb2012f3057e289976fb4b8b99f321e56f9303d668ddb7581e8335d24d4",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/15-max-char-save.txt",
+    "packaged": "output/evidence/15-max-char-save.txt.artifact.json",
+    "sha256": "f6f376f5dfd7c8d74b7d3f2a3f208e6ec7e1d1bc5e51d223f41865699cc744ac",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/26-lost-api.txt",
+    "packaged": "output/evidence/26-lost-api.txt",
+    "sha256": "c8b85ecbe30e20114935f7a32e98ef48e1eb85e83e501ec975d2c38ffce6b918",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/01-build-before.txt",
+    "packaged": "output/evidence/01-build-before.txt",
+    "sha256": "67459a6c492bae8dc57fafe00a1b727143015d4bd3591040980bae2c9d29eb62",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/19-201-actual-key-input.txt",
+    "packaged": "output/evidence/19-201-actual-key-input.txt",
+    "sha256": "cf95b8d404f2cb6fba5890e38ce78000d641ac11d6ebf5dc9df0fe8051f936e9",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/02-api-baseline.txt",
+    "packaged": "output/evidence/02-api-baseline.txt",
+    "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/10-api-after-long.txt",
+    "packaged": "output/evidence/10-api-after-long.txt",
+    "sha256": "e39122fcedbe140e4edf647e85e3e7b4f9af2da09f65c4dbe97c481b1fac5100",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/32-cleanup-ui-trace.txt",
+    "packaged": "output/evidence/32-cleanup-ui-trace.txt",
+    "sha256": "5016f4d3b47cc42f0455b39fde100695cf5666db7df1f4524ef47c5d16faa96e",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/06-long-save.txt",
+    "packaged": "output/evidence/06-long-save.txt.artifact.json",
+    "sha256": "136ea5e9af89d5142288ffe2980a136f902eba83735024e5df8325b3fbd5977f",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/33-final-api.txt",
+    "packaged": "output/evidence/33-final-api.txt",
+    "sha256": "2dba8a7e338eeb1aaf7e7c98273fa219bcec98358e53722f066301f20c298a83",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/12-long-reentry.jpg",
+    "packaged": "output/evidence/12-long-reentry.jpg",
+    "sha256": "302cf18644d083864108537a5e042bb057ad321b8f0511d90bb80130678902f1",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/27-before-cleanup-current-ids.json",
+    "packaged": "output/evidence/27-before-cleanup-current-ids.json",
+    "sha256": "023e60c5d1583fe5b70818ef0c54d6c4aa019f2c8305462eeb26b9469c473b38",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/23-201-reentry.txt",
+    "packaged": "output/evidence/23-201-reentry.txt.artifact.json",
+    "sha256": "e84d17999fa10cb4b0acbe8e5eb3c5adce63ede6045b9be60456862e88bb91e0",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/09-ui-refresh.txt",
+    "packaged": "output/evidence/09-ui-refresh.txt.artifact.json",
+    "sha256": "eb770d09f98073ae69ec10fb3884eb9c89a110dccd334e42f339230fb98e33bc",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/24-lost-save.txt",
+    "packaged": "output/evidence/24-lost-save.txt.artifact.json",
+    "sha256": "1b4fca6207b59e28661ba52fa8b699a2cfa1c0af78d22bc0bbc5a55f4edcf4dd",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/31-reentry-after-delete502.txt",
+    "packaged": "output/evidence/31-reentry-after-delete502.txt.artifact.json",
+    "sha256": "342617a3ece2317972c2af3d42a23063a04021aaf66fe6290ad59e0877bb2147",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/38-resource-cleanup.txt",
+    "packaged": "output/evidence/38-resource-cleanup.txt",
+    "sha256": "a41a3bca720345ede09d898a8b3bd43f14eeb6cfa1a618574d54e5eb64dba25d",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/16-api-values-checked.json",
+    "packaged": "output/evidence/16-api-values-checked.json",
+    "sha256": "d2e8a7689a53fb348558f4f30aea00e2f36d1bbf7853861230123e3b0d8b5af7",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/17-boundary-reentry.txt",
+    "packaged": "output/evidence/17-boundary-reentry.txt.artifact.json",
+    "sha256": "e84d17999fa10cb4b0acbe8e5eb3c5adce63ede6045b9be60456862e88bb91e0",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/35-final-reentry.txt",
+    "packaged": "output/evidence/35-final-reentry.txt.artifact.json",
+    "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/03-current-entry.txt",
+    "packaged": "output/evidence/03-current-entry.txt.artifact.json",
+    "sha256": "ccdd686a74911f533da83e1bcb9a87eeb80eb33ee8dde0f133eab00da8cae6e8",
+    "json_packed": true
+  }
+]

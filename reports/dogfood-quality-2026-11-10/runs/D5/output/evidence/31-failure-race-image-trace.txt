@@ -1,0 +1,1 @@
+mcp__cua_repl.js getScreenshot emitted actual JPEG after actual Active request 17 completed HTTP 503; model directly inspected result.

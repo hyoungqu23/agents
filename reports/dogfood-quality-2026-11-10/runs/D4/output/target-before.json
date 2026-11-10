@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "plan": {
+    "target": {
+      "url": "http://127.0.0.1:63653/",
+      "environment": "provided local QA app",
+      "role": "unknown",
+      "backend": "/api/items; /build reports local-sqlite",
+      "served_build": "quality-deployment",
+      "served_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "journeys": [
+      {
+        "id": "J-1",
+        "goal": "프로젝트 생성 후 API 재조회 및 재진입"
+      },
+      {
+        "id": "J-2",
+        "goal": "키보드 및 입력 경계 사용"
+      },
+      {
+        "id": "J-3",
+        "goal": "표시 상태와 이름 읽기"
+      }
+    ],
+    "checks": [
+      {
+        "id": "C-01",
+        "journey": "J-1",
+        "required": true,
+        "axis": "functional",
+        "purpose": "Initial list and form",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "목록과 생성 폼이 표시되고 기존 데이터가 유지된다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-02",
+        "journey": "J-1",
+        "required": true,
+        "axis": "functional",
+        "purpose": "Save via form button",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "유효한 이름으로 저장하면 목록에 생성 결과가 나타난다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-03",
+        "journey": "J-1",
+        "required": true,
+        "axis": "persistence",
+        "purpose": "Real API and reentry",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "저장한 이름과 ID를 실제 GET /api/items 및 reload 후 목록에서 다시 확인한다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-04",
+        "journey": "J-2",
+        "required": true,
+        "axis": "accessibility",
+        "purpose": "Actual Tab and Enter journey",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "키보드 Tab으로 입력·저장 제어에 접근하고 실제 Enter 입력으로 생성 동작을 마친다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-05",
+        "journey": "J-2",
+        "required": true,
+        "axis": "functional",
+        "purpose": "Empty name boundary",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "0자 이름은 생성되지 않는다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-06",
+        "journey": "J-2",
+        "required": true,
+        "axis": "functional",
+        "purpose": "One-character name boundary",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "1자 이름은 저장된다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-07",
+        "journey": "J-2",
+        "required": true,
+        "axis": "functional",
+        "purpose": "200-character name boundary",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "200자 이름은 손실 없이 저장된다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-08",
+        "journey": "J-2",
+        "required": true,
+        "axis": "functional",
+        "purpose": "201-character name boundary",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "201자 입력으로 200자 초과 이름을 저장할 수 없다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-09",
+        "journey": "J-3",
+        "required": true,
+        "axis": "functional",
+        "purpose": "Intentionally disabled Archive",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "보관 버튼은 비활성이며 생성 동선의 결함으로 보고하지 않는다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-10",
+        "journey": "J-3",
+        "required": true,
+        "axis": "accessibility",
+        "purpose": "Complete long name DOM availability",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "200자 전체 이름을 목록의 DOM/접근성 표현에서 읽을 수 있다.",
+          "certainty": "confirmed"
+        }
+      },
+      {
+        "id": "C-11",
+        "journey": "J-3",
+        "required": true,
+        "axis": "visual",
+        "purpose": "Actual visual display",
+        "expectation": {
+          "source": "현재 prompt.txt: 프로젝트 저장·재조회·키보드 동선과 표시 상태; 이름은 1~200자, 전체 이름 목록 읽기, 보관 비활성 의도",
+          "text": "실제 이미지에서 전체 이름 가독성·잘림/겹침·포커스 표시를 검사한다.",
+          "certainty": "confirmed"
+        }
+      }
+    ]
+  },
+  "local_source": {
+    "mode": "remote_only",
+    "limitation": "External served build is observed through tool traces, not authenticated by this helper."
+  },
+  "digest": "47b757ca78e6a60ba0d69acb2b91eadd697ed9c5f989ca8d5b8a596afb54c0db"
+}

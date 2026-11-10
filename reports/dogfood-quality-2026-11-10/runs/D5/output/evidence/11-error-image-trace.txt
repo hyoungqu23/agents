@@ -1,0 +1,1 @@
+mcp__cua_repl.js getScreenshot emitted actual JPEG and model inspected Could not load projects, visible Retry, no success count and selected Tide.

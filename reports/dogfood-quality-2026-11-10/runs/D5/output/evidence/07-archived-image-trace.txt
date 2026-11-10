@@ -1,0 +1,1 @@
+mcp__cua_repl.js getScreenshot emitted JPEG and model inspected Archived with selected Tide.

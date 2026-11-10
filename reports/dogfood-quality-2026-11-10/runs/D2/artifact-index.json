@@ -1,0 +1,314 @@
+[
+  {
+    "original": "output/target-after.json",
+    "packaged": "output/target-after.json",
+    "sha256": "50871f7e2ff13a62f276936ec78d7dc5b8f37381f76713b1dcb65945f4d72902",
+    "json_packed": false
+  },
+  {
+    "original": "output/target-before.json",
+    "packaged": "output/target-before.json",
+    "sha256": "50871f7e2ff13a62f276936ec78d7dc5b8f37381f76713b1dcb65945f4d72902",
+    "json_packed": false
+  },
+  {
+    "original": "output/assessment.json",
+    "packaged": "output/assessment.json",
+    "sha256": "92e1f014dbeaf06c6d888617443b960452ca9f2614853b5b0bc0b0a439341cc9",
+    "json_packed": false
+  },
+  {
+    "original": "output/report.md",
+    "packaged": "output/report.md",
+    "sha256": "487d3d81a35072f59959b06d2fe9c6271fb7f85dcd6221f85bd63928bb027451",
+    "json_packed": false
+  },
+  {
+    "original": "output/assessment-final.json",
+    "packaged": "output/assessment-final.json",
+    "sha256": "92e1f014dbeaf06c6d888617443b960452ca9f2614853b5b0bc0b0a439341cc9",
+    "json_packed": false
+  },
+  {
+    "original": "output/run.json",
+    "packaged": "output/run.json",
+    "sha256": "78ef50eee3d9ba4336a5bb96299cbb0a5eccdb6786d03bab639178a27a994bc3",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/normal-save.png",
+    "packaged": "output/evidence/normal-save.png",
+    "sha256": "ca7afbe56b44ba2fcfcb551e76ff1414d95773bb272ebee4c6243ea8c4de46f7",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/overlimit-dom.json",
+    "packaged": "output/evidence/overlimit-dom.json",
+    "sha256": "54bd25fedf90fcac714991b281269295cc5a3adaab2034d21070f66a3b2c3229",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/minimum-save-confirmed.txt",
+    "packaged": "output/evidence/minimum-save-confirmed.txt.artifact.json",
+    "sha256": "8eb848e06b99ea6bf112326f49182e99da0b8386f1f0b27c6e2310d566f75c72",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/tool-trace.md",
+    "packaged": "output/evidence/tool-trace.md",
+    "sha256": "acd402287724be0dd8ec26867fb865eebb6a22a7b925e9115bf9c84912c7e384",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/keyboard-refresh-focus.png",
+    "packaged": "output/evidence/keyboard-refresh-focus.png",
+    "sha256": "80f00c849e9ab92bf3444c7b31b6c02f9d254b07e3e2d32b981b55570241bd29",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/keyboard-tab-input.png",
+    "packaged": "output/evidence/keyboard-tab-input.png",
+    "sha256": "9de8b801d078ae2376f7f1464ef23fa6ed538759f93e308acb9e434c77d7e9bf",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/blank-submit.txt",
+    "packaged": "output/evidence/blank-submit.txt.artifact.json",
+    "sha256": "00dec44869611b3a0a7840c2434551333067385c975bb590fafe42ec26803102",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/build-after.json",
+    "packaged": "output/evidence/build-after.json",
+    "sha256": "91a31ee209c01f56e2df073a43082c900037da4ab822666cc6345f957fbdc06d",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/cleanup-reentry.txt",
+    "packaged": "output/evidence/cleanup-reentry.txt.artifact.json",
+    "sha256": "0ebe49438f2cbc86aed4f39ab4239294d95542aca6a7675c7ac948ea9fd643ce",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/overlimit-submit.png",
+    "packaged": "output/evidence/overlimit-submit.png",
+    "sha256": "d73d01f785da2d4689e050f24a06d84e1c065d935fa5859dd872009ec69b24b2",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/initial-metrics.json",
+    "packaged": "output/evidence/initial-metrics.json",
+    "sha256": "4087cd69838263727accb794b656724e927583f246660911f4fea0956d43b06b",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/items-all-saved.json",
+    "packaged": "output/evidence/items-all-saved.json",
+    "sha256": "4d7b51dca4342f95483eaf10ff6b4131788d39ef85eaebe8c0b579315ab422ab",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/items-before.json",
+    "packaged": "output/evidence/items-before.json",
+    "sha256": "4cec00c5a588269449525c0c7ba63b2a398819200468d0250d88d26cd6550d01",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/required-long-desktop.png",
+    "packaged": "output/evidence/required-long-desktop.png",
+    "sha256": "dfeaabbefddeb945a0aafd81077e1cd7ad0ce019cd4b9c566173db774fc560fd",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/all-refresh.txt",
+    "packaged": "output/evidence/all-refresh.txt",
+    "sha256": "48c9afcb4f3ba24c78d984a50b3119ac7ae1cb70da167f98254b77aa4b3cde95",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/items-after-boundaries.json",
+    "packaged": "output/evidence/items-after-boundaries.json",
+    "sha256": "04cbc064ce50306266ccf17e9ff756544ceacbdcb1eb069148fb5439272aa834",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/items-after-cleanup.json",
+    "packaged": "output/evidence/items-after-cleanup.json",
+    "sha256": "c142dcb4c328588e155bbc61f4499c007a29e28637f9b7b4afd71c154210937d",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/initial.png",
+    "packaged": "output/evidence/initial.png",
+    "sha256": "4a689eaa5a026f2b287c258c920bf168775667807972a90ff02036ee127d58cc",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/overlimit-submit.txt",
+    "packaged": "output/evidence/overlimit-submit.txt",
+    "sha256": "0b33dd1001e43745b8203782dbd735c5f054dda552dddfd6ba19485e3c1bf57b",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/keyboard-tab-input.txt",
+    "packaged": "output/evidence/keyboard-tab-input.txt.artifact.json",
+    "sha256": "e72182c84a58ef33a52551df9c9e795ba36f3cd27a3ec0759722655ca1068e71",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/keyboard-tab-save.txt",
+    "packaged": "output/evidence/keyboard-tab-save.txt.artifact.json",
+    "sha256": "2a2ca46105299a7e4507e6c933658ef1c18a7d4c8220f691755610b8de79f9e6",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/keyboard-tab-refresh.txt",
+    "packaged": "output/evidence/keyboard-tab-refresh.txt.artifact.json",
+    "sha256": "b56adfc923c5a0168f03bd9847159073096bc137a0f13823cdb9cbe2fa6a3148",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/normal-save-keyboard.txt",
+    "packaged": "output/evidence/normal-save-keyboard.txt.artifact.json",
+    "sha256": "6cd54d964427414fac5cc0ac4b3eb623c6323891c6a35d4ffa31ddd0da7ea820",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/blank-validation.json",
+    "packaged": "output/evidence/blank-validation.json",
+    "sha256": "9b5f17f1f87975ced46a0dc66074b4fc2c0d24f43d73c31949b361111be343b3",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/write-scenarios.json",
+    "packaged": "output/evidence/write-scenarios.json",
+    "sha256": "7ef655647acfaa73dbd89804ae18bccc6e41450fb8817849b50e66007b3c9d68",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/image-inspection-trace.json",
+    "packaged": "output/evidence/image-inspection-trace.json",
+    "sha256": "c376350955f621d243a6542bfed3557e81b31a9d7a96ba3d3e8722b5ce200743",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/all-reentry.txt",
+    "packaged": "output/evidence/all-reentry.txt.artifact.json",
+    "sha256": "8a4573dcdef57a9774247337aa86b7491a19df3a622b3f24b45039df3292f24a",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/initial-ax.txt",
+    "packaged": "output/evidence/initial-ax.txt.artifact.json",
+    "sha256": "73a5a2bd522344164eaac6c5a9024c0dbc36726ff2d35b474c9c55647016693f",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/before-long-refresh.txt",
+    "packaged": "output/evidence/before-long-refresh.txt.artifact.json",
+    "sha256": "be3074da245b584cf289fd7b8bbfbb1ab441c18ee0874eae51b962e97e05d702",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/maximum-save.txt",
+    "packaged": "output/evidence/maximum-save.txt.artifact.json",
+    "sha256": "b90ccf77fe04eeee18dbf796386dba546b404f35748ebac3335c5ded97d17fe5",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/minimum-save.txt",
+    "packaged": "output/evidence/minimum-save.txt.artifact.json",
+    "sha256": "76433e5e9811bcc540d12ca9f5587e76733dfdcd2d5468a102e402b600875a1f",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/api-overlimit-response.json",
+    "packaged": "output/evidence/api-overlimit-response.json",
+    "sha256": "f436309f591bd2aee6e870cdeb9f5fd715fe9ea892fcccab53af9bbd0ca92a5b",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/required-long-save.txt",
+    "packaged": "output/evidence/required-long-save.txt",
+    "sha256": "4198573ff4d775e2fdc5cf0ec977a9afe295f5afbf74f25cd8ad7ab3301ad301",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/keyboard-refresh-result.txt",
+    "packaged": "output/evidence/keyboard-refresh-result.txt.artifact.json",
+    "sha256": "b56adfc923c5a0168f03bd9847159073096bc137a0f13823cdb9cbe2fa6a3148",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/items-after-normal.json",
+    "packaged": "output/evidence/items-after-normal.json",
+    "sha256": "e2a9d1b9df38616350020f10b6ffa59a410ef577fdc3d3f2add631f301366cd8",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/reentry-normal.txt",
+    "packaged": "output/evidence/reentry-normal.txt.artifact.json",
+    "sha256": "52487f43199fb7abbac049a79861d257d94a11a06cbb062ce0644b812007a89b",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/cleanup-501.txt",
+    "packaged": "output/evidence/cleanup-501.txt.artifact.json",
+    "sha256": "0ebe49438f2cbc86aed4f39ab4239294d95542aca6a7675c7ac948ea9fd643ce",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/cleanup-final.png",
+    "packaged": "output/evidence/cleanup-final.png",
+    "sha256": "4a689eaa5a026f2b287c258c920bf168775667807972a90ff02036ee127d58cc",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/cleanup-502.txt",
+    "packaged": "output/evidence/cleanup-502.txt.artifact.json",
+    "sha256": "52487f43199fb7abbac049a79861d257d94a11a06cbb062ce0644b812007a89b",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/build-before.json",
+    "packaged": "output/evidence/build-before.json",
+    "sha256": "28922fceb97d441527a844451f91ceba2b48a7e58a423ba97cfddd231163bf48",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/cleanup-503.txt",
+    "packaged": "output/evidence/cleanup-503.txt.artifact.json",
+    "sha256": "bf39ee30a81e3e990a415b037ee0aa0111b3b822c8f727e3d9eab3b2a79f97ec",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/cleanup-plan.json",
+    "packaged": "output/evidence/cleanup-plan.json",
+    "sha256": "75d1541fab64f780fa067bf12f3dd8e108643cfb571af20f9a52156321878c8f",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/reentry-metrics.json",
+    "packaged": "output/evidence/reentry-metrics.json",
+    "sha256": "8c7a4290b1f168cc28d6fd9db286c40872feb558b09678079b2ae5be2da524cd",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/all-reentry.png",
+    "packaged": "output/evidence/all-reentry.png",
+    "sha256": "859448a6a1c877b409d949d5ea70ccc7ce45e5643251541ffe045ad6fb3646f2",
+    "json_packed": false
+  },
+  {
+    "original": "output/evidence/keyboard-skips-archive.txt",
+    "packaged": "output/evidence/keyboard-skips-archive.txt.artifact.json",
+    "sha256": "2c4488d3adde1429c96f04c69985a4939c7526c6ab79186d0de3b386becdbc07",
+    "json_packed": true
+  },
+  {
+    "original": "output/evidence/cleanup-504.txt",
+    "packaged": "output/evidence/cleanup-504.txt",
+    "sha256": "cec2abdcc528272c8cff2daf79d321e81a3c90daafb9974d1780f9a3231480b7",
+    "json_packed": false
+  }
+]

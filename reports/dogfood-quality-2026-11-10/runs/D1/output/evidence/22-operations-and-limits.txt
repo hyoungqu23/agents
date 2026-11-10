@@ -1,0 +1,6 @@
+Actual tool sequence: screenshots 07-reentry-clipping.png emitted inline via nodeRepl.emitImage and visually inspected after navigation from API to /. Same clipping reproduced, CSS viewport remains 2504x1363, DPR2.
+1char 가 save UI click => 저장됨; 200char 경×200 save UI click => 저장됨. GET actual /api/items id502 length1 and id503 length200 observed via read-only parsing of rendered JSON body. Reentry / lists both unchanged.
+201char entry: pressSequentially(201) timed out at length84; state checked; remaining117 timed out at167; state checked; remaining34 completed length201, maxLength -1, validity valid. Click 저장 once => 저장 결과 미확인. 다시 불러오기로 확인하세요.; requery button then actual GET API shows no extra item. No repeated write.
+lost-response UI click 저장 exactly once => 저장 결과 미확인. 다시 불러오기로 확인하세요.; refresh list shows lost-response; actual GET id504 exactly once; / reentry shows same. No retry. No network response interception. Native request status unavailable; do not assert whether timeout/reset/non-2xx caused message.
+Read-only rendered DOM: LI data-id500 existing; 501 required long name; 502 가; 503 경×200; 504 lost-response, each contains one delete button. Only 501~504 authorized cleanup.
+Tab dev.logs error/warn returned [] at this observation; no claim of comprehensive network logs.

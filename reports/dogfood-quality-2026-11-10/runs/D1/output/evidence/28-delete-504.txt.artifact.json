@@ -1,0 +1,7 @@
+{
+  "original_name": "28-delete-504.txt",
+  "encoding": "utf-8",
+  "sha256": "3ea3b6715df0ff123091bad42aeee2b69dd939239ab1c745c5d5d42063badeff",
+  "content": "Browser tab: 1893495255, Title: \"프로젝트 QA\", URL: \"http://127.0.0.1:61464/\".\n1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:61464/\n\t2 heading 프로젝트 목록, Value: 1\n\t\t3 text 프로젝트 목록\n\t4 text 프로젝트를 저장하고 다시 불러와 확인하세요.\n\t5 container form\n\t\t6 container\n\t\t\t7 text 프로젝트 이름 \n\t\t\t8 text field (settable) 프로젝트 이름, ID: name\n\t\t9 button 저장\n\t10 button 다시 불러오기, ID: refresh\n\t11 button (disabled) 보관 (미지원)\n\t12 content list items\n\t\t13 container\n\t\t\t14 text 기존 사용자 프로젝트 - 보존 대상\n\t\t\t15 button 삭제\n\nThe focused UI element is 1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:61464/",
+  "note": "Exact historical bytes, JSON-packed to preserve whitespace. Not rewritten/relabelled evidence."
+}

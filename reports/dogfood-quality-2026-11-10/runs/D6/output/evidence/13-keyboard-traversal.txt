@@ -1,0 +1,46 @@
+[
+  {
+    "action": "refresh → first delete; disabled archive skipped",
+    "key": "Tab",
+    "ax": "Browser tab: 1893495273, Title: \"프로젝트 QA\", URL: \"http://127.0.0.1:64114/\".\n1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:64114/\n\t2 heading 프로젝트 목록, Value: 1\n\t\t3 text 프로젝트 목록\n\t4 text 프로젝트를 저장하고 다시 불러와 확인하세요.\n\t5 container form\n\t\t6 container\n\t\t\t7 text 프로젝트 이름 \n\t\t\t8 text field (settable) 프로젝트 이름, ID: name\n\t\t9 button 저장\n\t10 button 다시 불러오기, ID: refresh\n\t11 button (disabled) 보관 (미지원)\n\t12 content list items\n\t\t13 container\n\t\t\t14 text 기존 사용자 프로젝트 - 보존 대상\n\t\t\t15 button 삭제\n\t\t16 container\n\t\t\t17 text 다른 팀이 생성한 프로젝트 - 보존 대상\n\t\t\t18 button 삭제\n\t\t19 container\n\t\t\t20 text 실제 사용자 동선 검증을 위한 아주 긴 프로젝트 이름\n\t\t\t21 button 삭제\n\nThe focused UI element is 15 button 삭제",
+    "active": {
+      "id": "",
+      "row": "500",
+      "tag": "BUTTON",
+      "text": "삭제"
+    }
+  },
+  {
+    "action": "current baseline500 delete → current baseline501 delete",
+    "key": "Tab",
+    "ax": "Browser tab: 1893495273, Title: \"프로젝트 QA\", URL: \"http://127.0.0.1:64114/\".\n1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:64114/\n\t2 heading 프로젝트 목록, Value: 1\n\t\t3 text 프로젝트 목록\n\t4 text 프로젝트를 저장하고 다시 불러와 확인하세요.\n\t5 container form\n\t\t6 container\n\t\t\t7 text 프로젝트 이름 \n\t\t\t8 text field (settable) 프로젝트 이름, ID: name\n\t\t9 button 저장\n\t10 button 다시 불러오기, ID: refresh\n\t11 button (disabled) 보관 (미지원)\n\t12 content list items\n\t\t13 container\n\t\t\t14 text 기존 사용자 프로젝트 - 보존 대상\n\t\t\t15 button 삭제\n\t\t16 container\n\t\t\t17 text 다른 팀이 생성한 프로젝트 - 보존 대상\n\t\t\t18 button 삭제\n\t\t19 container\n\t\t\t20 text 실제 사용자 동선 검증을 위한 아주 긴 프로젝트 이름\n\t\t\t21 button 삭제\n\nThe focused UI element is 18 button 삭제",
+    "active": {
+      "id": "",
+      "row": "501",
+      "tag": "BUTTON",
+      "text": "삭제"
+    }
+  },
+  {
+    "action": "current baseline501 delete → own502 delete",
+    "key": "Tab",
+    "ax": "Browser tab: 1893495273, Title: \"프로젝트 QA\", URL: \"http://127.0.0.1:64114/\".\n1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:64114/\n\t2 heading 프로젝트 목록, Value: 1\n\t\t3 text 프로젝트 목록\n\t4 text 프로젝트를 저장하고 다시 불러와 확인하세요.\n\t5 container form\n\t\t6 container\n\t\t\t7 text 프로젝트 이름 \n\t\t\t8 text field (settable) 프로젝트 이름, ID: name\n\t\t9 button 저장\n\t10 button 다시 불러오기, ID: refresh\n\t11 button (disabled) 보관 (미지원)\n\t12 content list items\n\t\t13 container\n\t\t\t14 text 기존 사용자 프로젝트 - 보존 대상\n\t\t\t15 button 삭제\n\t\t16 container\n\t\t\t17 text 다른 팀이 생성한 프로젝트 - 보존 대상\n\t\t\t18 button 삭제\n\t\t19 container\n\t\t\t20 text 실제 사용자 동선 검증을 위한 아주 긴 프로젝트 이름\n\t\t\t21 button 삭제\n\nThe focused UI element is 21 button 삭제",
+    "active": {
+      "id": "",
+      "row": "502",
+      "tag": "BUTTON",
+      "text": "삭제"
+    }
+  },
+  {
+    "action": "own502 delete → baseline501 delete",
+    "key": "Shift+Tab",
+    "ax": "Browser tab: 1893495273, Title: \"프로젝트 QA\", URL: \"http://127.0.0.1:64114/\".\n1 AXWebArea 프로젝트 QA, URL: 127.0.0.1:64114/\n\t2 heading 프로젝트 목록, Value: 1\n\t\t3 text 프로젝트 목록\n\t4 text 프로젝트를 저장하고 다시 불러와 확인하세요.\n\t5 container form\n\t\t6 container\n\t\t\t7 text 프로젝트 이름 \n\t\t\t8 text field (settable) 프로젝트 이름, ID: name\n\t\t9 button 저장\n\t10 button 다시 불러오기, ID: refresh\n\t11 button (disabled) 보관 (미지원)\n\t12 content list items\n\t\t13 container\n\t\t\t14 text 기존 사용자 프로젝트 - 보존 대상\n\t\t\t15 button 삭제\n\t\t16 container\n\t\t\t17 text 다른 팀이 생성한 프로젝트 - 보존 대상\n\t\t\t18 button 삭제\n\t\t19 container\n\t\t\t20 text 실제 사용자 동선 검증을 위한 아주 긴 프로젝트 이름\n\t\t\t21 button 삭제\n\nThe focused UI element is 18 button 삭제",
+    "active": {
+      "id": "",
+      "row": "501",
+      "tag": "BUTTON",
+      "text": "삭제"
+    }
+  }
+]

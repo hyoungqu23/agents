@@ -1,0 +1,1 @@
+mcp__cua_repl.js getScreenshot emitted actual JPEG and model directly inspected after request 11 completed; see captured controls and rows.

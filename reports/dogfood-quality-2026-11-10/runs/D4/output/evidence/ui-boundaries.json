@@ -1,0 +1,97 @@
+{
+  "tool": "cua_repl",
+  "tab": "1",
+  "origin": "http://127.0.0.1:63653/",
+  "actions": [
+    {
+      "input": "getByRole(textbox,프로젝트 이름).fill(D); getAXState; getByRole(button,저장).click(); getAXState",
+      "observed": {
+        "status": "저장됨",
+        "created": {
+          "id": "502",
+          "name": "D"
+        }
+      }
+    },
+    {
+      "input": "fill exact 200-char name; getAXState; click 저장; getAXState",
+      "observed": {
+        "status": "저장됨",
+        "created": {
+          "id": "503",
+          "length": 200,
+          "name": "D4-check-20261110-한글프로젝트-경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이"
+        },
+        "AX_name": "D4-check-20261110-한글프로젝트-경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이름경계이",
+        "list_innerText_contains_full_name": true
+      }
+    },
+    {
+      "input": "fill exact 201-char name; getAXState; click 저장; getAXState",
+      "observed": {
+        "inputLength": 201,
+        "status": "저장 결과 미확인. 다시 불러오기로 확인하세요.",
+        "list_ids": [
+          "500",
+          "501",
+          "502",
+          "503"
+        ],
+        "attempts": 1
+      }
+    },
+    {
+      "input": "Actual GET /api/items without retry; then click 다시 불러오기; getAXState",
+      "observed": {
+        "list_ids": [
+          "500",
+          "501",
+          "502",
+          "503"
+        ],
+        "oversized_exact_name_absent": true,
+        "status": "저장 결과 미확인. 다시 불러오기로 확인하세요."
+      }
+    }
+  ],
+  "read_only_long_name_layout": {
+    "selector": "li[data-id=\"503\"] .name",
+    "length": 200,
+    "clientWidth": 537,
+    "scrollWidth": 537,
+    "clientHeight": 129,
+    "scrollHeight": 129,
+    "rect": {
+      "x": 354,
+      "y": 655.046875,
+      "width": 536.5859375,
+      "height": 129
+    },
+    "style": {
+      "display": "block",
+      "maxWidth": "none",
+      "overflow": "visible",
+      "textOverflow": "clip",
+      "whiteSpace": "normal",
+      "width": "536.586px"
+    },
+    "title": null,
+    "ariaLabel": null,
+    "tabIndex": -1
+  },
+  "dev_logs": {
+    "request": {
+      "levels": [
+        "error",
+        "warn"
+      ],
+      "limit": 20
+    },
+    "result": []
+  },
+  "limits": [
+    "Read-only DOM layout metadata and full text do not prove image visibility or absence of overlaps/clipping.",
+    "No screenshot or image viewer invoked.",
+    "201-char response HTTP status not exposed by browser tool; actual GET proves absence, no claim of specific rejection status."
+  ]
+}

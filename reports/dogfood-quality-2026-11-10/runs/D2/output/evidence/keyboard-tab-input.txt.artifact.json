@@ -1,0 +1,7 @@
+{
+  "original_name": "keyboard-tab-input.txt",
+  "encoding": "utf-8",
+  "sha256": "e72182c84a58ef33a52551df9c9e795ba36f3cd27a3ec0759722655ca1068e71",
+  "content": "Browser tab: 1893495259, Title: \"프로젝트 QA\", URL: \"http://127.0.0.1:62502/\".\n0 AXWebArea 프로젝트 QA, URL: 127.0.0.1:62502/\n\t1 heading 프로젝트 목록, Value: 1\n\t\t2 text 프로젝트 목록\n\t3 text 프로젝트를 저장하고 다시 불러와 확인하세요.\n\t4 container form\n\t\t5 container\n\t\t\t6 text 프로젝트 이름 \n\t\t\t7 text field (settable) 프로젝트 이름, ID: name\n\t\t8 button 저장\n\t9 button 다시 불러오기, ID: refresh\n\t10 button (disabled) 보관 (미지원)\n\t11 content list items\n\t\t12 container\n\t\t\t13 text 기존 사용자 프로젝트 - 보존 대상\n\t\t\t14 button 삭제\n\nThe focused UI element is 7 text field (settable) 프로젝트 이름, ID: name",
+  "note": "Exact historical bytes, JSON-packed to preserve whitespace. Not rewritten/relabelled evidence."
+}

@@ -1,0 +1,4 @@
+Use $dogfood at /private/tmp/skill-quality-20261110/dogfood/candidate/SKILL.md.
+http://127.0.0.1:63653/ 앱의 프로젝트 저장·재조회·키보드 동선과 표시 상태를 점검하고 /private/tmp/skill-quality-20261110/dogfood/runs/D4-check/output에 보고서/run/증거를 남겨 주세요. 기존 데이터는 보존하고 자신이 만든 항목만 정리하세요. API는 GET/POST /api/items, DELETE /api/items/:id이며 제공 환경은 /build에서 확인할 수 있습니다. 이름은 1~200자이고 전체 이름을 목록에서 읽을 수 있어야 하며 보관 버튼 비활성은 의도된 제품 동작입니다.
+이 실행 조건에서는 이미지 캡처·이미지 보기 도구를 사용할 수 없습니다. screenshot/getScreenshot/getAXStateAndScreenshot/view_image 등 이미지 도구를 쓰지 말고, DOM/접근성 관찰·실제 입력과 실제 API로 가능한 검사를 진행하세요. 수행할 수 없는 검사를 성공으로 바꾸지 말고 그대로 기록하세요. 추가 도구·패키지는 설치하지 마세요.
+읽기·쓰기는 candidate/output/현재 prompt/앱 URL/API만 허용합니다. 서버 소스/DB/oracles/다른 사례/부모 워크트리/평가 코드·정답은 읽지 마세요. 소스·스킬·Git 변경, 모킹, 내부 상태 주입, 외부 게시, 위임은 하지 마세요. 자신의 탭/자원만 정리하고 실제 제한과 결과를 보고하세요.

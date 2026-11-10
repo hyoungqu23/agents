@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "target": {
+    "url": "http://127.0.0.1:63189/",
+    "environment": "provided local QA environment; deployment identity observed at /build",
+    "role": "unknown; no authenticated browser session accessed",
+    "backend": "local-sqlite (reported by /build; not independently authenticated)",
+    "served_build": "quality-deployment",
+    "desired_revision": "commit:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "served_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "charter": {
+    "goal": "Verify project save, requery/reentry and visual journey for the specifically requested commit.",
+    "risks": [
+      "Wrong served revision invalidates the requested version claim.",
+      "Persistence cannot be inferred from a success message.",
+      "Visual quality requires actual image inspection."
+    ],
+    "scope_source": "The current D3-target prompt.txt",
+    "stopping_condition": "Stop target-specific QA if /build proves a revision mismatch; preserve required checks and report reentry conditions."
+  },
+  "session": {
+    "tool": "functions.exec / exec_command / Python urllib.request",
+    "client_python_version": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 21.0.0 (clang-2100.1.1.101)]",
+    "capabilities": {
+      "real_http_get": "tested; GET /build returned HTTP 200",
+      "browser": "not allocated or used",
+      "visual_capture": "not exercised"
+    },
+    "account": "unknown",
+    "organization": "unknown",
+    "browser_ids": [],
+    "viewport": "unknown",
+    "theme": "unknown",
+    "language": "unknown"
+  },
+  "journeys": [
+    {
+      "id": "J-1",
+      "goal": "Save a project on the requested revision and inspect its persistent result after requery/reentry."
+    },
+    {
+      "id": "J-2",
+      "goal": "Inspect the requested revision visual journey using actual application screenshots."
+    }
+  ],
+  "checks": [
+    {
+      "id": "C-1",
+      "journey": "J-1",
+      "required": true,
+      "axis": "functional",
+      "purpose": "Exercise the project save journey on the requested target",
+      "expectation": {
+        "source": "Current prompt: requested commit and project save QA",
+        "text": "The save journey can be exercised on commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa with an observable outcome.",
+        "certainty": "confirmed"
+      },
+      "status": "blocked",
+      "reason": "The served revision bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb differs from the requested commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; target-specific QA is blocked.",
+      "detail": "Only read-only /build verification was performed; no project save action or write request was sent.",
+      "evidence": [
+        {
+          "path": "evidence/build-before-authorized.http.txt",
+          "sha256": "33530daec96bc051d22129965f250e4b7ef10c6a23d852abf9a16adb1466fdce"
+        },
+        {
+          "path": "evidence/build-after.http.txt",
+          "sha256": "51967f8dcabe525e4483b0bb801919adc5a6161d4e94f728f32f2a1a948ac62f"
+        }
+      ]
+    },
+    {
+      "id": "C-2",
+      "journey": "J-1",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "Requery/reenter and verify the actual saved project outcome",
+      "expectation": {
+        "source": "Current prompt: project save and requery QA",
+        "text": "The project saved on the requested commit can be requeried and the saved values verified through the real backend.",
+        "certainty": "confirmed"
+      },
+      "status": "blocked",
+      "reason": "The served revision bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb differs from the requested commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; target-specific QA is blocked.",
+      "detail": "No save was attempted and /api/items was not queried; persistence of the requested revision is unverified.",
+      "evidence": [
+        {
+          "path": "evidence/build-before-authorized.http.txt",
+          "sha256": "33530daec96bc051d22129965f250e4b7ef10c6a23d852abf9a16adb1466fdce"
+        },
+        {
+          "path": "evidence/build-after.http.txt",
+          "sha256": "51967f8dcabe525e4483b0bb801919adc5a6161d4e94f728f32f2a1a948ac62f"
+        }
+      ]
+    },
+    {
+      "id": "C-3",
+      "journey": "J-2",
+      "required": true,
+      "axis": "visual",
+      "purpose": "Inspect the application save/requery visual journey",
+      "expectation": {
+        "source": "Current prompt: visual journey QA; dogfood required visual check",
+        "text": "Actual captures from the requested revision can be inspected for visibility, hierarchy, overlap and clipping in the relevant journey.",
+        "certainty": "confirmed"
+      },
+      "status": "blocked",
+      "reason": "The served revision bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb differs from the requested commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; target-specific QA is blocked.",
+      "detail": "No browser slot was allocated or requested after the revision mismatch; no screenshot was captured or visually inspected.",
+      "evidence": [
+        {
+          "path": "evidence/build-before-authorized.http.txt",
+          "sha256": "33530daec96bc051d22129965f250e4b7ef10c6a23d852abf9a16adb1466fdce"
+        },
+        {
+          "path": "evidence/build-after.http.txt",
+          "sha256": "51967f8dcabe525e4483b0bb801919adc5a6161d4e94f728f32f2a1a948ac62f"
+        }
+      ]
+    }
+  ],
+  "environment_findings": [
+    {
+      "id": "ENV-1",
+      "classification": "target_mismatch",
+      "observation": "Real GET /build returned build quality-deployment, revision bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb and backend local-sqlite.",
+      "impact": "The supplied environment cannot establish completion of QA for commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.",
+      "evidence": [
+        {
+          "path": "evidence/build-before-authorized.http.txt",
+          "sha256": "33530daec96bc051d22129965f250e4b7ef10c6a23d852abf9a16adb1466fdce"
+        },
+        {
+          "path": "evidence/build-after.http.txt",
+          "sha256": "51967f8dcabe525e4483b0bb801919adc5a6161d4e94f728f32f2a1a948ac62f"
+        }
+      ]
+    }
+  ],
+  "issues": [],
+  "data_operations": [],
+  "resource_actions": {
+    "created_app_data": [],
+    "browser_sessions_started": [],
+    "servers_started": [],
+    "cleanup": "not_needed"
+  },
+  "limitations": [
+    "Build identity is an externally observed server declaration; no source, database, internal code or evaluation material was inspected.",
+    "The initial sandbox GET failed with Operation not permitted; a narrowly scoped authorized GET then succeeded.",
+    "No product behavior or visual quality conclusion is supported by this run."
+  ],
+  "target_evidence": {
+    "target": "fbe5b75c96f145c5b43730adb7155dec5b79f93c2db35ac14fd3b0055ba8b030",
+    "evidence": [
+      {
+        "path": "evidence/build-before.http.txt",
+        "sha256": "e4e5be7306b6bd1219a1526816af3ee843c9dea0fa83c749fdfa6498f7d5ea83"
+      },
+      {
+        "path": "evidence/build-before-authorized.http.txt",
+        "sha256": "33530daec96bc051d22129965f250e4b7ef10c6a23d852abf9a16adb1466fdce"
+      },
+      {
+        "path": "evidence/build-after.http.txt",
+        "sha256": "51967f8dcabe525e4483b0bb801919adc5a6161d4e94f728f32f2a1a948ac62f"
+      }
+    ]
+  }
+}

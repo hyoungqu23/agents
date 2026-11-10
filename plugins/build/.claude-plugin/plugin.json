@@ -1,8 +1,8 @@
 {
   "name": "build",
   "displayName": "Build",
-  "version": "0.3.1",
-  "description": "Implement product features with original SPEC coverage and scoped bug or QA corrections.",
+  "version": "0.4.0",
+  "description": "Implement features with original SPEC coverage, apply scoped fixes and dogfood real user journeys with visual and persistence evidence.",
   "author": {
     "name": "HM2"
   },

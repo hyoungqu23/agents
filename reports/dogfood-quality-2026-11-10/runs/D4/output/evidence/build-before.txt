@@ -1,0 +1,3 @@
+Actual exec_command curl GET http://127.0.0.1:63653/build, 2026-11-10 01:33:15 UTC
+HTTP/1.0 200 OK
+{"build": "quality-deployment", "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "backend": "local-sqlite"}

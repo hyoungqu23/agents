@@ -1,0 +1,566 @@
+{
+  "schema_version": 1,
+  "target": {
+    "url": "http://127.0.0.1:63857/",
+    "environment": "provided local QA fixture",
+    "role": "no login/organization/role shown (anonymous fixture)",
+    "backend": "http://127.0.0.1:63857/api/projects",
+    "served_build": "quality-async-deployment",
+    "served_revision": "dddddddddddddddddddddddddddddddddddddddd"
+  },
+  "charter": {
+    "goal": "실제 UI 입력과 HTTP로 프로젝트 필터·선택·실패/Retry·늦게 끝나는 이전 요청을 확인한다.",
+    "risks": [
+      "목록/개수 불일치",
+      "선택 손실",
+      "오래된 성공/실패로 최신 상태 덮기",
+      "empty/error 혼동"
+    ],
+    "stop": "9개 필수 체크를 실제 증거와 판정으로 기록하고 소유 탭·fixture 모드를 정리한다.",
+    "source": "current prompt.txt confirmed requirements"
+  },
+  "journeys": [
+    {
+      "id": "J-1",
+      "goal": "네 필터의 실제 결과/개수와 empty 표시 확인"
+    },
+    {
+      "id": "J-2",
+      "goal": "필터·실패/Retry에서 선택 유지"
+    },
+    {
+      "id": "J-3",
+      "goal": "겹친 요청에서 최신 결과 유지"
+    }
+  ],
+  "checks": [
+    {
+      "id": "C-01",
+      "journey": "J-1",
+      "required": true,
+      "axis": "functional",
+      "purpose": "All 결과/개수",
+      "expectation": {
+        "source": "current prompt.txt: 확정 요구 및 실행 지시",
+        "text": "Status All은 실제 GET /api/projects?status=all 결과/개수와 일치한다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "All의 Tide/Forest/North 및 3 projects가 실제 API 200의 3개와 일치. 초기 진입 1회.",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "evidence": [
+        {
+          "path": "evidence/01-all-ax.txt",
+          "sha256": "4ce72fcda3157eadc4da2f4e11bbd50f6231c4d5e326c4946c05a5dcc296e5c1"
+        },
+        {
+          "path": "evidence/01-all.jpg",
+          "sha256": "be1104ec4072844beb3b8112982e6e58a01c329f668dae1aef8d35103541f8fd"
+        },
+        {
+          "path": "evidence/03-api-all.json",
+          "sha256": "fe781c0e8985bd141b0de6e40bf56f5bffef62828b5df2de5996d24dac5ec531"
+        }
+      ]
+    },
+    {
+      "id": "C-02",
+      "journey": "J-1",
+      "required": true,
+      "axis": "functional",
+      "purpose": "Active 결과/개수",
+      "expectation": {
+        "source": "current prompt.txt: 확정 요구 및 실행 지시",
+        "text": "Status Active는 실제 GET /api/projects?status=active 결과/개수와 일치한다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "Active 단독 요청 ID 6 완료 후 Tide/North 2 projects. 실제 API 200 2개와 일치. 단독 완료 1회.",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "evidence": [
+        {
+          "path": "evidence/06-active-ax.txt",
+          "sha256": "deb4d86a4cf603481cd789b26908d68ef5489d86e35afa18440080822e07777e"
+        },
+        {
+          "path": "evidence/03-api-active.json",
+          "sha256": "1a70f43569bf9eb5b4d5b9898a4f7bb83764934f1648dfb8edb14dfe03f202e4"
+        },
+        {
+          "path": "evidence/12-pending-error.json",
+          "sha256": "e0db82dceb254f715d4239ef31cbfb9be6514c487943fc85d5278761670aaa3b"
+        }
+      ]
+    },
+    {
+      "id": "C-03",
+      "journey": "J-1",
+      "required": true,
+      "axis": "functional",
+      "purpose": "Archived 결과/개수",
+      "expectation": {
+        "source": "current prompt.txt: 확정 요구 및 실행 지시",
+        "text": "Status Archived는 실제 GET /api/projects?status=archived 결과/개수와 일치한다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "Archived 단독 요청 ID 7 완료 후 Forest 1 project. 실제 API 200 1개와 일치. 이후 Retry 및 겹침 최신 요청에서도 관찰.",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "evidence": [
+        {
+          "path": "evidence/08-archived-complete-ax.txt",
+          "sha256": "9260e5fda2f472300022cc291a547dedd944b5965d801664a40ebc7fede6e5a6"
+        },
+        {
+          "path": "evidence/03-api-archived.json",
+          "sha256": "532c1ba81a342ae382118ab8afeca69fa07e0628125c39e2ea78e5c5cfbe2efa"
+        }
+      ]
+    },
+    {
+      "id": "C-04",
+      "journey": "J-1",
+      "required": true,
+      "axis": "functional",
+      "purpose": "Paused 성공 empty",
+      "expectation": {
+        "source": "current prompt.txt: 확정 요구 및 실행 지시",
+        "text": "Status Paused는 실제 GET /api/projects?status=paused 결과/개수와 일치하고 성공 empty는 오류와 구분된다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "Paused 요청 ID 8의 200 성공 empty에 0 projects / No projects found 표시. 오류 UI와 구분. 1회.",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "evidence": [
+        {
+          "path": "evidence/09-paused-ax.txt",
+          "sha256": "64954af65f04a973fb8be5b2fe05390e3b3e1bebc318b28413f45b966e1d4193"
+        },
+        {
+          "path": "evidence/09-paused.jpg",
+          "sha256": "eb747f83236e906a1ff1a0d3c37aec1bfea86b868b5d16eb1066b3d08f239767"
+        },
+        {
+          "path": "evidence/03-api-paused.json",
+          "sha256": "38d39365c3957a91d443bc6e3b1b76986280a35c1435c4db0336471d022ff42f"
+        },
+        {
+          "path": "evidence/11-error-ax.txt",
+          "sha256": "9fe17130e048b15d02c0430ba69c6dfdb2825f2ac9b7b91b6bbb906344e7bba9"
+        }
+      ]
+    },
+    {
+      "id": "C-05",
+      "journey": "J-2",
+      "required": true,
+      "axis": "functional",
+      "purpose": "필터 간 선택 보존",
+      "expectation": {
+        "source": "current prompt.txt: 확정 요구 및 실행 지시",
+        "text": "선택은 필터 전환에서 유지된다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "Tide 실제 클릭 1회 후 All→Active→Archived→Paused, 실패/복구 및 race 동안 Selected project Tide 유지.",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "evidence": [
+        {
+          "path": "evidence/04-selected-ax.txt",
+          "sha256": "006c8778efa3c1caca5e22621b89f9fff6e9b0f294ebc6cc9042558bc54c3612"
+        },
+        {
+          "path": "evidence/06-active-ax.txt",
+          "sha256": "deb4d86a4cf603481cd789b26908d68ef5489d86e35afa18440080822e07777e"
+        },
+        {
+          "path": "evidence/08-archived-complete-ax.txt",
+          "sha256": "9260e5fda2f472300022cc291a547dedd944b5965d801664a40ebc7fede6e5a6"
+        },
+        {
+          "path": "evidence/09-paused-ax.txt",
+          "sha256": "64954af65f04a973fb8be5b2fe05390e3b3e1bebc318b28413f45b966e1d4193"
+        },
+        {
+          "path": "evidence/31-failure-race-3-after.txt",
+          "sha256": "df455aee4a7e06b4dc4c18e1f2a5648e534019f868ff1330931bbb042dc76ccc"
+        }
+      ]
+    },
+    {
+      "id": "C-06",
+      "journey": "J-2",
+      "required": true,
+      "axis": "functional",
+      "purpose": "실패와 Retry에서 선택 보존",
+      "expectation": {
+        "source": "current prompt.txt: 확정 요구 및 실행 지시",
+        "text": "실제 backend 실패를 오류로 표시하고 Retry로 회복하며 선택을 유지한다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "실제 Archived 요청 ID 9 HTTP 503에 오류/Retry 표시. 정상 모드에서 실제 Retry 클릭 후 ID 10 HTTP 200 Forest 1개 회복. Tide 선택 유지. 전용 실패/Retry 흐름 1회.",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "evidence": [
+        {
+          "path": "evidence/10-mode-fail.json",
+          "sha256": "4f7b7cdd69689fed80dd53964fad0ff39ad9b596324515dd046307069f9a3a80"
+        },
+        {
+          "path": "evidence/11-error-ax.txt",
+          "sha256": "9fe17130e048b15d02c0430ba69c6dfdb2825f2ac9b7b91b6bbb906344e7bba9"
+        },
+        {
+          "path": "evidence/12-pending-error.json",
+          "sha256": "e0db82dceb254f715d4239ef31cbfb9be6514c487943fc85d5278761670aaa3b"
+        },
+        {
+          "path": "evidence/13-mode-recover.json",
+          "sha256": "88560cd667840965619c8224c9a12c703f4094729ed127ccf6ba6495c323ddcd"
+        },
+        {
+          "path": "evidence/14-retry-ax.txt",
+          "sha256": "9260e5fda2f472300022cc291a547dedd944b5965d801664a40ebc7fede6e5a6"
+        },
+        {
+          "path": "evidence/17-success-race-pending.json",
+          "sha256": "c67da72ddc8c8562dbe808f07c95de9edeadc604ab8bb6da467b26f7d180185d"
+        }
+      ]
+    },
+    {
+      "id": "C-07",
+      "journey": "J-3",
+      "required": true,
+      "axis": "functional",
+      "purpose": "오래된 성공 응답",
+      "expectation": {
+        "source": "current prompt.txt: 확정 요구 및 실행 지시",
+        "text": "앞선 Active 성공이 최신 Archived 필터 결과를 덮지 않는다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "유효한 성공 겹침 1회. Active 11 pending 중 Archived 12가 200 완료. 이후 Active 11도 200 완료됐지만 Archived/Forest/1 project/Tide 유지.",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "evidence": [
+        {
+          "path": "evidence/15-success-race-active.txt",
+          "sha256": "3126bde9d67137ddffee86063e8367e893c68890c24970d5d4ce72558a8182e5"
+        },
+        {
+          "path": "evidence/16-success-race-latest.txt",
+          "sha256": "76a51d0d9d5c496ac881b6eea34aa36f936e6dd485da42afb8f6aecb1d3728a6"
+        },
+        {
+          "path": "evidence/17-success-race-pending.json",
+          "sha256": "c67da72ddc8c8562dbe808f07c95de9edeadc604ab8bb6da467b26f7d180185d"
+        },
+        {
+          "path": "evidence/18-success-race-completion.json",
+          "sha256": "5401131353136e7a3165bc1e3e0b5907f5cf334d296515963ad59e1bddd935df"
+        },
+        {
+          "path": "evidence/19-success-race-after.txt",
+          "sha256": "435dc9368ff3cea04435b0c93ef29b54d664631ab7ef74b60a3e6f06b8dd95e5"
+        },
+        {
+          "path": "evidence/19-success-race-after.jpg",
+          "sha256": "8ae48a227e8ffb81f3d09bdf4d8b39235361be464a9842fc0eee9c912749dce6"
+        }
+      ]
+    },
+    {
+      "id": "C-08",
+      "journey": "J-3",
+      "required": true,
+      "axis": "functional",
+      "purpose": "오래된 실패 응답",
+      "expectation": {
+        "source": "current prompt.txt: 확정 요구 및 실행 지시",
+        "text": "앞선 Active 실패가 최신 Archived 성공 결과를 덮지 않는다.",
+        "certainty": "confirmed"
+      },
+      "status": "failed",
+      "detail": "실패 race 시도 3회 중 앞선 2회는 최신 전환 전 이전 요청이 완료되어 유효 겹침 제외. 3번째 유효 겹침 1회에서 Archived 18 200/Forest 1개 이후 Active 17 503 완료가 최신 화면을 오류/Retry로 덮음.",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "evidence": [
+        {
+          "path": "evidence/21-failure-race-active.txt",
+          "sha256": "37848eab91c423ed2d6055b464e4604a218b1bde0110d1aee3ce54bb2aa3d93d"
+        },
+        {
+          "path": "evidence/23-failure-race-latest.txt",
+          "sha256": "9fc2358a17e1eb9c8687e01c344df82ba21071eb785ab72e6520170ce654af61"
+        },
+        {
+          "path": "evidence/24-failure-race-pending.json",
+          "sha256": "c602400341337e5f40503689e3105229b31f8aba2fca2dc77a39a1f9330b1e0c"
+        },
+        {
+          "path": "evidence/25-failure-race-http-timeline.json",
+          "sha256": "1c3a6934a6ee34c47ded179fa0b2eca9176aed481d285b5b089ec3c080a35f52"
+        },
+        {
+          "path": "evidence/27-failure-race-2-latest.txt",
+          "sha256": "76477ca5b2d6fcad7a2045afb50e18a8b4d84de82a9b726dbd9a4cb87384258b"
+        },
+        {
+          "path": "evidence/28-failure-race-http-timeline.json",
+          "sha256": "6f233f3733618c74b2b0e97f2355e0d03438bfa8e00b771313efe04e4ddcf197"
+        },
+        {
+          "path": "evidence/29-failure-race-3-active.txt",
+          "sha256": "c9f0c223e40a6bd2ec7c1f14aad480893e864e36dd545f17013dc8fcc2aa23fd"
+        },
+        {
+          "path": "evidence/30-failure-race-3-latest.txt",
+          "sha256": "33ead6926137762572fcfdb2dc581f2b17eb583c782a7f6a8d368367479d4547"
+        },
+        {
+          "path": "evidence/31-failure-race-3-after.txt",
+          "sha256": "df455aee4a7e06b4dc4c18e1f2a5648e534019f868ff1330931bbb042dc76ccc"
+        },
+        {
+          "path": "evidence/31-failure-race-3-after.jpg",
+          "sha256": "bd2396c232019c40e7ac887981f21f453fa41e9000b584296390957ed5aacd19"
+        }
+      ]
+    },
+    {
+      "id": "C-09",
+      "journey": "J-1",
+      "required": true,
+      "axis": "visual",
+      "purpose": "실제 화면 가독성",
+      "expectation": {
+        "source": "current prompt.txt: 확정 요구 및 실행 지시",
+        "text": "프로젝트 목록·필터·선택·오류/empty 화면에 겹침/잘림이 없고 상태를 식별할 수 있다.",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "실제 JPEG 8장을 도구로 직접 검사. All 목록, Archived 로딩/성공, Paused empty, 실제 오류, 두 race 완료 화면에서 필터/목록/개수/선택/오류가 읽히며 관찰 영역의 겹침·잘림 없음. 기능 오류 C-08은 별도 기록.",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "evidence": [
+        {
+          "path": "evidence/01-all.jpg",
+          "sha256": "be1104ec4072844beb3b8112982e6e58a01c329f668dae1aef8d35103541f8fd"
+        },
+        {
+          "path": "evidence/07-archived.jpg",
+          "sha256": "8d08d1846626faadde2b6d7bb18d5c166b856c12e90146a29b88b744f9afcf19"
+        },
+        {
+          "path": "evidence/09-paused.jpg",
+          "sha256": "eb747f83236e906a1ff1a0d3c37aec1bfea86b868b5d16eb1066b3d08f239767"
+        },
+        {
+          "path": "evidence/11-error.jpg",
+          "sha256": "bd2396c232019c40e7ac887981f21f453fa41e9000b584296390957ed5aacd19"
+        },
+        {
+          "path": "evidence/14-retry.jpg",
+          "sha256": "8ae48a227e8ffb81f3d09bdf4d8b39235361be464a9842fc0eee9c912749dce6"
+        },
+        {
+          "path": "evidence/19-success-race-after.jpg",
+          "sha256": "8ae48a227e8ffb81f3d09bdf4d8b39235361be464a9842fc0eee9c912749dce6"
+        },
+        {
+          "path": "evidence/31-failure-race-3-after.jpg",
+          "sha256": "bd2396c232019c40e7ac887981f21f453fa41e9000b584296390957ed5aacd19"
+        },
+        {
+          "path": "evidence/31-failure-race-image-trace.txt",
+          "sha256": "47c3601796d8f5bf757ee0cb18fea7d048af42bac15d00e3ac3042f16b773928"
+        },
+        {
+          "path": "evidence/33-final-all.jpg",
+          "sha256": "592aefcbd025175efa4d27df78d08fc41eebc74c28a9a489037315091c740684"
+        },
+        {
+          "path": "evidence/33-final-image-trace.txt",
+          "sha256": "b191ce0adcde14bdbe91f07ce89ebad864c5c9e912fc4433b100320d492ba8d8"
+        }
+      ],
+      "visual": {
+        "image": "evidence/31-failure-race-3-after.jpg",
+        "inspected": true,
+        "inspection_trace": "evidence/31-failure-race-image-trace.txt",
+        "observation": "Archived dropdown and Selected project Tide remain visible while error and Retry replace latest Forest list. Text and panels readable without observed clipping or overlap.",
+        "pixels": [
+          2504,
+          1363
+        ],
+        "css_viewport": [
+          2504,
+          1363
+        ],
+        "dpr": 2,
+        "scale": 1,
+        "capture": "viewport",
+        "comparison_scope": "Full desktop CSS viewport 2504x1363, DPR 2. Host returned JPEG at CSS dimensions (2504x1363); actual bytes retained, no resampling/conversion. Within-run state comparison, no external design reference. No mobile claim."
+      }
+    }
+  ],
+  "issues": [
+    {
+      "id": "I-01",
+      "check": "C-08",
+      "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+      "title": "오래된 Active 실패가 최신 Archived 성공 화면을 오류로 덮음",
+      "expected": "current prompt 확정 요구: 오래된 실패는 최신 필터 결과를 덮지 않아야 한다. Archived 18 200 이후 Forest 1개를 유지해야 한다.",
+      "actual": "Archived 18이 먼저 HTTP 200 완료되고 UI에 Forest/1 project 표시. 약 8초 지연 Active 17이 뒤늦게 HTTP 503 완료되자 Archived 선택을 둔 채 Could not load projects / Retry로 바뀜. 선택 Tide는 유지.",
+      "steps": "1. 정상 모드 Archived 성공 화면에서 Tide를 선택된 상태로 둔다.\n2. PUT /__fixture__/mode {fail:true} 후 UI Status를 Active로 바꾼다.\n3. GET /__fixture__/pending에서 Active 진행 확인 후 PUT mode {fail:false}.\n4. Active 완료 전 UI Status Archived로 바꾸어 Forest/1 project 성공 화면을 확인한다.\n5. pending 기록으로 Archived 18 200 완료와 Active 17 pending을 확인한다.\n6. Active 17 503 완료를 확인한 뒤 UI를 다시 관찰한다.",
+      "impact": "최근 필터는 정상 응답했는데 사용자는 오류 화면을 보며 불필요한 Retry가 필요하다.",
+      "attempts": 3,
+      "valid_overlap_attempts": 1,
+      "observed_failures": 1,
+      "classification": "observed_once",
+      "evidence": [
+        {
+          "path": "evidence/28-failure-race-http-timeline.json",
+          "sha256": "6f233f3733618c74b2b0e97f2355e0d03438bfa8e00b771313efe04e4ddcf197"
+        },
+        {
+          "path": "evidence/30-failure-race-3-latest.txt",
+          "sha256": "33ead6926137762572fcfdb2dc581f2b17eb583c782a7f6a8d368367479d4547"
+        },
+        {
+          "path": "evidence/31-failure-race-3-after.txt",
+          "sha256": "df455aee4a7e06b4dc4c18e1f2a5648e534019f868ff1330931bbb042dc76ccc"
+        },
+        {
+          "path": "evidence/31-failure-race-3-after.jpg",
+          "sha256": "bd2396c232019c40e7ac887981f21f453fa41e9000b584296390957ed5aacd19"
+        }
+      ],
+      "uncertainty": "소스/내부 상태 미열람. 원인은 추정하지 않음. 앞선 2회는 요청 순서가 달라 비재현/통과로 계산하지 않음.",
+      "step_details": [
+        "정상 모드 Archived 성공 화면에서 Tide를 선택된 상태로 둔다.",
+        "PUT /__fixture__/mode {fail:true} 후 UI Status를 Active로 바꾼다.",
+        "GET /__fixture__/pending에서 Active 진행 확인 후 PUT mode {fail:false}.",
+        "Active 완료 전 UI Status Archived로 바꾸어 Forest/1 project 성공 화면을 확인한다.",
+        "pending 기록으로 Archived 18 200 완료와 Active 17 pending을 확인한다.",
+        "Active 17 503 완료를 확인한 뒤 UI를 다시 관찰한다."
+      ]
+    }
+  ],
+  "data_operations": [
+    {
+      "id": "D-01",
+      "created_ids": [],
+      "detail": "Fixture mode PUT fail true/false만 변경. 프로젝트 생성/수정/삭제 없음. 마지막 driver finally fail:false HTTP 200. 이후 실제 GET all 200 3개 재확인. 최초 모드를 읽는 endpoint는 제공되지 않아 원래 값은 unknown; 작업 종료 시 정상 모드로 둠.",
+      "outcome": "confirmed",
+      "cleanup": "done",
+      "evidence": [
+        {
+          "path": "evidence/28-failure-race-http-timeline.json",
+          "sha256": "6f233f3733618c74b2b0e97f2355e0d03438bfa8e00b771313efe04e4ddcf197"
+        },
+        {
+          "path": "evidence/37-api-normal-after.json",
+          "sha256": "7184a5e0ced519aa77a9dff6512fcf08c751978b32f56f12b28a0113fe49170d"
+        },
+        {
+          "path": "evidence/34-owned-tab-cleanup.json",
+          "sha256": "2e68e490d0346927e6e523f0dd015744adf9e3ace2b5703f398edb96a1836f22"
+        },
+        {
+          "path": "evidence/36-pending-after.json",
+          "sha256": "2bc50b6aa8767e7bcf51673c4741e0f0ea8a0ced20b50543ffc083a025eb011e"
+        }
+      ]
+    }
+  ],
+  "session": {
+    "provider": "cua_repl Chrome extension",
+    "browser_id": "2",
+    "tab_id": "1893495269",
+    "ownership": "owned QA tab",
+    "browser_version": "unknown (not exposed)",
+    "capabilities": {
+      "semantic_ui": "documented and actual initial AX observed",
+      "screenshots": "Actual JPEG capture, 8 images emitted and directly inspected; 2504x1363 CSS viewport, DPR 2, capture pixels 2504x1363",
+      "network_viewer": "not exposed; direct HTTP and fixture pending used instead",
+      "modifier_input": "documented; irrelevant single-selection scope"
+    }
+  },
+  "target_evidence": {
+    "target": "650dc53a1296562822ec379d4e09f4d26d495566d878f6db071a4c20c163410f",
+    "evidence": [
+      {
+        "path": "evidence/environment-before.json",
+        "sha256": "c0b3573831eb7c3747ebcc365c4b56bd21b10b6e24a185f8e7c0ff54ba632822"
+      },
+      {
+        "path": "evidence/01-all-ax.txt",
+        "sha256": "4ce72fcda3157eadc4da2f4e11bbd50f6231c4d5e326c4946c05a5dcc296e5c1"
+      },
+      {
+        "path": "evidence/03-api-all.json",
+        "sha256": "fe781c0e8985bd141b0de6e40bf56f5bffef62828b5df2de5996d24dac5ec531"
+      },
+      {
+        "path": "evidence/35-build-after.json",
+        "sha256": "ae8efa338c2088530a05999f305e44263e479f340b1c569918f50dc05e957aee"
+      }
+    ]
+  },
+  "observations": {
+    "single_filter_baseline_each": 1,
+    "selection_clicks": 1,
+    "dedicated_error_retry_journeys": 1,
+    "success_race_attempts": 1,
+    "success_race_valid_overlaps": 1,
+    "failure_race_attempts": 3,
+    "failure_race_valid_overlaps": 1,
+    "failure_race_confirmed_failures": 1,
+    "invalid_failure_race_attempts": 2,
+    "screenshots_inspected_so_far": 8,
+    "limits": [
+      "브라우저 버전 미노출",
+      "브라우저 network inspector 미제공: 실제 direct HTTP와 fixture pending 완료 순서 사용",
+      "제공 build metadata를 관찰했으며 번들 암호학적 인증은 아님",
+      "단일 desktop viewport, anonymous fixture만 검사",
+      "재로드 후 선택 영속성은 요구가 아니어서 미검사",
+      "서버 코드/DB/평가 정답/다른 사례/부모 워크트리 미열람"
+    ],
+    "ui_project_get_requests": 16,
+    "ui_filter_inputs": 13,
+    "ui_retry_clicks": 2,
+    "direct_projects_http_requests": 5,
+    "stale_error_recovery_retry": 1
+  },
+  "cleanup": {
+    "owned_tab_id": "1893495269",
+    "tab_closed": true,
+    "other_tabs_touched": false,
+    "http_driver_sessions": [
+      "86971 exited 0",
+      "92735 exited 0"
+    ],
+    "fixture_mode": "fail:false confirmed PUT HTTP 200; API all 200 requery",
+    "pending_requests_at_cleanup": [],
+    "created_project_ids": [],
+    "evidence": [
+      {
+        "path": "evidence/34-owned-tab-cleanup.json",
+        "sha256": "2e68e490d0346927e6e523f0dd015744adf9e3ace2b5703f398edb96a1836f22"
+      },
+      {
+        "path": "evidence/36-pending-after.json",
+        "sha256": "2bc50b6aa8767e7bcf51673c4741e0f0ea8a0ced20b50543ffc083a025eb011e"
+      },
+      {
+        "path": "evidence/37-api-normal-after.json",
+        "sha256": "7184a5e0ced519aa77a9dff6512fcf08c751978b32f56f12b28a0113fe49170d"
+      }
+    ]
+  },
+  "notes": [
+    "Screenshot API returned JPEG bytes. Initial evidence names used .png; byte magic checked and files renamed to .jpg without pixel conversion. Actual dimensions checked with sips (2504x1363).",
+    "One checkbox role selector timed out without delivering an action; live DOM snapshot exposed buttons and subsequent input used actual button role.",
+    "First two failure overlap attempts retained but excluded from valid temporal coverage because earlier Active finished before latest Archived. Third attempt used actual HTTP pending signal, not app state injection.",
+    "Shell sandbox initially blocked localhost connection; the authorized exact localhost HTTP was retried with sandbox escalation and succeeded. No automatic approval rejection occurred."
+  ]
+}
