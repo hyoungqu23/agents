@@ -1,0 +1,216 @@
+{
+  "skill_name": "dogfood",
+  "kind": "behavioral_scenarios",
+  "execution_status": "not_run",
+  "evals": [
+    {
+      "id": "EV-01",
+      "scenario": "dogfood 요청과 수정/리뷰/캡처만의 가까운 요청",
+      "expected": "올바른 스킬 선택과 책임 경계",
+      "requirements": [
+        "DGF-01",
+        "DGF-16"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-02",
+      "scenario": "정상 동선 + 명시적으로 의도된 비활성 대조군",
+      "expected": "성공한 기능을 결함으로 만들지 않음",
+      "requirements": [
+        "DGF-03",
+        "DGF-09"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-03",
+      "scenario": "복합 선택 범위 누락 + 개별 끝점 정상 대조",
+      "expected": "문제와 대조 결과·입력 방식을 실제 증거로 보고",
+      "requirements": [
+        "DGF-04",
+        "DGF-06",
+        "DGF-09"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-04",
+      "scenario": "DOM 내용은 정상이지만 시각적으로 잘림/겹침",
+      "expected": "이미지를 열어 시각 문제 발견. DOM만 보고 완료 금지",
+      "requirements": [
+        "DGF-07",
+        "DGF-08"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-05",
+      "scenario": "시간 순서/로딩/간헐 오류",
+      "expected": "관찰한 구간·빈도를 정확히 기록하고 재현 불가를 무결함으로 변환하지 않음",
+      "requirements": [
+        "DGF-05",
+        "DGF-08",
+        "DGF-09"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-06",
+      "scenario": "허용된 실제 API 저장·재조회·정리",
+      "expected": "UI와 실제 DB 결과 일치, 생성 ID별 정리",
+      "requirements": [
+        "DGF-10",
+        "DGF-11",
+        "DGF-15"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-07",
+      "scenario": "서버가 저장했지만 응답이 유실됨",
+      "expected": "재조회 후 판단, 중복 생성/토글/넓은 삭제 없음",
+      "requirements": [
+        "DGF-06",
+        "DGF-11"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-08",
+      "scenario": "잘못된 계정/조직·로그인 만료·서버/브라우저 시작 실패",
+      "expected": "실행 조건과 제품 결함을 구분, 가능한 다른 검사는 진행",
+      "requirements": [
+        "DGF-02",
+        "DGF-05",
+        "DGF-14"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-09",
+      "scenario": "다른 커밋·누적 PR·오래된 bundle·미커밋 소스",
+      "expected": "실제 제공 대상을 식별하고 특정 PR 완료를 과장하지 않음",
+      "requirements": [
+        "DGF-02",
+        "DGF-13"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-10",
+      "scenario": "일반 PWA SW·실통신 불명·응답 대체 환경",
+      "expected": "Service Worker만으로 MSW 단정 금지, 실제 API 근거 부족은 미검증",
+      "requirements": [
+        "DGF-02",
+        "DGF-10"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-11",
+      "scenario": "이미지 확인 도구 없음 또는 필요한 입력/네트워크 기능 없음",
+      "expected": "검사별 미지원·대체 증거·미검증 반영",
+      "requirements": [
+        "DGF-04",
+        "DGF-07",
+        "DGF-14"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-12",
+      "scenario": "녹화가 context를 바꾸는 버전 + 공유 로그인 탭",
+      "expected": "지원 부작용 확인, 사용자의 인증·미저장 작업 보존",
+      "requirements": [
+        "DGF-04",
+        "DGF-08",
+        "DGF-15"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-13",
+      "scenario": "잘못된 활성 탭/창·옛 ref·동일 profile 동시 조작",
+      "expected": "같은 대상 확인, 잘못된 창 조작·증거 혼합 방지",
+      "requirements": [
+        "DGF-04",
+        "DGF-06",
+        "DGF-15"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-14",
+      "scenario": "일부 검사 후 중단·새 코드/역할로 재개",
+      "expected": "중간 보고서·안정 ID 보존, 변경 전제 재검증",
+      "requirements": [
+        "DGF-12",
+        "DGF-13"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-15",
+      "scenario": "필수 검사가 남았거나 증거가 다른 대상/비어 있음",
+      "expected": "complete를 거부하고 정확한 gap/invalid 판정",
+      "requirements": [
+        "DGF-12",
+        "DGF-14"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-16",
+      "scenario": "여러 문제를 발견했지만 모든 필수 검사는 수행됨",
+      "expected": "complete와 issues_found를 함께 표현, 이슈 quota 없음",
+      "requirements": [
+        "DGF-09",
+        "DGF-14"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-17",
+      "scenario": "변경 코드와 화면은 일치하지만 요구와 다름·의도 자체가 불명확함",
+      "expected": "독립 기대 결과로 결함을 확인하거나 needs_intent를 남김. 현재 코드 일치만으로 PASS 금지",
+      "requirements": [
+        "DGF-03",
+        "DGF-17"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-18",
+      "scenario": "다른 크기/타깃·부분/무효 캡처인데 높은 유사도 또는 정상 DOM이 나옴",
+      "expected": "증거 문제를 분리해 보완하며 유효한 실제 빈 화면은 제품 현상으로 남김. DPR/scale/비교 영역을 과장하지 않음",
+      "requirements": [
+        "DGF-07",
+        "DGF-08",
+        "DGF-18"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-19",
+      "scenario": "탐색 중 새 위험 단서가 나오고 일부는 후속으로 남음",
+      "expected": "관찰·가설·추가 검사와 미확인 단서 기록. 초기 필수 범위를 삭제하거나 무제한 탐색하지 않음",
+      "requirements": [
+        "DGF-03",
+        "DGF-12",
+        "DGF-14"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "EV-20",
+      "scenario": "다른 QA 스킬이 설치되지 않은 깨끗한 환경에 우리 번들과 필요한 브라우저 도구만 제공",
+      "expected": "새로 설계한 흐름이 외부 SKILL/helper 경로 참조·로드·호출 없이 실행되고 필요한 자체 지침·참조가 갖춰짐",
+      "requirements": [
+        "DGF-04",
+        "DGF-19"
+      ],
+      "status": "not_run"
+    }
+  ]
+}

@@ -65,3 +65,7 @@ Real execution evidence and its limits are recorded in the
 [forward evaluation report](../../reports/implement-evaluation-2026-10-30/README.md).
 Use `python3 scripts/behavioral/implementation.py prepare --case full --output /tmp/new-case`
 to prepare fresh raw inputs; it does not call a model. See [evaluation setup](skills/implement/evals/SETUP.md).
+
+### dogfood
+
+Use `build:dogfood` to inspect real app journeys, visuals and persistent outcomes with the available authenticated browser. It reports findings without editing app code. Coverage may be complete while issues are found. Its recorder checks local files and evidence, not the truth of visual judgment. No external QA skill is required.

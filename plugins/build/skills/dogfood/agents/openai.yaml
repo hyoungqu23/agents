@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dogfood"
+  short_description: "Exercise real app journeys and report visual QA evidence"
+  default_prompt: "Use $dogfood to inspect this app's real user journeys, visuals and persistent outcomes, preserving the session and reporting reproducible evidence."

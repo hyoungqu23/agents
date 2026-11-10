@@ -63,8 +63,8 @@
     {
       "name": "build",
       "source": "./plugins/build",
-      "description": "Implement features and apply scoped bug/QA corrections with verification evidence.",
-      "version": "0.3.0",
+      "description": "Implement features, apply scoped fixes and dogfood real user journeys with visual and persistence evidence.",
+      "version": "0.4.0",
       "category": "Productivity",
       "keywords": [
         "implementation",

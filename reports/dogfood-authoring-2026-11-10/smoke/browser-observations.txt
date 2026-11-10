@@ -1,0 +1,15 @@
+Primary-agent observation record of actual mcp__cua_repl calls on 2026-11-10 KST.
+Execution mode: self-run, not blind/independent model evaluation. No response mock or app-state injection.
+Created own IAB tab 1 at http://127.0.0.1:64230/. Initial list empty, role anonymous.
+setValue(project name), click Save: status 저장됨, AX contained full name and one Delete control.
+getScreenshot emitted actual JPEG and wrote clipped-name.jpg; primary agent inspected it. Name was visibly clipped at the list's right boundary although AX had the full name.
+Click 다시 불러오기: item retained; readonly DOM observation yielded row id=1 with full saved Korean name.
+Native Tab after Reload moved focus to Delete, skipping the explicitly disabled 보관 (미지원) control.
+Readonly DOM viewport observation: width=1036,height=1314,devicePixelRatio=2.
+setValue(lost-response), click Save once: status 저장 결과 미확인. 다시 불러오기로 확인하세요.
+Click Reload, no second POST: readonly DOM rows id=1 full Korean name and id=2 lost-response.
+Independent direct SQLite SELECT before cleanup matched exactly these two items (database-before-cleanup.json).
+Clicked scoped Delete on observed li[data-id="2"], then fresh AX confirmed remaining id=1.
+Clicked scoped Delete on observed li[data-id="1"], fresh AX list empty. Captured cleanup.jpg and inspected final empty list.
+Closed only own tab. Direct SQLite SELECT after cleanup was [] (database-after-cleanup.json).
+No recorder/profile copying or native desktop adapter used. Server URL is historical, not a persistent deliverable.

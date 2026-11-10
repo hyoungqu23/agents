@@ -89,3 +89,7 @@ computed status and remaining decisions. Supply reproducible app commands/routes
 scenario data, input identities and current diff for separately requested code
 review or Visual QA. Never claim those workflows ran when they did not. Commit,
 push, PR creation and deployment follow the user's separate task authorization.
+
+For a separately requested real-app journey and visual QA report, hand the current
+inputs, route/data, target and verification limits to `build:dogfood`. Its invocation
+is optional; this skill's own UI checks do not establish independent dogfood completion.

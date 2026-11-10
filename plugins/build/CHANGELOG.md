@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- Reject mismatched requested/served revisions and contradictory check/issue outcomes; keep deployment IDs separate from source revisions.
+- Add report-only build:dogfood for actual app journeys, visual inspection and real persistence evidence; separate coverage completion from product findings.
+
 ## 0.3.0 - 2026-11-06
 
 - Add opt-in local S1 review notification after complete implementation assessment, with an independent delivery receipt. Missing harnesses do not change implementation verification results.

@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "target": {
+    "url": "http://127.0.0.1:64230/",
+    "environment": "loopback fixture",
+    "role": "anonymous",
+    "backend": "local SQLite via /api/items",
+    "served_build": "dogfood-fixture-v1",
+    "local_root": "/private/tmp/agents-skill-authoring-20261110/dogfood/plugins/build/skills/dogfood/evals/files/live-app"
+  },
+  "journeys": [
+    {
+      "id": "J-1",
+      "goal": "Save, inspect, requery and clean own project data"
+    }
+  ],
+  "checks": [
+    {
+      "id": "C-save",
+      "journey": "J-1",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "Save and requery",
+      "expectation": {
+        "source": "evals/files/live-app/request.md",
+        "text": "Saved item persists with its exact full name",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "Actual UI observation retained in browser-observations.txt",
+      "target": "0a63e52a373e37e3baecdeceee77ddbe941765de95f1f2fc4b996e7020766107",
+      "evidence": [
+        {
+          "path": "browser-observations.txt",
+          "sha256": "998fa668d60a861987345bf44d81dfcee0c63492e60141d54acc2d56d420fdfa"
+        },
+        {
+          "path": "database-before-cleanup.json",
+          "sha256": "342ba362fe72c38f7950305398204c321a7cc26796cf5f4bd795b158b2bf3eca"
+        }
+      ],
+      "persistence": {
+        "mode": "real_api",
+        "requery_trace": "browser-observations.txt"
+      }
+    },
+    {
+      "id": "C-visual",
+      "journey": "J-1",
+      "required": true,
+      "axis": "visual",
+      "purpose": "Inspect readable name",
+      "expectation": {
+        "source": "evals/files/live-app/request.md",
+        "text": "The full requested name can be read",
+        "certainty": "confirmed"
+      },
+      "status": "failed",
+      "detail": "Full Korean name exists in AX and SQLite but is clipped in the actual screenshot",
+      "target": "0a63e52a373e37e3baecdeceee77ddbe941765de95f1f2fc4b996e7020766107",
+      "evidence": [
+        {
+          "path": "browser-observations.txt",
+          "sha256": "998fa668d60a861987345bf44d81dfcee0c63492e60141d54acc2d56d420fdfa"
+        },
+        {
+          "path": "clipped-name.jpg",
+          "sha256": "96cc409f4b71080cf60f87e35ac172a3caec17426a640f3ad012864e63fa315d"
+        }
+      ],
+      "visual": {
+        "image": "clipped-name.jpg",
+        "inspected": true,
+        "inspection_trace": "browser-observations.txt",
+        "observation": "Visible right clipping of the list name",
+        "pixels": [
+          1036,
+          1314
+        ],
+        "css_viewport": [
+          1036,
+          1314
+        ],
+        "dpr": 2,
+        "scale": 0.5,
+        "capture": "viewport",
+        "comparison_scope": "Full original screenshot; scale inferred from image/CSS viewport/DPR, no resizing; expectation from fixture request, not a reference-image similarity score."
+      }
+    },
+    {
+      "id": "C-loss",
+      "journey": "J-1",
+      "required": true,
+      "axis": "persistence",
+      "purpose": "Resolve uncertain write",
+      "expectation": {
+        "source": "evals/files/live-app/request.md",
+        "text": "After lost response, requery shows exactly one saved item before retry",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "Actual UI observation retained in browser-observations.txt",
+      "target": "0a63e52a373e37e3baecdeceee77ddbe941765de95f1f2fc4b996e7020766107",
+      "evidence": [
+        {
+          "path": "browser-observations.txt",
+          "sha256": "998fa668d60a861987345bf44d81dfcee0c63492e60141d54acc2d56d420fdfa"
+        },
+        {
+          "path": "database-before-cleanup.json",
+          "sha256": "342ba362fe72c38f7950305398204c321a7cc26796cf5f4bd795b158b2bf3eca"
+        }
+      ],
+      "persistence": {
+        "mode": "real_api",
+        "requery_trace": "browser-observations.txt"
+      }
+    },
+    {
+      "id": "C-keyboard",
+      "journey": "J-1",
+      "required": true,
+      "axis": "accessibility",
+      "purpose": "Inspect keyboard and intended disabled control",
+      "expectation": {
+        "source": "evals/files/live-app/request.md",
+        "text": "Tab moves focus through supported controls and archive remains disabled",
+        "certainty": "confirmed"
+      },
+      "status": "passed",
+      "detail": "Actual UI observation retained in browser-observations.txt",
+      "target": "0a63e52a373e37e3baecdeceee77ddbe941765de95f1f2fc4b996e7020766107",
+      "evidence": [
+        {
+          "path": "browser-observations.txt",
+          "sha256": "998fa668d60a861987345bf44d81dfcee0c63492e60141d54acc2d56d420fdfa"
+        }
+      ]
+    }
+  ],
+  "issues": [
+    {
+      "id": "I-1",
+      "check": "C-visual",
+      "target": "0a63e52a373e37e3baecdeceee77ddbe941765de95f1f2fc4b996e7020766107",
+      "expected": "Full 1–200 character name can be read in list (fixture request.md)",
+      "actual": "Long Korean name is horizontally clipped although full text persists",
+      "steps": "Empty anonymous fixture; save stated long Korean project name; reload list; inspect screenshot at CSS viewport 1036×1314",
+      "impact": "User cannot read the saved full project name",
+      "attempts": 1,
+      "classification": "observed_once",
+      "evidence": [
+        {
+          "path": "browser-observations.txt",
+          "sha256": "998fa668d60a861987345bf44d81dfcee0c63492e60141d54acc2d56d420fdfa"
+        },
+        {
+          "path": "clipped-name.jpg",
+          "sha256": "96cc409f4b71080cf60f87e35ac172a3caec17426a640f3ad012864e63fa315d"
+        }
+      ]
+    }
+  ],
+  "data_operations": [
+    {
+      "id": "D-1",
+      "created_ids": [
+        "1",
+        "2"
+      ],
+      "outcome": "confirmed",
+      "cleanup": "done",
+      "detail": "Saved full name and lost-response once each; requery confirmed both; UI deleted exactly own IDs 2 then 1; SQLite empty",
+      "evidence": [
+        {
+          "path": "browser-observations.txt",
+          "sha256": "998fa668d60a861987345bf44d81dfcee0c63492e60141d54acc2d56d420fdfa"
+        },
+        {
+          "path": "database-after-cleanup.json",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "path": "cleanup.jpg",
+          "sha256": "5188728f2a48f9dd08014c1535cec1dcb092f9aaaaf84bb131852055a6adffb6"
+        }
+      ]
+    }
+  ],
+  "execution_mode": "primary-agent self-run, not an independent model evaluation",
+  "charter": "Run four named checks only; stop after exact cleanup. No source changes, mocks or internal state injection.",
+  "target_evidence": {
+    "target": "0a63e52a373e37e3baecdeceee77ddbe941765de95f1f2fc4b996e7020766107",
+    "evidence": [
+      {
+        "path": "browser-observations.txt",
+        "sha256": "998fa668d60a861987345bf44d81dfcee0c63492e60141d54acc2d56d420fdfa"
+      }
+    ]
+  }
+}

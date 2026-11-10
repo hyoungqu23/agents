@@ -136,3 +136,5 @@ and the remaining human evaluation requirements.
 ## Publishing note
 
 Resolve the public license and third-party attribution requirements before the first public release.
+
+Build 0.4.0: Add report-only build:dogfood for actual app journeys, visual inspection and real persistence evidence; separate coverage completion from product findings.

@@ -84,3 +84,7 @@ edits and refresh affected evidence. This is correction verification, not an
 independent code review or Visual QA pass. Commits, push, PRs, replies and deployment
 follow the current task's authorization; a fix request alone does not authorize
 posting messages or bypass a PR-response workflow.
+
+For a separately requested real-app journey and visual QA report, hand the current
+inputs, route/data, target and verification limits to `build:dogfood`. Its invocation
+is optional; this skill's own UI checks do not establish independent dogfood completion.
