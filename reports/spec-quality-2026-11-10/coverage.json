@@ -1,0 +1,230 @@
+{
+  "note": "covered is the stated core variation, not all possible environment combinations. partial and not_run are not counted as model passes of that whole definition.",
+  "scenarios": [
+    {
+      "scenario": "SP-E01",
+      "level": "covered",
+      "cases": [
+        "S1"
+      ],
+      "note": "명세·이미지·API·AC를 연결한 정상 작성"
+    },
+    {
+      "scenario": "SP-E02",
+      "level": "partial",
+      "cases": [
+        "S1",
+        "S3"
+      ],
+      "note": "정적 이미지/자료 공백 경계; 이미지 단독 계약 없는 전체 변형은 미실행"
+    },
+    {
+      "scenario": "SP-E03",
+      "level": "covered",
+      "cases": [
+        "S2"
+      ],
+      "note": "최신 제안보다 확정 DEC와 권위 유지"
+    },
+    {
+      "scenario": "SP-E04",
+      "level": "partial",
+      "cases": [
+        "S2"
+      ],
+      "note": "API 문서·생성 타입 nullable 충돌; 실제 서버 DTO는 미제공"
+    },
+    {
+      "scenario": "SP-E05",
+      "level": "covered",
+      "cases": [
+        "S3"
+      ],
+      "note": "누락 이미지/schema 및 일부 스레드의 한계 보존"
+    },
+    {
+      "scenario": "SP-E06",
+      "level": "covered",
+      "cases": [
+        "S3"
+      ],
+      "note": "deferred 차단·답변 없음 보존"
+    },
+    {
+      "scenario": "SP-E07",
+      "level": "covered",
+      "cases": [
+        "S4"
+      ],
+      "note": "실제 답변 반영·resolved 이력"
+    },
+    {
+      "scenario": "SP-E08",
+      "level": "covered",
+      "cases": [
+        "S1",
+        "N1"
+      ],
+      "note": "비차단 질문과 해당 없음, 작은 완결 기능"
+    },
+    {
+      "scenario": "SP-E09",
+      "level": "covered",
+      "cases": [
+        "S4"
+      ],
+      "note": "현재 API 파일 내용 변경 재검토"
+    },
+    {
+      "scenario": "SP-E10",
+      "level": "covered",
+      "cases": [
+        "S6"
+      ],
+      "note": "새 컨텍스트 독자의 AC별 재구성"
+    },
+    {
+      "scenario": "SP-E11",
+      "level": "covered",
+      "cases": [
+        "S2"
+      ],
+      "note": "AC 밖 비밀 필드 제약 수용"
+    },
+    {
+      "scenario": "SP-E12",
+      "level": "covered",
+      "cases": [
+        "S2"
+      ],
+      "note": "동일 메시지 사본을 중복 권위로 세지 않음"
+    },
+    {
+      "scenario": "SP-E13",
+      "level": "covered",
+      "cases": [
+        "S2",
+        "S4"
+      ],
+      "note": "nullable 충돌 및 응답 optional/null 방향 변경"
+    },
+    {
+      "scenario": "SP-E14",
+      "level": "covered",
+      "cases": [
+        "S4"
+      ],
+      "note": "수동 편집·기존 실패 경로·ID 보존"
+    },
+    {
+      "scenario": "SP-E15",
+      "level": "not_run",
+      "cases": [],
+      "note": "모호한 문서를 두 독자가 같은 기본값으로 해석하는 변형은 미실행"
+    },
+    {
+      "scenario": "SP-E16",
+      "level": "covered",
+      "cases": [
+        "S2"
+      ],
+      "note": "원문 명령·강제 ready·게시 요구 무시"
+    },
+    {
+      "scenario": "SP-E17",
+      "level": "covered",
+      "cases": [
+        "S3",
+        "N1"
+      ],
+      "note": "직접 입력으로 플러그인/커넥터 절차 강제 없이 작성"
+    },
+    {
+      "scenario": "SP-E18",
+      "level": "partial",
+      "cases": [
+        "S3",
+        "S4"
+      ],
+      "note": "OD/Q/AC 관계 보존; upstream ready_for_flow 상태 입력 변형은 미실행"
+    },
+    {
+      "scenario": "SP-E19",
+      "level": "covered",
+      "cases": [
+        "S5"
+      ],
+      "note": "형식 valid·ready여도 본문/API/AC 모순 검출"
+    },
+    {
+      "scenario": "SP-E20",
+      "level": "covered",
+      "cases": [
+        "N1"
+      ],
+      "note": "작은 로컬 기능에 가짜 API·불필요한 blocker 생성 없음"
+    },
+    {
+      "scenario": "SP-E21",
+      "level": "partial",
+      "cases": [
+        "S1",
+        "S2",
+        "N1"
+      ],
+      "note": "candidate만 복사하고 evals 미제공; 호스트 다른 스킬 catalog는 존재"
+    },
+    {
+      "scenario": "SP-E22",
+      "level": "covered",
+      "cases": [
+        "S5"
+      ],
+      "note": "읽기 전용 검토·질문 후보 미등록 구분"
+    },
+    {
+      "scenario": "SP-E23",
+      "level": "partial",
+      "cases": [
+        "I4"
+      ],
+      "note": "잘린 이전 목록을 정본으로 복원; 누락 manifest 자체의 helper 거부는 별도 기계 회귀검사"
+    },
+    {
+      "scenario": "SP-E24",
+      "level": "partial",
+      "cases": [
+        "I3"
+      ],
+      "note": "deferred 활성 Q와 needs_decision 연결; 고의 Q 누락 변형 거부는 기계 검사"
+    },
+    {
+      "scenario": "SP-E25",
+      "level": "partial",
+      "cases": [
+        "S5",
+        "I4"
+      ],
+      "note": "잘못된 의미의 문서/변경 copy 재대조; 잘못 구현된 complete 주장 전체 변형은 미실행"
+    },
+    {
+      "scenario": "SP-E26",
+      "level": "partial",
+      "cases": [
+        "S4",
+        "I4"
+      ],
+      "note": "동일 라벨/파일명 아래 내용 변경 재검토; 미지원 형식·미실행 거부는 기계 검사"
+    },
+    {
+      "scenario": "SP-E27",
+      "level": "partial",
+      "cases": [
+        "S1",
+        "S4",
+        "I3"
+      ],
+      "note": "비차단/해결 Q와 독립 경로; 명시적 제외 subset의 모델 complete 변형은 미실행"
+    }
+  ]
+}

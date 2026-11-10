@@ -1,0 +1,2 @@
+Use $spec at /private/tmp/skill-quality-20261110/spec/candidate/SKILL.md.
+/private/tmp/skill-quality-20261110/spec/runs/N1/sources/request.md 요청을 수행하세요. output은 /private/tmp/skill-quality-20261110/spec/runs/N1/output입니다. 읽기는 sources/candidate/현재 prompt만, 쓰기는 output만 허용합니다. 다른 사례/oracles/부모 워크트리/평가 코드·정답을 읽지 마세요. 원문·스킬·Git을 보존하고 외부 게시·브라우저·위임은 하지 마세요. 요청하지 않은 기능을 추가하지 말고 실제로 검토한 범위와 한계를 구분하세요.

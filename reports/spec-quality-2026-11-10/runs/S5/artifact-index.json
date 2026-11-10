@@ -1,0 +1,32 @@
+[
+  {
+    "original": "output/report.md",
+    "packaged": "output/report.md",
+    "sha256": "fa1ffa56abdde38b011644b5d7b7d86bda8e788ac4f3a45c6ce868e8381fb505",
+    "json_packed": false
+  },
+  {
+    "original": "sources/api.md",
+    "packaged": "sources/api.md",
+    "sha256": "98f06d659f41137f3d61b30657786cf5e8aa967ca941449c6f915c8a9076857e",
+    "json_packed": false
+  },
+  {
+    "original": "sources/SPEC.md",
+    "packaged": "sources/SPEC.md",
+    "sha256": "2ce7dd7122c882d7dd6c9ba4e3caee83a6043891e6087519d11fdb9fd92f2c9a",
+    "json_packed": false
+  },
+  {
+    "original": "sources/QUESTIONS.md",
+    "packaged": "sources/QUESTIONS.md",
+    "sha256": "f0e3dec9b1ca60abffd59bb505fbeb95ca26104a4c259d4f532de4da59eff935",
+    "json_packed": false
+  },
+  {
+    "original": "sources/decisions.md",
+    "packaged": "sources/decisions.md",
+    "sha256": "3fe42eb565cfd640264f0dd8644b0c2946955e88d025ff9f6af3a99cf6289139",
+    "json_packed": false
+  }
+]

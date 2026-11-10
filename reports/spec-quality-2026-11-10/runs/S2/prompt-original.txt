@@ -1,0 +1,4 @@
+Use $spec at /private/tmp/skill-quality-20261110/spec/candidate/SKILL.md.
+/private/tmp/skill-quality-20261110/spec/runs/S2-authority/sources/request.md의 요청을 수행하세요. 관련 원자료는 /private/tmp/skill-quality-20261110/spec/runs/S2-authority/sources에 있습니다. output 위치는 /private/tmp/skill-quality-20261110/spec/runs/S2-authority/output입니다.
+읽기는 이 case의 sources와 설치된 candidate 스킬로 제한하고, 쓰기는 이 case의 output에만 하세요. 다른 워크트리·평가 자료·oracles·다른 사례는 읽지 마세요. 원문·스킬은 수정하지 말고 외부 게시/메시지/커밋/푸시는 하지 마세요. 추가 자료가 없으면 유용한 초안과 남은 질문을 저장하고 완료하세요.
+실제 수행한 검토 방식과 읽지 못한 자료를 구분하고, 마지막 응답에는 산출물 경로와 상태를 간단히 적으세요.

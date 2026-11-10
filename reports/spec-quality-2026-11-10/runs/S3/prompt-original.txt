@@ -1,0 +1,3 @@
+Use $spec at /private/tmp/skill-quality-20261110/spec/candidate/SKILL.md.
+/private/tmp/skill-quality-20261110/spec/runs/S3-incomplete/sources/request.md의 요청을 수행하세요. 제공 원문은 /private/tmp/skill-quality-20261110/spec/runs/S3-incomplete/sources, 출력은 /private/tmp/skill-quality-20261110/spec/runs/S3-incomplete/output입니다. 없는 자료를 새로 찾거나 사용자에게 답변을 요청하지 말고 현재 자료로 초안을 마무리하세요.
+읽기는 sources/candidate/현재 prompt, 쓰기는 output만 허용합니다. 다른 사례·oracles·부모 워크트리·평가/채점 코드를 읽지 마세요. 원문·스킬을 보존하고 Git·외부 게시·위임은 하지 마세요. 브라우저를 사용하지 마세요.

@@ -1,0 +1,164 @@
+{
+  "S1-ready": {
+    "structure": "valid",
+    "gaps": [],
+    "limitation": "Record checks do not certify semantic correctness or runtime behavior.",
+    "declared_status": "ready",
+    "active_blockers": [],
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3"
+    ],
+    "sources": {
+      "spec": "f5ceaaa4b2cf85b4f02de17a22ae26407b4af2392006595c3107a2b8797f7a7e",
+      "questions": "3f9bc0504360bf46416faa86562e56614a5731d933e6ceb0e237ebf6d2ad5846"
+    }
+  },
+  "S2-authority": {
+    "structure": "valid",
+    "gaps": [],
+    "limitation": "Record checks do not certify semantic correctness or runtime behavior.",
+    "declared_status": "blocked",
+    "active_blockers": [
+      {
+        "id": "Q-001",
+        "acs": [
+          "AC-share"
+        ]
+      },
+      {
+        "id": "Q-002",
+        "acs": [
+          "AC-share"
+        ]
+      },
+      {
+        "id": "Q-003",
+        "acs": [
+          "AC-share"
+        ]
+      },
+      {
+        "id": "Q-004",
+        "acs": [
+          "AC-share"
+        ]
+      },
+      {
+        "id": "Q-005",
+        "acs": [
+          "AC-share"
+        ]
+      },
+      {
+        "id": "Q-006",
+        "acs": [
+          "AC-secret"
+        ]
+      }
+    ],
+    "ac_ids": [
+      "AC-share",
+      "AC-secret"
+    ],
+    "sources": {
+      "spec": "cd62200fc5a07cd7daa459084a8a970c66e749e65f4df48961d14f829f5fb4de",
+      "questions": "4fcce8381387840c84bbf0351d7e1a9e07fa5b28e45469e1ecf20c2a7896ba7d"
+    }
+  },
+  "S3-incomplete": {
+    "structure": "valid",
+    "gaps": [],
+    "limitation": "Record checks do not certify semantic correctness or runtime behavior.",
+    "declared_status": "blocked",
+    "active_blockers": [
+      {
+        "id": "Q-001",
+        "acs": [
+          "AC-invite"
+        ]
+      },
+      {
+        "id": "Q-002",
+        "acs": [
+          "AC-invite"
+        ]
+      },
+      {
+        "id": "Q-003",
+        "acs": [
+          "AC-invite"
+        ]
+      },
+      {
+        "id": "Q-004",
+        "acs": [
+          "AC-invite"
+        ]
+      },
+      {
+        "id": "Q-005",
+        "acs": [
+          "AC-invite"
+        ]
+      },
+      {
+        "id": "Q-006",
+        "acs": [
+          "AC-invite"
+        ]
+      },
+      {
+        "id": "Q-007",
+        "acs": [
+          "AC-invite"
+        ]
+      },
+      {
+        "id": "Q-008",
+        "acs": [
+          "AC-invite"
+        ]
+      }
+    ],
+    "ac_ids": [
+      "AC-invite"
+    ],
+    "sources": {
+      "spec": "b132fdbea640ba6dae11aa46556f4d783035ef18af4c28f5ee3d2dcf7451e453",
+      "questions": "6204c70e9c4d4faf5dbef85cf29766958c2fc2bb142db4e52756c86e7880b092"
+    }
+  },
+  "S4-update": {
+    "structure": "valid",
+    "gaps": [],
+    "limitation": "Record checks do not certify semantic correctness or runtime behavior.",
+    "declared_status": "ready",
+    "active_blockers": [],
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-owner"
+    ],
+    "sources": {
+      "spec": "5be1366ecfa00dd875d353032f83ca24d4aa42edfc6b487cabb16ddf27c4ef5c",
+      "questions": "63390fbcdc2fc02d1acbc1175a071d97a663b27d45bc1b4a96140640284fc82f"
+    }
+  },
+  "N1": {
+    "structure": "valid",
+    "gaps": [],
+    "limitation": "Record checks do not certify semantic correctness or runtime behavior.",
+    "declared_status": "ready",
+    "active_blockers": [],
+    "ac_ids": [
+      "AC-local"
+    ],
+    "sources": {
+      "spec": "757a1440b07d9a4f888e8971d05c28216fc1cfd7c6f230f4b7d257a5bfdb0360",
+      "questions": "4aab9e2b2d7cca1354a8ebef4042797fd243329a5f200c669b852855caa82e1e"
+    }
+  }
+}

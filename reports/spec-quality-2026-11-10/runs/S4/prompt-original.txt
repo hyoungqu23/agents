@@ -1,0 +1,3 @@
+Use $spec at /private/tmp/skill-quality-20261110/spec/candidate/SKILL.md.
+/private/tmp/skill-quality-20261110/spec/runs/S4-update/documents의 기존 SPEC/QUESTIONS를 /private/tmp/skill-quality-20261110/spec/runs/S4-update/sources/api.md와 update-decision.md의 최신 내용에 맞춰 갱신하세요. 두 문서를 직접 수정하고 검토·helper 실행 기록은 /private/tmp/skill-quality-20261110/spec/runs/S4-update/output에 남기세요. 현재 사용자 편집과 ID/이력을 보존하세요. 기존 검토 기록·동일 파일 이름만으로 준비 상태를 재사용하지 마세요.
+읽기는 documents/sources/candidate/현재 prompt, 쓰기는 documents의 SPEC.md·QUESTIONS.md와 자신의 output만 허용합니다. 원자료와 기존 spec-check.json은 보존하세요. 다른 사례/oracles/부모 워크트리/평가 코드·정답은 읽지 마세요. 외부 게시·Git·위임·브라우저는 하지 마세요. 이미지는 로컬 이미지 도구로 확인할 수 있습니다.

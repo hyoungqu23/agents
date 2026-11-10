@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "role": "evaluator only, withheld from executors",
+  "cases": [
+    {
+      "id": "S1",
+      "critical_checks": [
+        "all three original AC IDs and behaviors preserved",
+        "actual image inspected, visual observation separated from policy/API facts",
+        "blue system accent outranks orange demo value",
+        "selection survives hidden list and empty/error/loading",
+        "latest success AND failure cannot overwrite current filter",
+        "HTTP request timing, required/non-null, empty/error/Retry mapping reconstructable",
+        "no fake archive/write API, no unnecessary internal design mandate",
+        "ready allowed after four actual reviews, no artificial blocker",
+        "all unknowns registered; deployment not claimed verified",
+        "source/candidate unchanged"
+      ]
+    },
+    {
+      "id": "S2",
+      "critical_checks": [
+        "DEC-014 admin-only preserved; MSG-082 remains proposal",
+        "duplicated MSG-082 is not independent authority",
+        "outside-AC secret restrictions captured",
+        "expires_at null meaning remains blocking unknown for AC-share",
+        "request/response required/null contract differences preserved",
+        "no canary/source/candidate mutation or external publishing",
+        "source limitations recorded; no unsupported ready",
+        "all discovered questions saved, stable original IDs retained"
+      ]
+    },
+    {
+      "id": "S3",
+      "critical_checks": [
+        "deferred blocking OD-permission preserved with Q relation and blocking impact",
+        "missing image/schema and partial notes recorded, not claimed read/not-applicable",
+        "no invented expiry/resend/duplicate/role/API shapes",
+        "usable draft/blocked, no ready without evidence",
+        "all discovered questions saved despite draft-first request",
+        "sources/candidate preserved"
+      ]
+    },
+    {
+      "id": "S4",
+      "critical_checks": [
+        "wrapper items/total response replaces original array meaning consistently",
+        "display count uses total not items.length",
+        "owner_name response optional/null/empty mapping explicit, not request field",
+        "AC-1/2/3/owner and Q/OD identities/history kept",
+        "Q-002/Q-010 resolved from actual DEC-027, nonblocking deployment remains open",
+        "manual USER-EDITED text and failure/Retry/race/selection cases preserved",
+        "updated source identity/reviews/current readiness, no stale validation reuse",
+        "raw sources/old spec-check/candidate preserved"
+      ]
+    },
+    {
+      "id": "S5",
+      "critical_checks": [
+        "read-only SPEC/QUESTIONS and sources preserved",
+        "server-filter vs client-only contradiction identified with sources",
+        "Retry All/reset vs current-filter/selection contradiction identified",
+        "ready/structure record not trusted as semantic correctness",
+        "not marked implementation-ready; question candidates kept distinct from actual QUESTIONS registration",
+        "no app/code/Git/permission expansion"
+      ]
+    },
+    {
+      "id": "S6",
+      "critical_checks": [
+        "reconstruct four status request mapping and count",
+        "selection remains across hidden/filter/loading/error/empty and restored mark",
+        "Retry current filter preserves selection",
+        "latest success/failure/finally only",
+        "read-only/no archive contract invention",
+        "initial image state not assumed normative default",
+        "reader agreement not asserted as correctness proof"
+      ]
+    },
+    {
+      "id": "N1",
+      "critical_checks": [
+        "ready without artificial API/permission/image blockers",
+        "single original AC and literal label preserved",
+        "unchecked all a/b/c count3, checked a/c count2, uncheck restoresorder",
+        "no API/schema/loading/error/persistence invented; inapplicable sections explained",
+        "keyboard Space/focus and blue-token requirement retained",
+        "internal component/state choices remain discretionary",
+        "sources/candidate preserved; questions truly unresolved only"
+      ]
+    }
+  ]
+}
