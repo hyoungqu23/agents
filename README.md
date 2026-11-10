@@ -136,3 +136,5 @@ and the remaining human evaluation requirements.
 ## Publishing note
 
 Resolve the public license and third-party attribution requirements before the first public release.
+
+Product 0.5.0: Add product:spec with bundled SPEC/QUESTIONS templates, source authority and readiness guidance, and a standalone handoff record checker.
