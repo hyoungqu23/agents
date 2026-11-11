@@ -1,0 +1,7 @@
+{
+  "name": "invoice-response-fixture",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  }
+}

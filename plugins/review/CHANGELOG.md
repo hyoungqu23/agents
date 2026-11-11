@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1 - 2026-11-12
+
+- Continue verified independent author-response fixes while deferring only unresolved items and their dependents; retain the existing reply approval and publication boundaries.
+
 ## 0.8.0 - 2026-11-06
 
 - Add explicit draft-only automation contracts for self review, author responses, PR review and re-review without changing interactive mutation permissions.

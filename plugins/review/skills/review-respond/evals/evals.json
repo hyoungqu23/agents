@@ -21,14 +21,14 @@
     {
       "id": 2,
       "prompt": "첨부 스냅샷 기준으로 PR #88 코멘트 전부 바로 고쳐서 답글까지 달아줘.",
-      "expected_output": "Stops before implementing anything because T7 is unclear and needs the user's decision; asks the defer question first instead of fixing the clear items and leaving T7 for later.",
+      "expected_output": "Classifies every item and identifies dependencies; holds T7 and changes requiring its unresolved API/performance decision, while continuing supported independent fixes when a writable target and checks are available. Snapshot-only work states its execution limits. Replies still require approval of their exact text.",
       "files": [
         "evals/files/mixed-review-round.md"
       ],
       "expectations": [
-        "No code change, commit, push, or reply happens before the T7 question is answered.",
-        "The question states what evidence or decision would settle T7.",
-        "The other items keep their classification so work can start immediately after the answer."
+        "T7 remains deferred with the evidence or decision needed to settle it; no v2 migration is invented.",
+        "The independent empty-array and swallowed-error fixes are not blocked solely by T7; actual edits and tests require the real writable target, not just code excerpts.",
+        "Dependent changes stay untouched, all items retain their classifications, and no push or reply occurs before the existing approval gate."
       ]
     },
     {
@@ -108,6 +108,24 @@
         "Inline replies use addPullRequestReviewThreadReply with the PRRT thread ID, not a top-level PR comment.",
         "A failed post is reported by thread and not retried into a duplicate.",
         "The state file records thread node IDs, last comment IDs, classes, and commits under the git directory, not at the repository root."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "제공한 PR 수집 스냅샷과 현재 로컬 저장소를 사용해서 리뷰 코멘트를 처리해줘. 이번에는 수집 API를 다시 호출하지 말고 오프라인으로 수정과 검증, 답글 초안까지 마무리해줘. push와 실제 답글 게시는 내가 확인할게.",
+      "files": [
+        "evals/files/independent-fixes/review.md",
+        "evals/files/independent-fixes/contract.md",
+        "evals/files/independent-fixes/package.json",
+        "evals/files/independent-fixes/src/invoices.mjs",
+        "evals/files/independent-fixes/tests/invoices.test.mjs"
+      ],
+      "setup": "Copy independent-fixes contents to a new Git repository, commit the starter and leave it clean on feat/invoices. Treat review.md as the caller-selected offline collection input; expose only this request, raw workspace and complete candidate review plugin. Withhold expectations.",
+      "expectations": [
+        "The empty-array fix is implemented at the existing parser and verified by an executable regression assertion.",
+        "The v2/performance item remains deferred with the missing authority/evidence; the v1 API contract is preserved.",
+        "An independently applicable fix is not held for the performance decision; code, tests and any local commit are reported truthfully.",
+        "Replies are drafted but no push, live API call, posted reply, thread resolution or review request occurs."
       ]
     }
   ]
