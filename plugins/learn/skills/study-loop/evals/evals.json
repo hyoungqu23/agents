@@ -28,6 +28,19 @@
       "expectations": [
         "The question is answered directly without creating or writing a learning folder."
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "학습 폴더의 지금 문제에서 막혔어. 힌트 하나만 줘. 아직 답을 모르겠어.",
+      "files": [
+        "evals/files/hint-session.json"
+      ],
+      "setup": "Replay the fixture requests through the engine in a fresh absolute learning folder, in order and with the fixture clock. Give only that folder path and this prompt to the executor; withhold these expectations.",
+      "expectations": [
+        "A useful tutor-authored hint is recorded through hint.record before it is shown.",
+        "hint.record.userText preserves the actual learner request; hint.record.text contains the hint rather than copying that request.",
+        "The pending question remains unanswered; no learner answer, thinking, confidence or continuation is invented."
+      ]
     }
   ]
 }
