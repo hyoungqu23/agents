@@ -23,7 +23,7 @@
       "name": "review",
       "source": "./plugins/review",
       "description": "Evidence-backed code review, Pending PR review drafts, claim verification and author responses.",
-      "version": "0.8.0",
+      "version": "0.8.1",
       "category": "Productivity",
       "keywords": [
         "review",
@@ -50,7 +50,7 @@
       "name": "product",
       "source": "./plugins/product",
       "description": "Product requirements, user flows and traceable frontend implementation specifications.",
-      "version": "0.5.0",
+      "version": "0.5.1",
       "category": "Productivity",
       "keywords": [
         "product",
@@ -64,7 +64,7 @@
       "name": "build",
       "source": "./plugins/build",
       "description": "Implement features with original SPEC coverage, apply scoped fixes and dogfood real user journeys with visual and persistence evidence.",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "category": "Productivity",
       "keywords": [
         "implementation",
@@ -77,7 +77,7 @@
       "name": "learn",
       "source": "./plugins/learn",
       "description": "Resumable tutoring that diagnoses, plans, teaches and keeps the learning record in a local folder.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "category": "Productivity",
       "keywords": [
         "learning",

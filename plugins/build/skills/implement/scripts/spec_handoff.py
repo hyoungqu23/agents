@@ -2,6 +2,9 @@
 
 This is a format reader, not a prose/semantic correctness validator. Unsupported
 syntax is an error rather than an empty canonical list. No IO or code execution.
+
+The product:spec copy is canonical; build:implement ships an identical standalone
+copy. scripts/tests/test_spec_handoff_parity.py guards both bytes and behavior.
 """
 import re
 

@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.4.1 - 2026-11-10
+## 0.4.1 - 2026-11-12
+
+- Guard the standalone implement SPEC reader against drift from the canonical product reader with source parity and shared behavior cases.
 
 - Preserve unchanged dogfood observations and issues when exploration adds checks; bind each observation to its source, expectation and journey while retaining legacy capture support.
 

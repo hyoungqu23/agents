@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1 - 2026-11-12
+
+- Keep the independently shipped SPEC readers byte-identical and exercise both against a shared accepted/rejected handoff corpus.
+
 ## 0.5.0
 
 - Reject malformed canonical rows instead of omitting ACs/questions; keep frontmatter detection separate from examples and encoding failures.
