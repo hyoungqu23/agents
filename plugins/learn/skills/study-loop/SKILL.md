@@ -18,8 +18,10 @@ move. The Korean label is **학습 루프**. Talk to the learner in their langua
 - Wait for the learner. After a question, end your turn and wait for their real
   answer. After feedback, wait for their real choice to continue. Never write the
   learner's answer, thinking, confidence or decision for them.
-- Put the learner's own words in every `userText`, `text` and `thinking` field.
-  Leave `confidence` and `thinking` null when they did not give them, and set
+- Preserve the learner's own words in `userText`, `answer.text` and
+  `answer.thinking`. For `hint.record`, `text` is the tutor's hint;
+  `userText` preserves the learner's request for it.
+  Leave `answer.confidence` and `answer.thinking` null when they did not give them, and set
   `reportedExternalHelp` to `none` unless they mention outside help.
 - Follow `nextAction` in the packet the engine returns; do not skip ahead.
 - Say something is saved only when the response has `"ok": true`.

@@ -76,6 +76,8 @@ Update report/checks/issues during execution so interruption leaves useful evide
 Retain stable IDs and earlier results. On resume compare actual source, served build,
 role/session and data. Changed premises require a new attempt and affected checks;
 do not relabel old evidence under a new target or erase the original required scope.
+Use the recorder's per-check targets so adding exploratory checks preserves unchanged
+observations; the full scope digest still identifies each capture.
 
 Capture target-after.json and run `dogfood_result.py assess`. Report its computed
 record/coverage status separately from product_result: `complete + issues_found`

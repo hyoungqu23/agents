@@ -91,11 +91,17 @@ Signals worth reading: Conventional Comments labels (`nitpick`, `suggestion`, `i
 
 Verify before implementing. Read the code, callers, and tests the comment concerns and confirm the claim holds here. A comment's existence proves only that someone wrote it. Bot findings get the same check; a bot finding is a claim, not a verdict. If a claim cannot be verified locally, classify it `defer` and say what evidence would settle it.
 
-If any item is unclear, stop before implementing anything and ask. Items are often related, and a change built on partial understanding is the wrong change.
+After classifying all items, identify dependencies between the proposed changes and
+unresolved decisions. Ask what would settle each `defer` item, and hold that item
+and any changes depending on its answer. Continue verified, authorized fixes whose
+outcome does not depend on it. Pause all implementation only when the unresolved
+choice affects all remaining changes; explain that dependency.
 
 ## 4. Change the code
 
-Start only when every item has a class and the user has answered the `defer` questions.
+Start once every item has a class and the chosen changes' dependencies are settled.
+Keep deferred items and dependent changes untouched while independent fixes are
+implemented and checked. Revalidate an item after the missing decision arrives.
 
 - Order: blocking correctness and security first, then small mechanical fixes, then larger changes. Test each fix as it lands.
 - Commit in logical units, not one commit per comment. Every review round is new commits: do not amend, squash, rebase, or force-push while the PR is under review. Force-pushing marks every thread outdated and breaks the reviewer's "changes since last review" view. This applies to bot reviews too; do not use fixup commits.
@@ -113,7 +119,8 @@ What each reply says:
 - `answer`: the answer and the code it rests on.
 - `pushback`: the evidence, then the question whose answer would change your mind. State the disagreement plainly; do not hide it behind "consider".
 - `already-addressed`: the commit that handles it.
-- `defer`: nothing is posted until the user decides.
+- `defer`: no fix or reply for this item until its missing decision is settled;
+  independently handled items can proceed through the existing approval workflow.
 
 Rules for every reply:
 

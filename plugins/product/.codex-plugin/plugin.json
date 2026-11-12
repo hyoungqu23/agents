@@ -1,6 +1,6 @@
 {
   "name": "product",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Product requirements, user flows and traceable frontend implementation specifications.",
   "author": {
     "name": "HM2"

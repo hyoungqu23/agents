@@ -1,0 +1,41 @@
+{
+  "base_commit": "1d5a9fb903e325cd80a7c4cbae7a69899081db66",
+  "source_sha256": {
+    "plugins/build/.claude-plugin/plugin.json": "05905b314bf2356d11ba6906819ffa1aa9c2686f6db7713c39d4c31c7b98c1ed",
+    "plugins/build/.codex-plugin/plugin.json": "d2b7b2db3af7017d1c1cf50c1eb51d4a21813af3f99de811467f3a70836fed6f",
+    "plugins/build/CHANGELOG.md": "078b0867f481c3457fc2baff7750dea12ce0c3e30ec3e5cb2f75ac7aa01a3f63",
+    "plugins/build/skills/dogfood/SKILL.md": "2c5598bec12debf32a4fc7270b0c5731d199c6416d8e74dac9efccdd1b1c0902",
+    "plugins/build/skills/dogfood/references/evidence-and-results.md": "edcf5e2d527990f9ce4e07d939b8f0a9ac6b2f71297188ec4a63c6d1cab24ab7",
+    "plugins/build/skills/dogfood/scripts/dogfood_result.py": "682f9700c4a9c36754ae90bae6c3109e212c368d51a3f3eedfba54e765aca997",
+    "plugins/build/skills/implement/scripts/spec_handoff.py": "46cd50f166d90da3ba897a223eb68ec1b6e702d814f6cf73a9fb1b9af288a021",
+    "plugins/learn/.claude-plugin/plugin.json": "649d7771920848663bac3bc968c6285ad46ea8ac9a2838cd863a35e903f7f41f",
+    "plugins/learn/.codex-plugin/plugin.json": "b3378d17c5e849da2106784022a2e5c3eef66ce5399b2c9e18f41761c327c1f9",
+    "plugins/learn/CHANGELOG.md": "b8e20cb214ae1cf97075fd83180769cad8b89f7ec8ea2c523899806a6e0dfe6d",
+    "plugins/learn/skills/study-loop/SKILL.md": "23b2825dd4f913d88fac7449c9db08db3b4c408a95477b51e8efecd70ceb19cb",
+    "plugins/product/.claude-plugin/plugin.json": "ba60028dc38a9211bd5acd044b9dba51bad687233d3b3202ed4273d2cdd1d969",
+    "plugins/product/.codex-plugin/plugin.json": "96881ad142237aa58ffea34b9549806ed00554106c19d0a29eee17840e15cd77",
+    "plugins/product/CHANGELOG.md": "0826d6a5b0503baf1c79a8a88bfeb6496c7714d25c1e5d57296c38dc531222a2",
+    "plugins/product/skills/spec/scripts/spec_handoff.py": "46cd50f166d90da3ba897a223eb68ec1b6e702d814f6cf73a9fb1b9af288a021",
+    "plugins/review/.claude-plugin/plugin.json": "6591a9f5589fbd61a76e4a011bb75437559bcfc616c49489b64ede60ee356ecf",
+    "plugins/review/.codex-plugin/plugin.json": "d47c10158091228288ca970c3546fbe450bdf13c187e9b1a3898a14f92de2a65",
+    "plugins/review/CHANGELOG.md": "0d631b950b801b4221bc8024dc3a91774012ba442d6336e48529da36b54c9c6f",
+    "plugins/review/skills/review-respond/SKILL.md": "03992e517838b88f3dc54a2e21ebac28b8f51994dadef65242ec5823bf5695a8"
+  },
+  "behavioral_runs": [
+    {
+      "case": "study-loop/hint",
+      "method": "fresh collaboration context; raw engine-seeded folder and candidate skill without evals",
+      "model": "exact runtime model identity unavailable; inherited session model",
+      "entrypoint_sha256": "23b2825dd4f913d88fac7449c9db08db3b4c408a95477b51e8efecd70ceb19cb",
+      "result": "tutor hint saved, learner request verbatim, await_answer retained"
+    },
+    {
+      "case": "review-respond/independent-fixes",
+      "method": "fresh collaboration context; caller-selected offline snapshot and local fixture; complete candidate plugin without evals",
+      "model": "exact runtime model identity unavailable; inherited session model",
+      "entrypoint_sha256": "03992e517838b88f3dc54a2e21ebac28b8f51994dadef65242ec5823bf5695a8",
+      "fixture_commit": "69706c5348193aa9bd62c54ac19cff33bff871d2",
+      "result": "independent empty-success fix and regression completed; v2 request deferred; no external writes"
+    }
+  ]
+}

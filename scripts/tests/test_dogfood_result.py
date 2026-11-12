@@ -55,10 +55,10 @@ class DogfoodResultTests(unittest.TestCase):
         snapshot = gate.capture(self.run_path)
         self.write(self.before, snapshot); self.write(self.after, snapshot)
         for c in self.run['checks']:
-            c['target'] = snapshot['digest']
-        self.run['target_evidence'] = {'target': snapshot['digest'], 'evidence': [self.entries[1]]}
+            c['target'] = snapshot.get('check_targets', {}).get(c['id'], snapshot['digest'])
+        self.run['target_evidence'] = {'target': snapshot.get('observation_target', snapshot['digest']), 'evidence': [self.entries[1]]}
         for i in self.run['issues']:
-            i['target'] = snapshot['digest']
+            i['target'] = next(c['target'] for c in self.run['checks'] if c['id'] == i['check'])
 
     def assess(self):
         self.write(self.run_path, self.run)
@@ -105,13 +105,84 @@ class DogfoodResultTests(unittest.TestCase):
         self.assertEqual(self.assess()['status'], 'invalid')
 
     def test_added_exploration_checks_are_allowed_after_recapture(self):
+        prior_check = copy.deepcopy(self.run['checks'][0])
+        prior_target_evidence = copy.deepcopy(self.run['target_evidence'])
         self.run['checks'].append({**self.run['checks'][0], 'id': 'C-2', 'axis': 'functional'})
         self.write(self.run_path, self.run)
         target = gate.capture(self.run_path); self.write(self.after, target)
-        for c in self.run['checks']:
-            c['target'] = target['digest']
-        self.run['target_evidence']['target'] = target['digest']
+        self.run['checks'][-1]['target'] = target['digest']
         self.assertEqual(self.assess()['status'], 'complete')
+        self.assertEqual(self.run['checks'][0], prior_check)
+        self.assertEqual(self.run['target_evidence'], prior_target_evidence)
+
+    def test_repeated_exploration_preserves_prior_checks_and_issues(self):
+        self.run['checks'][0]['status'] = 'failed'
+        self.run['issues'] = [self.issue('observed_once')]
+        for number in (2, 3):
+            prior_checks = copy.deepcopy(self.run['checks'])
+            prior_issues = copy.deepcopy(self.run['issues'])
+            added = {**self.run['checks'][0], 'id': f'C-{number}', 'axis': 'functional', 'status': 'passed'}
+            self.run['checks'].append(added)
+            self.write(self.run_path, self.run)
+            target = gate.capture(self.run_path); self.write(self.after, target)
+            added['target'] = target['check_targets'][added['id']]
+            self.assertEqual(self.assess()['status'], 'complete')
+            self.assertEqual(self.run['checks'][:-1], prior_checks)
+            self.assertEqual(self.run['issues'], prior_issues)
+
+    def test_check_target_binds_its_definition_and_journey(self):
+        original = gate.capture(self.run_path)
+        for field in ('expectation', 'journey'):
+            with self.subTest(field=field):
+                changed = copy.deepcopy(self.run)
+                if field == 'expectation':
+                    changed['checks'][0]['expectation']['text'] = 'Another outcome'
+                else:
+                    changed['journeys'][0]['goal'] = 'Another journey'
+                self.write(self.run_path, changed)
+                target = gate.capture(self.run_path)
+                self.assertEqual(target['observation_target'], original['observation_target'])
+                self.assertNotEqual(target['check_targets']['C-1'], original['check_targets']['C-1'])
+
+    def test_new_check_cannot_borrow_another_checks_target(self):
+        self.run['checks'].append({**self.run['checks'][0], 'id': 'C-2', 'axis': 'functional'})
+        self.write(self.run_path, self.run)
+        self.write(self.after, gate.capture(self.run_path))
+        self.assertEqual(self.assess()['status'], 'invalid')
+
+    def test_changed_added_check_requires_fresh_observation(self):
+        added = {**self.run['checks'][0], 'id': 'C-2', 'axis': 'functional'}
+        self.run['checks'].append(added)
+        self.write(self.run_path, self.run)
+        captured = gate.capture(self.run_path); self.write(self.after, captured)
+        added['target'] = captured['check_targets']['C-2']
+        self.assertEqual(self.assess()['status'], 'complete')
+        added['expectation'] = {**added['expectation'], 'text': 'A changed expected outcome'}
+        self.write(self.run_path, self.run)
+        self.write(self.after, gate.capture(self.run_path))
+        self.assertEqual(self.assess()['status'], 'invalid')
+
+    def test_legacy_captures_and_full_digest_observations_remain_readable(self):
+        value = gate.capture(self.run_path)
+        for key in ('digest', 'observation_target', 'check_targets'):
+            value.pop(key, None)
+        value['digest'] = gate.digest(value)
+        self.write(self.before, value); self.write(self.after, value)
+        self.run['checks'][0]['target'] = value['digest']
+        self.run['target_evidence']['target'] = value['digest']
+        self.assertEqual(self.assess()['status'], 'complete')
+
+    def test_new_check_cannot_claim_legacy_initial_scope_digest(self):
+        value = json.loads(self.before.read_text())
+        for key in ('digest', 'observation_target', 'check_targets'):
+            value.pop(key, None)
+        value['digest'] = gate.digest(value)
+        self.write(self.before, value)
+        self.run['checks'][0]['target'] = value['digest']
+        self.run['checks'].append({**self.run['checks'][0], 'id': 'C-2', 'axis': 'functional'})
+        self.write(self.run_path, self.run)
+        self.write(self.after, gate.capture(self.run_path))
+        self.assertEqual(self.assess()['status'], 'invalid')
 
     def test_stale_evidence_not_retargeted_automatically(self):
         self.run['checks'][0]['target'] = 'old target'

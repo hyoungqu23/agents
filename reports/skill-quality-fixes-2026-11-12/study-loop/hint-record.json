@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "workspaceId": "11111111-1111-4111-8111-111111111111",
+  "operationId": "ddd8e40e-8b1f-4e0f-93d8-b852f6ada2e9",
+  "revision": 10,
+  "recordedAt": "2026-11-11T22:57:17Z",
+  "requestHash": "e0bfd6d8ca3f7bb5b7e2b1fd2f1208d38007919543e85515bde0441dcb3741b9",
+  "actor": {
+    "host": "codex-desktop",
+    "hostVersion": null,
+    "model": null,
+    "authMode": "unknown"
+  },
+  "command": "hint.record",
+  "events": [
+    {
+      "eventId": "982100c3-03a3-5626-a478-743f144f333b",
+      "type": "hint_recorded",
+      "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+      "data": {
+        "hintId": "4d9e7185-a7ee-54ab-9f50-86cc30ace91e",
+        "questionId": "40cfb100-5d35-5a7b-9bf3-39b05a343602",
+        "level": 1,
+        "kind": "cue",
+        "text": "사과 두 무리를 한데 모아, 빠뜨리거나 두 번 세는 것 없이 하나씩 세어 보세요.",
+        "requestText": "학습 폴더의 지금 문제에서 막혔어. 힌트 하나만 줘. 아직 답을 모르겠어.",
+        "recordedAt": "2026-11-11T22:57:17Z"
+      }
+    }
+  ],
+  "entityIds": {
+    "sessionId": "dafb5519-5f39-5617-b607-13ddee4f6232",
+    "hintId": "4d9e7185-a7ee-54ab-9f50-86cc30ace91e"
+  }
+}

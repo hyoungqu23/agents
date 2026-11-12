@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 - 2026-11-12
+
+- Scope verbatim learner text to learner-authored fields; distinguish tutor hint text from the learner request and add a pending-question hint evaluation.
+
 ## 0.1.0 - 2026-11-06
 
 - Add `study-loop`: diagnose, plan, teach, practice and review one goal over several sessions, waiting for the learner's real answers and choices.
