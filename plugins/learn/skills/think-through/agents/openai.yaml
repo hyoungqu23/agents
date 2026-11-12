@@ -1,0 +1,4 @@
+interface:
+  display_name: "Think Through"
+  short_description: "Learn through questions in the current conversation"
+  default_prompt: "Use $think-through to help me understand this topic by asking one question at a time and adapting to my answers."

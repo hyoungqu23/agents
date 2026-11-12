@@ -1,6 +1,6 @@
 ---
 name: study-loop
-description: Run a resumable tutoring loop that diagnoses what the learner already knows, agrees a small plan, teaches one step at a time, waits for real answers, assesses them against rubrics written before the question, and keeps goals, answers, hints, progress and cited sources in a local learning folder that Claude Code and Codex can both resume. Use when the user asks to study, learn, be tutored in, practice or review a topic over several turns or sessions, or to continue a saved learning folder. Do not use for a one-off explanation or quick factual question, for grading someone else's work, or for reading LearnHarness app data; answer those directly instead.
+description: Run a resumable tutoring loop with diagnosis, a small plan, real learner answers, rubric-based assessments and a local learning record that Claude Code and Codex can both resume. Use when the user asks for saved learning progress, a learning folder, a structured course across sessions, practice or review of a recorded plan, or to continue a saved learning folder. Do not use for conversation-only tutoring or quizzes without a saved record; use think-through instead. For a one-off explanation or factual question, answer directly. Do not use for grading someone else's work or reading LearnHarness app data.
 ---
 
 # Study Loop
@@ -29,7 +29,9 @@ move. The Korean label is **학습 루프**. Talk to the learner in their langua
 - Do not read credential or login files. Do not start background agents.
 
 Do not turn a short one-off question into a saved lesson. Start the loop only
-when the learner asks to study over time or names a learning folder.
+when the learner asks for saved learning progress, a structured course across
+sessions or names a learning folder. For conversation-only tutoring or quizzes,
+use the sibling `think-through` skill instead.
 
 ## Start or resume
 

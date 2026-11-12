@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 - 2026-11-12
+
+- Add `think-through` for Socratic tutoring in the current conversation, with one question at a time and no learning-folder setup.
+- Adapt the diagnostic and explanations to the learner; allow stopping at any point and describe demonstrated understanding without mastery scores.
+- Route saved learning records and cross-session study to `study-loop`, and conversation-only tutoring to `think-through`.
+- Preserve Jane Street's Socratic Tutor attribution and MIT notice, and add evaluation scenarios for scope, learner control, assistance and handoff.
+
 ## 0.1.1 - 2026-11-12
 
 - Scope verbatim learner text to learner-authored fields; distinguish tutor hint text from the learner request and add a pending-question hint evaluation.

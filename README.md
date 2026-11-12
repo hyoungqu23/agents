@@ -15,7 +15,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | [`design`](plugins/design) | `design-brief`, `prototype-explore`, `prototype-promote` | Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references. |
 | [`product`](plugins/product) | `problem-frame`, `prd-write`, `prd-gate`, `flow-spec`, `spec` | Problem framing, traceable requirements, readiness review, user flows and frontend implementation specifications. |
 | [`build`](plugins/build) | `implement`, `fix`, `dogfood` | Implement features, apply scoped corrections and dogfood real app journeys with current-source evidence. |
-| [`learn`](plugins/learn) | `study-loop` | Resumable tutoring that diagnoses, plans, teaches, waits for real answers and keeps the learning record in a local folder that Claude Code and Codex can both continue. Needs Python 3.10+. |
+| [`learn`](plugins/learn) | `think-through`, `study-loop` | Learn through questions in conversation, or continue structured study with a local learning record. Only `study-loop` needs Python 3.10+. |
 
 ## Repository layout
 
@@ -33,7 +33,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
     ├── build/
     │   └── skills/{implement,fix}/
     ├── learn/
-    │   └── skills/study-loop/
+    │   └── skills/{think-through,study-loop}/
     └── design/
         ├── references/
         └── skills/{design-brief,prototype-explore,prototype-promote}/

@@ -1,0 +1,77 @@
+{
+  "skill_name": "think-through",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "이진 탐색을 왜 쓰는지 이해하고 싶어. $think-through로 질문하면서 가르쳐줘. 정렬된 배열이 뭔지는 알아. 파일에 저장할 필요는 없어.",
+      "files": [],
+      "expectations": [
+        "The response is in Korean and starts from the supplied background without asking again whether tutoring is wanted.",
+        "Exactly one relevant diagnostic question or exercise is posed, with no answer or hint appended, and the turn ends waiting for the learner.",
+        "No learning folder, engine invocation, mastery score or formal plan approval is introduced."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Quick question: what is a JavaScript closure? Give me a short explanation.",
+      "files": [],
+      "expectations": [
+        "The closure question is answered directly without an unsolicited diagnostic, quiz or tutoring setup."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We are using $think-through to learn recursion. You asked what stops factorial from calling itself forever. I don't know, and I'm getting frustrated. Stop quizzing me and explain it directly from now on.",
+      "files": [],
+      "expectations": [
+        "The base case and how it stops recursion are explained directly without requiring more failed attempts.",
+        "No new quiz question is imposed after the explanation, and the learner's continuing preference for explanations is respected."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "We're doing a think-through lesson on binary search. I got the last exercise right only after you told me which half to discard, then repeated your answer. Does that prove I've mastered it?",
+      "files": [],
+      "expectations": [
+        "The response distinguishes assisted success and repeating a supplied answer from independent understanding.",
+        "No mastery level, percentage or long-term retention claim is awarded; a different uncued check may be proposed without its solution."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "We've been learning closures with $think-through. I independently explained capturing an outer variable, but needed a hint about what happens after the outer function returns. Save state so I can paste it into another chat. Don't create any files.",
+      "files": [],
+      "expectations": [
+        "A compact summary in chat preserves the independently demonstrated point, the hinted point and a useful next step.",
+        "No file or study-loop engine record is written, and automatic persistence or verified mastery is not claimed."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "질문으로 배우는 건 좋았어. 이제 답변과 평가를 폴더에 기록하고, 다음 주에 다른 대화에서도 이어가고 싶어. 아직 저장 위치는 안 정했어.",
+      "files": [],
+      "expectations": [
+        "The request is routed to study-loop for a durable learning record, preserving the current goal as context if known.",
+        "Past conversational answers are not fabricated into engine events, and no learning folder is initialized before its location is established."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "We're doing a think-through lesson on recursion. I can identify the base case but haven't tried writing a recursive function. 오늘은 여기까지. 나머지는 다음에 할게.",
+      "files": [],
+      "expectations": [
+        "The session ends without another question or a requirement to complete the remaining subskills.",
+        "A brief summary distinguishes identifying a base case from the untested ability to write a recursive function."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Help me think through whether to use a queue or a cron job for our nightly export. I need an engineering recommendation, not a lesson.",
+      "files": [],
+      "expectations": [
+        "The ordinary phrase 'think through' does not trigger Socratic tutoring.",
+        "The request is handled as an engineering decision using the available constraints, without a diagnostic, quiz or learning record."
+      ]
+    }
+  ]
+}

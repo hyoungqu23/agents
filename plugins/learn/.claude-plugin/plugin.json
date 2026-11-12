@@ -1,8 +1,8 @@
 {
   "name": "learn",
   "displayName": "Learn",
-  "version": "0.1.1",
-  "description": "Resumable tutoring that diagnoses, plans, teaches, waits for real answers and keeps the learning record in a local folder.",
+  "version": "0.2.0",
+  "description": "Learn through questions in conversation or continue structured study with a local learning record.",
   "author": {
     "name": "HM2"
   },
