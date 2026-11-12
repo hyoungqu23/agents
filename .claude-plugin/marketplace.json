@@ -76,8 +76,8 @@
     {
       "name": "learn",
       "source": "./plugins/learn",
-      "description": "Resumable tutoring that diagnoses, plans, teaches and keeps the learning record in a local folder.",
-      "version": "0.1.1",
+      "description": "Learn through questions in conversation or continue structured study with a local learning record.",
+      "version": "0.2.0",
       "category": "Productivity",
       "keywords": [
         "learning",
