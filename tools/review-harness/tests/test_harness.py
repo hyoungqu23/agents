@@ -281,6 +281,19 @@ class StateTests(unittest.TestCase):
             self.assertEqual(store.enqueue('S3', {'pr': 7}), key); store.recover()
             self.assertEqual(store.rows()[0]['status'], 'write_unconfirmed'); self.assertIsNone(store.next()); store.close()
 
+    def test_lookup_includes_jobs_older_than_inbox(self):
+        with tempfile.TemporaryDirectory() as root:
+            store = Store(root)
+            try:
+                keys = [store.enqueue('S3', {'pr': i}) for i in range(110)]
+                self.assertNotIn(keys[0], [row['id'] for row in store.rows()])
+                self.assertEqual(store.find_job(keys[0])['id'], keys[0])
+                prefix = next(k[:1] for k in keys if sum(v.startswith(k[:1]) for v in keys) > 1)
+                with self.assertRaisesRegex(HarnessError, 'Ambiguous'):
+                    store.find_job(prefix)
+            finally:
+                store.close()
+
     def test_second_local_service_cannot_take_lock(self):
         with tempfile.TemporaryDirectory() as root, instance_lock(root):
             with self.assertRaises(HarnessError):
