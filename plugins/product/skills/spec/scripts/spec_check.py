@@ -15,6 +15,8 @@ _module.loader.exec_module(handoff)
 
 
 def read(path):
+    if not hasattr(os, 'O_NOFOLLOW'):
+        raise ValueError('Unsupported platform: safe input reads require O_NOFOLLOW')
     path = Path(path).absolute()
     for parent in (path, *path.parents):
         if parent.is_symlink():

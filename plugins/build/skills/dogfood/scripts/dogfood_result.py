@@ -41,6 +41,8 @@ def rows(value, label):
 
 
 def read(path):
+    if not hasattr(os, 'O_NOFOLLOW'):
+        raise ValueError('Unsupported platform: safe input reads require O_NOFOLLOW')
     if path.is_symlink() or not path.is_file():
         raise RecordError('Expected a regular file')
     with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), 'rb') as stream:
