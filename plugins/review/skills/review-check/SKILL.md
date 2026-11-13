@@ -72,6 +72,13 @@ provide one concise record per claim with:
 - verdict, evidence locations (`file:line` or snapshot section), trigger and impact;
 - counterevidence, missing evidence, and recommended action as applicable.
 
+For claims covering multiple callers, record the current state and source for
+each caller. If the original claim held for both and only one has been fixed,
+retain the historical confirmed verdict and the aggregate present state. Name
+the remaining caller in the action. Assess proposed remedies separately from
+the defect and its demonstrated impact. A completed-fix reply requires evidence
+that every affected path is addressed.
+
 For `already_addressed`, distinguish the original condition from the current fix.
 For `unresolved`, state the question or artifact needed to settle it; leave verified
 severity unset. Finish with claim coverage, checks run and their results, checks

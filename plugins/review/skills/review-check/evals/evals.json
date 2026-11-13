@@ -75,6 +75,17 @@
         "No git checkout, commit, push, reply, or resolve.",
         "Scope is supplied claims, not a complete audit."
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "R7 claimed both A and B lost edits on cancellation. At review time both directly called discardEdits() on cancel. Today A calls keepEdits() and B still calls discardEdits(). The contract requires retaining edits for both. Verify R7 from this snapshot.",
+      "files": [],
+      "expected_output": "R7 confirmed at review time. A already addressed; B present; aggregate present. Repair B only.",
+      "expectations": [
+        "One original ID survives.",
+        "Current remediation is scoped to B.",
+        "No whole-claim completion reply or invented execution."
+      ]
     }
   ]
 }
