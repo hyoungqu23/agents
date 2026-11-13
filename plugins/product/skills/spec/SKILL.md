@@ -33,6 +33,14 @@ Start new documents from the bundled [SPEC template](assets/SPEC.template.md) an
 example rows and placeholders from outputs. Preserve existing user edits, original
 FR/AC/FLOW/EV/AS/DEC/OD identities and question history on updates.
 
+Scale detail to the behavior a reader must reconstruct. For a local interaction,
+give each rule one primary explanation and use short references from other
+sections. Replace inapplicable template tables with a sentence grounded in the
+source. Keep the canonical AC conditions, action, expected result and check
+self-contained. Expand permissions, persistence, failure and recovery wherever
+they change observable outcomes. On updates check the primary rule and its AC
+summary together.
+
 Make the six SPEC sections reconstructable as an FE contract:
 
 1. User outcome, declared scope/exclusions, constraints and target environment.
