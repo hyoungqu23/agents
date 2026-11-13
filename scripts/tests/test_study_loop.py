@@ -556,6 +556,18 @@ class AcceptanceTests(Lab):
         mine = [item for item in export["assessments"] if item["answerId"] == answer_id]
         self.assertEqual([item["replacesAssessmentId"] for item in mine], [None, first["assessmentId"]])
 
+    def test_v1_manual_choice_survives_host_change_and_rebuild(self):
+        self.ready([node("a"), node("b", ["a"])])
+        self.attempt()
+        before = self.packet()
+        self.assertEqual(before["nextAction"]["kind"], "wait_for_continue")
+        journal = self.journal()
+        self.actor = CODEX
+        self.ok("workspace.rebuild", {})
+        resumed = self.packet()
+        self.assertEqual(resumed["nextAction"], before["nextAction"])
+        self.assertEqual(self.journal(), journal)
+
     def test_ac29_late_assessment_edit(self):
         self.ready([node("a"), node("b", ["a"])])
         _, answer_id, result = self.attempt()
