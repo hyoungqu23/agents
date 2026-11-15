@@ -70,7 +70,9 @@ provide one concise record per claim with:
 - ID, original claim, and original review revision if known;
 - target revision and current state;
 - verdict, evidence locations (`file:line` or snapshot section), trigger and impact;
-- counterevidence, missing evidence, and recommended action as applicable.
+- counterevidence or missing facts that determine the verdict;
+- current state and evidence for each affected path where remediation differs;
+- assessment of any supplied remedy, and the remaining required or optional action.
 
 For `already_addressed`, distinguish the original condition from the current fix.
 For `unresolved`, state the question or artifact needed to settle it; leave verified

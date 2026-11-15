@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Track remediation by caller in review-check and review-respond, including outstanding paths and unsafe proposed fixes.
+
 ## 0.8.2 - 2026-11-15
 
 - Route investigation depth by risk while retaining every mandatory pass and quality check.

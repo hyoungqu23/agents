@@ -75,6 +75,20 @@
         "No git checkout, commit, push, reply, or resolve.",
         "Scope is supplied claims, not a complete audit."
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "Verify R7 against the attached historical and current snapshots. Report the status of the original finding and assess the proposed fix.",
+      "files": [
+        "evals/files/cancel-snapshot.md"
+      ],
+      "expected_output": "R7 verdict=confirmed and aggregate current_state=present. At revision B only the toolbar is fixed; the keyboard handler still needs a local change. Reject the global no-op because confirmed deletion must clear the draft. Preserve original ID R7 and distinguish the defect verdict from the remedy assessment.",
+      "expectations": [
+        "One original ID survives.",
+        "Current remediation is scoped to keyboard cancellation.",
+        "R7 has aggregate current_state=present; already_addressed and unknown are incorrect.",
+        "The shared discard helper remains valid for confirmed deletion; reject the proposed global change."
+      ]
     }
   ]
 }
