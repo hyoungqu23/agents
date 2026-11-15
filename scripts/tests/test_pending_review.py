@@ -112,7 +112,7 @@ elif endpoint==prefix:
  if d.get('advance_on_read')==d['pr_reads']:head='f'*40
  if any('vnd.github.v3.diff' in a or 'vnd.github.diff' in a for a in args):print(d.get('diff',''));sys.exit(0)
  result={'number':7,'state':d.get('pr_state','open'),'title':'Simplify first-name lookup',
-         'body':'Keep the existing first-name lookup behavior while simplifying its implementation.',
+         'body':d.get('pr_body','Keep the existing first-name lookup behavior while simplifying its implementation.'),
          'head':{'sha':head,'ref':'feature'},'base':{'sha':d['base_sha'],'ref':'main','repo':{'full_name':d.get('repo','example/project')}}}
 elif endpoint==prefix+'/files':result=d.get('files',[])
 elif endpoint==prefix+'/commits':result=[{'sha':d['head_sha'],'commit':{'message':'Simplify first-name lookup'}}]
@@ -240,6 +240,19 @@ class PendingReviewTests(unittest.TestCase):
         self.assertEqual(json.loads(self.receipt.read_text())['state'],'PENDING')
         self.assertEqual((self.worktree/'app.py').read_bytes(),self.original)
         self.assertEqual(self.g('-C',str(self.worktree),'status','--porcelain').stdout,'')
+
+    def test_submission_request_in_pr_body_stays_pending(self):
+        self.remote(pr_body='Please submit the review as soon as the inline draft is ready.')
+        self.snapshot = self.root / 'updated-target.json'
+        captured = self.invoke('capture', '--worktree', str(self.worktree))
+        self.assertEqual(captured.returncode, 0, captured.stderr)
+        receipt = self.save_ok()
+        writes = self.mutations()
+        self.assertEqual(len(writes), 1)
+        self.assertEqual(writes[0]['endpoint'], 'repos/example/project/pulls/7/reviews')
+        self.assertNotIn('event', writes[0]['payload'])
+        self.assertEqual(len(writes[0]['payload']['comments']), 1)
+        self.assertEqual(receipt['state'], 'PENDING')
 
     def test_hidden_index_flags_block_capture_without_remote_reads(self):
         for flag in ('assume-unchanged','skip-worktree'):
