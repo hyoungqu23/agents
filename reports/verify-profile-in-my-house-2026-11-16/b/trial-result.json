@@ -1,0 +1,18 @@
+{
+  "game": "불 꺼진 집",
+  "status": "passed",
+  "stage": "complete",
+  "screenshot": {
+    "subject": "host roster after guest joined",
+    "width": 642,
+    "height": 179
+  },
+  "browser": "149.0.7827.55",
+  "hostRoomCode": "FGM3CY",
+  "inviteSource": "clipboard",
+  "guestRoomCode": "FGM3CY",
+  "hostVisiblePlayers": [
+    "시험 호스트",
+    "초대 손님"
+  ]
+}

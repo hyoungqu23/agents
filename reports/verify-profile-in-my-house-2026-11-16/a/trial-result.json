@@ -1,0 +1,16 @@
+{
+  "game": "불 꺼진 집",
+  "passed": true,
+  "completed": [
+    "Host alone in created room",
+    "Visible invite for host room obtained",
+    "Independent guest sees both names in same room",
+    "Host sees guest in live roster"
+  ],
+  "chromium": "149.0.7827.55",
+  "hostRoster": [
+    "시험 호스트",
+    "초대 손님"
+  ],
+  "screenshot": "trial.png"
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "command": "/bin/zsh -lc 'cat .eval-skills/dogfood/SKILL.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat .agents/verify/web/PROFILE.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat package.json'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'rg --files | head -160'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"rg -n '초대|플레이어|roomCode|nickname|참가자|방 코드|player-list' src/modules/room/ui/room-client.tsx\"",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat src/app/page.tsx src/modules/room/ui/create-room-button.tsx | tail -220'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'ls node_modules/next/dist/docs/01-app/01-getting-started; cat .eval-skills/dogfood/references/{journeys-and-oracles,scope-and-intent,session-and-environment,evidence-and-results,checklists,drivers/host-browser}.md | head -85'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"cat src/modules/room/ui/join-room-form.tsx | tail -85; rg -n '불 꺼진 집' src\"",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"sed -n '410,455p' src/modules/room/ui/room-client.tsx\nrg -n 'view.code|room-code|view.room.code|copy' src/modules/room/ui/room-client.tsx\nhead -35 node_modules/next/dist/docs/01-app/01-getting-started/04-linking-and-navigating.md\ncat playwright.config.ts\nrg -n 'random.*code|generateRoomCode|ROOM_CODE' src/modules/room\"",
+    "exit_code": 1
+  },
+  {
+    "command": "/bin/zsh -lc \"sed -n '302,321p' src/modules/room/ui/room-client.tsx\nrg -n 'randomInt|randomBytes|nanoid|codeAlphabet|length: 6' src/modules/room\ncat src/modules/room/repository/index.ts\"",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"cat > trial.cjs <<'EOF'\nconst fs = require('node:fs')\nconst path = require('node:path')\nconst assert = require('node:assert/strict')\nconst { chromium } = require('@playwright/test')\n\nconst resultFile = path.join(__dirname, 'trial-result.json')\nconst imageFile = path.join(__dirname, 'trial.png')\nconst hostName = '시험 호스트'\nconst guestName = '초대 손님'\nconst result = { game: '불 꺼진 집', status: 'running', stage: 'setup', screenshot: null }\n\nfunction checkpoint(stage) {\n  result.stage = stage\n  fs.writeFileSync(resultFile, JSON.stringify(result, null, 2) + '\\\\n')\n}\n\nasync function capture(locator, description) {\n  const png = await locator.screenshot({ animations: 'disabled' })\n  fs.writeFileSync(imageFile, png)\n  result.screenshot = { subject: description, width: png.readUInt32BE(16), height: png.readUInt32BE(20) }\n}\n\nasync function join(page, nickname) {\n  await page.getByLabel('닉네임', { exact: true }).fill(nickname)\n  await page.getByRole('button', { name: '이 이름으로 들어가기', exact: true }).click()\n  await player(page, nickname).waitFor()\n  const code = page.locator('.lobby-code-block strong')\n  await code.waitFor()\n  const value = (await code.innerText()).trim()\n  assert.match(value, /\"'^[A-Z0-9]{6}$/)\n  return value\n}\n\nfunction player(page, nickname) {\n  return page.locator('\"'.players-list').getByText(nickname, { exact: true })\n}\n\nasync function main() {\n  let browser\n  try {\n    fs.rmSync(imageFile, { force: true })\n    checkpoint('validate local target')\n    const base = new URL(process.env.BASE_URL)\n    assert.ok(['localhost', '127.0.0.1'].includes(base.hostname))\n    assert.ok(base.protocol === 'http:' && \"'!base.username && !base.password)\n    assert.ok(!process.env.GAME_STORE || process.env.GAME_STORE === '\"'memory')\n    browser = await chromium.launch()\n    result.browser = browser.version()\n    async function freshContext() {\n      const ctx = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1280, height: 900 } })\n      ctx.setDefaultTimeout(45000)\n      await ctx.route('**/*', route => new URL(route.request().url()).origin === base.origin\n        ? route.continue() : route.abort())\n      await ctx.routeWebSocket('**/*', socket => {\n        const url = new URL(socket.url())\n        if (url.protocol === 'ws:' && url.host === base.host) socket.connectToServer()\n        else socket.close()\n      })\n      return ctx\n    }\n    const hostContext = await freshContext()\n    await hostContext.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base.origin })\n    const host = await hostContext.newPage()\n    checkpoint('select game and create room')\n    await host.goto(base.origin, { waitUntil: 'domcontentloaded' })\n    const card = host.locator('article').filter({ has: host.getByRole('heading', { name: result.game, exact: true }) })\n    const start = card.getByRole('button', { name: '불을 끄고 시작하기', exact: true })\n    await capture(start, 'game creation button')\n    await start.click()\n    checkpoint('join as host')\n    result.hostRoomCode = await join(host, hostName)\n    const roster = host.locator('.players-list')\n    await capture(roster, 'host roster before invitation')\n    checkpoint('copy invite through host panel')\n    const panel = host.locator('aside').filter({ has: host.getByRole('heading', { name: '친구 초대' }) })\n    await panel.getByRole('button', { name: '초대 링크 복사' }).click()\n    const manual = panel.getByLabel('직접 복사할 초대 링크')\n    const copied = panel.getByRole('button', { name: '복사했습니다' })\n    await copied.or(manual).waitFor()\n    const fallback = await manual.isVisible()\n    const invite = new URL(fallback ? await manual.inputValue() : await host.evaluate(() => navigator.clipboard.readText()))\n    assert.ok(invite.origin === base.origin && \"'!invite.username && !invite.password)\n    result.inviteSource = fallback ? '\"'visible manual copy field' : 'clipboard'\n    checkpoint('join through invite in fresh guest context')\n    const guest = await (await freshContext()).newPage()\n    await guest.goto(invite.href, { waitUntil: 'domcontentloaded' })\n    result.guestRoomCode = await join(guest, guestName)\n    checkpoint('verify shared room and host roster')\n    assert.equal(result.hostRoomCode, result.guestRoomCode)\n    await player(guest, hostName).waitFor()\n    await host.bringToFront()\n    await player(host, guestName).waitFor()\n    await player(host, hostName).waitFor()\n    await capture(roster, 'host roster after guest joined')\n    result.hostVisiblePlayers = [hostName, guestName]\n    result.status = 'passed'\n    checkpoint('complete')\n  } catch {\n    // Browser errors can quote invite fragments, input values and DOM snapshots.\n    result.status = 'failed'\n    checkpoint(result.stage)\n    process.exitCode = 1\n  } finally {\n    if (browser) await browser.close()\n  }\n}\n\nmain().catch(() => {\n  result.status = 'failed'\n  checkpoint(result.stage)\n  process.exitCode = 1\n})\nEOF\"",
+    "exit_code": 0
+  }
+]
