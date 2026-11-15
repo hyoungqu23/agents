@@ -56,6 +56,13 @@ real failure path. A shallow mock or call count cannot establish the desired res
 Strong source/contract evidence may support a correction without runtime access;
 record the missing runtime check rather than claiming reproduction.
 
+When the reproduction is stable and the target repository has a CI suite for
+that path, keep the regression there. Follow the CI entry point through its
+test command and discovery filters, then run that command with the failing
+case and a valid control. Reuse an existing check when it already distinguishes
+both outcomes. If CI cannot exercise the path, record the local evidence and
+remaining gap.
+
 For QA changes, compare the original state and requested target, then exercise the
 changed behavior. Do not add a unit test for every visual adjustment. Cover affected
 normal and alternate paths with the smallest relevant project checks.

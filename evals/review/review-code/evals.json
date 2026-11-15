@@ -319,6 +319,19 @@
         "The shortened follow-up keeps any new or materially changed judgment attributed and applicable, or says that no additional supported change is needed; it does not resurrect old advice as a requirement.",
         "Product tests and web checks are not claimed as executed against the snapshot."
       ]
+    },
+    {
+      "id": 24,
+      "prompt": "Review the proposed export change using the supplied snapshot.",
+      "files": [
+        "files/bulk-export.md"
+      ],
+      "expected_output": "A source-backed unintended export finding with a discriminating CI case.",
+      "expectations": [
+        "Trace empty selection to export of every row. Explain why selecting the only invoice in the existing test passes either version.",
+        "Recommend an empty selection expecting no rows and a nonempty selection expecting only selected rows.",
+        "Do not claim a recurrence, executed tests, or a code edit."
+      ]
     }
   ]
 }

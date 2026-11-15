@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.4
+
+- Explain the missed regression check for confirmed recurring or high-impact findings.
+
 ## 0.8.3
 
 - Move review-code evaluation inputs outside the installed plugin.
