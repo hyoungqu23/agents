@@ -56,6 +56,18 @@ use the sibling `think-through` skill instead.
    the learner's goal, UTC offset in minutes and the background they gave.
 4. Act on `packet.nextAction` using the table below.
 
+## Recording a continuation preference
+
+When the learner explicitly sets or cancels a standing preference in an accepted
+plan, use protocolVersion 2 and `continuation.preference`. Supply the current
+sessionId, accepted planVersion, original userText, mode (`continue` or `manual`)
+and questionLimit (a positive count explicitly given by the learner, otherwise
+null; always null for manual). A one-time “next” uses the ordinary choice.
+The preference survives resume and rebuild. Once saved, use protocolVersion 2
+for subsequent calls in this folder. Earlier clients cannot read the v2 journal.
+This release records preferences; still follow the engine's wait_for_continue
+and capture a real choice there. No automatic transition is enabled yet.
+
 ## Calling the engine
 
 The engine is `scripts/study_loop.py` in this skill's directory. Send one JSON
