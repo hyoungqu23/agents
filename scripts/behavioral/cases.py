@@ -32,7 +32,12 @@ SKILLS = {"design-existing": ("design", "design-brief"),
 
 def scenario(repo, plugin, skill, number):
     root = repo / "plugins" / plugin / "skills" / skill
-    suite = json.loads((root / "evals/evals.json").read_text())
+    if (plugin, skill) in {("product", "prd-gate"), ("review", "review-code")}:
+        root = repo / "evals" / plugin / skill
+        suite_path = root / "evals.json"
+    else:
+        suite_path = root / "evals/evals.json"
+    suite = json.loads(suite_path.read_text())
     return root, next(case for case in suite["evals"] if case["id"] == number)
 
 
@@ -74,9 +79,9 @@ def prepare(repo, case, workspace):
         for path in source["files"]:
             shutil.copy2(root / path, workspace / Path(path).name)
         prompt = source["prompt"] + "\n제공된 로컬 입력만 사용하고 외부 조회는 하지 마세요."
-        origin = f"plugins/{plugin}/skills/{skill}/evals/evals.json#{number}"
+        origin = f"evals/{plugin}/{skill}/evals.json#{number}"
     elif case == "product-chain":
-        shutil.copy2(repo / "plugins/product/skills/prd-gate/evals/files/chain-notes.md", workspace / "chain-notes.md")
+        shutil.copy2(repo / "evals/product/prd-gate/files/chain-notes.md", workspace / "chain-notes.md")
         prompt = (
             "chain-notes.md로 질문 없이 세 단계를 연결해줘. 이번 요청은 전체 순차 실행을 명시적으로 허용한다. "
             "problem-frame을 적용하여 problem.md를 작성하고, .eval-plugins/product/skills/prd-write/SKILL.md와 "
@@ -97,7 +102,7 @@ def prepare(repo, case, workspace):
             "요청 실패 또는 시간 초과라면 결과를 발명하거나 자체 검토하지 말고 실패와 한계를 보고해줘. "
             "검토자의 보고서를 부모가 수정하지 마. 코드 구현·commit·외부 게시·외부 조회는 하지 마."
         )
-        origin = "plugins/product/skills/prd-gate/evals/files/chain-notes.md:single orchestrating request"
+        origin = "evals/product/prd-gate/files/chain-notes.md:single orchestrating request"
     elif case.startswith("prd-"):
         number = {"prd-from-problem": 1, "prd-update": 2, "prd-direct": 3}[case]
         root, source = scenario(repo, plugin, skill, number)
@@ -124,7 +129,7 @@ def prepare(repo, case, workspace):
         prompt += ('\n추가로 review.json을 작성하세요. 형식은 '
                    '{"findings":[{"file":"상대 경로","line":정수,"description":"원인과 영향",'
                    '"fix":"수정 제안"}],"tests_executed":불리언,"limitations":"검증 한계"}입니다.')
-        origin = f"plugins/{plugin}/skills/{skill}/evals/evals.json#9"
+        origin = f"evals/{plugin}/{skill}/evals.json#9"
     else:
         draft = ("안내드립니다. 지난 9월 12일, 24명의 사용자가 내보내기를 시도했고 3명이 실패했습니다. "
                  "원인은 아직 확인 중입니다. 재시도 버튼은 9월 23일에 배포할 예정이며 일정은 바뀔 수 있습니다.\n")

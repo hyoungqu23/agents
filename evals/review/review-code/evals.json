@@ -93,7 +93,7 @@
       "prompt": "첨부된 Vite PR을 엄격하게 리뷰해줘. 문제가 없으면 억지로 찾지 말고, 실제로 검증한 범위도 알려줘.",
       "expected_output": "Recognizes a clean Vite + TypeScript change, does not invent a finding, does not route to Next.js-specific guidance, and reports that repository commands were not executed because the fixture is not a checkout.",
       "files": [
-        "evals/files/clean-vite-pr.md"
+        "files/clean-vite-pr.md"
       ],
       "expectations": [
         "No evidence-backed finding is emitted for the supplied implementation.",
@@ -107,7 +107,7 @@
       "prompt": "첨부된 archived invoice PR을 파일 간 계약까지 추적해서 리뷰해줘.",
       "expected_output": "Finds the cross-file contract regression where an unsafe cast admits archived into an unchanged domain union and label map, causing the promised Archived label to render as missing, and reports absent coverage without fabricating command results.",
       "files": [
-        "evals/files/cross-file-runtime-regression.md"
+        "files/cross-file-runtime-regression.md"
       ],
       "expectations": [
         "A promoted finding anchors the unsafe cast at src/api/toInvoice.ts:9.",
@@ -122,7 +122,7 @@
       "prompt": "첨부된 FastAPI PR을 acceptance criteria 기준으로 하드 리뷰해줘.",
       "expected_output": "Maps all three acceptance criteria, promotes the missing admin-role authorization check, confirms the not-found membership behavior and transactional rotation from available evidence, and does not limit backend review to generic Python style.",
       "files": [
-        "evals/files/fastapi-spec-mismatch.md"
+        "files/fastapi-spec-mismatch.md"
       ],
       "expectations": [
         "A promoted finding anchors the membership-only authorization path at app/api/workspace_keys.py:27 or another precise changed line in that path.",
@@ -137,7 +137,7 @@
       "prompt": "첨부된 Go 서비스 변경을 리뷰해줘. FE 기준을 억지로 적용하지 말고 동시 요청 경로와 검증 계획까지 봐줘.",
       "expected_output": "Detects Go backend code, traces singleton HTTP concurrency to unsynchronized map reads/writes, promotes the race/panic risk, and proposes Go-native verification without applying frontend criteria.",
       "files": [
-        "evals/files/go-concurrency-change.md"
+        "files/go-concurrency-change.md"
       ],
       "expectations": [
         "The review promotes a finding on a precise changed cache read or write line in internal/features/service.go.",
@@ -152,7 +152,7 @@
       "prompt": "첨부 변경을 리뷰해줘. 전문 스킬도 없고 의존성도 설치되지 않은 환경이야. 권장 fallback으로 진행해줘.",
       "expected_output": "Continues with the built-in frontend lens, emits no invented issue for the simple optional description behavior, does not install dependencies or use the network, and records missing specialist and command validation as residual risk.",
       "files": [
-        "evals/files/missing-specialist-and-tools.md"
+        "files/missing-specialist-and-tools.md"
       ],
       "expectations": [
         "The review explicitly falls back to the built-in frontend lens because matching specialists are unavailable.",
@@ -167,7 +167,7 @@
       "prompt": "첨부된 Go 변경을 PR 리뷰하고 실제로 달 인라인 코멘트까지 추천해줘. 기술 용어는 유지하되, 낯설 수 있는 용어는 첫 등장에 쉬운 설명도 같이 써줘.",
       "expected_output": "Promotes the concurrent map access finding and produces a copy-ready Korean inline comment that preserves exact technical terminology and code identifiers while explaining an unfamiliar term's mechanism once in plain language within the un-ai wording pass.",
       "files": [
-        "evals/files/go-concurrency-change.md"
+        "files/go-concurrency-change.md"
       ],
       "expectations": [
         "The promoted finding and inline recommendation use a precise changed cache read or write line in internal/features/service.go.",
@@ -182,7 +182,7 @@
       "prompt": "첨부된 변경사항을 review-code로 리뷰해줘. 코드는 수정하지 마.",
       "expected_output": "Applies the default quality bar without a separate quality request. Finds the duplicated invoice rule with wrong ownership and a worker-to-UI dependency, plus the incorrect seconds name for a millisecond value, despite correct current outputs. Proposes reuse and an internal rename without semantic edits.",
       "files": [
-        "evals/files/quality-without-runtime-failure.md"
+        "files/quality-without-runtime-failure.md"
       ],
       "expectations": [
         "A P2 finding cites src/ui/InvoiceSummary.tsx:3 or :4, src/invoices/total.ts, and the worker import at src/workers/toInvoiceRow.ts:2; it explains the shared invoice invariant and current need to maintain it in two places.",
@@ -199,7 +199,7 @@
       "prompt": "첨부 변경을 review-code로 리뷰해줘. 완벽한 코드 퀄리티를 추구하고 동일 로직 중복도 엄격히 봐줘. 수정은 하지 마.",
       "expected_output": "Distinguishes independently owned trial and refund policies from duplicate implementations of one invariant; emits no unsupported abstraction, naming, or severity finding and records the ownership evidence for retaining separate policies.",
       "files": [
-        "evals/files/independent-similar-policies.md"
+        "files/independent-similar-policies.md"
       ],
       "expectations": [
         "No finding is invented solely because both functions currently compare against the same 14-day limit.",
@@ -214,7 +214,7 @@
       "prompt": "첨부된 리팩터링을 review-code로 리뷰해줘. 코드는 수정하지 마.",
       "expected_output": "Respects the authoritative API-client migration and external wire contract while reviewing repository fit and naming. Accepts the precise internal millisecond name and behavior-preserving adapter without reverting to the more common legacy pattern or demanding a breaking wire rename.",
       "files": [
-        "evals/files/authoritative-pattern-and-contract-name.md"
+        "files/authoritative-pattern-and-contract-name.md"
       ],
       "expectations": [
         "The review uses docs/api-migration.md as authority rather than counting neighboring legacyGet calls as the canonical pattern.",
@@ -229,7 +229,7 @@
       "prompt": "첨부 변경을 review-code로 리뷰해줘. 코드 퀄리티는 엄격히 보되 과도한 수정은 피하고 싶어.",
       "expected_output": "Leaves the adequate local filter unchanged, respects the still-valid prior decision, and emits no speculative abstraction, cosmetic rename, performance, or autofix request.",
       "files": [
-        "evals/files/adequate-local-change.md"
+        "files/adequate-local-change.md"
       ],
       "expectations": [
         "The review maps the requested filtering, order preservation, and input immutability to the implementation and supplied tests without inventing a defect.",
@@ -244,7 +244,7 @@
       "prompt": "첨부 리팩터링을 review-code로 리뷰해줘. 가능한 작은 수정으로 충분했으면 해. 코드는 수정하지 마.",
       "expected_output": "Finds the removed batch-size validation despite the smaller diff and shortcut comment, traces invalid input to a silently accepted preview, and proposes restoring the local guard and exercising the existing tests without a new framework.",
       "files": [
-        "evals/files/smaller-patch-removes-validation.md"
+        "files/smaller-patch-removes-validation.md"
       ],
       "expectations": [
         "A promoted finding anchors src/batches/parseBatchSize.ts:3 and cites the required integer/range checks plus previewBatch's raw-input path.",
@@ -292,7 +292,7 @@
       "prompt": "첨부된 프로젝트별 인보이스 조회 변경을 review-code로 리뷰해줘. 수정하지 마. 최종 리뷰에는 실제로 달 만한 인라인 코멘트도 추천해줘.",
       "expected_output": "Finds the project cache-key defect and explains the separate request, repository policy and version-matched TanStack Query source. Does not promote an unadopted options-factory suggestion or invent source retrieval. Preserves the decisive basis in an inline recommendation.",
       "files": [
-        "evals/files/finding-basis-query-key.md"
+        "files/finding-basis-query-key.md"
       ],
       "expectations": [
         "A finding anchors src/queries/useInvoices.ts:6 and traces a successful A fetch followed by mounting B with the same fresh key to A data being reused instead of an independent B query.",
@@ -308,7 +308,7 @@
       "prompt": "첨부된 변경사항을 review-code로 리뷰해줘. 코드는 수정하지 마. 이어서 ‘그럼 더 고칠 부분은 없어?’라는 후속 질문에 대한 짧은 답변도 덧붙여줘.",
       "expected_output": "Retains the reachable empty-list regression using the user contract and static caller trace without demanding official documentation. Respects the current user decision and keeps old reviewer advice distinct from repository or team policy, including in the short follow-up.",
       "files": [
-        "evals/files/finding-basis-advice-and-bug.md"
+        "files/finding-basis-advice-and-bug.md"
       ],
       "expectations": [
         "A finding anchors src/invoices/firstInvoiceLabel.ts:3 and shows that [] reaches rows[0].label through previewLabel.ts, throwing before the null fallback can display No invoices.",

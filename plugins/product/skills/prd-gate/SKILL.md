@@ -8,8 +8,8 @@ description: Review a PRD against its problem, sources and decisions before user
 The Korean label is **제품 요구사항 검토**. Review the document as supplied, with
 its real context. This is a product-readiness opinion, not a deployment or build approval.
 
-Read [artifact-contract.md](../../references/artifact-contract.md) for source and
-claim meanings, then [prd-review-contract.md](../../references/prd-review-contract.md)
+Read [artifact-contract.md](references/artifact-contract.md) for source and
+claim meanings, then [prd-review-contract.md](references/prd-review-contract.md)
 for review lenses, dispositions, evidence and saved-output conventions.
 No external CLI or installed sibling skill is required for ordinary review.
 

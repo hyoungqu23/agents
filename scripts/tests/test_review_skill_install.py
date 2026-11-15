@@ -1,5 +1,6 @@
 """Review references must survive copying just the skill directories."""
 from pathlib import Path
+import json
 import re
 import shutil
 import tempfile
@@ -32,6 +33,23 @@ class ReviewSkillInstallTests(unittest.TestCase):
             installed = Path(temporary) / '.agents/skills'
             shutil.copytree(SKILLS, installed)
             self.assertEqual(broken_links(installed), [])
+
+    def test_evaluation_inputs_stay_outside_distributed_skills(self):
+        for plugin, skill in (('review', 'review-code'), ('product', 'prd-gate')):
+            with self.subTest(skill=skill), tempfile.TemporaryDirectory() as temp:
+                installed = Path(temp) / 'skills'
+                shutil.copytree(ROOT / 'plugins' / plugin / 'skills', installed)
+                self.assertTrue((installed / skill / 'SKILL.md').is_file())
+                self.assertFalse((installed / skill / 'evals').exists())
+                if skill == 'prd-gate':
+                    self.assertEqual(broken_links(installed / skill), [])
+                    for reference in (installed / skill / 'references').glob('*.md'):
+                        canonical = ROOT / 'plugins/product/references' / reference.name
+                        self.assertEqual(reference.read_bytes(), canonical.read_bytes())
+                suite = ROOT / 'evals' / plugin / skill
+                for case in json.loads((suite / 'evals.json').read_text())['evals']:
+                    for name in case['files']:
+                        self.assertTrue((suite / name).is_file(), name)
 
     def test_reference_checker_rejects_missing_and_outside_targets(self):
         with tempfile.TemporaryDirectory() as temporary:
