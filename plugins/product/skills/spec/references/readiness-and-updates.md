@@ -48,6 +48,13 @@ freshness. Patch affected sections only, increment content revisions and preserv
 stable IDs. Removing an AC, exception or failure case requires supersession/exclusion
 evidence. Record what changed and which reviews were actually repeated.
 
+When a rule changes, start at its primary explanation and trace its references
+through the affected UI/API rules, canonical AC and open questions. Check the
+previous wording for exceptions before shortening it. If two accounts conflict,
+retain the conflict and its authority question until the sources settle it.
+Keep the affected role, failure, retry and recovery conditions explicit even
+when they occur on a single screen.
+
 The implement handoff uses these same original tables. Its bundled consumer must
 freeze both originals, map every AC (including justified exclusions), preserve
 active Q → needs_decision and compare final code/behavior with original conditions,

@@ -26,6 +26,18 @@ def outcome(operation, value):
 
 
 class SpecHandoffParityTests(unittest.TestCase):
+    def test_compact_local_list_preserves_canonical_handoff(self):
+        run = ROOT / 'reports/spec-quality-2026-11-10/runs/N1'
+        reader = load(READERS[1], 'compact_consumer')
+        for variant in ('output', 'compact-example'):
+            with self.subTest(variant=variant):
+                spec = reader.read_spec((run / variant / 'SPEC.md').read_bytes())
+                questions = reader.read_questions((run / variant / 'QUESTIONS.md').read_bytes())
+                self.assertEqual(spec['metadata']['id'], 'spec:local-list')
+                self.assertEqual(spec['metadata']['status'], 'ready')
+                self.assertEqual([row['AC ID'] for row in spec['acs']], ['AC-local'])
+                self.assertEqual(questions['questions'], [])
+
     def test_bundled_readers_are_identical(self):
         self.assertEqual(READERS[0].read_bytes(), READERS[1].read_bytes(),
                          'Update the canonical product SPEC reader and its standalone build copy together')
