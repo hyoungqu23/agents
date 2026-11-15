@@ -262,7 +262,7 @@ def session_markdown(state, session_id):
         elif kind == "plan_accepted":
             lines += [f"## 계획 v{data['version']} 승인: {data['userText']}", ""]
         elif kind == "continuation_preference_set":
-            lines.append(f"**진행 선호 ({data['mode']}):** {data['userText']}")
+            lines += [f"**진행 선호 ({data['mode']}):** {data['userText']}", ""]
         elif kind in ("session_paused", "session_resumed", "session_finished", "continuation_accepted", "content_resolved"):
             lines += [f"- {kind}: {data.get('userText') or data.get('correction', '')}", ""]
     return "\n".join(lines).encode("utf-8")

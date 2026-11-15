@@ -338,14 +338,19 @@ def assessed_diagnostics(state, session):
 
 # ---- next action ------------------------------------------------------------
 
+def preference_scope_matches(state, session, plan_version):
+    return (session is not None and state.accepted_version is not None
+            and plan_version == state.accepted_version
+            and session["phase"] in ("learning", "practicing", "reviewing"))
+
+
 def next_action(state, protocol_version=1):
     session = state.sessions.get(state.current) if state.current else None
     action = {"nodeId": None, "questionId": None, "answerId": None, "recommendedMove": None}
 
     def done(kind, reason, commands):
         allowed = list(commands) + list(WORKSPACE_COMMANDS)
-        if (protocol_version == 2 and session and state.accepted_version
-                and session["phase"] in ("learning", "practicing", "reviewing")):
+        if protocol_version == 2 and preference_scope_matches(state, session, state.accepted_version):
             allowed.append("continuation.preference")
         return {"kind": kind, "reason": reason, **action, "allowedCommands": allowed}
 

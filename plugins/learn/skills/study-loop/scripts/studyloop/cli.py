@@ -122,7 +122,8 @@ class Engine:
         self.state = state
         self.revision = state.revision
         if state.schema_version > self.request["protocolVersion"]:
-            fail("UNSUPPORTED_VERSION", "This journal requires protocolVersion 2")
+            fail("UNSUPPORTED_VERSION", "This journal requires protocolVersion 2",
+                 "같은 요청을 protocolVersion 2로 다시 보낸다.")
         if state.workspace["workspaceId"] != self.request["workspaceId"]:
             fail("WORKSPACE_MISMATCH", f"this folder is workspace {state.workspace['workspaceId']}")
         return state

@@ -596,13 +596,32 @@ class AcceptanceTests(Lab):
         self.assertEqual(self.journal(), stored)
         self.actor = CODEX
         self.assertEqual(self.call(req("workspace.rebuild", {}))["result"]["session"]["continuationPreference"], payload)
-        old_client = self.send("session.pause", {"sessionId": sid, "userText": "잠깐"})
+        resume = self.request("workspace.query", {"view": "resume", "id": None, "search": None, "cursor": None, "limit": 20})
+        old_client = self.call(resume)
         self.assertEqual(old_client["error"]["code"], "UNSUPPORTED_VERSION")
+        self.assertIn("protocolVersion 2", old_client["error"]["recovery"])
+        retried = self.call({**resume, "protocolVersion": 2})
+        self.assertEqual(retried["result"]["session"]["continuationPreference"], payload)
         self.assertEqual(self.journal(), stored)
         self.assertTrue(self.call(req("session.pause", {"sessionId": sid, "userText": "잠깐"}))["ok"])
         manual = {**payload, "mode": "manual", "questionLimit": None, "userText": "앞으로 매번 물어봐"}
         updated = self.call(req("continuation.preference", manual))
         self.assertEqual(updated["result"]["packet"]["session"]["continuationPreference"], manual)
+
+    def test_replan_clears_saved_preference(self):
+        self.ready([node("a")])
+        sid = self.sid
+        self.attempt()
+        def send(command, payload):
+            response = self.call({**self.request(command, payload), "protocolVersion": 2})
+            self.assertTrue(response["ok"], response)
+            return response["result"]["packet"]
+        preference = send("continuation.preference", {"sessionId": sid, "planVersion": 1,
+                          "mode": "continue", "questionLimit": 1, "userText": "한 문제 더"})
+        self.assertIn("continuationPreference", preference["session"])
+        replanned = send("continuation.accept", {"sessionId": sid, "intent": "replan", "userText": "계획을 바꾸자"})
+        self.assertEqual(replanned["session"]["phase"], "planning")
+        self.assertNotIn("continuationPreference", replanned["session"])
 
     def test_ac29_late_assessment_edit(self):
         self.ready([node("a"), node("b", ["a"])])

@@ -48,7 +48,7 @@ use the sibling `think-through` skill instead.
    shell call starts fresh, so write the printed name (for example `python3.13`)
    in later commands instead of relying on `$PY`.
 3. Check `<folder>/records/events.jsonl` first. If it exists, read `workspaceId`
-   from its first commit and query `view=resume`; missing/stale `workspace.json`
+   from its first commit and query `view=resume` using protocolVersion 2 on this engine; missing/stale `workspace.json`
    is only a projection problem, not permission to initialize again. If no journal
    exists but `records/.init.json` does, retry its recorded initialization request
    with the same IDs. An orphaned `workspace.json` needs recovery, not a new goal.
@@ -136,7 +136,8 @@ Read `error.code`, `error.message` and `error.recovery`; do not retry blindly.
 | `OPERATION_CONFLICT` | You reused an ID for a different request; use a new one |
 | `COMMIT_STATUS_UNKNOWN` | Query `view=operation` with the same `operationId` before anything else |
 | `LOCK_BUSY` | Another process is writing; wait and retry the same request |
-| `CORRUPT_JOURNAL`, `UNSUPPORTED_VERSION`, `RUNTIME_UNSUPPORTED` | Stop writing and tell the learner what the message says |
+| `UNSUPPORTED_VERSION` with “This journal requires protocolVersion 2” | Retry the request with protocolVersion 2 on this engine |
+| `CORRUPT_JOURNAL`, other `UNSUPPORTED_VERSION`, `RUNTIME_UNSUPPORTED` | Stop writing and tell the learner what the message says |
 | Content codes (`INVALID_PLAN`, `RUBRIC_MISMATCH`, `TARGET_NOT_ALLOWED`, …) | Fix the request as the message says, with a new `operationId` |
 
 ## Materials and knowledge

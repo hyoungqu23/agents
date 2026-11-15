@@ -264,7 +264,7 @@ def _continuation_accepted(state, event, commit):
 def _continuation_preference_set(state, event, commit):
     session = _session(state, event)
     preference = event["data"]
-    if preference["planVersion"] != state.accepted_version or session["phase"] not in ("learning", "practicing", "reviewing"):
+    if not policy.preference_scope_matches(state, session, preference["planVersion"]):
         fail("CORRUPT_JOURNAL", "Continuation preference has no matching session plan")
     if preference["sessionId"] != state.current or not preference["userText"].strip():
         fail("CORRUPT_JOURNAL", "Continuation preference must identify a current session and explicit choice")
@@ -754,7 +754,7 @@ def decide_continuation_accept(state, request, context):
 def decide_continuation_preference(state, request, context):
     payload = request["payload"]
     session = current_session(state, payload["sessionId"], allow_paused=payload["mode"] == "manual")
-    if session["phase"] not in ("learning", "practicing", "reviewing") or payload["planVersion"] != state.accepted_version:
+    if not policy.preference_scope_matches(state, session, payload["planVersion"]):
         fail("INVALID_TRANSITION", "Select the current session and its accepted plan")
     if payload["mode"] == "manual" and payload["questionLimit"] is not None:
         fail("INVALID_REQUEST", "Manual continuation takes no question limit")
