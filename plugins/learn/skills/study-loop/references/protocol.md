@@ -200,6 +200,7 @@ Lists page with `limit` (1–100) and `cursor` = the previous `nextCursor`.
 | Code | Meaning | Recovery |
 | --- | --- | --- |
 | `INVALID_REQUEST` | Field, type, length or combination is wrong | Fix it; new `operationId` if the payload changes |
+| `UNSUPPORTED_VERSION` | v1 request on a supported v2 journal | Retry the request using protocolVersion 2 on this engine |
 | `UNSUPPORTED_VERSION` | Protocol or journal format is newer | Stop; use a newer engine |
 | `RUNTIME_UNSUPPORTED` | Python is older than 3.10 | Use Python 3.10+ |
 | `WORKSPACE_MISSING`, `WORKSPACE_MISMATCH`, `WORKSPACE_NOT_EMPTY` | Wrong or unsuitable folder | Check the path and ID; never initialize over unrelated files |

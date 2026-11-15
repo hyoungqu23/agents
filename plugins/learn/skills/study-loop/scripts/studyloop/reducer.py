@@ -20,6 +20,7 @@ KNOWN_EVENTS = set(EVENT_TYPE.values())
 class State:
     def __init__(self):
         self.revision = 0
+        self.schema_version = 1
         self.workspace = None
         self.initial_learner_text = ""
         self.ops = {}
@@ -61,7 +62,7 @@ def verify_commit(state, commit):
     if not isinstance(commit, dict):
         fail("CORRUPT_JOURNAL", f"{where}: not an object")
     version = commit.get("schemaVersion")
-    if isinstance(version, int) and not isinstance(version, bool) and version > 1:
+    if isinstance(version, int) and not isinstance(version, bool) and version > 2:
         fail("UNSUPPORTED_VERSION", f"{where}: schemaVersion {version} is newer than this engine")
     events = commit.get("events")
     if not isinstance(events, list):
@@ -80,6 +81,8 @@ def verify_commit(state, commit):
         fail("CORRUPT_JOURNAL", f"{where}: workspaceId changed")
     if commit["operationId"] in state.ops:
         fail("CORRUPT_JOURNAL", f"{where}: operationId reused")
+    if version < state.schema_version or (version == 1 and commit["command"] == "continuation.preference"):
+        fail("CORRUPT_JOURNAL", f"{where}: incompatible journal version")
     event = commit["events"][0]
     if event["type"] != EVENT_TYPE[commit["command"]]:
         fail("CORRUPT_JOURNAL", f"{where}: {commit['command']} cannot write {event['type']}")
@@ -96,6 +99,7 @@ def apply(state, commit):
         APPLY[event["type"]](state, event, commit)
     except (KeyError, TypeError, IndexError, AttributeError) as error:
         raise StudyError("CORRUPT_JOURNAL", f"revision {commit['revision']}: dangling reference {error!r}")
+    state.schema_version = commit["schemaVersion"]
     state.revision = commit["revision"]
     state.ops[commit["operationId"]] = {
         "revision": commit["revision"],
@@ -174,6 +178,7 @@ def _diagnosis_completed(state, event, commit):
 
 
 def _plan_proposed(state, event, commit):
+    _session(state, event).pop("continuationPreference", None)
     plan = event["data"]
     state.plans[plan["version"]] = plan
     state.latest_version = plan["version"]
@@ -252,6 +257,21 @@ def _continuation_accepted(state, event, commit):
     continuation = state.cont.pop(session["sessionId"])
     fields = policy.follow(state, session, continuation, event["data"]["intent"])
     session.update(pending=None, **fields)
+    if session["phase"] == "planning":
+        session.pop("continuationPreference", None)
+
+
+def _continuation_preference_set(state, event, commit):
+    session = _session(state, event)
+    preference = event["data"]
+    if not policy.preference_scope_matches(state, session, preference["planVersion"]):
+        fail("CORRUPT_JOURNAL", "Continuation preference has no matching session plan")
+    if preference["sessionId"] != state.current or not preference["userText"].strip():
+        fail("CORRUPT_JOURNAL", "Continuation preference must identify a current session and explicit choice")
+    if ((preference["mode"] == "manual" and preference["questionLimit"] is not None)
+            or (preference["mode"] == "continue" and session["lifecycle"] != "active")):
+        fail("CORRUPT_JOURNAL", "Continuation preference is invalid for the session")
+    session["continuationPreference"] = dict(preference)
 
 
 def _content_resolved(state, event, commit):
@@ -262,6 +282,7 @@ def _content_resolved(state, event, commit):
     state.resolutions[event["data"]["assessmentId"]] = event["data"]
     if event["data"]["resolution"] == "replan":
         state.cont.pop(session["sessionId"])
+        session.pop("continuationPreference", None)
         session.update(phase="planning", pending=None, requiredMove=None, currentNodeId=None)
         return
     _continuation(state, session, event, "resolve", entry["q"], None)
@@ -320,6 +341,7 @@ APPLY = {
     "answer_recorded": _answer_recorded,
     "assessment_recorded": _assessment_recorded,
     "continuation_accepted": _continuation_accepted,
+    "continuation_preference_set": _continuation_preference_set,
     "content_resolved": _content_resolved,
     "source_registered": _source_registered,
     "knowledge_committed": _knowledge_committed,
@@ -729,6 +751,18 @@ def decide_continuation_accept(state, request, context):
     return session["sessionId"], dict(payload), _session_ids(state, session)
 
 
+def decide_continuation_preference(state, request, context):
+    payload = request["payload"]
+    session = current_session(state, payload["sessionId"], allow_paused=payload["mode"] == "manual")
+    if not policy.preference_scope_matches(state, session, payload["planVersion"]):
+        fail("INVALID_TRANSITION", "Select the current session and its accepted plan")
+    if payload["mode"] == "manual" and payload["questionLimit"] is not None:
+        fail("INVALID_REQUEST", "Manual continuation takes no question limit")
+    if not payload["userText"].strip():
+        fail("INVALID_REQUEST", "Supply the learner's explicit choice")
+    return session["sessionId"], dict(payload), _session_ids(state, session)
+
+
 def decide_content_resolve(state, request, context):
     payload = request["payload"]
     session = current_session(state, payload["sessionId"])
@@ -840,6 +874,7 @@ DECIDE = {
     "answer.record": decide_answer_record,
     "assessment.record": decide_assessment_record,
     "continuation.accept": decide_continuation_accept,
+    "continuation.preference": decide_continuation_preference,
     "content.resolve": decide_content_resolve,
     "source.register": decide_source_register,
     "knowledge.commit": decide_knowledge_commit,

@@ -60,7 +60,7 @@ def _id_or_none(value):
 def failure(request, revision, error):
     request = request if isinstance(request, dict) else {}
     return {
-        "protocolVersion": 1,
+        "protocolVersion": 2 if request.get("protocolVersion") == 2 else 1,
         "ok": False,
         "workspaceId": _id_or_none(request.get("workspaceId")),
         "operationId": _id_or_none(request.get("operationId")),
@@ -93,7 +93,7 @@ class Engine:
         if command in ("workspace.query", "workspace.validate"):
             self.load()
             if command == "workspace.query":
-                result = views.query(self.state, self.request["payload"], self.learner_text())
+                result = views.query(self.state, self.request["payload"], self.learner_text(), self.request["protocolVersion"])
             else:
                 result = self.validate()
             return self.success(result, committed=False, replayed=False, operation_revision=None, views_status="not_applicable")
@@ -107,7 +107,7 @@ class Engine:
             if command == "workspace.rebuild":
                 self.load()
                 self.require_revision()
-                packet = views.context_packet(self.state, self.learner_text())
+                packet = views.context_packet(self.state, self.learner_text(), self.request["protocolVersion"])
                 return self.success(packet, committed=False, replayed=False, operation_revision=None, views_status=self.refresh(packet))
             return self.write()
 
@@ -121,6 +121,9 @@ class Engine:
             fail("CORRUPT_JOURNAL", f"the journal replays into an inconsistent state: {error!r}")
         self.state = state
         self.revision = state.revision
+        if state.schema_version > self.request["protocolVersion"]:
+            fail("UNSUPPORTED_VERSION", "This journal requires protocolVersion 2",
+                 "같은 요청을 protocolVersion 2로 다시 보낸다.")
         if state.workspace["workspaceId"] != self.request["workspaceId"]:
             fail("WORKSPACE_MISMATCH", f"this folder is workspace {state.workspace['workspaceId']}")
         return state
@@ -154,7 +157,7 @@ class Engine:
     def commit(self, state, digest, now, session_id, data, entity_ids, material=None, actor=None, before_append=None):
         request = self.request
         commit = {
-            "schemaVersion": 1,
+            "schemaVersion": 2 if request["command"] == "continuation.preference" else state.schema_version,
             "workspaceId": request["workspaceId"],
             "operationId": request["operationId"],
             "revision": state.revision + 1,
@@ -176,7 +179,7 @@ class Engine:
         reducer.apply(state, commit)
         # learner.md is created only after the first journal line; show its initial copy until then.
         initial = request["command"] == "workspace.init" and not (self.store.root / "learner.md").exists()
-        packet = views.context_packet(state, state.initial_learner_text if initial else self.learner_text())
+        packet = views.context_packet(state, state.initial_learner_text if initial else self.learner_text(), request["protocolVersion"])
         if len(canonical(packet)) > PACKET_LIMIT:
             fail("CONTEXT_LIMIT", "the resulting context packet is larger than 256 KiB; nothing was saved")
         if before_append:
@@ -197,7 +200,7 @@ class Engine:
             fail("OPERATION_CONFLICT", f"operation {self.request['operationId']} was saved with a different request")
         if self.request["command"] == "workspace.init":
             self.ensure_learner_file(self.state)
-        packet = views.context_packet(self.state, self.learner_text())
+        packet = views.context_packet(self.state, self.learner_text(), self.request["protocolVersion"])
         result = {"kind": "transition", "entityIds": operation["entityIds"], "packet": packet}
         return self.success(result, committed=True, replayed=True, operation_revision=operation["revision"], views_status=self.refresh(packet))
 
@@ -354,7 +357,7 @@ class Engine:
     def success(self, result, committed, replayed, operation_revision, views_status):
         request = self.request
         return {
-            "protocolVersion": 1,
+            "protocolVersion": request["protocolVersion"],
             "ok": True,
             "workspaceId": request["workspaceId"],
             "operationId": request["operationId"],
