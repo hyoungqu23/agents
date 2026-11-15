@@ -32,20 +32,21 @@ def main():
     if args.event == 'pull_request':
         base = git('merge-base', base, head)
     paths = git('diff', '--name-only', '--diff-filter=AM', '--no-renames', base, head,
-                '--', ':(glob)plugins/*/.claude-plugin/plugin.json').splitlines()
+                '--', ':(glob)plugins/*/.claude-plugin/plugin.json',
+                ':(glob)plugins/*/.codex-plugin/plugin.json').splitlines()
     errors = []
     for path in paths:
         version = json.loads(git('show', f'{head}:{path}'))['version']
         if git('ls-tree', base, '--', path):
             if json.loads(git('show', f'{base}:{path}'))['version'] == version:
                 continue
-        changelog = path.split('/.claude-plugin/')[0] + '/CHANGELOG.md'
+        changelog = '/'.join(path.split('/')[:2]) + '/CHANGELOG.md'
         notes = git('show', f'{head}:{changelog}') if git('ls-tree', head, '--', changelog) else ''
         error = check_notes(version, notes)
         if error:
             errors.append(f'{changelog}: {error}')
     if errors:
-        raise SystemExit('\n'.join(errors))
+        raise SystemExit('\n'.join(dict.fromkeys(errors)))
 
 
 if __name__ == '__main__':
