@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.3
+
+- Move review-code evaluation inputs outside the installed plugin.
+
 ## Unreleased
 
 - Track remediation by caller in review-check and review-respond, including outstanding paths and unsafe proposed fixes.

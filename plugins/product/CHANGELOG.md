@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.3
+
+- Move prd-gate evaluation inputs outside the installed plugin.
+
 ## 0.5.2 - 2026-11-15
 
 - Run the spec checker from the active installation and report unsupported safe reads.
