@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2 - 2026-11-15
+
+- Resolve the active implement and dogfood helpers across installation paths and diagnose unavailable safe reads.
+
 ## 0.4.1 - 2026-11-12
 
 - Guard the standalone implement SPEC reader against drift from the canonical product reader with source parity and shared behavior cases.

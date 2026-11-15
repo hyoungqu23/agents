@@ -28,10 +28,17 @@ session identities, capabilities and charter in additional fields/report as need
 Do not add secrets. Preserve initial check/journey definitions; exploration may add
 checks but cannot weaken or erase existing ones.
 
+For each invocation, resolve the directory of the active SKILL.md supplied by
+the host (Claude Code can expand `${CLAUDE_SKILL_DIR}` in the skill entry point).
+Bind `skill_dir` to that actual absolute directory in the same shell call, or pass
+the absolute helper path as one argument directly. Reuse the same resolved
+installation and module versions for the run. If the helper is missing, report
+the incomplete installation. Replace example input/output paths with actual paths.
+
 ```text
-python3 /installed/dogfood/scripts/dogfood_result.py capture --run /state/run.json --output /state/target-before.json
-python3 /installed/dogfood/scripts/dogfood_result.py capture --run /state/run.json --output /state/target-after.json
-python3 /installed/dogfood/scripts/dogfood_result.py assess --run /state/run.json --before /state/target-before.json --after /state/target-after.json --output /state/assessment.json
+python3 -B "${skill_dir:?set skill_dir to the active skill directory}/scripts/dogfood_result.py" capture --run /state/run.json --output /state/target-before.json
+python3 -B "${skill_dir:?set skill_dir to the active skill directory}/scripts/dogfood_result.py" capture --run /state/run.json --output /state/target-after.json
+python3 -B "${skill_dir:?set skill_dir to the active skill directory}/scripts/dogfood_result.py" assess --run /state/run.json --before /state/target-before.json --after /state/target-after.json --output /state/assessment.json
 ```
 
 Capture before and after execution. `digest` identifies the entire scope snapshot.

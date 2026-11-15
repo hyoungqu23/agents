@@ -4,6 +4,7 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 SKILL = ROOT / 'plugins/product/skills/spec'
@@ -71,6 +72,12 @@ class SpecHandoffTests(unittest.TestCase):
 
     def check(self):
         return gate.check(self.spec, self.q)
+
+    def test_missing_nofollow_reports_invalid_structure(self):
+        with patch.object(gate.os, 'O_NOFOLLOW', None, create=True):
+            result = self.check()
+        self.assertEqual(result['structure'], 'invalid')
+        self.assertEqual(result['gaps'], ['Unsupported platform: safe input reads require O_NOFOLLOW'])
 
     def test_complete_korean_contract_and_opaque_ids(self):
         self.assertEqual(self.check()['structure'], 'valid')

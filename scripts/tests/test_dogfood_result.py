@@ -4,9 +4,13 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import shutil
 import struct
+import subprocess
+import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import zlib
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -69,9 +73,33 @@ class DogfoodResultTests(unittest.TestCase):
                 'actual': 'Clipped', 'steps': 'Open page with stated viewport/data', 'impact': 'Cannot read result',
                 'attempts': 2, 'classification': classification, 'evidence': self.entries}
 
+    def test_missing_nofollow_reports_cli_error(self):
+        import contextlib
+        import io
+        error = io.StringIO()
+        args = ['dogfood_result', 'capture', '--run', str(self.run_path), '--output', str(self.state / 'unused.json')]
+        with patch.object(gate.os, 'O_NOFOLLOW', None, create=True), patch.object(sys, 'argv', args), contextlib.redirect_stderr(error):
+            self.assertEqual(gate.main(), 1)
+        self.assertEqual(error.getvalue().strip(), 'Unsupported platform: safe input reads require O_NOFOLLOW')
+
     def test_complete_and_no_issues_observed(self):
         self.assertEqual(self.assess()['status'], 'complete')
         self.assertEqual(self.assess()['product_result'], 'no_issues_observed')
+
+    def test_standalone_install_captures_and_assesses_from_another_directory(self):
+        scripts = self.root / '설치 경로' / 'scripts'
+        shutil.copytree(ROOT / 'plugins/build/skills/dogfood/scripts', scripts)
+        command = [sys.executable, '-B', scripts / 'dogfood_result.py']
+        self.write(self.run_path, self.run)
+        before = self.state / 'installed-before.json'
+        after = self.state / 'installed-after.json'
+        for path in (before, after):
+            subprocess.run(command + ['capture', '--run', self.run_path, '--output', path],
+                           cwd=self.source, check=True, capture_output=True)
+        output = self.state / 'installed-assessment.json'
+        subprocess.run(command + ['assess', '--run', self.run_path, '--before', before, '--after', after,
+                                  '--output', output], cwd=self.source, check=True, capture_output=True)
+        self.assertEqual(json.loads(output.read_text())['status'], 'complete')
 
     def test_complete_and_issues_found_are_independent(self):
         self.run['checks'][0]['status'] = 'failed'; self.run['issues'] = [self.issue()]

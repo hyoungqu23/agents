@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -86,6 +87,19 @@ class ImplementationStateTests(unittest.TestCase):
     def test_implementation_changes_are_allowed_between_two_snapshots(self):
         self.assertNotEqual(self.baseline['digest'], self.verified['digest'])
         self.assertEqual(self.assess()['status'], 'complete')
+
+    def test_standalone_install_captures_and_assesses_from_another_directory(self):
+        scripts = self.root / '설치 경로' / 'scripts'
+        shutil.copytree(SCRIPT.parent, scripts)
+        command = [sys.executable, '-B', scripts / SCRIPT.name]
+        target = self.state / 'installed-verification.json'
+        subprocess.run(command + ['capture', '--worktree', self.repo, '--inputs', self.inputs_path,
+                                  '--output', target], cwd=self.repo, env=self.env, check=True, capture_output=True)
+        output = self.state / 'installed-assessment.json'
+        subprocess.run(command + ['assess', '--worktree', self.repo, '--target', self.baseline_path,
+                                  '--verification-target', target, '--result', self.result_path, '--output', output],
+                       cwd=self.repo, env=self.env, check=True, capture_output=True)
+        self.assertEqual(json.loads(output.read_text())['status'], 'complete')
 
     def test_current_source_drift_invalidates_verification(self):
         (self.repo / 'src/app.js').write_text('export const name = "after checks";\n')
