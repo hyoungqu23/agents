@@ -78,13 +78,16 @@
     },
     {
       "id": 7,
-      "prompt": "R7 claimed both A and B lost edits on cancellation. At review time both directly called discardEdits() on cancel. Today A calls keepEdits() and B still calls discardEdits(). The contract requires retaining edits for both. Verify R7 from this snapshot.",
-      "files": [],
-      "expected_output": "R7 confirmed at review time. A already addressed; B present; aggregate present. Repair B only.",
+      "prompt": "Verify R7 against the attached historical and current snapshots. Report the status of the original finding and assess the proposed fix.",
+      "files": [
+        "evals/files/cancel-snapshot.md"
+      ],
+      "expected_output": "The historical defect in both paths is confirmed. At revision B only the toolbar is fixed; the keyboard handler still needs a local change. Reject the global no-op because confirmed deletion must clear the draft. Preserve original ID R7 and distinguish the defect verdict from the remedy assessment.",
       "expectations": [
         "One original ID survives.",
-        "Current remediation is scoped to B.",
-        "No whole-claim completion reply or invented execution."
+        "Current remediation is scoped to keyboard cancellation.",
+        "No whole-claim completion reply or invented execution.",
+        "The shared discard helper remains valid for confirmed deletion; reject the proposed global change."
       ]
     }
   ]

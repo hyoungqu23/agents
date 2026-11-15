@@ -87,6 +87,12 @@ Read every item first. Then give each exactly one class:
 | `apply-suggestion` | A ```` ```suggestion ```` block you accept after verifying it |
 | `defer` | Unclear, conflicts with an earlier decision the user made, or cannot be verified locally; needs the user |
 
+For a comment spanning several callers, cite the already repaired paths and
+classify the action by the remaining work. If an authorized fix is still needed,
+choose `fix` and limit it to the affected paths. Use `apply-suggestion` only
+when the specific suggested edit preserves every applicable contract. Draft a
+completion reply only after verifying all affected paths.
+
 Signals worth reading: Conventional Comments labels (`nitpick`, `suggestion`, `issue`, `question`) and `(blocking)` / `(non-blocking)` decorations; `pullRequestReview.state` of `CHANGES_REQUESTED`; `authorAssociation` to tell bots and external reviewers from members; `isOutdated`; suggestion fences.
 
 Verify before implementing. Read the code, callers, and tests the comment concerns and confirm the claim holds here. A comment's existence proves only that someone wrote it. Bot findings get the same check; a bot finding is a claim, not a verdict. If a claim cannot be verified locally, classify it `defer` and say what evidence would settle it.

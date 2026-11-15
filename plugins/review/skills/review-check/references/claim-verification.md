@@ -32,6 +32,18 @@ permission to edit code, commit, or post replies.
 - Missing access, missing runtime evidence, and unavailable contracts are unresolved
   facts, not disproof. State precisely what evidence would settle them.
 
+For each material assertion, identify the fact that would change the verdict:
+trace runtime claims to a reachable input, policy claims to the applicable decision
+and its exceptions, design claims to ownership and actual change cost, performance
+claims to workload and scale, and test claims to an assertion that distinguishes
+the alleged failure. Record the decisive observation or the missing fact. Stop
+when that question is settled or further progress needs unavailable evidence.
+
+Assess the defect, demonstrated impact, and reviewer's proposed remedy separately.
+A remedy that breaks another contract can be rejected while the defect still
+needs a fix. Distinguish a required change from an optional improvement. Carry
+the supported portion into the caller's action and identify any unverified part.
+
 Internal verdicts (the calling skill may map these to its own action classes):
 
 | Verdict | Evidence required |
@@ -45,6 +57,15 @@ Track `current_state` separately: `present`, `already_addressed`, `not_applicabl
 or `unknown`. For an already addressed claim, cite the fix or supplied before/after
 evidence. Only claim historical validity when the old source is available; otherwise
 keep the historical verdict unresolved while recording the current fix.
+
+For a single ID that names several affected callers, trace each caller at the
+reviewed and current revisions. Preserve a historically confirmed finding when
+some callers were subsequently fixed. Aggregate to present when any verified
+defect remains, even if other callers are fixed or unknown. Reserve an aggregate
+already_addressed for a verified fix across all originally affected paths.
+When none is known to remain but an applicable path is unverified, use unknown
+and name that path. A refuted historical claim requires evidence about the
+reviewed revision, even when today's behavior is correct.
 
 Do not give unresolved claims a confirmed severity. A reviewer's priority can be
 retained as an attributed input, separate from the verified impact. A clean result
