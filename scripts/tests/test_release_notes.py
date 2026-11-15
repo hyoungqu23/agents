@@ -53,3 +53,8 @@ class ReleaseNotesTests(unittest.TestCase):
             mismatch = commit('1.2.0', '## 1.1.0\n')
             check('push', bad, mismatch, '1.2.0')
             check('push', 'missing-base', fixed, 'fatal')
+            codex_manifest = plugin / '.codex-plugin' / 'plugin.json'
+            codex_manifest.parent.mkdir()
+            codex_manifest.write_text(json.dumps({'version': '2.0.0'}))
+            codex_change = commit('1.2.0', '## 1.2.0\n')
+            check('push', mismatch, codex_change, '2.0.0')
