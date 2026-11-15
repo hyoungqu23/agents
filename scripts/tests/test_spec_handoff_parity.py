@@ -26,6 +26,26 @@ def outcome(operation, value):
 
 
 class SpecHandoffParityTests(unittest.TestCase):
+    def test_compact_local_list_preserves_canonical_handoff(self):
+        run = ROOT / 'reports/spec-quality-2026-11-10/runs/N1'
+        reader = load(READERS[1], 'compact_consumer')
+        for variant in ('output', 'compact-example'):
+            with self.subTest(variant=variant):
+                spec = reader.read_spec((run / variant / 'SPEC.md').read_bytes())
+                questions = reader.read_questions((run / variant / 'QUESTIONS.md').read_bytes())
+                self.assertEqual(spec['metadata']['id'], 'spec:local-list')
+                self.assertEqual(spec['metadata']['status'], 'ready')
+                self.assertEqual([row['AC ID'] for row in spec['acs']], ['AC-local'])
+                self.assertEqual(questions['questions'], [])
+
+    def test_compact_ac_includes_the_observable_contract(self):
+        example = ROOT / 'reports/spec-quality-2026-11-10/runs/N1/compact-example/SPEC.md'
+        row, = load(READERS[1], 'compact_ac').read_spec(example.read_bytes())['acs']
+        for item in ('(a, Alpha, false)', '(b, Beta, true)', '(c, Gamma, false)'):
+            self.assertIn(item, row['사전 조건'])
+        for result in ('완료 항목 숨기기', '체크 해제', '--accent'):
+            self.assertIn(result, row['기대 관찰 결과'])
+
     def test_bundled_readers_are_identical(self):
         self.assertEqual(READERS[0].read_bytes(), READERS[1].read_bytes(),
                          'Update the canonical product SPEC reader and its standalone build copy together')
