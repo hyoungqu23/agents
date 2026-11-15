@@ -44,6 +44,14 @@ Risk guidance:
 - Medium: product behavior, error/fallback paths, caching/state, non-destructive persistence, shared components/utilities, performance-sensitive paths, or meaningful config changes.
 - Low: isolated mechanical changes, docs, snapshots, or generated output with no detected behavioral contract. Low risk still requires classification and review.
 
+Use the initial risk to choose investigation depth for each changed behavior:
+
+- Low — for an isolated mechanical change, compare the old and new contract at an actual consumer. Close the trace once equivalence and all applicable ledger checks are supported. A generated API schema or a rename crossing a package boundary needs its consumer checked before taking this route.
+- Medium — trace the triggering input through the affected consumer to an observable result. Include the relevant failure or recovery path for product behavior, cache/state changes, shared utilities and meaningful configuration changes.
+- High — for high impact, or when an unresolved assumption requires escalation, use the high-risk trace in §4. If two otherwise isolated changes share a state transition, contract, or deployment order, trace their combination and update the ledger risk when it changes the impact.
+
+Apply the existing three passes and five quality criteria at every depth. Reuse evidence in linked behavior notes and record gaps where the deciding consumer or contract is unavailable.
+
 When several files implement one behavior, create a behavior note that connects its entry point, transformations, boundaries, effect, tests, and deployment implications. This avoids reviewing each file in isolation.
 
 ## 3. Discover Before Filtering

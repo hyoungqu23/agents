@@ -216,6 +216,19 @@ class Store:
                     self.db.execute('UPDATE jobs SET run_dir=NULL WHERE id=? AND run_dir=?', (row['id'], str(path)))
         return candidates
 
+    def find_job(self, prefix):
+        if not prefix:
+            raise HarnessError('Job ID is required')
+        matches = self.db.execute(
+            'SELECT * FROM jobs WHERE substr(id, 1, ?) = ? LIMIT 2',
+            (len(prefix), prefix),
+        ).fetchall()
+        if not matches:
+            raise HarnessError('Job not found')
+        if len(matches) > 1:
+            raise HarnessError('Ambiguous job ID; use a longer prefix')
+        return dict(matches[0])
+
     def rows(self):
         return [dict(row) for row in self.db.execute('SELECT * FROM jobs ORDER BY created DESC LIMIT 100')]
 

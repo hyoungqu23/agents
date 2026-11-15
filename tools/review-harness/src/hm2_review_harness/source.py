@@ -106,16 +106,29 @@ def local_checkout(config, original, root, gate):
 
 def packet(root, scope, max_bytes, previous_head=None):
     """Send text only. Omitted/binary source is an explicit review limitation."""
-    paths = git(root, 'ls-tree', '-r', '--name-only', '-z', scope['target']['head_sha']).decode().split('\x00')
-    changed = [row['path'] for row in scope['files']]
-    order = list(dict.fromkeys(changed + [p for p in paths if p]))
+    def tree_names(revision):
+        raw = git(root, 'ls-tree', '-r', '--name-only', '-z', scope['target'][revision + '_sha'])
+        return [name for name in raw.decode().split('\x00') if name]
+
+    paths = tree_names('head')
+    changed = dict.fromkeys(name for row in scope['files']
+                            for name in (row.get('old_path'), row['path']) if name)
+    order = dict.fromkeys([*changed, *paths])
+    head = set(paths)
+    base = head if scope['target']['base_sha'] == scope['target']['head_sha'] else set(tree_names('base'))
+    base_rules = sorted(name for name in base if PurePosixPath(name).name in ('AGENTS.md', 'CLAUDE.md'))
+    revision_paths = {
+        'head': [name for name in order if name in head],
+        'base': dict.fromkeys([*(name for name in changed if name in base), *base_rules]),
+    }
+    if scope['target']['mode'] == 'working-tree':
+        index = set(git(root, 'ls-files', '-z').decode().split('\x00'))
+        revision_paths['index'] = [name for name in order if name in index]
+        revision_paths['working'] = order
+
     sources, omitted, used = {}, [], 0
-    for revision in ('head', 'base', 'index', 'working'):
-        if scope['target']['mode'] != 'working-tree' and revision in ('index', 'working'):
-            continue
-        for name in order:
-            if revision == 'base' and name not in changed and PurePosixPath(name).name not in ('AGENTS.md', 'CLAUDE.md'):
-                continue
+    for revision, names in revision_paths.items():
+        for name in names:
             try:
                 if revision == 'working':
                     path = safe_path(root, name)
@@ -124,15 +137,13 @@ def packet(root, scope, max_bytes, previous_head=None):
                     raw = path.read_bytes()
                 else:
                     ref = ':' + name if revision == 'index' else scope['target'][revision + '_sha'] + ':' + name
-                    raw = git(root, 'show', ref)
+                    raw = git(root, 'cat-file', 'blob', ref)
                 text = raw.decode('utf-8')
                 if '\x00' in text or used + len(raw) > max_bytes:
                     omitted.append(revision + ':' + name); continue
                 sources[revision + ':' + name] = text; used += len(raw)
-            except (HarnessError, UnicodeError):
-                # Deleted/untracked paths may not exist at all revisions.
-                if revision == 'working' or (revision == 'head' and scope['target']['mode'] == 'commits'):
-                    omitted.append(revision + ':' + name)
+            except (HarnessError, UnicodeError, OSError):
+                omitted.append(revision + ':' + name)
     delta = None
     if previous_head:
         try:
