@@ -80,6 +80,26 @@ class SourceTests(GitFixture):
         self.assertEqual(before['target'], copied['target']); self.assertEqual(before, gate.capture_scope(self.repo, working_tree=True))
         self.assertTrue((checkout / 'outside').is_symlink()); self.assertEqual((checkout / 'new.py').stat().st_mode & 0o111, 0o111)
 
+    def test_packet_keeps_deleted_and_renamed_base_sources(self):
+        self.g('mv', 'export.py', 'renamed.py')
+        self.g('rm', 'app.py')
+        self.g('commit', '-qm', 'rename export and remove app')
+        gate = module('review-code', 'review_result.py')
+        scope = gate.capture_scope(self.repo, self.head)
+        packet = source.packet(self.repo, scope, 10000)
+        self.assertEqual(set(packet['sources']), {'base:export.py', 'head:renamed.py', 'base:app.py'})
+        self.assertEqual(packet['sources']['base:export.py'], packet['sources']['head:renamed.py'])
+        self.assertEqual(packet['omitted'], [])
+
+    def test_unreadable_base_text_is_a_gap_even_after_deletion(self):
+        (self.repo / 'legacy').write_bytes(bytes([255]))
+        self.g('add', 'legacy')
+        self.g('commit', '-qm', 'add non-UTF8 data')
+        self.g('rm', 'legacy')
+        self.g('commit', '-qm', 'remove non-UTF8 data')
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, 'HEAD~1')
+        self.assertEqual(source.packet(self.repo, scope, 10000)['omitted'], ['base:legacy'])
+
     def test_packet_omission_is_explicit_and_source_hook_never_runs(self):
         marker = self.root / 'hook-ran'
         hook = self.repo / '.git/hooks/post-checkout'; hook.parent.mkdir(exist_ok=True)
