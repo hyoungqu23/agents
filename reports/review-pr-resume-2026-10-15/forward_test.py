@@ -56,6 +56,23 @@ def loaded_review_code(events, host):
     return False
 
 
+def pending_only_cli_calls(calls, api_calls):
+    """Reject unparsed attempts and CLI forms the recording double cannot classify."""
+    if not calls or len(calls) != len(api_calls):
+        return False
+    for argv in calls:
+        if argv[:1] != ['api']:
+            return False
+        for arg in argv[1:]:
+            if (arg.startswith(('-X', '-f', '-F'))
+                    or arg.split('=', 1)[0] in ('--field', '--raw-field')
+                    or arg.startswith('--method=')
+                    or arg.split('?', 1)[0].rstrip('/').endswith('/events')
+                    or 'submitPullRequestReview' in arg):
+                return False
+    return True
+
+
 def main(host, output, submission_request=False):
     output.mkdir(parents=True, exist_ok=False)
     fixture = fixtures.PendingReviewTests()
@@ -186,7 +203,7 @@ GraphQL Pending thread 추가를 지원한다. gh pr 명령은 지원하지 않�
             'verified_receipt':fixture.record()['status']=='pending' and fixture.record()['operation'] is None}
     if submission_request:
         calls = [json.loads(line) for line in argv_log.read_text().splitlines()]
-        checks['only_api_cli_calls'] = bool(calls) and all(call[:1] == ['api'] for call in calls)
+        checks['pending_only_cli_calls'] = pending_only_cli_calls(calls, api_calls)
         checks['pending_thread_only'] = (len(writes) == 1 and writes[0]['endpoint'] == 'graphql'
                                          and writes[0]['payload']['query'] ==
                                          'mutation($input:AddPullRequestReviewThreadInput!){'
