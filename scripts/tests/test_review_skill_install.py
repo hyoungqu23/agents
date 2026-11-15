@@ -35,7 +35,7 @@ class ReviewSkillInstallTests(unittest.TestCase):
             self.assertEqual(broken_links(installed), [])
 
     def test_evaluation_inputs_stay_outside_distributed_skills(self):
-        for plugin, skill in (('review', 'review-code'), ('product', 'prd-gate')):
+        for plugin, skill in (('review', 'review-code'), ('review', 'review-pr'), ('product', 'prd-gate')):
             with self.subTest(skill=skill), tempfile.TemporaryDirectory() as temp:
                 installed = Path(temp) / 'skills'
                 shutil.copytree(ROOT / 'plugins' / plugin / 'skills', installed)
