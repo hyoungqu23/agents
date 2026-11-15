@@ -33,6 +33,14 @@ Start new documents from the bundled [SPEC template](assets/SPEC.template.md) an
 example rows and placeholders from outputs. Preserve existing user edits, original
 FR/AC/FLOW/EV/AS/DEC/OD identities and question history on updates.
 
+Scale detail to the behavior a reader must reconstruct. For a local interaction,
+give each rule one primary explanation and use short references from other
+sections. Replace inapplicable template tables with a sentence grounded in the
+source. Keep the canonical AC conditions, action, expected result and check
+self-contained. Expand permissions, persistence, failure and recovery wherever
+they change observable outcomes. On updates check the primary rule and its canonical AC
+together.
+
 Make the six SPEC sections reconstructable as an FE contract:
 
 1. User outcome, declared scope/exclusions, constraints and target environment.
@@ -67,8 +75,15 @@ Do not call reader agreement independent proof of accuracy.
 
 Run the bundled helper after writing or changing a structured handoff:
 
+For each invocation, resolve the directory of the active SKILL.md supplied by
+the host (Claude Code can expand `${CLAUDE_SKILL_DIR}` in the skill entry point).
+Bind `skill_dir` to that actual absolute directory in the same shell call, or pass
+the absolute helper path as one argument directly. Reuse the same resolved
+installation and module versions for the run. If the helper is missing, report
+the incomplete installation. Replace example input/output paths with actual paths.
+
 ```text
-python3 /installed/spec/scripts/spec_check.py --spec /feature/SPEC.md --questions /feature/QUESTIONS.md
+python3 -B "${skill_dir:?set skill_dir to the active skill directory}/scripts/spec_check.py" --spec /feature/SPEC.md --questions /feature/QUESTIONS.md
 ```
 
 Read its output. It checks supported structure, canonical IDs, companion identity,

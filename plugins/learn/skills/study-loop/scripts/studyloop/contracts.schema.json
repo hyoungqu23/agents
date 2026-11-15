@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:study-loop:v1:contracts",
-  "title": "Study Loop v1 contracts",
+  "$id": "urn:study-loop:v2:contracts",
+  "title": "Study Loop v1 and v2 contracts",
   "description": "Normative design artifact. Cross-record constraints are specified in spec.md.",
   "$ref": "#/$defs/Request",
   "$defs": {
@@ -1716,6 +1716,9 @@
               "type": "null"
             }
           ]
+        },
+        "continuationPreference": {
+          "$ref": "#/$defs/ContinuationPreference"
         }
       },
       "required": [
@@ -2733,7 +2736,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -2801,7 +2808,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -2905,7 +2916,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -2948,7 +2963,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -2992,7 +3011,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3055,7 +3078,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3148,7 +3175,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3206,7 +3237,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3264,7 +3299,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3336,7 +3375,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3445,7 +3488,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3535,7 +3582,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3598,7 +3649,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3654,7 +3709,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3733,7 +3792,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3797,7 +3860,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3861,7 +3928,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3917,7 +3988,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -3973,7 +4048,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -4041,7 +4120,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -4122,7 +4205,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -4195,7 +4282,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -4308,6 +4399,9 @@
         },
         {
           "$ref": "#/$defs/Request_knowledge_commit"
+        },
+        {
+          "$ref": "#/$defs/Request_continuation_preference"
         }
       ]
     },
@@ -5304,6 +5398,9 @@
         },
         {
           "$ref": "#/$defs/Event_knowledge_committed"
+        },
+        {
+          "$ref": "#/$defs/Event_continuation_preference_set"
         }
       ]
     },
@@ -5311,7 +5408,11 @@
       "type": "object",
       "properties": {
         "schemaVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "workspaceId": {
           "type": "string",
@@ -5359,7 +5460,8 @@
             "continuation.accept",
             "content.resolve",
             "source.register",
-            "knowledge.commit"
+            "knowledge.commit",
+            "continuation.preference"
           ]
         },
         "events": {
@@ -5397,7 +5499,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "ok": {
           "const": true
@@ -5436,7 +5542,8 @@
             "continuation.accept",
             "content.resolve",
             "source.register",
-            "knowledge.commit"
+            "knowledge.commit",
+            "continuation.preference"
           ]
         },
         "revision": {
@@ -5513,7 +5620,11 @@
       "type": "object",
       "properties": {
         "protocolVersion": {
-          "const": 1
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
         },
         "ok": {
           "const": false
@@ -5637,6 +5748,126 @@
           "$ref": "#/$defs/Failure"
         }
       ]
+    },
+    "ContinuationPreference": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "userText": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "planVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mode": {
+          "enum": [
+            "manual",
+            "continue"
+          ]
+        },
+        "questionLimit": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "sessionId",
+        "userText",
+        "planVersion",
+        "mode",
+        "questionLimit"
+      ],
+      "additionalProperties": false
+    },
+    "Request_continuation_preference": {
+      "type": "object",
+      "properties": {
+        "protocolVersion": {
+          "const": 2
+        },
+        "workspaceId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "operationId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "expectedRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "actor": {
+          "$ref": "#/$defs/Actor"
+        },
+        "command": {
+          "const": "continuation.preference"
+        },
+        "payload": {
+          "$ref": "#/$defs/ContinuationPreference"
+        }
+      },
+      "required": [
+        "protocolVersion",
+        "workspaceId",
+        "operationId",
+        "expectedRevision",
+        "actor",
+        "command",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "Event_continuation_preference_set": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "type": {
+          "const": "continuation_preference_set"
+        },
+        "sessionId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data": {
+          "$ref": "#/$defs/ContinuationPreference"
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "sessionId",
+        "data"
+      ],
+      "additionalProperties": false
     }
   }
 }

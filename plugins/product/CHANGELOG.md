@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2 - 2026-11-15
+
+- Run the spec checker from the active installation and report unsupported safe reads.
+
 ## 0.5.1 - 2026-11-12
 
 - Keep the independently shipped SPEC readers byte-identical and exercise both against a shared accepted/rejected handoff corpus.

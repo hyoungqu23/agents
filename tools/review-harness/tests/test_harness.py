@@ -80,6 +80,26 @@ class SourceTests(GitFixture):
         self.assertEqual(before['target'], copied['target']); self.assertEqual(before, gate.capture_scope(self.repo, working_tree=True))
         self.assertTrue((checkout / 'outside').is_symlink()); self.assertEqual((checkout / 'new.py').stat().st_mode & 0o111, 0o111)
 
+    def test_packet_keeps_deleted_and_renamed_base_sources(self):
+        self.g('mv', 'export.py', 'renamed.py')
+        self.g('rm', 'app.py')
+        self.g('commit', '-qm', 'rename export and remove app')
+        gate = module('review-code', 'review_result.py')
+        scope = gate.capture_scope(self.repo, self.head)
+        packet = source.packet(self.repo, scope, 10000)
+        self.assertEqual(set(packet['sources']), {'base:export.py', 'head:renamed.py', 'base:app.py'})
+        self.assertEqual(packet['sources']['base:export.py'], packet['sources']['head:renamed.py'])
+        self.assertEqual(packet['omitted'], [])
+
+    def test_unreadable_base_text_is_a_gap_even_after_deletion(self):
+        (self.repo / 'legacy').write_bytes(bytes([255]))
+        self.g('add', 'legacy')
+        self.g('commit', '-qm', 'add non-UTF8 data')
+        self.g('rm', 'legacy')
+        self.g('commit', '-qm', 'remove non-UTF8 data')
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, 'HEAD~1')
+        self.assertEqual(source.packet(self.repo, scope, 10000)['omitted'], ['base:legacy'])
+
     def test_packet_omission_is_explicit_and_source_hook_never_runs(self):
         marker = self.root / 'hook-ran'
         hook = self.repo / '.git/hooks/post-checkout'; hook.parent.mkdir(exist_ok=True)
@@ -280,6 +300,19 @@ class StateTests(unittest.TestCase):
             store = Store(root)
             self.assertEqual(store.enqueue('S3', {'pr': 7}), key); store.recover()
             self.assertEqual(store.rows()[0]['status'], 'write_unconfirmed'); self.assertIsNone(store.next()); store.close()
+
+    def test_lookup_includes_jobs_older_than_inbox(self):
+        with tempfile.TemporaryDirectory() as root:
+            store = Store(root)
+            try:
+                keys = [store.enqueue('S3', {'pr': i}) for i in range(110)]
+                self.assertNotIn(keys[0], [row['id'] for row in store.rows()])
+                self.assertEqual(store.find_job(keys[0])['id'], keys[0])
+                prefix = next(k[:1] for k in keys if sum(v.startswith(k[:1]) for v in keys) > 1)
+                with self.assertRaisesRegex(HarnessError, 'Ambiguous'):
+                    store.find_job(prefix)
+            finally:
+                store.close()
 
     def test_second_local_service_cannot_take_lock(self):
         with tempfile.TemporaryDirectory() as root, instance_lock(root):

@@ -25,7 +25,7 @@ WRITE_COMMANDS = (
     "workspace.init", "session.start", "session.pause", "session.resume", "session.finish",
     "diagnosis.complete", "plan.propose", "plan.accept", "question.pose", "hint.record",
     "question.reveal", "question.skip", "answer.record", "assessment.record",
-    "continuation.accept", "content.resolve", "source.register", "knowledge.commit",
+    "continuation.accept", "continuation.preference", "content.resolve", "source.register", "knowledge.commit",
 )
 # Commands that never change a session and are allowed in any session state.
 WORKSPACE_COMMANDS = (
@@ -48,6 +48,7 @@ EVENT_TYPE = {
     "answer.record": "answer_recorded",
     "assessment.record": "assessment_recorded",
     "continuation.accept": "continuation_accepted",
+    "continuation.preference": "continuation_preference_set",
     "content.resolve": "content_resolved",
     "source.register": "source_registered",
     "knowledge.commit": "knowledge_committed",
@@ -273,7 +274,7 @@ def check_request(request):
     if not isinstance(request, dict):
         fail("INVALID_REQUEST", "request must be a JSON object")
     version = request.get("protocolVersion")
-    if isinstance(version, int) and not isinstance(version, bool) and version != 1:
+    if isinstance(version, int) and not isinstance(version, bool) and version not in (1, 2):
         fail("UNSUPPORTED_VERSION", f"protocolVersion {version} is not supported")
     command = request.get("command")
     name = "Request_" + command.replace(".", "_") if isinstance(command, str) else None

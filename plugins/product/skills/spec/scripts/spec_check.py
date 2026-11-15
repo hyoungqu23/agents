@@ -15,11 +15,14 @@ _module.loader.exec_module(handoff)
 
 
 def read(path):
+    no_follow = getattr(os, 'O_NOFOLLOW', None)
+    if no_follow is None:
+        raise ValueError('Unsupported platform: safe input reads require O_NOFOLLOW')
     path = Path(path).absolute()
     for parent in (path, *path.parents):
         if parent.is_symlink():
             raise ValueError('Input path traverses a symlink; use the actual resolved path')
-    with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), 'rb') as stream:
+    with os.fdopen(os.open(path, os.O_RDONLY | no_follow), 'rb') as stream:
         return stream.read()
 
 

@@ -29,7 +29,7 @@ def _shown(state):
     return session, question_id, answer_id, assessment_id
 
 
-def context_packet(state, learner_text):
+def context_packet(state, learner_text, protocol_version=1):
     session, question_id, answer_id, assessment_id = _shown(state)
     if session is None and state.session_order:
         session = state.sessions[state.session_order[-1]]
@@ -56,7 +56,7 @@ def context_packet(state, learner_text):
         "assessment": state.assessments[assessment_id]["x"] if assessment_id else None,
         "hints": state.hints.get(question_id, []) if question_id else [],
         "learnerText": learner_text[:LEARNER_TEXT_LIMIT],
-        "nextAction": policy.next_action(state),
+        "nextAction": policy.next_action(state, protocol_version),
     }
 
 
@@ -129,11 +129,11 @@ def passage(state, event_id):
     }
 
 
-def query(state, payload, learner_text):
+def query(state, payload, learner_text, protocol_version=1):
     view = payload["view"]
     if view in ("resume", "status"):
         _require_null(payload, "id", "search", "cursor")
-        return context_packet(state, learner_text)
+        return context_packet(state, learner_text, protocol_version)
     if view == "assessor":
         _require_null(payload, "search", "cursor")
         return assessor_packet(state, payload["id"])
@@ -261,6 +261,8 @@ def session_markdown(state, session_id):
             lines += [f"## 계획 v{data['version']} 제안", ""]
         elif kind == "plan_accepted":
             lines += [f"## 계획 v{data['version']} 승인: {data['userText']}", ""]
+        elif kind == "continuation_preference_set":
+            lines += [f"**진행 선호 ({data['mode']}):** {data['userText']}", ""]
         elif kind in ("session_paused", "session_resumed", "session_finished", "continuation_accepted", "content_resolved"):
             lines += [f"- {kind}: {data.get('userText') or data.get('correction', '')}", ""]
     return "\n".join(lines).encode("utf-8")

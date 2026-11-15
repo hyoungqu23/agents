@@ -29,6 +29,7 @@
 - 입력 묶음·평가자 기준: `plugins/product/skills/spec/evals/quality/fixtures/*.json`, `rubric.json`. 실행자에게 rubric/report를 주지 마세요.
 - 공통 입력 준비 도구: `scripts/behavioral/materialize_quality_case.py`. 새 외부 폴더에 입력과 evals 없는 candidate를 만들며 모델·앱·설치·네트워크를 실행하지 않습니다. 구현 사례의 Git 초기화는 새 fixture에만 한정됩니다.
 - 원본 prompt와 실행자가 만든 실제 문서/코드/기록/native 로그/이미지는 `runs/CASE/` 아래 있습니다. 각 artifact-index.json은 원래 이름과 SHA-256을 보존합니다. 후행 공백·patch context가 있는 텍스트는 `.artifact.json`에 정확한 바이트로 포장했고 정상화해 성공 증거로 바꾸지 않았습니다.
+- `runs/N1/compact-example/`은 N1 종료 후 같은 입력으로 직접 작성한 비교 예시입니다. N1 실행자의 산출물과 해시 목록은 `output/` 및 `artifact-index.json`에서 확인할 수 있습니다.
 - 원래 절대 경로·서버 URL·source identity는 당시 기록입니다. 파일을 다른 곳으로 옮긴 뒤 옛 helper 판정을 현재 source에 재사용하거나 digest를 바꿔 붙이지 마세요. 새 실행은 새 baseline/target/evidence가 필요합니다.
 - dependency cache/node_modules/build 출력은 제외했습니다. React fixture는 고정 package/lockfile을 제공하며 operator가 의존성과 원래 native checks를 준비한 뒤 실행자에게 전달합니다. 모델이 수정한 코드와 native 로그·브라우저 증거는 별도 보존합니다.
 

@@ -83,7 +83,7 @@ def serve(root, once=False):
                         next_poll = time.monotonic() + engine.config['poll_seconds']
                     key = engine.run_one() if not stopping else None
                     if key:
-                        row = next(r for r in engine.store.rows() if r['id'] == key)
+                        row = engine.store.find_job(key)
                         print(f'{key[:12]} {row["scenario"]} {row["status"]}', flush=True)
                         if sys.platform == 'darwin' and shutil.which('osascript'):
                             subprocess.run(['/usr/bin/osascript', '-e', 'on run argv\ndisplay notification (item 1 of argv) with title "HM2 Review"\nend run',
@@ -205,9 +205,7 @@ def main(argv=None):
         try:
             if args.action in ('inbox', 'status'):
                 print(json.dumps(store.rows(), ensure_ascii=False, indent=2)); return 0
-            row = next((r for r in store.rows() if r['id'].startswith(args.job)), None)
-            if row is None:
-                raise HarnessError('Job not found in the recent inbox')
+            row = store.find_job(args.job)
             if args.action == 'show':
                 report = Path(row['run_dir']) / 'report.md' if row['run_dir'] else None
                 print(report.read_text() if report and report.is_file() else json.dumps(row)); return 0

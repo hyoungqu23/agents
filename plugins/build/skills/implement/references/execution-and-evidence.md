@@ -12,10 +12,20 @@ and evidence there. Keep it outside every implementation checkout. Every helper
 output must be a new file. A new attempt uses new names/folders without deleting
 the earlier failed attempt.
 
+If baseline capture fails, continue read-only preparation. Preserve the index,
+tracked edits and untracked bytes until a valid external baseline exists.
+
 Before edits, run the installed `implementation_state.py`:
 
+For each invocation, resolve the directory of the active SKILL.md supplied by
+the host (Claude Code can expand `${CLAUDE_SKILL_DIR}` in the skill entry point).
+Bind `skill_dir` to that actual absolute directory in the same shell call, or pass
+the absolute helper path as one argument directly. Reuse the same resolved
+installation and module versions for the run. If the helper is missing, report
+the incomplete installation. Replace example input/output paths with actual paths.
+
 ```text
-python3 /installed/implement/scripts/implementation_state.py capture --worktree /app --inputs /state/task/inputs.json --output /state/task/target.json
+python3 -B "${skill_dir:?set skill_dir to the active skill directory}/scripts/implementation_state.py" capture --worktree /app --inputs /state/task/inputs.json --output /state/task/target.json
 ```
 
 After implementation, before checks, run `capture` again with the same inputs,
@@ -93,7 +103,7 @@ These notes do not substitute for requirement/check dispositions.
 ## Assess
 
 ```text
-python3 /installed/implement/scripts/implementation_state.py assess --worktree /app --target /state/task/target.json --verification-target /state/task/verification-target.json --result /state/task/result.json --output /state/task/assessment.json
+python3 -B "${skill_dir:?set skill_dir to the active skill directory}/scripts/implementation_state.py" assess --worktree /app --target /state/task/target.json --verification-target /state/task/verification-target.json --result /state/task/result.json --output /state/task/assessment.json
 ```
 
 Exit 0 means `complete`; exit 2 returns `partial`, `blocked` or `invalid`. Exit 1 is
