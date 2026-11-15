@@ -46,9 +46,9 @@ Risk guidance:
 
 Use the initial risk to choose investigation depth for each changed behavior:
 
-- For a mechanical change, compare the old and new contract at an actual consumer. Close the trace once equivalence and all applicable ledger checks are supported. A generated API schema or a rename crossing a package boundary needs its consumer checked before taking this route.
-- For a product behavior change, trace the triggering input through its consumer to an observable result and inspect the relevant failure or recovery path.
-- For high impact or an unresolved assumption, use the high-risk trace in §4. If two otherwise isolated changes share a state transition, contract, or deployment order, trace their combination and update the ledger risk when it changes the impact.
+- Low — for an isolated mechanical change, compare the old and new contract at an actual consumer. Close the trace once equivalence and all applicable ledger checks are supported. A generated API schema or a rename crossing a package boundary needs its consumer checked before taking this route.
+- Medium — trace the triggering input through the affected consumer to an observable result. Include the relevant failure or recovery path for product behavior, cache/state changes, shared utilities and meaningful configuration changes.
+- High — for high impact, or when an unresolved assumption requires escalation, use the high-risk trace in §4. If two otherwise isolated changes share a state transition, contract, or deployment order, trace their combination and update the ledger risk when it changes the impact.
 
 Apply the existing three passes and five quality criteria at every depth. Reuse evidence in linked behavior notes and record gaps where the deciding consumer or contract is unavailable.
 

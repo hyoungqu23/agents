@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.2 - 2026-11-15
+
+- Route investigation depth by risk while retaining every mandatory pass and quality check.
+
 ## 0.8.1 - 2026-11-12
 
 - Continue verified independent author-response fixes while deferring only unresolved items and their dependents; retain the existing reply approval and publication boundaries.
