@@ -38,8 +38,8 @@ give each rule one primary explanation and use short references from other
 sections. Replace inapplicable template tables with a sentence grounded in the
 source. Keep the canonical AC conditions, action, expected result and check
 self-contained. Expand permissions, persistence, failure and recovery wherever
-they change observable outcomes. On updates check the primary rule and its AC
-summary together.
+they change observable outcomes. On updates check the primary rule and its canonical AC
+together.
 
 Make the six SPEC sections reconstructable as an FE contract:
 

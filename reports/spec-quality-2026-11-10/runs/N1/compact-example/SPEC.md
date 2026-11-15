@@ -34,7 +34,7 @@ SRC-001은 [보관된 요청 원문](../sources/request.md) 1–5행이다. 텍�
 
 | AC ID | 근거 | 사전 조건 | 행동 | 기대 관찰 결과 | 관련 화면·흐름·API | 확인 방법·미결 참조 |
 | --- | --- | --- | --- | --- | --- | --- |
-| AC-local | FR-local, SRC-001 | §5 props로 첫 진입 | 체크·해제, focus 후 Space 두 번, 다시 체크 후 새로고침 | Alpha/Beta/Gamma 3개 → Alpha/Gamma 2개 → 원래 3개. Space로 동일하게 전환하며 focus가 보인다. 새로고침하면 해제·원래 순서·3개다. | §3 목록, §4 레이블·토큰, §5 로컬 데이터 | 실제 UI에서 레이블·순서·수·키보드를 확인하고 코드에서 토큰·props 불변·비영속화를 대조한다. 활성 Q 없음 |
+| AC-local | FR-local, SRC-001 | 읽기 전용 (id, label, done) 입력 (a, Alpha, false), (b, Beta, true), (c, Gamma, false)로 첫 진입 | 체크·해제, focus 후 Space 두 번, 다시 체크 후 새로고침 | 첫 진입 시 정확한 레이블 `완료 항목 숨기기`, 체크 해제 상태, 기존 blue 토큰 `--accent` 사용. Alpha/Beta/Gamma 3개 → Alpha/Gamma 2개 → 원래 3개. Space로 동일하게 전환하며 focus가 보인다. 새로고침하면 해제·원래 순서·3개다. | §3 목록, §4 레이블·토큰, §5 로컬 데이터 | 실제 UI에서 레이블·순서·수·키보드를 확인하고 코드에서 토큰·props 불변·비영속화를 대조한다. 활성 Q 없음 |
 
 ### 6.2 명세 검토 결과
 
