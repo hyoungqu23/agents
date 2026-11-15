@@ -10,6 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Check release notes for changed plugin versions
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/check_release_notes.py "$GITHUB_EVENT_NAME" "$BASE_SHA" "$HEAD_SHA"
       - uses: actions/setup-node@v7
         with:
           node-version: 22

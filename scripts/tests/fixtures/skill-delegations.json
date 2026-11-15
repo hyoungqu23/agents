@@ -1,0 +1,18 @@
+[
+  {
+    "path": "review/skills/review-code/resources/skill-routing.md",
+    "line": "| PR inline comment wording | `un-ai` from the `content` plugin | Apply the PR comment wording rules directly without substituting another writing skill; report the missing `un-ai` pass if comments are still requested |"
+  },
+  {
+    "path": "review/skills/review-code/resources/skill-routing.md",
+    "line": "2. Load `un-ai` from the `content` plugin and apply it in Edit mode. `un-ai` is the only wording skill for this route; if it is not installed, apply the constraints below directly and report the missing pass instead of substituting another writing skill."
+  },
+  {
+    "path": "review/skills/review-code/SKILL.md",
+    "line": "3. Follow the sole wording procedure in `resources/skill-routing.md#pr-comment-wording-route`: use `un-ai` from the `content` plugin, or its documented fallback. Keep placement metadata outside the copy-ready quote. Under `hm2-five`, include its one policy prefix in the comment itself. Recheck the final text against the evidence and diff anchor."
+  },
+  {
+    "path": "review/skills/review-respond/SKILL.md",
+    "line": "- Load `un-ai` from the `content` plugin and apply it in Edit mode with the same constraints `review-code` uses for inline comments: plain words, one idea per sentence, exact identifiers as code, no filler or hedging. If `un-ai` is not installed, do not substitute another writing skill; apply the constraints directly and record the missing pass under `## 검증`."
+  }
+]
