@@ -82,11 +82,11 @@
       "files": [
         "evals/files/cancel-snapshot.md"
       ],
-      "expected_output": "The historical defect in both paths is confirmed. At revision B only the toolbar is fixed; the keyboard handler still needs a local change. Reject the global no-op because confirmed deletion must clear the draft. Preserve original ID R7 and distinguish the defect verdict from the remedy assessment.",
+      "expected_output": "R7 verdict=confirmed and aggregate current_state=present. At revision B only the toolbar is fixed; the keyboard handler still needs a local change. Reject the global no-op because confirmed deletion must clear the draft. Preserve original ID R7 and distinguish the defect verdict from the remedy assessment.",
       "expectations": [
         "One original ID survives.",
         "Current remediation is scoped to keyboard cancellation.",
-        "No whole-claim completion reply or invented execution.",
+        "R7 has aggregate current_state=present; already_addressed and unknown are incorrect.",
         "The shared discard helper remains valid for confirmed deletion; reject the proposed global change."
       ]
     }

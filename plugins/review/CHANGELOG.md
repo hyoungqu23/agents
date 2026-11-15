@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Track remediation by caller in review-check and review-respond, including outstanding paths and unsafe proposed fixes.
+
 ## 0.8.1 - 2026-11-12
 
 - Continue verified independent author-response fixes while deferring only unresolved items and their dependents; retain the existing reply approval and publication boundaries.

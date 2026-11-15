@@ -117,7 +117,7 @@ Run the focused behavioral smoke with:
 python3 scripts/behavioral/run.py --model <model-id> --case review-check --output /tmp/review-check-unique-run
 ```
 
-The six scenarios in `skills/review-check/evals/evals.json` are a qualitative rubric;
+The seven scenarios in `skills/review-check/evals/evals.json` are a qualitative rubric;
 the smoke executes scenario 5 only. It does not establish full scenario coverage,
 automatic discovery, Claude behavior, or the absence of regressions in PR posting.
 

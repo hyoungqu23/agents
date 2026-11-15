@@ -127,6 +127,18 @@
         "An independently applicable fix is not held for the performance decision; code, tests and any local commit are reported truthfully.",
         "Replies are drafted but no push, live API call, posted reply, thread resolution or review request occurs."
       ]
+    },
+    {
+      "id": 10,
+      "prompt": "내 PR의 R7 리뷰에 대해 첨부한 변경 전후 스냅샷으로 작성자 조치를 분류하고 현재 상태에 맞는 답글 초안을 작성해줘. 코드 수정과 게시는 보류해줘.",
+      "files": [
+        "evals/files/cancel-snapshot.md"
+      ],
+      "expectations": [
+        "Classify fix only for the still-broken keyboard cancellation path; the toolbar was repaired.",
+        "Reject apply-suggestion for the global no-op because confirmed deletion must discard edits.",
+        "Do not draft a completion reply while keyboard cancellation remains broken."
+      ]
     }
   ]
 }
