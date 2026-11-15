@@ -19,7 +19,7 @@ The [shared artifact contract](references/artifact-contract.md) defines stable I
 revision and provenance; [problem-template](references/problem-template.md) is an
 adaptable outline. A completed draft is not proof of customer demand.
 
-Evaluation inputs and rubrics live in each skill’s evals/evals.json.
+The [prd-gate evaluation suite](../../evals/product/prd-gate/evals.json) lives outside the installed plugin. Other product skills keep their evaluation suites in their own `evals/evals.json`.
 Real model outputs must be inspected for unsupported claims and preserved source
 qualifications; a manifest check or expected keyword alone cannot establish quality.
 
