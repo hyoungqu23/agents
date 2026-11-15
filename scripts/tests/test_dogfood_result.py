@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import zlib
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -71,6 +72,15 @@ class DogfoodResultTests(unittest.TestCase):
         return {'id': 'I-1', 'check': 'C-1', 'target': self.run['checks'][0]['target'], 'expected': 'Readable',
                 'actual': 'Clipped', 'steps': 'Open page with stated viewport/data', 'impact': 'Cannot read result',
                 'attempts': 2, 'classification': classification, 'evidence': self.entries}
+
+    def test_missing_nofollow_reports_cli_error(self):
+        import contextlib
+        import io
+        error = io.StringIO()
+        args = ['dogfood_result', 'capture', '--run', str(self.run_path), '--output', str(self.state / 'unused.json')]
+        with patch.object(gate.os, 'O_NOFOLLOW', None, create=True), patch.object(sys, 'argv', args), contextlib.redirect_stderr(error):
+            self.assertEqual(gate.main(), 1)
+        self.assertEqual(error.getvalue().strip(), 'Unsupported platform: safe input reads require O_NOFOLLOW')
 
     def test_complete_and_no_issues_observed(self):
         self.assertEqual(self.assess()['status'], 'complete')
