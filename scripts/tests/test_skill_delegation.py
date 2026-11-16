@@ -34,9 +34,30 @@ def targets(line, path):
         if len(cells) == 3:
             for match in re.finditer(TARGET + '(?:' + OWNER + ')?', cells[1]):
                 name, owner = match.groups()
-                if name not in OPTIONAL.get(cells[0], set()):
+                if owner or name not in OPTIONAL.get(cells[0], set()):
                     result.add(f'{owner}:{name}' if owner else name)
     return result
+
+
+def markdown_blocks(text):
+    """Join soft-wrapped prose while retaining each table row and block boundary."""
+    paragraph = []
+    start = 1
+    for number, raw in enumerate(text.splitlines(), 1):
+        line = raw.strip()
+        separate = line.startswith(('|', '#', '~~~', '```'))
+        starts_item = re.match(r'^(?:[-+*]|[0-9]+[.)])\s', line)
+        if paragraph and (not line or separate or starts_item):
+            yield start, ' '.join(paragraph)
+            paragraph.clear()
+        if separate:
+            yield number, line
+        elif line:
+            if not paragraph:
+                start = number
+            paragraph.append(line)
+    if paragraph:
+        yield start, ' '.join(paragraph)
 
 
 class DelegationTests(unittest.TestCase):
@@ -50,7 +71,7 @@ class DelegationTests(unittest.TestCase):
             docs.update(PLUGINS.glob(f'*/skills/*/{folder}/**/*.md'))
         for doc in sorted(docs):
             path = doc.relative_to(PLUGINS)
-            for number, line in enumerate(doc.read_text().splitlines(), 1):
+            for number, line in markdown_blocks(doc.read_text()):
                 self.assertFalse(missing := targets(line, path) - names,
                                  f'{path}:{number}: resolve missing skill delegation {missing}')
 
@@ -60,6 +81,21 @@ class DelegationTests(unittest.TestCase):
             path, line = Path(case['path']), case['line']
             self.assertEqual(targets(line, path), {'content:un-ai'})
             self.assertEqual(targets(line.replace('`un-ai`', '`missing`'), path), {'content:missing'})
+
+    def test_wrapped_delegations(self):
+        for text in ('Load\n`missing` from the `content` plugin.',
+                     'Load `missing`\nfrom the `content` plugin.'):
+            [(number, block)] = markdown_blocks(text)
+            self.assertEqual(number, 1)
+            self.assertEqual(targets(block, ROUTING), {'content:missing'})
+
+    def test_optional_route_requires_unqualified_name(self):
+        trigger = 'Unresolved framework, API, standard, or external contract'
+        row = f'| {trigger} | `contract-research` | fallback |'
+        qualified = row.replace('`contract-research`', '`contract-research` from the `unknown` plugin')
+        blocks = list(markdown_blocks(row + '\n' + qualified))
+        self.assertEqual([targets(block, ROUTING) for _, block in blocks],
+                         [set(), {'unknown:contract-research'}])
 
     def test_alternatives_are_not_delegations(self):
         line = 'Do not use this for QA; use the sibling `think-through` skill instead. Use `draft`.'

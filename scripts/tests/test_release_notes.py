@@ -47,7 +47,8 @@ class ReleaseNotesTests(unittest.TestCase):
             check('push', unchanged, fixed)
             git('checkout', '-q', '--detach', start)
             for content in ('## 1.1.0\n## Unreleased\n- queued\n',
-                            '## Unreleased\n- queued\n## 1.1.0\n'):
+                            '## Unreleased\n- queued\n## 1.1.0\n',
+                            '## [Unreleased]\n- queued\n## [1.1.0]\n'):
                 bad = commit('1.1.0', content)
                 check('pull_request', fixed, bad, 'Unreleased')
             mismatch = commit('1.2.0', '## 1.1.0\n')

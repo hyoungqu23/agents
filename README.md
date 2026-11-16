@@ -113,6 +113,10 @@ invocations separately, using a logged-in CLI or `CODEX_API_KEY`:
 python3 scripts/behavioral/run.py --model <model-id> --output /tmp/hm2-behavioral-unique-run
 ```
 
+For the fix skill, the [export selection regression](evals/build/fix/README.md)
+checks that a retained test fails on the original code and that CI discovers
+both the regression and its valid control after the correction.
+
 Git-backed code reviews also produce a structured result checked against the current
 SHA, full changed-file inventory and source quotations. Pending saves require this
 result and retain partial scope explicitly. The focused Codex/Claude

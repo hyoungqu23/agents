@@ -13,7 +13,7 @@ def check_notes(version, notes):
     sections = re.split(r'^##[ \t]+(.+?)[ \t]*$', notes, flags=re.M)
     latest = None
     for title, body in zip(sections[1::2], sections[2::2]):
-        if title.lower() == 'unreleased' and body.strip():
+        if title.strip().lower() in ('unreleased', '[unreleased]') and body.strip():
             return 'move remaining Unreleased entries into the new release'
         release = re.match(r'^\[?(\d+\.\d+\.\d+(?:[-+][\w.-]+)?)\]?(?=\s|$)', title)
         if release and latest is None:
