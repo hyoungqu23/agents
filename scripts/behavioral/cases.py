@@ -32,7 +32,7 @@ SKILLS = {"design-existing": ("design", "design-brief"),
 
 def scenario(repo, plugin, skill, number):
     root = repo / "plugins" / plugin / "skills" / skill
-    if (plugin, skill) in {("product", "prd-gate"), ("review", "review-code")}:
+    if (plugin, skill) in {("product", "prd-gate"), ("review", "review-code"), ("review", "review-pr")}:
         root = repo / "evals" / plugin / skill
         suite_path = root / "evals.json"
     else:

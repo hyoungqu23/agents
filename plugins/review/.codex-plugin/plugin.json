@@ -1,6 +1,6 @@
 {
   "name": "review",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "Evidence-backed code review, Pending PR review drafts, claim verification and author responses.",
   "author": {
     "name": "HM2"

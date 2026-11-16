@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.5
+
+- Keep review-pr evaluation scenarios outside the installed skill.
+
 ## 0.8.4
 
 - Explain the missed regression check for confirmed recurring or high-impact findings.
