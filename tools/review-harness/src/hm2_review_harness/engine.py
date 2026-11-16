@@ -46,7 +46,7 @@ class Engine:
         for repository in self.config['repositories']:
             repo = repository['name']
             pulls = self.gh.pages(f'repos/{repo}/pulls?state=open', cached=True)
-            enrolled = {row['pr'] for row in tracked if row.get('repo') == repo and row.get('state') == 'open'}
+            enrolled = {row['pr'] for row in tracked if row.get('repo') == repo and row.get('state') == 'open' and row.get('account', login) == login}
             selected = set(enrolled) | set(self.gh.reviewed(repo, login))
             for pr in pulls:
                 own = pr['user']['login'].lower() == login.lower()

@@ -26,7 +26,12 @@ def setup(args, root):
             raise HarnessError('Install and authenticate the required program: ' + program)
         config[name] = str(Path(path).resolve())
     agent.probe(config['provider'], config['agent_path']); bundle_root()
-    config['login'] = GitHub(config, root).login()
+    previous = config['login']
+    # Only an explicit switch may replace the stored account; it starts from import's unauthorized, paused baseline.
+    config['login'] = GitHub({**config, 'login': ''} if args.switch_account else config, root).login()
+    switched = bool(previous) and config['login'].lower() != previous.lower()
+    if switched:
+        config.update(pending_enabled=False, active_device=None, paused=True)
     repository = args.repo
     if not repository and not config['repositories']:
         if not sys.stdin.isatty():
@@ -47,7 +52,11 @@ def setup(args, root):
         config.update(pending_enabled=True, active_device=device(root))
     save_json(root / 'config.json', validate_config(config))
     print(f'Configured {config["login"]}; {len(config["repositories"])} repositories; Pending writes: {config["pending_enabled"]}')
-    print('Next: hm2-review-harness doctor; brew services start hm2-review-harness')
+    if switched:
+        print(f'Switched account from {previous}: Pending writes disabled and service paused. Queued work and receipts of {previous} stay with that account.')
+        print('Next: hm2-review-harness doctor; hm2-review-harness resume (setup --pending --single-writer re-enables drafts for this account)')
+    else:
+        print('Next: hm2-review-harness doctor; brew services start hm2-review-harness')
 
 
 def doctor(config, root):
@@ -153,7 +162,7 @@ def main(argv=None):
     parser.add_argument('--state-home', type=Path)
     sub = parser.add_subparsers(dest='action', required=True)
     p = sub.add_parser('setup'); p.add_argument('--repo'); p.add_argument('--path'); p.add_argument('--team', action='append')
-    p.add_argument('--provider', choices=('codex', 'claude')); p.add_argument('--pending', action='store_true'); p.add_argument('--single-writer', action='store_true')
+    p.add_argument('--provider', choices=('codex', 'claude')); p.add_argument('--pending', action='store_true'); p.add_argument('--single-writer', action='store_true'); p.add_argument('--switch-account', action='store_true')
     sub.add_parser('doctor'); sub.add_parser('serve'); sub.add_parser('run-once'); sub.add_parser('inbox'); sub.add_parser('status')
     sub.add_parser('pause'); sub.add_parser('resume'); sub.add_parser('disable-pending')
     p = sub.add_parser('enqueue-pr'); p.add_argument('--repo', required=True); p.add_argument('--pr', type=int, required=True)

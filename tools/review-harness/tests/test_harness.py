@@ -3,6 +3,10 @@ import copy
 import json
 import os
 from pathlib import Path
+import contextlib
+import io
+import re
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -12,9 +16,10 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from hm2_review_harness import agent, delivery, source
-from hm2_review_harness.cli import export, import_config
+from hm2_review_harness.cli import export, import_config, main
 from hm2_review_harness.engine import Engine
 from hm2_review_harness.github import ApiError, GitHub, claims, fingerprint
+from hm2_review_harness.policy import PolicyChanged, require_pending
 from hm2_review_harness.state import HarnessError, Store, defaults, device, digest, instance_lock, read_json, save_json
 from hm2_review_harness.trusted import module
 
@@ -328,6 +333,79 @@ class StateTests(unittest.TestCase):
             raw = (root / 'settings.json').read_text(); self.assertNotIn('/private/old-machine', raw); self.assertNotIn('agent_path', raw)
             import_config(target, root / 'settings.json'); imported = read_json(target / 'config.json')
             self.assertTrue(imported['paused']); self.assertFalse(imported['pending_enabled']); self.assertEqual(imported['login'], '')
+
+
+class AccountSwitchTests(GitFixture):
+    """Issue #57: stored account 'me', gh now authenticated as 'other'."""
+    def setUp(self):
+        super().setUp()
+        self.state = (self.root / 'state').resolve()
+        self.cfg.update(pending_enabled=True, active_device=device(self.state))
+        save_json(self.state / 'config.json', self.cfg)
+        for target in ('hm2_review_harness.cli.agent.probe', 'hm2_review_harness.cli.bundle_root'):
+            patcher = patch(target); patcher.start(); self.addCleanup(patcher.stop)
+        for patcher in (patch('hm2_review_harness.cli.shutil.which', return_value='/usr/bin/true'),
+                        patch.object(GitHub, 'api', return_value={'login': 'other'})):
+            patcher.start(); self.addCleanup(patcher.stop)
+
+    def cli(self, *args):
+        errors = io.StringIO()
+        with contextlib.redirect_stderr(errors), contextlib.redirect_stdout(io.StringIO()):
+            return main(['--state-home', str(self.state), *args]), errors.getvalue()
+
+    def test_plain_setup_keeps_previous_account_and_every_entry_point_names_the_recovery_commands(self):
+        with self.assertRaises(ApiError) as raised:
+            GitHub(self.cfg, self.state).login()
+        message = str(raised.exception); self.assertEqual(raised.exception.status, 401)
+        self.assertIn('gh auth switch --hostname github.com --user me', message)
+        self.assertIn(f'hm2-review-harness --state-home {shlex.quote(str(self.state))} setup --switch-account', message)
+        for action in (('setup', '--repo', 'example/app'), ('doctor',)):
+            code, errors = self.cli(*action)
+            self.assertEqual((code, errors.strip()), (1, message))
+        self.assertEqual(read_json(self.state / 'config.json'), self.cfg)
+        with patch('hm2_review_harness.github.home', return_value=self.state):
+            with self.assertRaisesRegex(ApiError, 'run: hm2-review-harness setup --switch-account'):
+                GitHub(self.cfg, self.state).login()
+
+    def test_advised_switch_completes_setup_without_inheriting_pending_queue_or_receipts(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot()))
+        old_job = engine.enqueue_pr('example/app', 7); engine.store.close()
+        event = {'hostname': 'github.com', 'repo': 'example/app', 'pr': 7, 'account': 'me'}
+        old_receipt = self.state / 'receipts' / digest({'host': 'github.com', 'repo': 'example/app', 'pr': 7, 'login': 'me'}) / 'reply-review.json'
+        save_json(old_receipt, {'status': 'pending'})
+        _, errors = self.cli('doctor')
+        advised = shlex.split(re.search(r'hm2-review-harness (.*setup --switch-account)', errors).group(1))
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(main(advised), 0)
+        switched = read_json(self.state / 'config.json')
+        self.assertEqual(switched['login'], 'other'); self.assertEqual(switched['repositories'], self.cfg['repositories'])
+        self.assertFalse(switched['pending_enabled']); self.assertIsNone(switched['active_device']); self.assertTrue(switched['paused'])
+        self.assertEqual(self.cli('doctor'), (0, ''))
+        self.assertEqual(self.cli('setup', '--switch-account')[0], 0)
+        self.assertEqual(read_json(self.state / 'config.json'), switched)
+        for held in (self.cfg, switched, {**switched, 'paused': False}):
+            save_json(self.state / 'config.json', {**switched, 'paused': held['paused']})
+            with self.assertRaises(PolicyChanged):
+                require_pending(held, self.state, {**event, 'account': held['login']})
+        resumed = {**switched, 'paused': False}; save_json(self.state / 'config.json', resumed)
+        changed = self.snapshot(); add_thread(changed)  # the previous account's watched PR receives new input
+        gh = FakeGitHub(changed); gh.login = lambda: 'other'
+        engine = Engine(resumed, self.state, github=gh); self.addCleanup(engine.store.close)
+        engine.poll()
+        self.assertEqual([row['id'] for row in engine.store.rows()], [old_job])
+        with patch('hm2_review_harness.source.pr_checkout') as checkout:
+            engine.run_one()
+        checkout.assert_not_called(); self.assertEqual(engine.store.find_job(old_job)['status'], 'auth_required')
+        with patch('hm2_review_harness.delivery.module', return_value=SimpleNamespace()):
+            self.assertEqual(delivery.inspect(resumed, gh, event, self.state)['status'], 'local_ready')
+            gh.login = lambda: 'me'
+            self.assertEqual(delivery.inspect(self.cfg, gh, event, self.state)['status'], 'write_unconfirmed')
+        self.assertEqual(read_json(old_receipt), {'status': 'pending'})
+
+    def test_switch_with_explicit_single_writer_grant_authorizes_only_the_new_account(self):
+        self.assertEqual(self.cli('setup', '--switch-account', '--pending', '--single-writer')[0], 0)
+        switched = read_json(self.state / 'config.json')
+        self.assertEqual((switched['login'], switched['pending_enabled'], switched['paused']), ('other', True, True))
 
 
 class DeliveryTests(GitFixture):

@@ -132,6 +132,33 @@ logs. On a new Mac use `import settings.json`, then `setup` to authenticate/map 
 and `resume`. Imports are paused with Pending writes disabled. Stop the previous
 writer before explicitly enabling the new one. Settings/history are not cloud-synced.
 
+### Switch GitHub accounts
+
+A state directory belongs to the account recorded by `setup`. When `gh` is
+authenticated as a different account, `setup`, `doctor`, `serve` and `run-once` stop
+with `GitHub account changed` and print both recovery commands. Plain `setup` never
+replaces the stored account. To keep the recorded account, switch `gh` back:
+
+```sh
+gh auth switch --hostname github.com --user PREVIOUS_LOGIN
+```
+
+To move this state directory to the account `gh` now uses, switch explicitly (add the
+same `--state-home` you normally pass, as the error message shows):
+
+```sh
+hm2-review-harness setup --switch-account
+hm2-review-harness doctor
+hm2-review-harness setup --pending --single-writer   # only to authorize drafts for the new account
+hm2-review-harness resume
+```
+
+Like `import`, a switch disables Pending writes, clears the active device and pauses
+the service; repositories, paths and limits are kept. Nothing passes to the new
+account: the previous account's queued jobs stop as `auth_required`, its watched PRs
+are not re-enrolled, and receipts stay under the previous login. They apply again
+only after switching back the same way.
+
 To remove, stop the service then `brew uninstall hm2-review-harness`. Settings and
 review history are retained for reinstall; deleting that user-data folder is a
 separate explicit action. No application checkout or user-owned worktree is removed.
