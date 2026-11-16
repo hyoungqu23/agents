@@ -18,6 +18,8 @@ workflow is required. prd-write handles requested PRD drafts and scoped updates;
 The [shared artifact contract](references/artifact-contract.md) defines stable IDs,
 revision and provenance; [problem-template](references/problem-template.md) is an
 adaptable outline. A completed draft is not proof of customer demand.
+Each skill carries its own copy of the shared references it reads, so installing only
+the `skills/` folder works; a test keeps the copies identical to these originals.
 
 The [prd-gate evaluation suite](../../evals/product/prd-gate/evals.json) lives outside the installed plugin. Other product skills keep their evaluation suites in their own `evals/evals.json`.
 Real model outputs must be inspected for unsupported claims and preserved source

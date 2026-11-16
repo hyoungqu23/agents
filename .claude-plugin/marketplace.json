@@ -36,7 +36,7 @@
       "name": "design",
       "source": "./plugins/design",
       "description": "Design briefs, interactive HTML exploration, and selected prototypes preserved as implementation references.",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "category": "Productivity",
       "keywords": [
         "design",
@@ -50,7 +50,7 @@
       "name": "product",
       "source": "./plugins/product",
       "description": "Product requirements, user flows and traceable frontend implementation specifications.",
-      "version": "0.5.3",
+      "version": "0.5.4",
       "category": "Productivity",
       "keywords": [
         "product",

@@ -9,8 +9,8 @@ Connect requirements to what a user can do and observe. The Korean label is
 **사용자 흐름 명세**. Use this when roles, branches, or changing requirements need
 traceability; a simple screen does not need another mandatory planning stage.
 
-Read [artifact-contract.md](../../references/artifact-contract.md) for identity and
-authority. For a requested document, use [flow-template.md](../../references/flow-template.md)
+Read [artifact-contract.md](references/artifact-contract.md) for identity and
+authority. For a requested document, use [flow-template.md](references/flow-template.md)
 as a content guide, adapting to the existing format.
 
 ## Establish the inputs
