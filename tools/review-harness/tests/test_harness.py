@@ -242,6 +242,68 @@ class EngineTests(GitFixture):
         gh.value['threads'][0]['comments'].append({'id': 'author-reply', 'body': 'I updated this.', 'author': {'login': 'teammate'}, 'pullRequestReview': None})
         engine.poll(); self.assertEqual(engine.store.next()['scenario'], 'S4')
 
+    def own_pr_engine(self, resolved):
+        snapshot = self.snapshot(own=True); add_thread(snapshot); snapshot['threads'][0]['isResolved'] = resolved
+        gh = FakeGitHub(snapshot); engine = Engine(self.cfg, self.root / 'state', github=gh, reviewer=self.reviewer)
+        self.addCleanup(engine.store.close)
+        return gh, engine
+
+    def test_reopened_thread_on_own_pr_queues_author_response_once(self):
+        gh, engine = self.own_pr_engine(resolved=True)
+        engine.poll(); self.assertEqual(engine.store.rows(), [])
+        gh.value['threads'][0]['isResolved'] = False
+        engine.poll(); job = engine.store.next()
+        self.assertEqual(job['scenario'], 'S2')
+        self.assertEqual([c['thread_id'] for c in json.loads(job['event'])['claims']], ['T1'])
+        engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
+
+    def test_reopen_after_earlier_response_job_is_not_swallowed_by_job_key(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        engine.poll()
+        with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo): engine.run_one()
+        self.assertEqual([row['status'] for row in engine.store.rows()], ['local_ready'])
+        for cycle in (2, 3):
+            # The author resolving a thread is not review input.
+            gh.value['threads'][0]['isResolved'] = True
+            engine.poll(); self.assertIsNone(engine.store.next()); self.assertEqual(len(engine.store.rows()), cycle - 1)
+            gh.value['threads'][0]['isResolved'] = False
+            engine.poll(); self.assertEqual(len(engine.store.rows()), cycle)
+            job = engine.store.next(); self.assertEqual(job['scenario'], 'S2')
+            self.assertEqual(json.loads(job['event'])['reopened']['threads'], ['T1'])
+            engine.poll(); self.assertEqual(len(engine.store.rows()), cycle)
+            with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo): engine.run_one()
+            self.assertEqual(engine.store.find_job(job['id'])['status'], 'local_ready')
+
+    def test_reopened_thread_already_answered_by_author_stays_quiet(self):
+        gh, engine = self.own_pr_engine(resolved=True)
+        gh.value['threads'][0]['comments'].append({'id': 'C2', 'body': 'Fixed.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll(); gh.value['threads'][0]['isResolved'] = False
+        engine.poll(); self.assertEqual(engine.store.rows(), [])
+
+    def test_reopen_seen_while_draft_is_queued_once_ready(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        engine.poll()
+        with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo): engine.run_one()
+        gh.value['threads'][0]['isResolved'] = True; gh.value['pr']['draft'] = True; engine.poll()
+        gh.value['threads'][0]['isResolved'] = False; engine.poll(); engine.poll()
+        self.assertEqual(len(engine.store.rows()), 1)
+        gh.value['pr']['draft'] = False; engine.poll(); engine.poll()
+        self.assertEqual(len(engine.store.rows()), 2); self.assertEqual(engine.store.next()['scenario'], 'S2')
+
+    def test_watches_from_before_reopen_tracking_do_not_requeue_open_threads(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        gh.value['threads'].append({**copy.deepcopy(gh.value['threads'][0]), 'id': 'T2', 'isResolved': True})
+        gh.value['threads'][1]['comments'][0]['id'] = 'C2'
+        engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
+        row = engine.store.db.execute('SELECT id, data FROM watches').fetchone()
+        legacy = json.loads(row['data']); del legacy['resolved']
+        with engine.store.db:
+            engine.store.db.execute('UPDATE watches SET fingerprint=?, data=? WHERE id=?', (digest(legacy), json.dumps(legacy), row['id']))
+        engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
+        self.assertEqual(engine.store.tracked()[0]['resolved'], ['T2'])
+        gh.value['threads'][1]['isResolved'] = False
+        engine.poll(); self.assertEqual(len(engine.store.rows()), 2)
+
     def test_old_manually_reviewed_pr_is_discovered_without_new_request(self):
         snapshot = self.snapshot(reviewed=True); snapshot['pr']['requested_reviewers'] = []
         engine = Engine(self.cfg, self.root / 'state', github=FakeGitHub(snapshot), reviewer=self.reviewer)

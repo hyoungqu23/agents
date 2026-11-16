@@ -64,7 +64,7 @@ finding identities rather than discarding everything at that source line.
 | Workflow | Trigger and behavior |
 | --- | --- |
 | S1 self review | The configured build `implement` assessment completes with `--notify-review`; capture staged/unstaged/untracked source in a separate equivalent snapshot and run review-code. Requires build plugin 0.3.0+ and a registered checkout path. |
-| S2 author response | An own PR receives new inline/review-body/conversation input; verify every claim, prepare fixes as proposals and responses as drafts. Only inline responses support GitHub Pending delivery. |
+| S2 author response | An own PR receives new inline/review-body/conversation input, or a resolved thread that still awaits the author is reopened; verify every claim, prepare fixes as proposals and responses as drafts. Resolving a thread never queues work. Only inline responses support GitHub Pending delivery. |
 | S3 reviewer | A person/team requests review, or `enqueue-pr` explicitly selects it; inspect the pinned PR and save supported comments as Pending. |
 | S4 re-review | A tracked, previously reviewed PR changes; reassess the original claims and inspect the previous-review delta and current code scope independently. Unavailable previous objects remain a gap. |
 

@@ -78,6 +78,18 @@ class Engine:
                  'account': login, 'policy_version': __version__, 'state': pr['state'], 'requested': requested}
         active = pr['state'] == 'open' and not pr.get('draft') and (scenario != 'S2' or bool(inputs))
         changed = prior is None or prior['fingerprint'] != stamp or prior.get('policy_version') != __version__ or (requested and not prior.get('requested'))
+        if scenario == 'S2':
+            # The account fingerprint ignores resolution so the author's own resolve stays quiet; only a
+            # thread seen resolved and now awaiting the author again is new input. Watches written before
+            # this field have no 'resolved' list, so the first poll after an upgrade only records it.
+            resolved = {t['id'] for t in snapshot['threads'] if t.get('isResolved')}
+            reopened = sorted(set((prior or {}).get('resolved', [])) & {c['thread_id'] for c in inputs if c.get('thread_id')})
+            if reopened:
+                # Head and comments can equal an earlier response job; without this its key would be ignored.
+                event['reopened'] = {'threads': reopened, 'nonce': uuid.uuid4().hex}
+                changed = True
+            # A reopening seen while the PR cannot be answered (draft) stays recorded until a job is queued.
+            value['resolved'] = sorted(resolved if active else resolved | set(reopened))
         if force and active:
             event['manual_request'] = uuid.uuid4().hex
             self.store.observe(watch_key, value)
