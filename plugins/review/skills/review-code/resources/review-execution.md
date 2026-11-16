@@ -135,6 +135,13 @@ Use one terminal disposition per candidate:
 
 For absence findings, anchor the production branch, contract declaration, test script, or nearest changed line where the missing behavior becomes actionable. Never invent a line outside the evidence.
 
+For a confirmed finding with substantial impact (such as lost data or unintended
+publication), explain which observable failure a current check misses and what
+a nearby valid control should do. Apply the same reasoning to a recurring
+defect when the current scope or a supplied prior issue, review or commit shows
+the same cause twice. Cite the occurrences before calling it recurring. Keep
+this in the finding and leave implementation to a separately requested fix.
+
 ## 6. Completion Gate
 
 Do not present the review as complete until all checks pass:

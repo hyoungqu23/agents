@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.3
+
+- Retain a stable reproduction in the target CI suite when the real failure path is available.
+
 ## 0.4.2 - 2026-11-15
 
 - Resolve the active implement and dogfood helpers across installation paths and diagnose unavailable safe reads.
