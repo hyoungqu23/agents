@@ -17,4 +17,28 @@
 
 **해석 범위.** 호스트와 모델의 브라우저 실행 권한 차이를 통제하기 위해 서버 시작과 브라우저 실행은 양쪽 모두 코디네이터가 맡았다. 자동 프로필 발견이나 모델의 독립적인 설치·서버 기동 능력은 측정하지 않았다. 앱에는 이미 시작법과 다중 브라우저 테스트가 있다. 프로필 작성에는 저장소의 실행 문서·초대 UI·기존 E2E를 읽는 추가 작업이 들었다. 작성 시간과 유지 비용은 독립적으로 계측하지 않았다. 한 쌍의 결과로 실행 시간이나 토큰 절감 효과를 추정할 수 없다.
 
-경과 시간은 코디네이터가 만든 모델 이벤트 파일의 생성 시각과 프로그램·결과 파일의 수정 시각 차이다. 두 모델은 동시에 시작했고 브라우저 프로그램은 같은 시스템 클립보드의 간섭을 피하려고 A, B 순서로 실행했다. 두 번째 행에는 코디네이터의 검토·대기 시간이 포함된다.
+## 재현 절차
+
+게임 커밋 `f97c4b3`의 별도 복사본 두 개를 준비한다. 각 앱 루트에서 `pnpm install --frozen-lockfile --ignore-scripts`를 실행한다. 모델에 제공한 dogfood 지침은 [agents 8d26bdd의 build/skills/dogfood](https://github.com/hyoungqu23/agents/tree/8d26bdd/plugins/build/skills/dogfood)이며, 두 앱의 `.eval-skills/dogfood/`에 복사했다. B에만 이 보고서의 PROFILE.md를 `.agents/verify/web/PROFILE.md`로 복사하고 공통 요청 끝에 다음 한 줄을 추가했다.
+
+> Consult .agents/verify/web/PROFILE.md for this journey.
+
+저장된 프로그램을 재실행하려면 각 앱 루트에 이 보고서의 해당 `a/trial.cjs` 또는 `b/trial.cjs`를 `trial.cjs`로 복사한다. 프로젝트의 Playwright 버전에 맞는 Chromium을 준비한다. 각 앱 루트에서 서버 전용 터미널과 실행 전용 터미널을 사용한다.
+
+| 실행 | 서버 터미널 | 실행 터미널 |
+| --- | --- | --- |
+| A | `GAME_STORE=memory NEXT_TELEMETRY_DISABLED=1 pnpm exec next dev --hostname 127.0.0.1 --port 34671` | `BASE_URL=http://127.0.0.1:34671 GAME_STORE=memory node trial.cjs` |
+| B | `GAME_STORE=memory NEXT_TELEMETRY_DISABLED=1 pnpm exec next dev --hostname 127.0.0.1 --port 34672` | `BASE_URL=http://127.0.0.1:34672 GAME_STORE=memory node trial.cjs` |
+
+브라우저 프로그램은 A가 종료된 뒤 B를 실행한다. 각 앱 루트에 trial-result.json과 trial.png가 생성된다. 결과를 확인한 뒤 해당 서버 터미널에서 Ctrl-C로 종료한다.
+
+## 경과 시간의 원자료
+
+아래는 임시 실행 파일에서 읽은 UTC 시각이다. 시작은 모델 이벤트 파일의 생성 시각, 프로그램 작성과 결과 저장은 각 파일의 마지막 수정 시각이다.
+
+| 실행 | 시작 (UTC) | trial.cjs 작성 (UTC) | trial-result.json 저장 (UTC) |
+| --- | --- | --- | --- |
+| A | 2026-11-15T17:00:26.172Z | 2026-11-15T17:01:34.892Z | 2026-11-15T17:02:42.616Z |
+| B | 2026-11-15T17:00:27.832Z | 2026-11-15T17:01:30.422Z | 2026-11-15T17:03:18.126Z |
+
+‘모델 시작부터 명단 증거·결과 저장까지’에는 코디네이터의 프로그램 검토와 실행 대기가 포함된다. B의 170초에는 A의 브라우저 실행을 기다린 시간도 들어 있어 두 값으로 속도 차이를 판단할 수 없다.
