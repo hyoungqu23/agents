@@ -117,33 +117,40 @@ def packet(root, scope, max_bytes, previous_head=None):
     head = set(paths)
     base = head if scope['target']['base_sha'] == scope['target']['head_sha'] else set(tree_names('base'))
     base_rules = sorted(name for name in base if PurePosixPath(name).name in ('AGENTS.md', 'CLAUDE.md'))
-    revision_paths = {
-        'head': [name for name in order if name in head],
-        'base': dict.fromkeys([*(name for name in changed if name in base), *base_rules]),
-    }
+    present = {'head': head, 'base': base}
+    revisions = ['head', 'base']
     if scope['target']['mode'] == 'working-tree':
-        index = set(git(root, 'ls-files', '-z').decode().split('\x00'))
-        revision_paths['index'] = [name for name in order if name in index]
-        revision_paths['working'] = order
+        present.update(index=set(git(root, 'ls-files', '-z').decode().split('\x00')), working=set(order))
+        revisions = ['working', 'head', 'index', 'base']
+    # Budget goes to the change and its comparison versions, then trusted base rules, then unchanged context.
+    visits = dict.fromkeys([
+        *((revision, name) for revision in revisions for name in changed if name in present[revision]),
+        *(('base', name) for name in base_rules),
+        *((revision, name) for revision in ('head', 'index', 'working') if revision in present
+          for name in order if name in present[revision])])
 
-    sources, omitted, used = {}, [], 0
-    for revision, names in revision_paths.items():
-        for name in names:
-            try:
-                if revision == 'working':
-                    path = safe_path(root, name)
-                    if path.is_symlink() or not path.is_file():
-                        continue
-                    raw = path.read_bytes()
-                else:
-                    ref = ':' + name if revision == 'index' else scope['target'][revision + '_sha'] + ':' + name
-                    raw = git(root, 'cat-file', 'blob', ref)
-                text = raw.decode('utf-8')
-                if '\x00' in text or used + len(raw) > max_bytes:
-                    omitted.append(revision + ':' + name); continue
-                sources[revision + ':' + name] = text; used += len(raw)
-            except (HarnessError, UnicodeError, OSError):
+    sources, same_as, omitted, used = {}, {}, [], 0
+    for revision, name in visits:
+        try:
+            if revision == 'working':
+                path = safe_path(root, name)
+                if path.is_symlink() or not path.is_file():
+                    continue
+                raw = path.read_bytes()
+            else:
+                ref = ':' + name if revision == 'index' else scope['target'][revision + '_sha'] + ':' + name
+                raw = git(root, 'cat-file', 'blob', ref)
+            text = raw.decode('utf-8')
+            # One path often has the same text in several revisions; send it once and name the copy.
+            twin = next((other + ':' + name for other in revisions if sources.get(other + ':' + name) == text), None)
+            if twin:
+                same_as[revision + ':' + name] = twin
+            elif '\x00' in text or used + len(raw) > max_bytes:
                 omitted.append(revision + ':' + name)
+            else:
+                sources[revision + ':' + name] = text; used += len(raw)
+        except (HarnessError, UnicodeError, OSError):
+            omitted.append(revision + ':' + name)
     delta = None
     if previous_head:
         try:
@@ -152,7 +159,7 @@ def packet(root, scope, max_bytes, previous_head=None):
                 delta = None; omitted.append('previous-review delta exceeds packet limit')
         except HarnessError:
             omitted.append('previous-review objects unavailable; full current PR scope is supplied')
-    rules = {name: value for name, value in sources.items()
-             if name.startswith('base:') and PurePosixPath(name.split(':', 1)[1]).name in ('AGENTS.md', 'CLAUDE.md')}
-    return {'sources': sources, 'repository_paths': paths, 'trusted_base_rules': rules,
+    rules = {'base:' + name: sources[same_as.get('base:' + name, 'base:' + name)] for name in base_rules
+             if same_as.get('base:' + name, 'base:' + name) in sources}
+    return {'sources': sources, 'same_as': same_as, 'repository_paths': paths, 'trusted_base_rules': rules,
             'previous_review_delta': delta, 'omitted': omitted}

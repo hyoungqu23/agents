@@ -93,8 +93,11 @@ Pending delivery, including same-head conversation edits. Submitted rounds retai
 receipts and a new round gets a fresh Pending. Uncertain writes are not blindly retried.
 
 Runs distinguish complete/partial/invalid analysis from local/Pending persistence.
-Text packets are bounded (default 1 MB); omitted/binary paths and inaccessible
-contracts remain partial. Reviewers receive immutable source as data with command,
+Text packets are bounded (default 1 MB). The budget goes first to every revision of the
+changed files (working, head, index, base), then to the base `AGENTS.md`/`CLAUDE.md`, and
+only then to unchanged files. A revision whose text equals an already included revision
+of the same path is listed in `same_as` instead of being sent again. Omitted/binary paths
+and inaccessible contracts remain partial. Reviewers receive immutable source as data with command,
 connector/plugin and network tools disabled. They do not execute tests or target
 scripts. Static quote/coverage checks cannot certify the model's reasoning.
 Codex adapter flags are capability-checked against the installed CLI; see
