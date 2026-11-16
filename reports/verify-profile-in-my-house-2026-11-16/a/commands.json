@@ -1,0 +1,46 @@
+[
+  {
+    "command": "/bin/zsh -lc 'cat .eval-skills/dogfood/SKILL.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'rg --files | head -150'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat .eval-skills/dogfood/references/{scope-and-intent,session-and-environment,journeys-and-oracles,checklists,evidence-and-results,drivers/host-browser}.md | head -130'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'rg -l \"초대 링크|방 만들기|닉네임\" src | tail -60'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'ls tests -R | head -100; rg -in \"memory|STORAGE\" README.md | head -30; rg --files node_modules/next/dist/docs | rg \"page-and-layout|layouts-and-pages\" | head'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat src/modules/room/ui/join-room-form.tsx; rg -n \"초대|참가|복사|player.name|displayName|플레이어|방장\" src/modules/room/ui/room-client.tsx'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'rg -n \"ROOM_STORAGE|STORAGE_MODE|storageMode|storageDriver\" src'",
+    "exit_code": 1
+  },
+  {
+    "command": "/bin/zsh -lc 'ls tests/e2e; cat src/app/page.tsx; ls src/modules/room/ui; cat playwright.config.ts; head -30 node_modules/next/dist/docs/01-app/01-getting-started/03-layouts-and-pages.md'",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"sed -n '413,451p' src/modules/room/ui/room-client.tsx; cat src/modules/room/ui/create-room-button.tsx; rg -in 'process.env.*memory|storage.*memory' src | head -40; rg -n 'clipboard|joinUrl' src/modules/room/ui/room-client.tsx\"",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"rg -n 'health|GAME_STORE|chromium.launch' src/app/api tests/e2e | head -50; cat src/modules/auth/client.ts | head -80; rg -n 'joinUrl|generateRoomCode' src/modules/room/room-service.ts\"",
+    "exit_code": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"cat > trial.cjs <<'EOF'\nconst { chromium, expect } = require('@playwright/test');\nconst assert = require('node:assert/strict');\nconst fs = require('node:fs');\nconst path = require('node:path');\n\nconst output = name => path.join(__dirname, name);\nconst report = { game: '불 꺼진 집', passed: false, completed: [] };\nconst hostName = '시험 호스트';\nconst guestName = '초대 손님';\nlet stage = 'environment';\nlet browser;\nlet host;\nlet safeCapture;\n\nasync function join(page, nickname) {\n  await page.getByLabel('닉네임', { exact: true }).fill(nickname);\n  await page.getByRole('button', { name: '이 이름으로 들어가기' }).click();\n  await expect(page.locator('.players-list strong').getByText(nickname, { exact: true })).toBeVisible();\n}\n\nasync function main() {\n  fs.rmSync(output('trial.png'), { force: true });\n  const base = new URL(process.env.BASE_URL);\n  assert(['localhost', '127.0.0.1', '[::1]'].includes(base.hostname));\n  assert(['http:', 'https:'].includes(base.protocol) && \"'!base.username && !base.password);\n  assert.equal(process.env.GAME_STORE || '\"'memory', 'memory');\n  browser = await chromium.launch();\n  report.chromium = browser.version();\n\n  async function newPage() {\n    const context = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1280, height: 900 } });\n    await context.route('**/*', route => new URL(route.request().url()).origin === base.origin\n      ? route.continue() : route.abort());\n    await context.routeWebSocket('**/*', socket => {\n      const url = new URL(socket.url());\n      if (url.host === base.host) socket.connectToServer();\n      else socket.close();\n    });\n    context.setDefaultTimeout(30000);\n    return context.newPage();\n  }\n\n  stage = 'select and create';\n  host = await newPage();\n  await host.goto(base.origin);\n  const heading = host.getByRole('heading', { name: report.game, exact: true });\n  await expect(heading).toBeVisible();\n  safeCapture = heading;\n  const card = host.getByRole('article').filter({ has: heading });\n  await card.getByRole('button', { name: '불을 끄고 시작하기' }).click();\n  stage = 'host joins lobby';\n  await join(host, hostName);\n  const roster = host.locator('.players-list');\n  safeCapture = roster;\n  await expect(roster.locator('strong')).toHaveCount(1);\n  const code = await host.locator('.lobby-code-block strong').innerText();\n  const roomPath = new URL(host.url()).pathname;\n  assert.equal(roomPath, '/room/' + code);\n  report.completed.push('Host alone in created room');\n\n  stage = 'copy visible invite';\n  await host.context().grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base.origin });\n  await host.getByRole('button', { name: '초대 링크 복사' }).click();\n  const manual = host.getByRole('textbox', { name: '직접 복사할 초대 링크' });\n  await expect(host.getByRole('button', { name: '복사했습니다' }).or(manual)).toBeVisible();\n  const invite = new URL(await (await manual.isVisible() ? manual.inputValue() :\n    host.evaluate(() => navigator.clipboard.readText())));\n  assert(invite.origin === base.origin && \"'!invite.username && !invite.password &&\n    invite.pathname === roomPath + '\"'/join' && invite.hash.length > 1);\n  report.completed.push('Visible invite for host room obtained');\n\n  stage = 'guest joins through invite';\n  const guest = await newPage();\n  await guest.goto(invite.href);\n  await join(guest, guestName);\n  assert.equal(new URL(guest.url()).pathname, roomPath);\n  await expect(guest.locator('.lobby-code-block strong')).toHaveText(code);\n  await expect(guest.locator('.players-list strong')).toHaveText([hostName, guestName]);\n  report.completed.push('Independent guest sees both names in same room');\n\n  stage = 'host observes guest';\n  await expect(roster.locator('strong')).toHaveText([hostName, guestName], { timeout: 30000 });\n  await expect(roster.getByText(guestName, { exact: true })).toBeVisible();\n  report.hostRoster = [hostName, guestName];\n  stage = 'capture host roster';\n  await roster.screenshot({ path: output('trial.png'), animations: 'disabled' });\n  report.completed.push('Host sees guest in live roster');\n  report.passed = true;\n}\n\nmain().catch(async () => {\n  process.exitCode = 1;\n  report.failedStage = stage;\n  if (safeCapture && await safeCapture.isVisible().catch(() => false)) {\n    await safeCapture.screenshot({ path: output('trial.png'), timeout: 3000 }).catch(() => {});\n  }\n}).finally(async () => {\n  report.screenshot = fs.existsSync(output('trial.png')) ? 'trial.png' : null;\n  fs.writeFileSync(output('trial-result.json'), JSON.stringify(report, null, 2) + '\\\\n');\n  await browser?.close();\n});\nEOF\nsed -i '' \\\"s/page.locator('.players-list strong').getByText/page.locator('.players-list').getByText/\\\" trial.cjs\nnode --check trial.cjs\"",
+    "exit_code": 0
+  }
+]
