@@ -53,8 +53,10 @@ def setup(args, root):
     save_json(root / 'config.json', validate_config(config))
     print(f'Configured {config["login"]}; {len(config["repositories"])} repositories; Pending writes: {config["pending_enabled"]}')
     if switched:
-        print(f'Switched account from {previous}: Pending writes disabled and service paused. Queued work and receipts of {previous} stay with that account.')
-        print('Next: hm2-review-harness doctor; hm2-review-harness resume (setup --pending --single-writer re-enables drafts for this account)')
+        drafts = f'enabled for {config["login"]}' if config['pending_enabled'] else 'disabled'
+        print(f'Switched account from {previous}: Pending writes {drafts} and service paused. Queued work and receipts of {previous} stay with that account.')
+        print('Next: hm2-review-harness doctor; hm2-review-harness resume'
+              + ('' if config['pending_enabled'] else ' (setup --pending --single-writer re-enables drafts for this account)'))
     else:
         print('Next: hm2-review-harness doctor; brew services start hm2-review-harness')
 
@@ -228,6 +230,8 @@ def main(argv=None):
                 print(json.dumps(result)); return 0 if result['status'] == 'local_ready' else 2
             if row['status'] in ('collecting', 'snapshotting', 'reviewing', 'saving', 'write_unconfirmed'):
                 raise HarnessError('Inspect remote state and durable receipts before retrying an uncertain write')
+            if json.loads(row['event']).get('account', config['login']) != config['login']:
+                raise HarnessError('Job belongs to another account; switch back to it to retry')
             store.update(row['id'], 'queued'); return 0
         finally:
             store.close()

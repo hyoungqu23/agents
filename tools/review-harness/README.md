@@ -154,10 +154,14 @@ hm2-review-harness resume
 ```
 
 Like `import`, a switch disables Pending writes, clears the active device and pauses
-the service; repositories, paths and limits are kept. Nothing passes to the new
-account: the previous account's queued jobs stop as `auth_required`, its watched PRs
-are not re-enrolled, and receipts stay under the previous login. They apply again
-only after switching back the same way.
+the service; repositories, teams, paths and limits are kept. No review state passes
+to the new account: the previous account's queued jobs stop as `auth_required`,
+`reconcile` and `retry` refuse its jobs, its watched PRs are not re-enrolled (each
+account keeps its own watch of a PR), its earlier results are not given to the new
+account's reviews, and receipts stay under the previous login. They apply again only
+after switching back the same way. The inbox still lists both accounts' jobs, and the
+daily model-call count and state-size budget are shared by the state directory. Runs
+of the previous account are pruned after its PR closes, as for the current account.
 
 To remove, stop the service then `brew uninstall hm2-review-harness`. Settings and
 review history are retained for reinstall; deleting that user-data folder is a

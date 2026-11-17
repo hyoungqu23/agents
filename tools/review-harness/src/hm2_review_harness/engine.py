@@ -47,6 +47,7 @@ class Engine:
             repo = repository['name']
             pulls = self.gh.pages(f'repos/{repo}/pulls?state=open', cached=True)
             enrolled = {row['pr'] for row in tracked if row.get('repo') == repo and row.get('state') == 'open' and row.get('account', login) == login}
+            self.store.retire(repo, {pr['number'] for pr in pulls}, login)
             selected = set(enrolled) | set(self.gh.reviewed(repo, login))
             for pr in pulls:
                 own = pr['user']['login'].lower() == login.lower()
@@ -69,7 +70,7 @@ class Engine:
         requested = any(r['login'].lower() == login.lower() for r in pr.get('requested_reviewers', []))
         teams = next(r.get('teams', []) for r in self.config['repositories'] if r['name'] == repo)
         requested |= any(r['slug'] in teams for r in pr.get('requested_teams', []))
-        watch_key = f'{self.config["hostname"]}/{repo}/{number}'
+        watch_key = self.store.watch_key(self.config['hostname'], repo, number, login)
         previous = self.store.db.execute('SELECT data FROM watches WHERE id=?', (watch_key,)).fetchone()
         prior = json.loads(previous[0]) if previous else None
         event = {'hostname': self.config['hostname'], 'repo': repo, 'pr': number, 'fingerprint': stamp,
@@ -173,7 +174,7 @@ class Engine:
         self.store.update(key, 'collecting', run_dir=run_dir)
         snapshot = None
         try:
-            prior = self.store.previous(event['hostname'], event['repo'], event.get('pr')) if event.get('pr') else None
+            prior = self.store.previous(event['hostname'], event['repo'], event.get('pr'), self.config['login']) if event.get('pr') else None
             if job['scenario'] == 'S1':
                 actual = self.gate.capture_scope(event['worktree'], working_tree=True)
                 if actual['target'] != event['target']:

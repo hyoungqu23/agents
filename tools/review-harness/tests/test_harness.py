@@ -397,7 +397,9 @@ class AccountSwitchTests(GitFixture):
             engine.run_one()
         checkout.assert_not_called(); self.assertEqual(engine.store.find_job(old_job)['status'], 'auth_required')
         with patch('hm2_review_harness.delivery.module', return_value=SimpleNamespace()):
-            self.assertEqual(delivery.inspect(resumed, gh, event, self.state)['status'], 'local_ready')
+            with self.assertRaises(delivery.DeliveryError) as refused:
+                delivery.inspect(resumed, gh, event, self.state)
+            self.assertEqual(refused.exception.status, 'auth_required')
             gh.login = lambda: 'me'
             self.assertEqual(delivery.inspect(self.cfg, gh, event, self.state)['status'], 'write_unconfirmed')
         self.assertEqual(read_json(old_receipt), {'status': 'pending'})
@@ -406,6 +408,101 @@ class AccountSwitchTests(GitFixture):
         self.assertEqual(self.cli('setup', '--switch-account', '--pending', '--single-writer')[0], 0)
         switched = read_json(self.state / 'config.json')
         self.assertEqual((switched['login'], switched['pending_enabled'], switched['paused']), ('other', True, True))
+
+
+    def switch(self, *extra):
+        printed = io.StringIO()
+        with contextlib.redirect_stdout(printed):
+            self.assertEqual(main(['--state-home', str(self.state), 'setup', '--switch-account', *extra]), 0)
+        resumed = {**read_json(self.state / 'config.json'), 'paused': False}; save_json(self.state / 'config.json', resumed)
+        return resumed, printed.getvalue()
+
+    def as_other(self, snapshot):
+        gh = FakeGitHub(snapshot); gh.login = lambda: 'other'
+        return gh
+
+    def test_pr_already_watched_by_previous_account_is_enrolled_separately_for_the_new_one(self):
+        snapshot = self.snapshot(); snapshot['pr']['requested_reviewers'].append({'login': 'other'})
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(snapshot)); engine.poll()
+        legacy = engine.store.db.execute('SELECT id,data FROM watches').fetchall(); engine.store.close()
+        self.assertEqual([row[0] for row in legacy], ['github.com/example/app/7'])  # key format of existing databases
+        resumed, _ = self.switch()
+        engine = Engine(resumed, self.state, github=self.as_other(snapshot)); engine.poll(); engine.poll()
+        self.assertEqual(sorted((json.loads(row['event'])['account'], row['scenario']) for row in engine.store.rows()),
+                         [('me', 'S3'), ('other', 'S3')])
+        self.assertEqual(sorted(row['account'] for row in engine.store.tracked()), ['me', 'other'])
+        self.assertEqual(engine.store.db.execute('SELECT data FROM watches WHERE id=?', (legacy[0][0],)).fetchone()[0], legacy[0][1])
+        engine.store.close()
+        back = FakeGitHub(snapshot); back.pages = lambda *_args, **_kwargs: []  # only enrollment can select the PR
+        engine = Engine(self.cfg, self.state, github=back); self.addCleanup(engine.store.close); polled = []
+        with patch.object(engine, 'enqueue_pr', side_effect=lambda _repo, number: polled.append(number)):
+            engine.poll()
+        self.assertEqual(polled, [7])
+
+    def test_same_account_keeps_reading_existing_watch_rows_without_new_work(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot())); engine.poll(); engine.store.close()
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot())); self.addCleanup(engine.store.close)
+        before = engine.store.db.execute('SELECT * FROM watches').fetchall()
+        engine.poll()
+        self.assertEqual([tuple(row) for row in engine.store.db.execute('SELECT * FROM watches')], [tuple(row) for row in before])
+        self.assertEqual(len(engine.store.rows()), 1)
+
+    def test_reconcile_and_retry_refuse_previous_account_job_without_changing_it(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot()))
+        job = engine.enqueue_pr('example/app', 7); engine.store.update(job, 'write_unconfirmed', error='Inspect receipts before retry'); engine.store.close()
+        receipt = self.state / 'receipts' / digest({'host': 'github.com', 'repo': 'example/app', 'pr': 7, 'login': 'me'}) / 'reply-review.json'
+        save_json(receipt, {'status': 'pending'})
+        self.switch()
+        for action, status in (('reconcile', 'write_unconfirmed'), ('retry', 'local_ready')):
+            store = Store(self.state); store.update(job, status, error='kept'); store.close()
+            code, errors = self.cli(action, job[:12])
+            self.assertEqual(code, 1); self.assertIn('another account', errors)
+            store = Store(self.state); row = store.find_job(job); store.close()
+            self.assertEqual((row['status'], row['error']), (status, 'kept'))
+        self.assertEqual(read_json(receipt), {'status': 'pending'})
+
+    def test_switch_output_reports_the_pending_state_that_was_saved(self):
+        _, printed = self.switch('--pending', '--single-writer')
+        self.assertTrue(read_json(self.state / 'config.json')['pending_enabled'])
+        self.assertNotIn('Pending writes disabled', printed); self.assertNotIn('re-enables drafts', printed)
+        self.assertIn('Pending writes enabled', printed)
+        save_json(self.state / 'config.json', self.cfg)
+        _, printed = self.switch()
+        self.assertIn('Pending writes disabled', printed); self.assertIn('setup --pending --single-writer', printed)
+
+    def test_previous_account_runs_are_pruned_once_its_pr_closes(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot()))
+        job = engine.enqueue_pr('example/app', 7); run = self.state / 'runs' / 'old'; run.mkdir(parents=True)
+        engine.store.update(job, 'local_ready', run_dir=run)
+        with engine.store.db: engine.store.db.execute('UPDATE jobs SET updated=?', (time.time() - 30 * 86400,))
+        engine.store.close()
+        resumed, _ = self.switch()
+        gh = self.as_other(self.snapshot()); engine = Engine(resumed, self.state, github=gh); self.addCleanup(engine.store.close)
+        engine.poll(); engine.poll()
+        self.assertTrue(run.exists())  # still open for the previous account
+        gh.pages = lambda *_args, **_kwargs: []
+        engine.poll(); engine.poll()
+        self.assertFalse(run.exists())
+        self.assertEqual([(row['account'], row['state']) for row in engine.store.tracked()], [('me', 'closed')])
+
+    def test_prune_reads_the_watch_of_the_account_that_owns_the_run(self):
+        store = Store(self.state); self.addCleanup(store.close)
+        for account, state in (('me', 'open'), ('other', 'closed')):
+            key = store.enqueue('S3', {'repo': 'example/app', 'pr': 7, 'account': account})
+            path = self.state / 'runs' / account; path.mkdir(parents=True); store.update(key, 'local_ready', run_dir=path)
+            store.observe(account, {'repo': 'example/app', 'pr': 7, 'account': account, 'state': state})
+        with store.db: store.db.execute('UPDATE jobs SET updated=?', (time.time() - 30 * 86400,))
+        self.assertEqual(store.prune(14), [str(self.state / 'runs/other')])
+
+    def test_previous_result_is_not_handed_to_another_account(self):
+        store = Store(self.state); self.addCleanup(store.close)
+        key = store.enqueue('S3', {'hostname': 'github.com', 'repo': 'example/app', 'pr': 7, 'account': 'me'})
+        store.update(key, 'local_ready', result={'by': 'me'})
+        self.assertIsNone(store.previous('github.com', 'example/app', 7, 'other'))
+        self.assertEqual(store.previous('github.com', 'example/app', 7, 'me'), {'by': 'me'})
+        key = store.enqueue('S3', {'hostname': 'github.com', 'repo': 'example/app', 'pr': 8})  # recorded before accounts were stored
+        store.update(key, 'local_ready', result={'by': 'unrecorded'})
+        self.assertEqual(store.previous('github.com', 'example/app', 8, 'other'), {'by': 'unrecorded'})
 
 
 class DeliveryTests(GitFixture):
