@@ -64,7 +64,6 @@ class Engine:
         own_reviews = [r for r in snapshot['reviews'] if r['state'] != 'PENDING'
                        and (r.get('user') or {}).get('login', '').lower() == login.lower()]
         scenario = 'S2' if pr['user']['login'].lower() == login.lower() else ('S4' if own_reviews else 'S3')
-        inputs = claims(snapshot, scenario, login)
         stamp = fingerprint(snapshot, login)
         requested = any(r['login'].lower() == login.lower() for r in pr.get('requested_reviewers', []))
         teams = next(r.get('teams', []) for r in self.config['repositories'] if r['name'] == repo)
@@ -72,6 +71,8 @@ class Engine:
         watch_key = f'{self.config["hostname"]}/{repo}/{number}'
         previous = self.store.db.execute('SELECT data FROM watches WHERE id=?', (watch_key,)).fetchone()
         prior = json.loads(previous[0]) if previous else None
+        # A thread seen resolved on the last poll and open now is input even if the author answered last.
+        inputs = claims(snapshot, scenario, login, (prior or {}).get('resolved', []) if scenario == 'S2' else ())
         event = {'hostname': self.config['hostname'], 'repo': repo, 'pr': number, 'fingerprint': stamp,
                  'source_fingerprint': fingerprint(snapshot), 'account': login, 'policy_version': __version__, 'claims': inputs}
         value = {'hostname': self.config['hostname'], 'repo': repo, 'pr': number, 'fingerprint': stamp,
@@ -80,8 +81,9 @@ class Engine:
         changed = prior is None or prior['fingerprint'] != stamp or prior.get('policy_version') != __version__ or (requested and not prior.get('requested'))
         if scenario == 'S2':
             # The account fingerprint ignores resolution so the author's own resolve stays quiet; only a
-            # thread seen resolved and now awaiting the author again is new input. Watches written before
-            # this field have no 'resolved' list, so the first poll after an upgrade only records it.
+            # thread seen resolved and now open again is new input, whoever commented last or reopened it.
+            # Watches written before this field have no 'resolved' list, so the first poll after an
+            # upgrade only records it.
             resolved = {t['id'] for t in snapshot['threads'] if t.get('isResolved')}
             reopened = sorted(set((prior or {}).get('resolved', [])) & {c['thread_id'] for c in inputs if c.get('thread_id')})
             if reopened:
