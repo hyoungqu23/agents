@@ -113,21 +113,21 @@ def packet(root, scope, max_bytes, previous_head=None):
     paths = tree_names('head')
     changed = dict.fromkeys(name for row in scope['files']
                             for name in (row.get('old_path'), row['path']) if name)
-    order = dict.fromkeys([*changed, *paths])
     head = set(paths)
     base = head if scope['target']['base_sha'] == scope['target']['head_sha'] else set(tree_names('base'))
     base_rules = sorted(name for name in base if PurePosixPath(name).name in ('AGENTS.md', 'CLAUDE.md'))
     present = {'head': head, 'base': base}
     revisions = ['head', 'base']
     if scope['target']['mode'] == 'working-tree':
-        present.update(index=set(git(root, 'ls-files', '-z').decode().split('\x00')), working=set(order))
+        present.update(index=set(git(root, 'ls-files', '-z').decode().split('\x00')), working=set(changed))
         revisions = ['working', 'head', 'index', 'base']
     # Budget goes to the change and its comparison versions, then trusted base rules, then unchanged context.
+    # The scope lists every staged, unstaged and untracked path, so any other path is identical in head,
+    # index and working tree: visit it once as head, with no copy to send or to name in same_as.
     visits = dict.fromkeys([
         *((revision, name) for revision in revisions for name in changed if name in present[revision]),
         *(('base', name) for name in base_rules),
-        *((revision, name) for revision in ('head', 'index', 'working') if revision in present
-          for name in order if name in present[revision])])
+        *(('head', name) for name in paths)])
 
     sources, same_as, omitted, used = {}, {}, [], 0
     for revision, name in visits:

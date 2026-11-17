@@ -160,9 +160,49 @@ class SourceTests(GitFixture):
         self.assertEqual(set(packet['sources']), {'working:app.py', 'head:app.py', 'base:AGENTS.md', 'head:export.py'})
         self.assertEqual(packet['same_as'], {
             'index:app.py': 'head:app.py', 'base:app.py': 'head:app.py',
-            'head:AGENTS.md': 'base:AGENTS.md', 'index:AGENTS.md': 'base:AGENTS.md', 'working:AGENTS.md': 'base:AGENTS.md',
-            'index:export.py': 'head:export.py', 'working:export.py': 'head:export.py'})
+            'head:AGENTS.md': 'base:AGENTS.md'})
         self.assertEqual(packet['trusted_base_rules'], {'base:AGENTS.md': self.RULES})
+        self.assertEqual(packet['omitted'], [])
+
+    def test_unchanged_files_add_nothing_to_same_as(self):
+        def build(count):
+            for number in range(count):
+                (self.repo / f'unchanged_{number:03d}.py').write_text(f'VALUE = {number}\n' + '# padding\n' * 20)
+            self.g('add', '-A'); self.g('commit', '-qm', f'{count} unchanged files')
+            (self.repo / 'app.py').write_text('def first(rows):\n    return rows[-1]\n')
+            scope = module('review-code', 'review_result.py').capture_scope(self.repo, working_tree=True)
+            packet = source.packet(self.repo, scope, 1_000_000)
+            (self.repo / 'app.py').write_text('def first(rows):\n    return rows[0]\n')
+            return scope, packet
+        few_scope, few = build(5)
+        scope, many = build(200)
+        # same_as follows the one changed file, not the 200 files around it.
+        self.assertEqual(many['same_as'], {'index:app.py': 'head:app.py', 'base:app.py': 'head:app.py'})
+        self.assertEqual(many['same_as'], few['same_as'])
+        self.assertEqual(many['omitted'], [])
+        unchanged = [name for name in many['sources'] if name.split(':', 1)[1].startswith('unchanged_')]
+        self.assertEqual(len(unchanged), 200); self.assertTrue(all(name.startswith('head:') for name in unchanged))
+        # Each extra unchanged file costs the prompt its text and its path, with no alias on top.
+        def size(scope, packet):
+            return len(agent.prompt({'scenario': 'S1'}, scope, packet, None).encode())
+        added = {name: text for name, text in many['sources'].items() if name not in few['sources']}
+        listed = [name for name in many['repository_paths'] if name not in few['repository_paths']]
+        self.assertEqual(len(added), 195)
+        self.assertLessEqual(size(scope, many) - size(few_scope, few), len(json.dumps(added)) + len(json.dumps(listed)))
+
+    def test_same_as_grows_with_changed_files_only(self):
+        for number in range(40):
+            (self.repo / f'unchanged_{number:02d}.py').write_text(f'VALUE = {number}\n')
+        for number in range(3):
+            (self.repo / f'changed_{number}.py').write_text(f'VALUE = {number}\n')
+        self.g('add', '-A'); self.g('commit', '-qm', 'more files')
+        for number in range(3):
+            (self.repo / f'changed_{number}.py').write_text(f'VALUE = {number + 10}\n')
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, working_tree=True)
+        packet = source.packet(self.repo, scope, 1_000_000)
+        # Unstaged edit: index and base repeat head, so each changed file contributes exactly two aliases.
+        self.assertEqual(packet['same_as'], {f'{revision}:changed_{number}.py': f'head:changed_{number}.py'
+                                             for number in range(3) for revision in ('index', 'base')})
         self.assertEqual(packet['omitted'], [])
 
     def test_changed_rules_file_keeps_trusted_base_copy(self):
