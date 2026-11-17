@@ -18,10 +18,16 @@ TEMPLATE_LINKS = {
 }
 
 
-def broken_links(root):
+def broken_links(root, documents=None):
+    """List links in the Markdown under documents that leave root or miss a file.
+
+    root is the installed folder a link may not leave. documents is the folder
+    whose Markdown is checked; it defaults to root.
+    """
+    documents = documents or root
     failures = []
-    for source in sorted(root.rglob('*.md')):
-        if 'evals' in source.relative_to(root).parts:
+    for source in sorted(documents.rglob('*.md')):
+        if 'evals' in source.relative_to(documents).parts:
             continue
         for link in re.findall(r'\[[^\]]+\]\(([^)]+)\)', source.read_text()):
             url = urlsplit(link)
@@ -29,7 +35,7 @@ def broken_links(root):
                 continue
             target = (source.parent / unquote(url.path)).resolve()
             if not target.is_relative_to(root.resolve()) or not target.is_file():
-                failures.append(f'{source.relative_to(root)} -> {link}')
+                failures.append(f'{source.relative_to(documents)} -> {link}')
     return failures
 
 
@@ -55,7 +61,7 @@ class ReviewSkillInstallTests(unittest.TestCase):
             with self.subTest(plugin=skill_root.parent.name), tempfile.TemporaryDirectory() as temporary:
                 installed = Path(temporary) / skill_root.parent.name
                 shutil.copytree(skill_root.parent, installed)
-                broken = set(broken_links(installed / 'skills'))
+                broken = set(broken_links(installed, installed / 'skills'))
                 self.assertEqual(sorted(broken - TEMPLATE_LINKS), [])
 
     def test_copied_shared_references_match_plugin_originals(self):
@@ -97,6 +103,22 @@ class ReviewSkillInstallTests(unittest.TestCase):
                 '[missing](missing.md) [outside](../outside.md) '
                 '[web](https://example.invalid/doc) [anchor](#heading)')
             self.assertEqual(len(broken_links(root)), 2)
+
+    def test_reference_checker_accepts_plugin_references_only_inside_plugin(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            plugin = Path(temporary) / 'plugin'
+            skills = plugin / 'skills'
+            (skills / 'demo').mkdir(parents=True)
+            (plugin / 'references').mkdir()
+            shared = plugin / 'references/shared.md'
+            shared.write_text('Shared')
+            (plugin / 'README.md').write_text('[not a skill document](missing.md)')
+            (skills / 'demo/SKILL.md').write_text('[shared](../../references/shared.md)')
+            link = ['demo/SKILL.md -> ../../references/shared.md']
+            self.assertEqual(broken_links(plugin, skills), [])
+            self.assertEqual(broken_links(skills), link)
+            shared.unlink()
+            self.assertEqual(broken_links(plugin, skills), link)
 
 
 if __name__ == '__main__':
