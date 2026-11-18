@@ -1,4 +1,5 @@
 """Prepare disposable Git sources without activating incoming hooks or filters."""
+import json
 import os
 from pathlib import Path, PurePosixPath
 import shlex
@@ -104,7 +105,7 @@ def local_checkout(config, original, root, gate):
     return Path(root), copied
 
 
-def packet(root, scope, max_bytes, previous_head=None):
+def packet(root, scope, max_bytes, previous_head=None, review_versions=(), review_file_limit=None):
     """Send text only. Omitted/binary source is an explicit review limitation."""
     def tree_names(revision):
         raw = git(root, 'ls-tree', '-r', '--name-only', '-z', scope['target'][revision + '_sha'])
@@ -113,46 +114,108 @@ def packet(root, scope, max_bytes, previous_head=None):
     paths = tree_names('head')
     changed = dict.fromkeys(name for row in scope['files']
                             for name in (row.get('old_path'), row['path']) if name)
-    order = dict.fromkeys([*changed, *paths])
     head = set(paths)
     base = head if scope['target']['base_sha'] == scope['target']['head_sha'] else set(tree_names('base'))
     base_rules = sorted(name for name in base if PurePosixPath(name).name in ('AGENTS.md', 'CLAUDE.md'))
-    revision_paths = {
-        'head': [name for name in order if name in head],
-        'base': dict.fromkeys([*(name for name in changed if name in base), *base_rules]),
-    }
+    present = {'head': head, 'base': base}
+    revisions = ['head', 'base']
     if scope['target']['mode'] == 'working-tree':
-        index = set(git(root, 'ls-files', '-z').decode().split('\x00'))
-        revision_paths['index'] = [name for name in order if name in index]
-        revision_paths['working'] = order
+        present.update(index=set(git(root, 'ls-files', '-z').decode().split('\x00')), working=set(changed))
+        revisions = ['working', 'head', 'index', 'base']
+    # Budget goes to the change and its comparison versions, then trusted base rules, then the delta since
+    # the previous review, then unchanged context.
+    # The scope lists every staged, unstaged and untracked path, so any other path is identical in head,
+    # index and working tree: visit it once as head, with no copy to send or to name in same_as.
+    first = dict.fromkeys([
+        *((revision, name) for revision in revisions for name in changed if name in present[revision]),
+        *(('base', name) for name in base_rules)])
+    context = [visit for visit in dict.fromkeys(('head', name) for name in paths) if visit not in first]
 
-    sources, omitted, used = {}, [], 0
-    for revision, names in revision_paths.items():
-        for name in names:
-            try:
-                if revision == 'working':
-                    path = safe_path(root, name)
-                    if path.is_symlink() or not path.is_file():
-                        continue
-                    raw = path.read_bytes()
-                else:
-                    ref = ':' + name if revision == 'index' else scope['target'][revision + '_sha'] + ':' + name
-                    raw = git(root, 'cat-file', 'blob', ref)
-                text = raw.decode('utf-8')
-                if '\x00' in text or used + len(raw) > max_bytes:
-                    omitted.append(revision + ':' + name); continue
-                sources[revision + ':' + name] = text; used += len(raw)
-            except (HarnessError, UnicodeError, OSError):
-                omitted.append(revision + ':' + name)
+    def cost(value):
+        return len(json.dumps(value, ensure_ascii=False).encode()) + 2  # as it is sent, plus its separator
+
+    # max_bytes bounds the packet as it is sent, not the raw source: the path list and one name per visit
+    # (a sources key, a same_as key or an omitted entry) are spent before any text.
+    sources, same_as, omitted = {}, {}, []
+    used = cost(paths) + sum(cost(revision + ':' + name) for revision, name in [*first, *context])
+
+    review_versions = dict.fromkeys(review_versions)
+    if used >= max_bytes:
+        raise HarnessError('Repository path names leave no packet budget for source; raise the configured limit')
+
+    def visit(revision, name):
+        nonlocal used
+        key = revision + ':' + name
+        try:
+            if revision == 'working':
+                path = safe_path(root, name)
+                if path.is_symlink() or not path.is_file():
+                    return
+                raw = path.read_bytes()
+            else:
+                ref = ':' + name if revision == 'index' else scope['target'][revision + '_sha'] + ':' + name
+                raw = git(root, 'cat-file', 'blob', ref)
+            text = raw.decode('utf-8')
+            # A trusted base rule is sent a second time under trusted_base_rules.
+            rule = cost(key) + cost(text) if revision == 'base' and name in base_rules else 0
+            # One path often has the same text in several revisions; send it once and name the copy.
+            twin = next((other + ':' + name for other in revisions if sources.get(other + ':' + name) == text), None)
+            need = rule + (cost(twin) if twin else cost(text))
+            if '\x00' in text or used + need > max_bytes:
+                omitted.append(key)
+            elif twin:
+                same_as[key] = twin; used += need
+            else:
+                sources[key] = text; used += need
+        except (HarnessError, UnicodeError, OSError):
+            omitted.append(key)
+
+    for revision, name in first:
+        visit(revision, name)
     delta = None
     if previous_head:
         try:
             delta = git(root, 'diff', '--no-ext-diff', '--no-textconv', previous_head, scope['target']['head_sha'], '--').decode()
-            if len(delta.encode()) > max_bytes:
+            if used + cost(delta) > max_bytes:
                 delta = None; omitted.append('previous-review delta exceeds packet limit')
+            else:
+                used += cost(delta)
         except HarnessError:
             omitted.append('previous-review objects unavailable; full current PR scope is supplied')
-    rules = {name: value for name, value in sources.items()
-             if name.startswith('base:') and PurePosixPath(name.split(':', 1)[1]).name in ('AGENTS.md', 'CLAUDE.md')}
-    return {'sources': sources, 'repository_paths': paths, 'trusted_base_rules': rules,
+        except UnicodeError:
+            omitted.append('previous-review delta is not UTF-8 text; full current PR scope is supplied')
+    # Reserve labels only for readable history within the per-file limit.
+    # Keep at most one packet of candidate text in memory across the two passes.
+    history = {}
+    cached = {}
+    cached_bytes = 0
+    for ref, name in review_versions:
+        key = f'review:{ref}:{name}'
+        try:
+            text = git(root, 'cat-file', 'blob', f'{ref}:{name}').decode()
+        except (HarnessError, UnicodeError):
+            continue
+        if '\x00' in text or (review_file_limit is not None and len(text.encode()) >= review_file_limit):
+            continue
+        size = cost(text)
+        used += cost(key)
+        if used > max_bytes:
+            raise HarnessError('Review path names exceed the packet budget; raise the configured limit')
+        history[key] = (ref, name, size)
+        if cached_bytes + size <= max_bytes:
+            cached[key] = text
+            cached_bytes += size
+    for key, (ref, name, size) in history.items():
+        if used + size > max_bytes:
+            omitted.append(key)
+            continue
+        sources[key] = cached[key] if key in cached else git(root, 'cat-file', 'blob', f'{ref}:{name}').decode()
+        used += size
+    for revision, name in context:
+        visit(revision, name)
+    if not sources:
+        raise HarnessError('No source text fits in the review packet; check the scope or raise the configured limit')
+    rules = {'base:' + name: sources[same_as.get('base:' + name, 'base:' + name)] for name in base_rules
+             if same_as.get('base:' + name, 'base:' + name) in sources}
+    return {'sources': sources, 'same_as': same_as, 'repository_paths': paths, 'trusted_base_rules': rules,
             'previous_review_delta': delta, 'omitted': omitted}
