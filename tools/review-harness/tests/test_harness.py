@@ -112,10 +112,11 @@ class SourceTests(GitFixture):
     RULES = 'Keep empty input behavior.\n'
 
     def crowd(self, limit=4096):
-        """Commit base rules plus an unchanged document that leaves 10 bytes after head:app.py and one rules copy."""
+        """Commit base rules plus an unchanged document that fits only if nothing but head:app.py and the
+        rules are sent before it: 200 bytes are left for names and JSON escaping, less than one more revision."""
         (self.repo / 'AGENTS.md').write_text(self.RULES)
         used = len((self.repo / 'app.py').read_bytes()) + len(self.RULES)
-        (self.repo / 'docs.md').write_text('x' * (limit - used - 10))
+        (self.repo / 'docs.md').write_text('x' * (limit - used - 200))
         self.g('add', 'AGENTS.md', 'docs.md'); self.g('commit', '-qm', 'add rules and docs')
 
     def test_working_tree_change_outranks_unchanged_files_under_tight_budget(self):
@@ -157,6 +158,15 @@ class SourceTests(GitFixture):
         self.assertIn('rows[0] if rows else None', packet['previous_review_delta'])  # outranks unchanged notes
         self.assertTrue(any(name.startswith('head:note-') for name in packet['sources']))
         self.assertTrue(any(name.startswith('head:note-') for name in packet['omitted']))
+
+    def test_delta_that_is_not_utf8_is_reported_instead_of_failing(self):
+        self.g('checkout', '-q', '--detach', self.base); previous = self.g('rev-parse', 'HEAD').strip()
+        (self.repo / 'legacy.txt').write_bytes('한글\n'.encode('euc-kr'))
+        self.g('add', 'legacy.txt'); self.g('commit', '-qm', 'legacy encoding')
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, previous)
+        packet = source.packet(self.repo, scope, 4096, previous_head=previous)
+        self.assertIsNone(packet['previous_review_delta'])
+        self.assertIn('previous-review delta is not UTF-8 text; full current PR scope is supplied', packet['omitted'])
 
     def test_staged_and_unstaged_versions_are_both_delivered(self):
         self.crowd()
@@ -412,6 +422,18 @@ class EngineTests(GitFixture):
         engine.notify_implementation(self.repo, {'status': 'complete'}); engine.run_one()
         row = engine.store.rows()[0]; self.assertEqual(row['status'], 'partial')
         self.assertIn('working:app.py', read_json(Path(row['run_dir']) / 'source-packet.json')['omitted'])
+
+    def test_path_names_that_leave_no_room_for_source_stop_before_the_model(self):
+        self.cfg['max_packet_bytes'] = 4096
+        for number in range(60):
+            (self.repo / f'{number:03}-a-long-file-name-that-crowds-out-the-source-text.md').write_text('note\n')
+        self.g('add', '.'); self.g('commit', '-qm', 'many names')
+        (self.repo / 'app.py').write_text('def first(rows):\n    return rows[0]\n')
+        called = []
+        engine = Engine(self.cfg, self.root / 'state', reviewer=lambda *args: called.append(args)); self.addCleanup(engine.store.close)
+        engine.notify_implementation(self.repo, {'status': 'complete'}); engine.run_one()
+        row = engine.store.rows()[0]
+        self.assertIn('path names leave no packet budget', row['error']); self.assertEqual(called, [])
 
 
 class StateTests(unittest.TestCase):

@@ -178,6 +178,8 @@ def packet(root, scope, max_bytes, previous_head=None):
                 used += cost(delta)
         except HarnessError:
             omitted.append('previous-review objects unavailable; full current PR scope is supplied')
+        except UnicodeError:
+            omitted.append('previous-review delta is not UTF-8 text; full current PR scope is supplied')
     for revision, name in context:
         visit(revision, name)
     rules = {'base:' + name: sources[same_as.get('base:' + name, 'base:' + name)] for name in base_rules

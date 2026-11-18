@@ -198,6 +198,9 @@ class Engine:
             if remaining < 1:
                 raise HarnessError('Review context exceeds packet budget; narrow scope or raise the configured limit')
             packet = source.packet(checkout, scope, remaining, previous_head)
+            if not packet['sources'] and len(json.dumps(packet['repository_paths'], ensure_ascii=False).encode()) > remaining // 2:
+                # Path names are sent before any text; a model call that carries no source reviews nothing.
+                raise HarnessError('Repository path names leave no packet budget for source; raise the configured limit')
             packet['context'] = context
             for claim in event['claims']:
                 if claim.get('review_ref') and claim.get('path'):

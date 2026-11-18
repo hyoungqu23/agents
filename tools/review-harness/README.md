@@ -95,7 +95,8 @@ receipts and a new round gets a fresh Pending. Uncertain writes are not blindly 
 Runs distinguish complete/partial/invalid analysis from local/Pending persistence.
 Text packets are bounded (default 1 MB) as they are sent: the repository path list, one name
 per omitted or deduplicated path and JSON escaping count against the limit, not just source
-text. The budget goes first to every revision of the changed files (working, head, index,
+text. When path names alone leave no room for source, the job stops with an error asking for
+a higher limit instead of calling the model without source. The budget goes first to every revision of the changed files (working, head, index,
 base), then to the base `AGENTS.md`/`CLAUDE.md`, then to the delta since the previous review,
 and only then to unchanged files, which are sent once as `head:` (Git reports no change in
 their index and working copies; a checkout conversion such as `eol=crlf` is not sent separately). A changed file's revision, or a base rule file, whose
