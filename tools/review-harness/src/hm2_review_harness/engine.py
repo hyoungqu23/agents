@@ -8,10 +8,11 @@ import subprocess
 import hashlib
 
 from . import __version__, agent, delivery, source
-from .github import ApiError, GitHub, claims, fingerprint, public_comments
+from .github import ApiError, GitHub, claims, fingerprint
 from .state import HarnessError, Store, digest, save_json, load_config
 from .trusted import module
 from .policy import PolicyChanged, require_pending
+from .github import public_comments
 
 
 class Engine:
