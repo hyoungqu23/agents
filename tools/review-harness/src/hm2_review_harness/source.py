@@ -107,15 +107,19 @@ def local_checkout(config, original, root, gate):
 
 def packet(root, scope, max_bytes, previous_head=None, review_versions=(), review_file_limit=None):
     """Send text only. Omitted/binary source is an explicit review limitation."""
-    def tree_names(revision):
-        raw = git(root, 'ls-tree', '-r', '--name-only', '-z', scope['target'][revision + '_sha'])
-        return [name for name in raw.decode().split('\x00') if name]
+    def tree_sizes(revision):
+        # One listing gives every blob size, so an oversized file is dropped without reading it.
+        raw = git(root, 'ls-tree', '-r', '-l', '-z', scope['target'][revision + '_sha'])
+        rows = (entry.split('\t', 1) for entry in raw.decode().split('\x00') if entry)
+        return {name: int(meta.split()[3]) if meta.split()[3] != '-' else None for meta, name in rows}
 
-    paths = tree_names('head')
+    sizes = {'head': tree_sizes('head')}
+    paths = list(sizes['head'])
     changed = dict.fromkeys(name for row in scope['files']
                             for name in (row.get('old_path'), row['path']) if name)
     head = set(paths)
-    base = head if scope['target']['base_sha'] == scope['target']['head_sha'] else set(tree_names('base'))
+    sizes['base'] = sizes['head'] if scope['target']['base_sha'] == scope['target']['head_sha'] else tree_sizes('base')
+    base = set(sizes['base'])
     base_rules = sorted(name for name in base if PurePosixPath(name).name in ('AGENTS.md', 'CLAUDE.md'))
     present = {'head': head, 'base': base}
     revisions = ['head', 'base']
@@ -151,9 +155,20 @@ def packet(root, scope, max_bytes, previous_head=None, review_versions=(), revie
                 path = safe_path(root, name)
                 if path.is_symlink() or not path.is_file():
                     return
-                raw = path.read_bytes()
+                size = path.stat().st_size
             else:
                 ref = ':' + name if revision == 'index' else scope['target'][revision + '_sha'] + ':' + name
+                size = int(git(root, 'cat-file', '-s', ref)) if revision == 'index' else sizes[revision].get(name)
+            # Text costs more than its own bytes, and only an equally long copy already in the packet can
+            # stand in for it. Anything else over the remaining budget is omitted before it is read.
+            if size is not None and used + size > max_bytes and not any(
+                    len(sources[other + ':' + name].encode()) == size for other in revisions if other + ':' + name in sources):
+                omitted.append(key)
+                return
+            if revision == 'working':
+                with path.open('rb') as stream:
+                    raw = stream.read(size + 1)  # a file that grew after stat() still cannot exceed the budget
+            else:
                 raw = git(root, 'cat-file', 'blob', ref)
             text = raw.decode('utf-8')
             # A trusted base rule is sent a second time under trusted_base_rules.
@@ -167,7 +182,7 @@ def packet(root, scope, max_bytes, previous_head=None, review_versions=(), revie
                 same_as[key] = twin; used += need
             else:
                 sources[key] = text; used += need
-        except (HarnessError, UnicodeError, OSError):
+        except (HarnessError, UnicodeError, OSError, ValueError):
             omitted.append(key)
 
     for revision, name in first:
@@ -192,17 +207,21 @@ def packet(root, scope, max_bytes, previous_head=None, review_versions=(), revie
     for ref, name in review_versions:
         key = f'review:{ref}:{name}'
         try:
-            text = git(root, 'cat-file', 'blob', f'{ref}:{name}').decode()
-        except (HarnessError, UnicodeError):
+            raw_size = int(git(root, 'cat-file', '-s', f'{ref}:{name}'))
+            if review_file_limit is not None and raw_size >= review_file_limit:
+                continue
+            # A blob larger than the whole packet is labelled and omitted below without being read.
+            text = None if raw_size > max_bytes else git(root, 'cat-file', 'blob', f'{ref}:{name}').decode()
+        except (HarnessError, UnicodeError, ValueError):
             continue
-        if '\x00' in text or (review_file_limit is not None and len(text.encode()) >= review_file_limit):
+        if text is not None and '\x00' in text:
             continue
-        size = cost(text)
+        size = raw_size if text is None else cost(text)
         used += cost(key)
         if used > max_bytes:
             raise HarnessError('Review path names exceed the packet budget; raise the configured limit')
         history[key] = (ref, name, size)
-        if cached_bytes + size <= max_bytes:
+        if text is not None and cached_bytes + size <= max_bytes:
             cached[key] = text
             cached_bytes += size
     for key, (ref, name, size) in history.items():

@@ -195,6 +195,49 @@ class SourceTests(GitFixture):
         self.assertFalse(keys - packet['sources'].keys() - set(packet['omitted']))
         self.assertLessEqual(len(json.dumps(packet, ensure_ascii=False).encode()), 3200)
 
+    def test_oversized_sources_are_omitted_without_being_read(self):
+        big = 'x' * 50_000
+        (self.repo / 'generated.txt').write_text(big); self.g('add', 'generated.txt'); self.g('commit', '-qm', 'generated')
+        old = self.g('rev-parse', 'HEAD').strip()
+        (self.repo / 'generated.txt').write_text(big + 'y'); self.g('add', 'generated.txt'); self.g('commit', '-qm', 'regenerate')
+        (self.repo / 'generated.txt').write_text(big + 'z'); self.g('add', 'generated.txt')   # index
+        (self.repo / 'generated.txt').write_text(big + 'w')                                   # working tree
+        (self.repo / 'app.py').write_text('def first(rows):\n    return rows[-1]\n')
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, working_tree=True)
+        blobs, opened, git, real_open = [], [], source.git, Path.open
+
+        def spy_git(root, *args, **kwargs):
+            if args[:2] == ('cat-file', 'blob'):
+                blobs.append(args[2])
+            return git(root, *args, **kwargs)
+
+        def spy_open(path, *args, **kwargs):
+            opened.append(path.name)
+            return real_open(path, *args, **kwargs)
+
+        with patch.object(source, 'git', spy_git), patch.object(Path, 'open', spy_open):
+            packet = source.packet(self.repo, scope, 4096, review_versions=[(old, 'generated.txt'), (old, 'app.py')])
+        # Working file, index, head, base and a past review version: none is read, each is named.
+        self.assertFalse([ref for ref in blobs if ref.endswith(':generated.txt')])
+        self.assertNotIn('generated.txt', opened)
+        self.assertEqual({key for key in packet['omitted'] if key.endswith('generated.txt')},
+                         {f'{revision}:generated.txt' for revision in ('working', 'index', 'head', 'base', f'review:{old}')})
+        # Files that fit keep their priority and the single copy shared between identical revisions.
+        self.assertEqual(packet['sources']['working:app.py'], 'def first(rows):\n    return rows[-1]\n')
+        self.assertEqual(packet['same_as']['index:app.py'], 'head:app.py')
+        self.assertIn(f'review:{old}:app.py', packet['sources'])
+        self.assertIn('head:export.py', packet['sources'])
+
+    def test_identical_copy_is_still_named_when_the_budget_is_spent(self):
+        text = 'x' * 1500
+        (self.repo / 'big.py').write_text(text); self.g('add', 'big.py'); self.g('commit', '-qm', 'big'); base = self.g('rev-parse', 'HEAD').strip()
+        self.g('mv', 'export.py', 'moved.py'); self.g('commit', '-qm', 'touch nothing in big.py')
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, base)
+        scope['files'].append({'path': 'big.py'})   # a changed entry whose two revisions hold the same text
+        packet = source.packet(self.repo, scope, 2048)
+        self.assertEqual(packet['sources']['head:big.py'], text)
+        self.assertEqual(packet['same_as'], {'base:big.py': 'head:big.py'})
+
     def test_delta_that_is_not_utf8_is_reported_instead_of_failing(self):
         self.g('checkout', '-q', '--detach', self.base); previous = self.g('rev-parse', 'HEAD').strip()
         (self.repo / 'legacy.txt').write_bytes('한글\n'.encode('euc-kr'))
