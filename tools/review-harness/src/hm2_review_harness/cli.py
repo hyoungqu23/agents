@@ -172,7 +172,7 @@ def main(argv=None):
     sub.add_parser('doctor'); sub.add_parser('serve'); sub.add_parser('run-once'); sub.add_parser('inbox'); sub.add_parser('status')
     sub.add_parser('pause'); sub.add_parser('resume'); sub.add_parser('disable-pending')
     p = sub.add_parser('enqueue-pr'); p.add_argument('--repo', required=True); p.add_argument('--pr', type=int, required=True)
-    p = sub.add_parser('notify-implementation'); p.add_argument('--worktree', type=Path, required=True); p.add_argument('--assessment', type=Path, required=True); p.add_argument('--inputs', type=Path)
+    p = sub.add_parser('notify-implementation'); p.add_argument('--worktree', type=Path, required=True); p.add_argument('--assessment', type=Path, required=True); p.add_argument('--inputs', type=Path); p.add_argument('--verified', type=Path, help='Verification snapshot accepted by the completion check; differing inputs or sources are refused')
     p = sub.add_parser('show'); p.add_argument('job')
     p = sub.add_parser('retry'); p.add_argument('job')
     p = sub.add_parser('reconcile'); p.add_argument('job')
@@ -211,7 +211,7 @@ def main(argv=None):
         if args.action in ('enqueue-pr', 'notify-implementation'):
             engine = Engine(config, root)
             try:
-                job = engine.enqueue_pr(args.repo, args.pr, force=True) if args.action == 'enqueue-pr' else engine.notify_implementation(args.worktree, read_json(args.assessment), read_json(args.inputs) if args.inputs else None)
+                job = engine.enqueue_pr(args.repo, args.pr, force=True) if args.action == 'enqueue-pr' else engine.notify_implementation(args.worktree, read_json(args.assessment), args.inputs, read_json(args.verified) if args.verified else None)
                 print(job or 'No new input')
             finally:
                 engine.store.close()

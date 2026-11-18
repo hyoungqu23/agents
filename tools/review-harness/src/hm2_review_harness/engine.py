@@ -142,7 +142,32 @@ class Engine:
         return self.store.observe(watch_key, value, scenario if schedule else None, event if schedule else None)
 
 
-    def notify_implementation(self, worktree, assessment, inputs=None):
+    @staticmethod
+    def _approved_source(path, worktree, roots):
+        """Same boundary as the implement checker: inside the checkout, the inputs folder or a declared
+        source root, with no symlink below that root."""
+        path = Path(path)
+        if not path.is_absolute():
+            path = worktree / path
+        if '..' in path.parts:
+            raise HarnessError('Implementation source path may not contain ..')
+        candidates = [root for root in roots if path.is_relative_to(root)]
+        if not candidates:
+            raise HarnessError('Implementation source is outside the approved source roots')
+        selected = max(candidates, key=lambda root: len(root.parts))
+        current = selected.resolve()
+        for part in path.relative_to(selected).parts:
+            current = current / part
+            if current.is_symlink():
+                raise HarnessError('Implementation source is unavailable or symlinked')
+        if not current.is_file():
+            raise HarnessError('Implementation source is unavailable or symlinked')
+        return current
+
+    def notify_implementation(self, worktree, assessment, inputs=None, verified=None):
+        """`inputs` is the implementation inputs file (or its parsed content). `verified` is the snapshot the
+        completion check accepted; with it, anything that differs from that check is refused, not queued."""
+        stale = HarnessError('Implementation inputs or sources changed since completion was verified; run the completion check again')
         path = Path(worktree).resolve()
         repository = next((r for r in self.config['repositories'] if r.get('path') and Path(r['path']).resolve() == path), None)
         if repository is None:
@@ -151,19 +176,45 @@ class Engine:
             raise HarnessError('Only an assessed implementation completion triggers S1')
         scope = self.gate.capture_scope(path, working_tree=True)
         context = None
+        if verified is not None:
+            expected = verified.get('inputs') if isinstance(verified, dict) else None
+            known = verified.get('sources') if isinstance(verified, dict) else None
+            if (not isinstance(expected, dict) or not isinstance(known, dict) or not isinstance(inputs, (str, Path))
+                    or any(not isinstance(row, dict) for row in known.values())):
+                raise HarnessError('Verified snapshot or implementation inputs file is missing or malformed')
+        roots = [path]
+        if isinstance(inputs, (str, Path)):
+            inputs_path = Path(inputs).absolute()
+            if inputs_path.is_symlink() or not inputs_path.is_file():
+                raise HarnessError('Implementation inputs file is unavailable or symlinked')
+            raw_inputs = inputs_path.read_bytes()
+            if verified is not None and hashlib.sha256(raw_inputs).hexdigest() != expected.get('sha256'):
+                raise stale
+            try:
+                inputs = json.loads(raw_inputs)
+            except ValueError as error:
+                raise HarnessError('Implementation inputs file is not JSON') from error
+            roots.append(inputs_path.parent)
         if inputs:
+            if not isinstance(inputs, dict):
+                raise HarnessError('Implementation inputs must be an object')
+            roots += [Path(root) for root in inputs.get('source_roots', []) if isinstance(root, str) and Path(root).is_absolute()]
             context = {'requirements': inputs.get('requirements', []), 'checks': inputs.get('checks', []), 'sources': []}
-            used = 0
+            used, seen = 0, set()
             for row in inputs.get('sources', []):
-                input_path = Path(row['path'])
-                if not input_path.is_absolute():
-                    input_path = path / input_path
-                if input_path.is_symlink() or not input_path.is_file():
-                    raise HarnessError('Implementation source is unavailable or symlinked')
+                input_path = self._approved_source(row['path'], path, roots)
                 raw = input_path.read_bytes(); used += len(raw)
                 if used > self.config['max_packet_bytes']:
                     raise HarnessError('Implementation requirements exceed the review packet limit')
-                context['sources'].append({'id': row['id'], 'text': raw.decode(), 'sha256': hashlib.sha256(raw).hexdigest()})
+                digest_value = hashlib.sha256(raw).hexdigest(); seen.add(row['id'])
+                if verified is not None:
+                    row_expected = known.get(row['id'])
+                    if (row_expected is None or row_expected.get('sha256') != digest_value
+                            or Path(str(row_expected.get('path'))) != input_path.resolve()):
+                        raise stale
+                context['sources'].append({'id': row['id'], 'text': raw.decode(), 'sha256': digest_value})
+            if verified is not None and seen != set(known):
+                raise stale
         return self.store.enqueue('S1', {'hostname': self.config['hostname'], 'repo': repository['name'],
                                         'worktree': str(path), 'target': scope['target'],
                                         'account': self.config['login'], 'assessment': assessment,

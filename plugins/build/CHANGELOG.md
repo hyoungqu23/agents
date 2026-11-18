@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.4 - 2026-11-18
+
+- `implement`: hand the verification snapshot to the review harness with `--notify-review`, so inputs or sources changed after the completion check are refused instead of queued.
+
 ## 0.4.3
 
 - Retain a stable reproduction in the target CI suite when the real failure path is available.

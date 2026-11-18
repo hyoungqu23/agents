@@ -1,5 +1,6 @@
 """Real Git/SQLite integration with model/API doubles; no model calls or GitHub writes."""
 import copy
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -592,9 +593,62 @@ class EngineTests(GitFixture):
     def test_implementation_requirements_are_captured_as_review_input(self):
         document = self.root / 'spec.md'; document.write_text('first([]) returns None.\n')
         engine = Engine(self.cfg, self.root / 'state', reviewer=self.reviewer); self.addCleanup(engine.store.close)
-        engine.notify_implementation(self.repo, {'status': 'complete'}, {'requirements': [{'id': 'AC1'}], 'sources': [{'id': 'spec', 'path': str(document)}]})
+        inputs = self.root / 'inputs.json'
+        save_json(inputs, {'requirements': [{'id': 'AC1'}], 'sources': [{'id': 'spec', 'path': str(document)}]})
+        engine.notify_implementation(self.repo, {'status': 'complete'}, inputs)
         event = json.loads(engine.store.next()['event'])
         self.assertEqual(event['implementation_context']['sources'][0]['text'], document.read_text())
+
+    def handoff(self):
+        bundle = self.root / 'bundle'; bundle.mkdir(); document = bundle / 'spec.md'; document.write_text('first([]) returns None.\n')
+        inputs = bundle / 'inputs.json'; save_json(inputs, {'requirements': [{'id': 'AC1'}], 'sources': [{'id': 'spec', 'path': str(document)}]})
+        verified = {'inputs': {'path': str(inputs), 'sha256': hashlib.sha256(inputs.read_bytes()).hexdigest()},
+                    'sources': {'spec': {'path': str(document.resolve()), 'sha256': hashlib.sha256(document.read_bytes()).hexdigest()}}}
+        engine = Engine(self.cfg, self.root / 'state', reviewer=self.reviewer); self.addCleanup(engine.store.close)
+        return engine, inputs, document, verified
+
+    def test_verified_handoff_queues_exactly_what_the_completion_check_accepted(self):
+        engine, inputs, document, verified = self.handoff()
+        engine.notify_implementation(self.repo, {'status': 'complete'}, inputs, verified)
+        source = json.loads(engine.store.next()['event'])['implementation_context']['sources'][0]
+        self.assertEqual((source['text'], source['sha256']), (document.read_text(), verified['sources']['spec']['sha256']))
+
+    def test_inputs_or_sources_changed_after_verification_are_not_queued(self):
+        engine, inputs, document, verified = self.handoff()
+        original = (inputs.read_bytes(), document.read_bytes())
+        other = inputs.parent / 'other.md'; other.write_bytes(original[1])
+        changes = {'source text': lambda: document.write_text('first([]) raises.\n'),
+                   'inputs list': lambda: save_json(inputs, {'requirements': [{'id': 'AC2'}], 'sources': [{'id': 'spec', 'path': str(document)}]}),
+                   'dropped source': lambda: verified['sources'].update(extra={'path': str(other), 'sha256': 'x'}),
+                   'moved source': lambda: verified['sources']['spec'].update(path=str(other.resolve()))}
+        for name, change in changes.items():
+            with self.subTest(name):
+                snapshot = json.loads(json.dumps(verified)); change()
+                with self.assertRaisesRegex(HarnessError, 'changed since completion was verified'):
+                    engine.notify_implementation(self.repo, {'status': 'complete'}, inputs, verified)
+                self.assertEqual(engine.store.rows(), [])
+                inputs.write_bytes(original[0]); document.write_bytes(original[1]); verified.clear(); verified.update(snapshot)
+        with self.assertRaisesRegex(HarnessError, 'missing or malformed'):
+            engine.notify_implementation(self.repo, {'status': 'complete'}, json.loads(inputs.read_text()), verified)
+
+    def test_direct_handoff_refuses_sources_outside_the_approved_roots(self):
+        engine, inputs, document, _ = self.handoff()
+        outside = self.root / 'private.md'; outside.write_text('secret\n')
+        (inputs.parent / 'link.md').symlink_to(outside)
+        (self.repo / 'docs').mkdir(); (self.repo / 'docs' / 'spec.md').write_text('inside\n')
+        for path, message in ((str(outside), 'outside the approved source roots'), (str(inputs.parent / 'link.md'), 'symlinked'),
+                              ('../private.md', 'may not contain'), (str(inputs.parent / '..' / 'private.md'), 'may not contain')):
+            with self.subTest(path):
+                save_json(inputs, {'sources': [{'id': 'spec', 'path': path}]})
+                with self.assertRaisesRegex(HarnessError, message):
+                    engine.notify_implementation(self.repo, {'status': 'complete'}, inputs)
+                with self.assertRaises(HarnessError):  # parsed inputs carry no inputs folder to approve
+                    engine.notify_implementation(self.repo, {'status': 'complete'}, {'sources': [{'id': 'spec', 'path': path}]})
+        self.assertEqual(engine.store.rows(), [])
+        # Registered external specifications stay supported through declared source_roots.
+        save_json(inputs, {'source_roots': [str(self.root)], 'sources': [{'id': 'spec', 'path': str(outside)}, {'id': 'doc', 'path': 'docs/spec.md'}]})
+        engine.notify_implementation(self.repo, {'status': 'complete'}, inputs)
+        self.assertEqual([row['text'] for row in json.loads(engine.store.next()['event'])['implementation_context']['sources']], ['secret\n', 'inside\n'])
 
     def test_relative_implementation_sources_resolve_against_worktree(self):
         (self.repo / 'spec.md').write_text('first([]) returns None.\n')
