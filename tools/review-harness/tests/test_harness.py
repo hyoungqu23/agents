@@ -319,6 +319,18 @@ class EngineTests(GitFixture):
         gh.value['threads'][0]['comments'].append({'id': 'C3', 'body': 'Reverted.', 'author': {'login': 'me'}, 'pullRequestReview': None})
         engine.poll(); engine.poll(); self.assertEqual(engine.store.rows(), [])
 
+    def test_reopening_after_the_recorded_last_comment_was_deleted_still_queues(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        gh.value['threads'][0]['comments'] += [
+            {'id': 'C2', 'body': 'Fixed.', 'author': {'login': 'me'}, 'pullRequestReview': None},
+            {**gh.value['threads'][0]['comments'][0], 'id': 'C3', 'body': 'Thanks.'}]
+        gh.value['threads'][0]['isResolved'] = True
+        engine.poll(); self.assertEqual(engine.store.rows(), [])
+        # The reviewer withdraws the closing comment and reopens: the author's reply is last again.
+        gh.value['threads'][0]['comments'].pop(); gh.value['threads'][0]['isResolved'] = False
+        engine.poll(); engine.poll()
+        self.assertEqual([json.loads(row['event'])['claims'][0].get('reopened_after_author_reply') for row in engine.store.rows()], [True])
+
     def test_author_reply_written_while_draft_cancels_the_recorded_reopening(self):
         gh, engine = self.answered_and_resolved()
         gh.value['pr']['draft'] = True; engine.poll()

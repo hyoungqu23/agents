@@ -74,12 +74,15 @@ class Engine:
         prior = json.loads(previous[0]) if previous else None
         # A thread seen resolved earlier and open now is input even if the author answered last, as long as
         # nobody commented since: an author reply written after the reopening already answers it.
-        last = {t['id']: public_comments(t)[-1]['id'] for t in snapshot['threads'] if public_comments(t)}
+        present = {t['id']: [c['id'] for c in public_comments(t)] for t in snapshot['threads'] if public_comments(t)}
+        last = {thread: ids[-1] for thread, ids in present.items()}
         was_resolved = (prior or {}).get('resolved', {}) if scenario == 'S2' else {}
         if isinstance(was_resolved, list):  # watches written before the last comment was recorded
             was_resolved = dict.fromkeys(was_resolved)
         waiting = {**was_resolved, **((prior or {}).get('reopened', {}) if scenario == 'S2' else {})}
-        inputs = claims(snapshot, scenario, login, {t for t, seen in waiting.items() if seen in (None, last.get(t))})
+        # A recorded comment that is gone (deleted) says nothing about a later reply, so the thread still counts.
+        inputs = claims(snapshot, scenario, login, {t for t, seen in waiting.items()
+                                                    if seen == last.get(t) or seen not in present.get(t, ())})
         event = {'hostname': self.config['hostname'], 'repo': repo, 'pr': number, 'fingerprint': stamp,
                  'source_fingerprint': fingerprint(snapshot), 'account': login, 'policy_version': __version__, 'claims': inputs}
         value = {'hostname': self.config['hostname'], 'repo': repo, 'pr': number, 'fingerprint': stamp,
