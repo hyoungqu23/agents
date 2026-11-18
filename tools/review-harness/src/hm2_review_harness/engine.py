@@ -9,7 +9,7 @@ import hashlib
 
 from . import __version__, agent, delivery, source
 from .github import ApiError, GitHub, claims, fingerprint
-from .state import HarnessError, Store, digest, save_json, load_config
+from .state import HarnessError, Store, digest, save_json, load_config, same_account
 from .trusted import module
 from .policy import PolicyChanged, require_pending
 from .github import public_comments
@@ -44,19 +44,32 @@ class Engine:
             with self.store.db:
                 self.store.db.execute("UPDATE jobs SET status='queued' WHERE status='storage_limited'")
         tracked = self.store.tracked()
+        unavailable = []
         for repository in self.config['repositories']:
             repo = repository['name']
-            pulls = self.gh.pages(f'repos/{repo}/pulls?state=open', cached=True)
-            enrolled = {row['pr'] for row in tracked if row.get('repo') == repo and row.get('state') == 'open'}
-            selected = set(enrolled) | set(self.gh.reviewed(repo, login))
-            for pr in pulls:
-                own = pr['user']['login'].lower() == login.lower()
-                requested = any(row['login'].lower() == login.lower() for row in pr.get('requested_reviewers', []))
-                requested |= any(row['slug'] in repository.get('teams', []) for row in pr.get('requested_teams', []))
-                if own or requested:
-                    selected.add(pr['number'])
-            for number in sorted(selected):
-                self.enqueue_pr(repo, number)
+            try:
+                self._poll_repository(repository, tracked, login)
+            except ApiError as error:
+                if error.status != 404:
+                    raise
+                unavailable.append(repo)
+        if unavailable:
+            raise ApiError('Cannot access registered repositories: ' + ', '.join(unavailable), 404)
+
+    def _poll_repository(self, repository, tracked, login):
+        repo = repository['name']
+        pulls = self.gh.pages(f'repos/{repo}/pulls?state=open', cached=True)
+        enrolled = {row['pr'] for row in tracked if row.get('repo') == repo and row.get('state') == 'open' and same_account(row.get('account', login), login)}
+        self.store.retire(repo, {pr['number'] for pr in pulls}, login, lambda number: self.gh.pr_state(repo, number) == 'open')
+        selected = set(enrolled) | set(self.gh.reviewed(repo, login))
+        for pr in pulls:
+            own = pr['user']['login'].lower() == login.lower()
+            requested = any(row['login'].lower() == login.lower() for row in pr.get('requested_reviewers', []))
+            requested |= any(row['slug'] in repository.get('teams', []) for row in pr.get('requested_teams', []))
+            if own or requested:
+                selected.add(pr['number'])
+        for number in sorted(selected):
+            self.enqueue_pr(repo, number)
 
     def enqueue_pr(self, repo, number, force=False):
         if repo not in [r['name'] for r in self.config['repositories']]:
@@ -69,7 +82,7 @@ class Engine:
         requested = any(r['login'].lower() == login.lower() for r in pr.get('requested_reviewers', []))
         teams = next(r.get('teams', []) for r in self.config['repositories'] if r['name'] == repo)
         requested |= any(r['slug'] in teams for r in pr.get('requested_teams', []))
-        watch_key = f'{self.config["hostname"]}/{repo}/{number}'
+        watch_key = self.store.watch_key(self.config['hostname'], repo, number, login)
         previous = self.store.db.execute('SELECT data FROM watches WHERE id=?', (watch_key,)).fetchone()
         prior = json.loads(previous[0]) if previous else None
         # A thread seen resolved earlier and open now is input even if the author answered last, as long as
@@ -206,7 +219,7 @@ class Engine:
                 or (event.get('worktree') and (not repository.get('path')
                     or Path(repository['path']).resolve() != Path(event['worktree']).resolve()))):
             self.store.update(key, 'superseded', error='Queued scope is no longer registered'); return key
-        if event.get('account') != self.config['login']:
+        if not same_account(event.get('account'), self.config['login']):
             self.store.update(key, 'auth_required', error='Queued work belongs to another account'); return key
         if self.store.storage_bytes() >= self.config.get('max_state_bytes', 2 * 1024 ** 3):
             self.store.update(key, 'storage_limited', error='Local state budget reached; prune old runs or raise the configured limit'); return key
@@ -218,7 +231,7 @@ class Engine:
         self.store.update(key, 'collecting', run_dir=run_dir)
         snapshot = None
         try:
-            prior = self.store.previous(event['hostname'], event['repo'], event.get('pr')) if event.get('pr') else None
+            prior = self.store.previous(event['hostname'], event['repo'], event.get('pr'), self.config['login']) if event.get('pr') else None
             if job['scenario'] == 'S1':
                 actual = self.gate.capture_scope(event['worktree'], working_tree=True)
                 if actual['target'] != event['target']:

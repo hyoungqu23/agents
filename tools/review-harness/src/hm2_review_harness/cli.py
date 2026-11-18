@@ -3,6 +3,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import shlex
 import shutil
 import signal
 import sqlite3
@@ -13,7 +14,7 @@ import time
 from . import __version__, agent, delivery
 from .engine import Engine
 from .github import ApiError, GitHub
-from .state import HarnessError, Store, defaults, device, home, instance_lock, load_config, read_json, save_json, validate_config
+from .state import HarnessError, Store, defaults, device, home, instance_lock, load_config, read_json, same_account, save_json, validate_config
 from .trusted import bundle_root
 
 
@@ -26,7 +27,12 @@ def setup(args, root):
             raise HarnessError('Install and authenticate the required program: ' + program)
         config[name] = str(Path(path).resolve())
     agent.probe(config['provider'], config['agent_path']); bundle_root()
-    config['login'] = GitHub(config, root).login()
+    previous = config['login']
+    # Only an explicit switch may replace the stored account; it starts from import's unauthorized, paused baseline.
+    config['login'] = GitHub({**config, 'login': ''} if args.switch_account else config, root).login()
+    switched = bool(previous) and not same_account(config['login'], previous)
+    if switched:
+        config.update(pending_enabled=False, active_device=None, paused=True)
     repository = args.repo
     if not repository and not config['repositories']:
         if not sys.stdin.isatty():
@@ -47,7 +53,16 @@ def setup(args, root):
         config.update(pending_enabled=True, active_device=device(root))
     save_json(root / 'config.json', validate_config(config))
     print(f'Configured {config["login"]}; {len(config["repositories"])} repositories; Pending writes: {config["pending_enabled"]}')
-    print('Next: hm2-review-harness doctor; brew services start hm2-review-harness')
+    if switched:
+        drafts = f'enabled for {config["login"]}' if config['pending_enabled'] else 'disabled'
+        print(f'Switched account from {previous}: Pending writes {drafts} and service paused. Queued work and receipts of {previous} stay with that account.')
+        command = 'hm2-review-harness'
+        if root != home():
+            command += ' --state-home ' + shlex.quote(str(root))
+        print(f'Next: {command} doctor; {command} resume'
+              + ('' if config['pending_enabled'] else f' ({command} setup --pending --single-writer re-enables drafts for this account)'))
+    else:
+        print('Next: hm2-review-harness doctor; brew services start hm2-review-harness')
 
 
 def doctor(config, root):
@@ -153,7 +168,7 @@ def main(argv=None):
     parser.add_argument('--state-home', type=Path)
     sub = parser.add_subparsers(dest='action', required=True)
     p = sub.add_parser('setup'); p.add_argument('--repo'); p.add_argument('--path'); p.add_argument('--team', action='append')
-    p.add_argument('--provider', choices=('codex', 'claude')); p.add_argument('--pending', action='store_true'); p.add_argument('--single-writer', action='store_true')
+    p.add_argument('--provider', choices=('codex', 'claude')); p.add_argument('--pending', action='store_true'); p.add_argument('--single-writer', action='store_true'); p.add_argument('--switch-account', action='store_true')
     sub.add_parser('doctor'); sub.add_parser('serve'); sub.add_parser('run-once'); sub.add_parser('inbox'); sub.add_parser('status')
     sub.add_parser('pause'); sub.add_parser('resume'); sub.add_parser('disable-pending')
     p = sub.add_parser('enqueue-pr'); p.add_argument('--repo', required=True); p.add_argument('--pr', type=int, required=True)
@@ -219,6 +234,8 @@ def main(argv=None):
                 print(json.dumps(result)); return 0 if result['status'] == 'local_ready' else 2
             if row['status'] in ('collecting', 'snapshotting', 'reviewing', 'saving', 'write_unconfirmed'):
                 raise HarnessError('Inspect remote state and durable receipts before retrying an uncertain write')
+            if not same_account(json.loads(row['event']).get('account', config['login']), config['login']):
+                raise HarnessError('Job belongs to another account; switch back to it to retry')
             store.update(row['id'], 'queued'); return 0
         finally:
             store.close()

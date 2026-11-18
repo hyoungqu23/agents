@@ -2,11 +2,12 @@
 import json
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import time
 from urllib.parse import quote
 
-from .state import HarnessError, digest, read_json, save_json
+from .state import HarnessError, digest, home, read_json, save_json
 from .trusted import module
 
 
@@ -115,8 +116,16 @@ class GitHub:
         if not isinstance(login, str) or not login:
             raise ApiError('Authenticated GitHub user is unavailable', 401)
         if self.config.get('login') and login.lower() != self.config['login'].lower():
-            raise ApiError('GitHub account changed; run setup for this account', 401)
+            root = self.cache.parent
+            state = '' if root == home() else ' --state-home ' + shlex.quote(str(root))
+            raise ApiError(f'GitHub account changed: this state belongs to {self.config["login"]}, but gh is authenticated as {login}. '
+                           f'To keep {self.config["login"]}, run: gh auth switch --hostname {self.host} --user {self.config["login"]}. '
+                           f'To move this state to {login} (disables Pending writes and pauses the service), '
+                           f'run: hm2-review-harness{state} setup --switch-account', 401)
         return login
+
+    def pr_state(self, repo, number):
+        return self.api(f'repos/{repo}/pulls/{number}').get('state')
 
     def snapshot(self, repo, number):
         endpoint = f'repos/{repo}/pulls/{number}'

@@ -6,7 +6,7 @@ import time
 import uuid
 
 from .github import fingerprint, public_comments
-from .state import HarnessError, digest, read_json, save_json
+from .state import HarnessError, digest, read_json, save_json, same_account
 from .trusted import module
 from .policy import PolicyChanged, require_pending
 
@@ -18,7 +18,11 @@ class DeliveryError(HarnessError):
 
 def inspect(config, gh, event, state_root):
     """Read-only positive reconciliation. Never replay a missing/ambiguous write."""
-    login = gh.login(); helper = module('review-pr', 'pending_review.py')
+    login = gh.login()
+    if not same_account(event.get('account', login), login):
+        # This login's receipt directory says nothing about a write made as the other account.
+        raise DeliveryError('auth_required', f'Job belongs to another account ({event["account"]}); switch back to it to reconcile')
+    helper = module('review-pr', 'pending_review.py')
     helper.api = lambda host, endpoint, payload=None: gh.api(endpoint, payload)
     directory = Path(state_root) / 'receipts' / digest({'host': event['hostname'], 'repo': event['repo'], 'pr': event['pr'], 'login': login.lower()})
     endpoint = f'repos/{event["repo"]}/pulls/{event["pr"]}'

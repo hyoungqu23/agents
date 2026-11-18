@@ -3,6 +3,10 @@ import copy
 import json
 import os
 from pathlib import Path
+import contextlib
+import io
+import re
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -12,9 +16,10 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from hm2_review_harness import agent, delivery, source
-from hm2_review_harness.cli import export, import_config
+from hm2_review_harness.cli import export, import_config, main
 from hm2_review_harness.engine import Engine
 from hm2_review_harness.github import ApiError, GitHub, claims, fingerprint
+from hm2_review_harness.policy import PolicyChanged, require_pending
 from hm2_review_harness.state import HarnessError, Store, defaults, device, digest, instance_lock, read_json, save_json
 from hm2_review_harness.trusted import module
 
@@ -288,6 +293,7 @@ class FakeGitHub:
     def pages(self, *_args, **_kwargs): return [copy.deepcopy(self.value['pr'])]
     def reviewed(self, *_): return [7] if any((r.get('user') or {}).get('login') == 'me' and r['state'] != 'PENDING' for r in self.value['reviews']) else []
     def snapshot(self, *_args): return copy.deepcopy(self.value)
+    def pr_state(self, *_args): return self.value['pr']['state']
 
     def api(self, endpoint, payload=None):
         if payload is None:
@@ -683,6 +689,209 @@ class StateTests(unittest.TestCase):
             raw = (root / 'settings.json').read_text(); self.assertNotIn('/private/old-machine', raw); self.assertNotIn('agent_path', raw)
             import_config(target, root / 'settings.json'); imported = read_json(target / 'config.json')
             self.assertTrue(imported['paused']); self.assertFalse(imported['pending_enabled']); self.assertEqual(imported['login'], '')
+
+
+class AccountSwitchTests(GitFixture):
+    """Issue #57: stored account 'me', gh now authenticated as 'other'."""
+    def setUp(self):
+        super().setUp()
+        self.state = (self.root / 'state').resolve()
+        self.cfg.update(pending_enabled=True, active_device=device(self.state))
+        save_json(self.state / 'config.json', self.cfg)
+        for target in ('hm2_review_harness.cli.agent.probe', 'hm2_review_harness.cli.bundle_root'):
+            patcher = patch(target); patcher.start(); self.addCleanup(patcher.stop)
+        for patcher in (patch('hm2_review_harness.cli.shutil.which', return_value='/usr/bin/true'),
+                        patch.object(GitHub, 'api', return_value={'login': 'other'})):
+            patcher.start(); self.addCleanup(patcher.stop)
+
+    def cli(self, *args):
+        errors = io.StringIO()
+        with contextlib.redirect_stderr(errors), contextlib.redirect_stdout(io.StringIO()):
+            return main(['--state-home', str(self.state), *args]), errors.getvalue()
+
+    def test_plain_setup_keeps_previous_account_and_every_entry_point_names_the_recovery_commands(self):
+        with self.assertRaises(ApiError) as raised:
+            GitHub(self.cfg, self.state).login()
+        message = str(raised.exception); self.assertEqual(raised.exception.status, 401)
+        self.assertIn('gh auth switch --hostname github.com --user me', message)
+        self.assertIn(f'hm2-review-harness --state-home {shlex.quote(str(self.state))} setup --switch-account', message)
+        for action in (('setup', '--repo', 'example/app'), ('doctor',)):
+            code, errors = self.cli(*action)
+            self.assertEqual((code, errors.strip()), (1, message))
+        self.assertEqual(read_json(self.state / 'config.json'), self.cfg)
+        with patch('hm2_review_harness.github.home', return_value=self.state):
+            with self.assertRaisesRegex(ApiError, 'run: hm2-review-harness setup --switch-account'):
+                GitHub(self.cfg, self.state).login()
+
+    def test_advised_switch_completes_setup_without_inheriting_pending_queue_or_receipts(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot()))
+        old_job = engine.enqueue_pr('example/app', 7); engine.store.close()
+        event = {'hostname': 'github.com', 'repo': 'example/app', 'pr': 7, 'account': 'me'}
+        old_receipt = self.state / 'receipts' / digest({'host': 'github.com', 'repo': 'example/app', 'pr': 7, 'login': 'me'}) / 'reply-review.json'
+        save_json(old_receipt, {'status': 'pending'})
+        _, errors = self.cli('doctor')
+        advised = shlex.split(re.search(r'hm2-review-harness (.*setup --switch-account)', errors).group(1))
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(main(advised), 0)
+        switched = read_json(self.state / 'config.json')
+        self.assertEqual(switched['login'], 'other'); self.assertEqual(switched['repositories'], self.cfg['repositories'])
+        self.assertFalse(switched['pending_enabled']); self.assertIsNone(switched['active_device']); self.assertTrue(switched['paused'])
+        self.assertEqual(self.cli('doctor'), (0, ''))
+        self.assertEqual(self.cli('setup', '--switch-account')[0], 0)
+        self.assertEqual(read_json(self.state / 'config.json'), switched)
+        for held in (self.cfg, switched, {**switched, 'paused': False}):
+            save_json(self.state / 'config.json', {**switched, 'paused': held['paused']})
+            with self.assertRaises(PolicyChanged):
+                require_pending(held, self.state, {**event, 'account': held['login']})
+        resumed = {**switched, 'paused': False}; save_json(self.state / 'config.json', resumed)
+        changed = self.snapshot(); add_thread(changed)  # the previous account's watched PR receives new input
+        gh = FakeGitHub(changed); gh.login = lambda: 'other'
+        engine = Engine(resumed, self.state, github=gh); self.addCleanup(engine.store.close)
+        engine.poll()
+        self.assertEqual([row['id'] for row in engine.store.rows()], [old_job])
+        with patch('hm2_review_harness.source.pr_checkout') as checkout:
+            engine.run_one()
+        checkout.assert_not_called(); self.assertEqual(engine.store.find_job(old_job)['status'], 'auth_required')
+        with patch('hm2_review_harness.delivery.module', return_value=SimpleNamespace()):
+            with self.assertRaises(delivery.DeliveryError) as refused:
+                delivery.inspect(resumed, gh, event, self.state)
+            self.assertEqual(refused.exception.status, 'auth_required')
+            gh.login = lambda: 'me'
+            self.assertEqual(delivery.inspect(self.cfg, gh, event, self.state)['status'], 'write_unconfirmed')
+        self.assertEqual(read_json(old_receipt), {'status': 'pending'})
+
+    def test_switch_with_explicit_single_writer_grant_authorizes_only_the_new_account(self):
+        self.assertEqual(self.cli('setup', '--switch-account', '--pending', '--single-writer')[0], 0)
+        switched = read_json(self.state / 'config.json')
+        self.assertEqual((switched['login'], switched['pending_enabled'], switched['paused']), ('other', True, True))
+
+
+    def switch(self, *extra):
+        printed = io.StringIO()
+        with contextlib.redirect_stdout(printed):
+            self.assertEqual(main(['--state-home', str(self.state), 'setup', '--switch-account', *extra]), 0)
+        resumed = {**read_json(self.state / 'config.json'), 'paused': False}; save_json(self.state / 'config.json', resumed)
+        return resumed, printed.getvalue()
+
+    def as_other(self, snapshot):
+        gh = FakeGitHub(snapshot); gh.login = lambda: 'other'
+        return gh
+
+    def test_pr_already_watched_by_previous_account_is_enrolled_separately_for_the_new_one(self):
+        snapshot = self.snapshot(); snapshot['pr']['requested_reviewers'].append({'login': 'other'})
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(snapshot)); engine.poll()
+        legacy = engine.store.db.execute('SELECT id,data FROM watches').fetchall(); engine.store.close()
+        self.assertEqual([row[0] for row in legacy], ['github.com/example/app/7'])  # key format of existing databases
+        resumed, _ = self.switch()
+        engine = Engine(resumed, self.state, github=self.as_other(snapshot)); engine.poll(); engine.poll()
+        self.assertEqual(sorted((json.loads(row['event'])['account'], row['scenario']) for row in engine.store.rows()),
+                         [('me', 'S3'), ('other', 'S3')])
+        self.assertEqual(sorted(row['account'] for row in engine.store.tracked()), ['me', 'other'])
+        self.assertEqual(engine.store.db.execute('SELECT data FROM watches WHERE id=?', (legacy[0][0],)).fetchone()[0], legacy[0][1])
+        engine.store.close()
+        back = FakeGitHub(snapshot); back.pages = lambda *_args, **_kwargs: []  # only enrollment can select the PR
+        engine = Engine(self.cfg, self.state, github=back); self.addCleanup(engine.store.close); polled = []
+        with patch.object(engine, 'enqueue_pr', side_effect=lambda _repo, number: polled.append(number)):
+            engine.poll()
+        self.assertEqual(polled, [7])
+
+    def test_same_account_keeps_reading_existing_watch_rows_without_new_work(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot())); engine.poll(); engine.store.close()
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot())); self.addCleanup(engine.store.close)
+        before = engine.store.db.execute('SELECT * FROM watches').fetchall()
+        engine.poll()
+        self.assertEqual([tuple(row) for row in engine.store.db.execute('SELECT * FROM watches')], [tuple(row) for row in before])
+        self.assertEqual(len(engine.store.rows()), 1)
+
+    def test_reconcile_and_retry_refuse_previous_account_job_without_changing_it(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot()))
+        job = engine.enqueue_pr('example/app', 7); engine.store.update(job, 'write_unconfirmed', error='Inspect receipts before retry'); engine.store.close()
+        receipt = self.state / 'receipts' / digest({'host': 'github.com', 'repo': 'example/app', 'pr': 7, 'login': 'me'}) / 'reply-review.json'
+        save_json(receipt, {'status': 'pending'})
+        self.switch()
+        for action, status in (('reconcile', 'write_unconfirmed'), ('retry', 'local_ready')):
+            store = Store(self.state); store.update(job, status, error='kept'); store.close()
+            code, errors = self.cli(action, job[:12])
+            self.assertEqual(code, 1); self.assertIn('another account', errors)
+            store = Store(self.state); row = store.find_job(job); store.close()
+            self.assertEqual((row['status'], row['error']), (status, 'kept'))
+        self.assertEqual(read_json(receipt), {'status': 'pending'})
+
+    def test_missing_previous_repository_does_not_block_current_repository(self):
+        cfg = {**self.cfg, 'repositories': [{'name': 'old/private'}, *self.cfg['repositories']]}
+        gh = FakeGitHub(self.snapshot())
+        pages = gh.pages
+        def list_pulls(endpoint, **kwargs):
+            if 'old/private' in endpoint:
+                raise ApiError('not found', 404)
+            return pages(endpoint, **kwargs)
+        gh.pages = list_pulls
+        engine = Engine(cfg, self.state, github=gh); self.addCleanup(engine.store.close)
+        with self.assertRaisesRegex(ApiError, 'old/private'):
+            engine.poll()
+        self.assertEqual(json.loads(engine.store.next()['event'])['repo'], 'example/app')
+
+    def test_switch_output_reports_the_pending_state_that_was_saved(self):
+        _, printed = self.switch('--pending', '--single-writer')
+        self.assertTrue(read_json(self.state / 'config.json')['pending_enabled'])
+        self.assertNotIn('Pending writes disabled', printed); self.assertNotIn('re-enables drafts', printed)
+        self.assertIn('Pending writes enabled', printed)
+        save_json(self.state / 'config.json', self.cfg)
+        _, printed = self.switch()
+        self.assertIn(f'hm2-review-harness --state-home {shlex.quote(str(self.state))} resume', printed)
+        self.assertIn('Pending writes disabled', printed); self.assertIn('setup --pending --single-writer', printed)
+
+    def test_previous_account_runs_are_pruned_once_its_pr_closes(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot()))
+        job = engine.enqueue_pr('example/app', 7); run = self.state / 'runs' / 'old'; run.mkdir(parents=True)
+        engine.store.update(job, 'local_ready', run_dir=run)
+        with engine.store.db: engine.store.db.execute('UPDATE jobs SET updated=?', (time.time() - 30 * 86400,))
+        engine.store.close()
+        resumed, _ = self.switch()
+        gh = self.as_other(self.snapshot()); engine = Engine(resumed, self.state, github=gh); self.addCleanup(engine.store.close)
+        engine.poll(); engine.poll()
+        self.assertTrue(run.exists())  # still open for the previous account
+        gh.pages = lambda *_args, **_kwargs: []  # missing from the list alone (a page shifted) does not close it
+        engine.poll(); engine.poll()
+        self.assertTrue(run.exists())
+        self.assertEqual([(row['account'], row['state']) for row in engine.store.tracked()], [('me', 'open')])
+        gh.value['pr']['state'] = 'closed'
+        engine.poll(); engine.poll()
+        self.assertFalse(run.exists())
+        self.assertEqual([(row['account'], row['state']) for row in engine.store.tracked()], [('me', 'closed')])
+
+    def test_login_spelled_in_another_case_is_the_same_account(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot()))
+        job = engine.enqueue_pr('example/app', 7); engine.store.update(job, 'local_ready', result={'by': 'me'}); engine.store.close()
+        renamed = {**self.cfg, 'login': 'Me'}
+        engine = Engine(renamed, self.state, github=FakeGitHub(self.snapshot())); self.addCleanup(engine.store.close)
+        engine.gh.login = lambda: 'Me'
+        engine.poll()
+        self.assertEqual([row[0] for row in engine.store.db.execute('SELECT id FROM watches')], ['github.com/example/app/7'])
+        self.assertEqual(engine.store.previous('github.com', 'example/app', 7, 'Me'), {'by': 'me'})
+        allowed = {**renamed, 'pending_enabled': True, 'paused': False, 'active_device': device(self.state)}
+        save_json(self.state / 'config.json', allowed)
+        # The write boundary accepts work queued under the earlier spelling too.
+        require_pending(allowed, self.state, {'hostname': 'github.com', 'repo': 'example/app', 'account': 'me'})
+
+    def test_prune_reads_the_watch_of_the_account_that_owns_the_run(self):
+        store = Store(self.state); self.addCleanup(store.close)
+        for account, state in (('me', 'open'), ('other', 'closed')):
+            key = store.enqueue('S3', {'repo': 'example/app', 'pr': 7, 'account': account})
+            path = self.state / 'runs' / account; path.mkdir(parents=True); store.update(key, 'local_ready', run_dir=path)
+            store.observe(account, {'repo': 'example/app', 'pr': 7, 'account': account, 'state': state})
+        with store.db: store.db.execute('UPDATE jobs SET updated=?', (time.time() - 30 * 86400,))
+        self.assertEqual(store.prune(14), [str(self.state / 'runs/other')])
+
+    def test_previous_result_is_not_handed_to_another_account(self):
+        store = Store(self.state); self.addCleanup(store.close)
+        key = store.enqueue('S3', {'hostname': 'github.com', 'repo': 'example/app', 'pr': 7, 'account': 'me'})
+        store.update(key, 'local_ready', result={'by': 'me'})
+        self.assertIsNone(store.previous('github.com', 'example/app', 7, 'other'))
+        self.assertEqual(store.previous('github.com', 'example/app', 7, 'me'), {'by': 'me'})
+        key = store.enqueue('S3', {'hostname': 'github.com', 'repo': 'example/app', 'pr': 8})  # recorded before accounts were stored
+        store.update(key, 'local_ready', result={'by': 'unrecorded'})
+        self.assertIsNone(store.previous('github.com', 'example/app', 8, 'other'))
 
 
 class DeliveryTests(GitFixture):

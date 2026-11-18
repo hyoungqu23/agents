@@ -13,6 +13,11 @@ import time
 import uuid
 
 
+def same_account(left, right):
+    """GitHub logins are case-insensitive; a record made under another spelling is the same account."""
+    return (left or '').lower() == (right or '').lower()
+
+
 class HarnessError(RuntimeError):
     pass
 
@@ -162,6 +167,23 @@ class Store:
     def tracked(self):
         return [json.loads(row[0]) for row in self.db.execute('SELECT data FROM watches')]
 
+    def watch_key(self, host, repo, number, account):
+        """One watch per account. The bare key of existing databases stays with the account recorded in it."""
+        key = f'{host}/{repo}/{number}'
+        row = self.db.execute('SELECT data FROM watches WHERE id=?', (key,)).fetchone()
+        return key if row is None or same_account(json.loads(row[0]).get('account', account), account) else f'{key}@{account.lower()}'
+
+    def retire(self, repo, open_numbers, account, still_open):
+        """Other accounts' watches are not polled; record that their PR left the open list so prune can release its runs.
+
+        A PR can be missing from a paginated list while still open (the list shifts between page requests),
+        so `still_open(number)` confirms each one before the watch is closed."""
+        for key, data in self.db.execute('SELECT id,data FROM watches').fetchall():
+            value = json.loads(data)
+            if (value.get('repo') == repo and value.get('state') == 'open' and value.get('pr') not in open_numbers
+                    and not same_account(value.get('account', account), account) and not still_open(value.get('pr'))):
+                self.observe(key, {**value, 'state': 'closed'})
+
     def next(self):
         row = self.db.execute("SELECT * FROM jobs WHERE status='queued' ORDER BY created LIMIT 1").fetchone()
         return dict(row) if row else None
@@ -205,13 +227,16 @@ class Store:
         if type(days) is not int or days < 1:
             raise HarnessError('Retention must be at least one day')
         cutoff = time.time() - days * 86400; candidates = []
-        states = {(v.get('repo'), v.get('pr')): v.get('state') for v in self.tracked()}
+        watches = self.tracked()
         run_root = self.root / 'runs'
         if run_root.is_symlink():
             raise HarnessError('Owned run directory cannot be a symlink')
         for row in self.db.execute("SELECT * FROM jobs WHERE updated<? AND status IN ('local_ready','pending_saved','superseded','partial')", (cutoff,)):
             event = json.loads(row['event'])
-            if event.get('pr') and row['status'] != 'superseded' and states.get((event['repo'], event['pr'])) != 'closed':
+            # A run follows the watch of its own account; records without an account match any.
+            states = [v.get('state') for v in watches if (v.get('repo'), v.get('pr')) == (event.get('repo'), event.get('pr'))
+                      and same_account(v.get('account', event.get('account')), event.get('account', v.get('account')))]
+            if event.get('pr') and row['status'] != 'superseded' and (not states or any(state != 'closed' for state in states)):
                 continue
             if not row['run_dir']:
                 continue
@@ -241,9 +266,10 @@ class Store:
     def rows(self):
         return [dict(row) for row in self.db.execute('SELECT * FROM jobs ORDER BY created DESC LIMIT 100')]
 
-    def previous(self, host, repo, number):
+    def previous(self, host, repo, number, account):
         for row in self.db.execute('SELECT event,result FROM jobs WHERE result IS NOT NULL ORDER BY created DESC'):
             event = json.loads(row['event'])
-            if event.get('hostname') == host and event.get('repo') == repo and event.get('pr') == number:
+            if (event.get('hostname') == host and event.get('repo') == repo and event.get('pr') == number
+                    and event.get('account') and same_account(event['account'], account)):
                 return json.loads(row['result'])
         return None
