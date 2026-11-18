@@ -462,6 +462,20 @@ class AccountSwitchTests(GitFixture):
             self.assertEqual((row['status'], row['error']), (status, 'kept'))
         self.assertEqual(read_json(receipt), {'status': 'pending'})
 
+    def test_missing_previous_repository_does_not_block_current_repository(self):
+        cfg = {**self.cfg, 'repositories': [{'name': 'old/private'}, *self.cfg['repositories']]}
+        gh = FakeGitHub(self.snapshot())
+        pages = gh.pages
+        def list_pulls(endpoint, **kwargs):
+            if 'old/private' in endpoint:
+                raise ApiError('not found', 404)
+            return pages(endpoint, **kwargs)
+        gh.pages = list_pulls
+        engine = Engine(cfg, self.state, github=gh); self.addCleanup(engine.store.close)
+        with self.assertRaisesRegex(ApiError, 'old/private'):
+            engine.poll()
+        self.assertEqual(json.loads(engine.store.next()['event'])['repo'], 'example/app')
+
     def test_switch_output_reports_the_pending_state_that_was_saved(self):
         _, printed = self.switch('--pending', '--single-writer')
         self.assertTrue(read_json(self.state / 'config.json')['pending_enabled'])
@@ -469,6 +483,7 @@ class AccountSwitchTests(GitFixture):
         self.assertIn('Pending writes enabled', printed)
         save_json(self.state / 'config.json', self.cfg)
         _, printed = self.switch()
+        self.assertIn(f'hm2-review-harness --state-home {shlex.quote(str(self.state))} resume', printed)
         self.assertIn('Pending writes disabled', printed); self.assertIn('setup --pending --single-writer', printed)
 
     def test_previous_account_runs_are_pruned_once_its_pr_closes(self):
@@ -521,7 +536,7 @@ class AccountSwitchTests(GitFixture):
         self.assertEqual(store.previous('github.com', 'example/app', 7, 'me'), {'by': 'me'})
         key = store.enqueue('S3', {'hostname': 'github.com', 'repo': 'example/app', 'pr': 8})  # recorded before accounts were stored
         store.update(key, 'local_ready', result={'by': 'unrecorded'})
-        self.assertEqual(store.previous('github.com', 'example/app', 8, 'other'), {'by': 'unrecorded'})
+        self.assertIsNone(store.previous('github.com', 'example/app', 8, 'other'))
 
 
 class DeliveryTests(GitFixture):

@@ -3,6 +3,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import shlex
 import shutil
 import signal
 import sqlite3
@@ -55,8 +56,11 @@ def setup(args, root):
     if switched:
         drafts = f'enabled for {config["login"]}' if config['pending_enabled'] else 'disabled'
         print(f'Switched account from {previous}: Pending writes {drafts} and service paused. Queued work and receipts of {previous} stay with that account.')
-        print('Next: hm2-review-harness doctor; hm2-review-harness resume'
-              + ('' if config['pending_enabled'] else ' (setup --pending --single-writer re-enables drafts for this account)'))
+        command = 'hm2-review-harness'
+        if root != home():
+            command += ' --state-home ' + shlex.quote(str(root))
+        print(f'Next: {command} doctor; {command} resume'
+              + ('' if config['pending_enabled'] else f' ({command} setup --pending --single-writer re-enables drafts for this account)'))
     else:
         print('Next: hm2-review-harness doctor; brew services start hm2-review-harness')
 

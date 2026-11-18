@@ -261,6 +261,6 @@ class Store:
         for row in self.db.execute('SELECT event,result FROM jobs WHERE result IS NOT NULL ORDER BY created DESC'):
             event = json.loads(row['event'])
             if (event.get('hostname') == host and event.get('repo') == repo and event.get('pr') == number
-                    and same_account(event.get('account', account), account)):
+                    and event.get('account') and same_account(event['account'], account)):
                 return json.loads(row['result'])
         return None

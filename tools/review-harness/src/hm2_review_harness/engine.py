@@ -43,20 +43,32 @@ class Engine:
             with self.store.db:
                 self.store.db.execute("UPDATE jobs SET status='queued' WHERE status='storage_limited'")
         tracked = self.store.tracked()
+        unavailable = []
         for repository in self.config['repositories']:
             repo = repository['name']
-            pulls = self.gh.pages(f'repos/{repo}/pulls?state=open', cached=True)
-            enrolled = {row['pr'] for row in tracked if row.get('repo') == repo and row.get('state') == 'open' and same_account(row.get('account', login), login)}
-            self.store.retire(repo, {pr['number'] for pr in pulls}, login, lambda number: self.gh.pr_state(repo, number) == 'open')
-            selected = set(enrolled) | set(self.gh.reviewed(repo, login))
-            for pr in pulls:
-                own = pr['user']['login'].lower() == login.lower()
-                requested = any(row['login'].lower() == login.lower() for row in pr.get('requested_reviewers', []))
-                requested |= any(row['slug'] in repository.get('teams', []) for row in pr.get('requested_teams', []))
-                if own or requested:
-                    selected.add(pr['number'])
-            for number in sorted(selected):
-                self.enqueue_pr(repo, number)
+            try:
+                self._poll_repository(repository, tracked, login)
+            except ApiError as error:
+                if error.status != 404:
+                    raise
+                unavailable.append(repo)
+        if unavailable:
+            raise ApiError('Cannot access registered repositories: ' + ', '.join(unavailable), 404)
+
+    def _poll_repository(self, repository, tracked, login):
+        repo = repository['name']
+        pulls = self.gh.pages(f'repos/{repo}/pulls?state=open', cached=True)
+        enrolled = {row['pr'] for row in tracked if row.get('repo') == repo and row.get('state') == 'open' and same_account(row.get('account', login), login)}
+        self.store.retire(repo, {pr['number'] for pr in pulls}, login, lambda number: self.gh.pr_state(repo, number) == 'open')
+        selected = set(enrolled) | set(self.gh.reviewed(repo, login))
+        for pr in pulls:
+            own = pr['user']['login'].lower() == login.lower()
+            requested = any(row['login'].lower() == login.lower() for row in pr.get('requested_reviewers', []))
+            requested |= any(row['slug'] in repository.get('teams', []) for row in pr.get('requested_teams', []))
+            if own or requested:
+                selected.add(pr['number'])
+        for number in sorted(selected):
+            self.enqueue_pr(repo, number)
 
     def enqueue_pr(self, repo, number, force=False):
         if repo not in [r['name'] for r in self.config['repositories']]:
