@@ -95,11 +95,27 @@ class Engine:
             # Watches written before this field have no 'resolved' list, so the first poll after an
             # upgrade only records it.
             resolved = {t['id'] for t in snapshot['threads'] if t.get('isResolved')}
-            reopened = sorted(set(was_resolved) & {c['thread_id'] for c in inputs if c.get('thread_id')})
+            open_inputs = {c['thread_id'] for c in inputs if c.get('thread_id')}
+            reopened = sorted(set(was_resolved) & open_inputs)
+            # Keep the reopening attached to its job until the job processes the
+            # snapshot. Another thread can invalidate that snapshot on its own.
+            outstanding = (prior or {}).get('reopen_work', {})
+            remaining_threads = set(outstanding.get('threads', [])) & open_inputs
+            if remaining_threads:
+                job = self.store.find_job(outstanding['job'])
+                if job['status'] in ('queued', 'budget_limited', 'storage_limited', 'superseded'):
+                    if json.loads(job['event'])['source_fingerprint'] != event['source_fingerprint'] or job['status'] == 'superseded':
+                        changed = True
+                    value['reopen_work'] = outstanding
+                else:
+                    remaining_threads.clear()
             if reopened:
-                # Head and comments can equal an earlier response job; without this its key would be ignored.
-                event['reopened'] = {'threads': reopened, 'nonce': uuid.uuid4().hex}
+                event['reopened'] = {'threads': reopened}
                 changed = True
+            if active and (changed or force) and (remaining_threads or reopened):
+                # Even a previously processed identical snapshot needs a fresh job.
+                event['reopen_generation'] = uuid.uuid4().hex
+                value['reopen_work'] = {'threads': sorted(remaining_threads | set(reopened))}
             # A reopening seen while the PR cannot be answered (draft) stays recorded until a job is queued.
             value['resolved'] = {t: last.get(t) for t in sorted(resolved if active else resolved | set(reopened))}
             # An answered thread stays input for later jobs too (the queued one may be superseded before it
@@ -107,9 +123,11 @@ class Engine:
             value['reopened'] = {c['thread_id']: c['last_comment_id'] for c in inputs if c.get('reopened_after_author_reply')}
         if force and active:
             event['manual_request'] = uuid.uuid4().hex
-            self.store.observe(watch_key, value)
-            return self.store.enqueue(scenario, event)
-        return self.store.observe(watch_key, value, scenario if active and changed else None, event if active and changed else None)
+        schedule = active and (changed or force)
+        if schedule and 'reopen_work' in value:
+            value['reopen_work']['job'] = digest({'scenario': scenario, 'event': event})
+        return self.store.observe(watch_key, value, scenario if schedule else None, event if schedule else None)
+
 
     def notify_implementation(self, worktree, assessment, inputs=None):
         path = Path(worktree).resolve()

@@ -258,6 +258,27 @@ class EngineTests(GitFixture):
         self.assertNotIn('reopened_after_author_reply', json.loads(job['event'])['claims'][0])
         engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
 
+    def test_reopening_replaces_queued_response_and_survives_unrelated_resolution(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        second = copy.deepcopy(gh.value['threads'][0]); second['id'] = 'T2'
+        second['comments'][0]['id'] = 'C2'
+        gh.value['threads'].append(second)
+        engine.poll()
+        gh.value['threads'][0]['isResolved'] = True
+        engine.poll()
+        gh.value['threads'][0]['isResolved'] = False
+        engine.poll()
+        self.assertEqual(sum(row['status'] == 'queued' for row in engine.store.rows()), 1)
+        second['isResolved'] = True
+        with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo):
+            engine.run_one()  # queued snapshot is stale before the next poll
+            engine.poll(); engine.poll()
+            job = engine.store.next()
+            self.assertEqual([c['thread_id'] for c in json.loads(job['event'])['claims']], ['T1'])
+            engine.run_one()
+            self.assertEqual(engine.store.find_job(job['id'])['status'], 'local_ready')
+            engine.poll(); self.assertIsNone(engine.store.next())
+
     def test_reopen_after_earlier_response_job_is_not_swallowed_by_job_key(self):
         gh, engine = self.own_pr_engine(resolved=False)
         engine.poll()
