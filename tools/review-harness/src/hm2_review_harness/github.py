@@ -171,7 +171,8 @@ def fingerprint(snapshot, login=None):
                    'teams': [] if login else [x['slug'] for x in pr.get('requested_teams', [])]})
 
 
-def claims(snapshot, scenario, login):
+def claims(snapshot, scenario, login, reopened=()):
+    """S2 skips threads the author answered last, except `reopened` ones: those were resolved and are open again."""
     result = []
     for thread in snapshot['threads']:
         comments = public_comments(thread)
@@ -180,7 +181,8 @@ def claims(snapshot, scenario, login):
         first, last = comments[0], comments[-1]
         author = (first.get('author') or {}).get('login', '').lower()
         last_author = (last.get('author') or {}).get('login', '').lower()
-        if scenario == 'S2' and (thread['isResolved'] or last_author == login.lower()):
+        answered = last_author == login.lower()
+        if scenario == 'S2' and (thread['isResolved'] or (answered and thread['id'] not in reopened)):
             continue
         if scenario == 'S4' and author != login.lower():
             continue
@@ -191,6 +193,9 @@ def claims(snapshot, scenario, login):
                        'last_comment_id': last['id'], 'discussion': comments,
                        'thread_digest': digest(comments), 'path': thread['path'],
                        'line': thread.get('line') or thread.get('originalLine')})
+        if scenario == 'S2' and answered:
+            # Tells the responder why a thread whose last comment is the author's own is input again.
+            result[-1]['reopened_after_author_reply'] = True
     if scenario in ('S2', 'S4'):
         for source, rows in [('review_body', snapshot['reviews']), ('conversation', snapshot['conversation'])]:
             for row in rows:

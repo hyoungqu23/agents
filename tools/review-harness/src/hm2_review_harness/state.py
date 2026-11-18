@@ -143,9 +143,18 @@ class Store:
     def observe(self, key, value, scenario=None, event=None):
         fingerprint = digest(value)
         prior = self.db.execute('SELECT fingerprint FROM watches WHERE id=?', (key,)).fetchone()
-        if prior and prior[0] == fingerprint:
+        if prior and prior[0] == fingerprint and not (event and event.get('manual_request')):
             return None
         with self.db:
+            if scenario == 'S2' and value.get('reopen_work'):
+                # An earlier pending response for this PR is replaced by the
+                # latest full snapshot; leave completed and uncertain writes alone.
+                self.db.execute("""UPDATE jobs SET status='superseded', updated=?, error=?
+                    WHERE scenario='S2' AND status IN ('queued','budget_limited','storage_limited')
+                      AND json_extract(event,'$.hostname')=? AND json_extract(event,'$.repo')=?
+                      AND json_extract(event,'$.pr')=? AND json_extract(event,'$.account')=?""",
+                    (time.time(), 'Replaced by reopened thread response', event['hostname'],
+                     event['repo'], event['pr'], event['account']))
             job = self._insert(scenario, event) if scenario else None
             self.db.execute('INSERT OR REPLACE INTO watches VALUES (?,?,?)', (key, fingerprint, json.dumps(value)))
         return job

@@ -12,6 +12,7 @@ from .github import ApiError, GitHub, claims, fingerprint
 from .state import HarnessError, Store, digest, save_json, load_config
 from .trusted import module
 from .policy import PolicyChanged, require_pending
+from .github import public_comments
 
 
 class Engine:
@@ -64,7 +65,6 @@ class Engine:
         own_reviews = [r for r in snapshot['reviews'] if r['state'] != 'PENDING'
                        and (r.get('user') or {}).get('login', '').lower() == login.lower()]
         scenario = 'S2' if pr['user']['login'].lower() == login.lower() else ('S4' if own_reviews else 'S3')
-        inputs = claims(snapshot, scenario, login)
         stamp = fingerprint(snapshot, login)
         requested = any(r['login'].lower() == login.lower() for r in pr.get('requested_reviewers', []))
         teams = next(r.get('teams', []) for r in self.config['repositories'] if r['name'] == repo)
@@ -72,17 +72,62 @@ class Engine:
         watch_key = f'{self.config["hostname"]}/{repo}/{number}'
         previous = self.store.db.execute('SELECT data FROM watches WHERE id=?', (watch_key,)).fetchone()
         prior = json.loads(previous[0]) if previous else None
+        # A thread seen resolved earlier and open now is input even if the author answered last, as long as
+        # nobody commented since: an author reply written after the reopening already answers it.
+        present = {t['id']: [c['id'] for c in public_comments(t)] for t in snapshot['threads'] if public_comments(t)}
+        last = {thread: ids[-1] for thread, ids in present.items()}
+        was_resolved = (prior or {}).get('resolved', {}) if scenario == 'S2' else {}
+        if isinstance(was_resolved, list):  # watches written before the last comment was recorded
+            was_resolved = dict.fromkeys(was_resolved)
+        waiting = {**was_resolved, **((prior or {}).get('reopened', {}) if scenario == 'S2' else {})}
+        # A recorded comment that is gone (deleted) says nothing about a later reply, so the thread still counts.
+        inputs = claims(snapshot, scenario, login, {t for t, seen in waiting.items()
+                                                    if seen == last.get(t) or seen not in present.get(t, ())})
         event = {'hostname': self.config['hostname'], 'repo': repo, 'pr': number, 'fingerprint': stamp,
                  'source_fingerprint': fingerprint(snapshot), 'account': login, 'policy_version': __version__, 'claims': inputs}
         value = {'hostname': self.config['hostname'], 'repo': repo, 'pr': number, 'fingerprint': stamp,
                  'account': login, 'policy_version': __version__, 'state': pr['state'], 'requested': requested}
         active = pr['state'] == 'open' and not pr.get('draft') and (scenario != 'S2' or bool(inputs))
         changed = prior is None or prior['fingerprint'] != stamp or prior.get('policy_version') != __version__ or (requested and not prior.get('requested'))
+        if scenario == 'S2':
+            # The account fingerprint ignores resolution so the author's own resolve stays quiet; only a
+            # thread seen resolved and now open again is new input, whoever commented last or reopened it.
+            # Watches written before this field have no 'resolved' list, so the first poll after an
+            # upgrade only records it.
+            resolved = {t['id'] for t in snapshot['threads'] if t.get('isResolved')}
+            open_inputs = {c['thread_id'] for c in inputs if c.get('thread_id')}
+            reopened = sorted(set(was_resolved) & open_inputs)
+            # Keep the reopening attached to its job until the job processes the
+            # snapshot. Another thread can invalidate that snapshot on its own.
+            outstanding = (prior or {}).get('reopen_work', {})
+            remaining_threads = set(outstanding.get('threads', [])) & open_inputs
+            if remaining_threads:
+                job = self.store.find_job(outstanding['job'])
+                if job['status'] in ('queued', 'budget_limited', 'storage_limited', 'superseded'):
+                    if json.loads(job['event'])['source_fingerprint'] != event['source_fingerprint'] or job['status'] == 'superseded':
+                        changed = True
+                    value['reopen_work'] = outstanding
+                else:
+                    remaining_threads.clear()
+            if reopened:
+                event['reopened'] = {'threads': reopened}
+                changed = True
+            if active and (changed or force) and (remaining_threads or reopened):
+                # Even a previously processed identical snapshot needs a fresh job.
+                event['reopen_generation'] = uuid.uuid4().hex
+                value['reopen_work'] = {'threads': sorted(remaining_threads | set(reopened))}
+            # A reopening seen while the PR cannot be answered (draft) stays recorded until a job is queued.
+            value['resolved'] = {t: last.get(t) for t in sorted(resolved if active else resolved | set(reopened))}
+            # An answered thread stays input for later jobs too (the queued one may be superseded before it
+            # runs) until the author replies again or the thread is resolved.
+            value['reopened'] = {c['thread_id']: c['last_comment_id'] for c in inputs if c.get('reopened_after_author_reply')}
         if force and active:
             event['manual_request'] = uuid.uuid4().hex
-            self.store.observe(watch_key, value)
-            return self.store.enqueue(scenario, event)
-        return self.store.observe(watch_key, value, scenario if active and changed else None, event if active and changed else None)
+        schedule = active and (changed or force)
+        if schedule and 'reopen_work' in value:
+            value['reopen_work']['job'] = digest({'scenario': scenario, 'event': event})
+        return self.store.observe(watch_key, value, scenario if schedule else None, event if schedule else None)
+
 
     def notify_implementation(self, worktree, assessment, inputs=None):
         path = Path(worktree).resolve()

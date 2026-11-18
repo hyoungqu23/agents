@@ -55,6 +55,8 @@ def prompt(request, scope, source_packet, prior):
             '(standards/spec/runtime), quality (cohesion/coupling/duplication/repository_fit/naming), verification, findings, limitations. '
             'Do not supply its own status or complete. See the trusted result contract for enums. '
             'S2 review must be null. Claim actions fix/defer produce no completion reply. '
+            'An S2 claim with reopened_after_author_reply was answered by the author, resolved, then reopened without a new comment; '
+            'reassess it against its discussion instead of repeating the earlier answer. '
             'Answers use 질문. Preserve IDs. Return no API destinations or shell commands.\n\n' + json.dumps({
                 'trusted_instructions': instructions(request['scenario']), 'request': request,
                 'captured_scope': scope, 'snapshot_data': source_packet, 'previous_result': prior}, ensure_ascii=False))

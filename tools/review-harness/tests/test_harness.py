@@ -412,6 +412,171 @@ class EngineTests(GitFixture):
         gh.value['threads'][0]['comments'].append({'id': 'author-reply', 'body': 'I updated this.', 'author': {'login': 'teammate'}, 'pullRequestReview': None})
         engine.poll(); self.assertEqual(engine.store.next()['scenario'], 'S4')
 
+    def own_pr_engine(self, resolved):
+        snapshot = self.snapshot(own=True); add_thread(snapshot); snapshot['threads'][0]['isResolved'] = resolved
+        gh = FakeGitHub(snapshot); engine = Engine(self.cfg, self.root / 'state', github=gh, reviewer=self.reviewer)
+        self.addCleanup(engine.store.close)
+        return gh, engine
+
+    def test_reopened_thread_on_own_pr_queues_author_response_once(self):
+        gh, engine = self.own_pr_engine(resolved=True)
+        engine.poll(); self.assertEqual(engine.store.rows(), [])
+        gh.value['threads'][0]['isResolved'] = False
+        engine.poll(); job = engine.store.next()
+        self.assertEqual(job['scenario'], 'S2')
+        self.assertEqual([c['thread_id'] for c in json.loads(job['event'])['claims']], ['T1'])
+        self.assertNotIn('reopened_after_author_reply', json.loads(job['event'])['claims'][0])
+        engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
+
+    def test_reopening_replaces_queued_response_and_survives_unrelated_resolution(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        second = copy.deepcopy(gh.value['threads'][0]); second['id'] = 'T2'
+        second['comments'][0]['id'] = 'C2'
+        gh.value['threads'].append(second)
+        engine.poll()
+        gh.value['threads'][0]['isResolved'] = True
+        engine.poll()
+        gh.value['threads'][0]['isResolved'] = False
+        engine.poll()
+        self.assertEqual(sum(row['status'] == 'queued' for row in engine.store.rows()), 1)
+        second['isResolved'] = True
+        with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo):
+            engine.run_one()  # queued snapshot is stale before the next poll
+            engine.poll(); engine.poll()
+            job = engine.store.next()
+            self.assertEqual([c['thread_id'] for c in json.loads(job['event'])['claims']], ['T1'])
+            engine.run_one()
+            self.assertEqual(engine.store.find_job(job['id'])['status'], 'local_ready')
+            engine.poll(); self.assertIsNone(engine.store.next())
+
+    def test_reopen_after_earlier_response_job_is_not_swallowed_by_job_key(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        engine.poll()
+        with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo): engine.run_one()
+        self.assertEqual([row['status'] for row in engine.store.rows()], ['local_ready'])
+        for cycle in (2, 3):
+            # The author resolving a thread is not review input.
+            gh.value['threads'][0]['isResolved'] = True
+            engine.poll(); self.assertIsNone(engine.store.next()); self.assertEqual(len(engine.store.rows()), cycle - 1)
+            gh.value['threads'][0]['isResolved'] = False
+            engine.poll(); self.assertEqual(len(engine.store.rows()), cycle)
+            job = engine.store.next(); self.assertEqual(job['scenario'], 'S2')
+            self.assertEqual(json.loads(job['event'])['reopened']['threads'], ['T1'])
+            engine.poll(); self.assertEqual(len(engine.store.rows()), cycle)
+            with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo): engine.run_one()
+            self.assertEqual(engine.store.find_job(job['id'])['status'], 'local_ready')
+
+    def test_own_resolve_with_other_input_still_open_queues_nothing(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        gh.value['conversation'].append({'id': 5, 'body': 'Please also cover empty rows.', 'user': {'login': 'teammate'}})
+        engine.poll()
+        with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo): engine.run_one()
+        self.assertEqual([row['status'] for row in engine.store.rows()], ['local_ready'])
+        # The conversation comment keeps S2 input non-empty, so only the resolution state changes.
+        gh.value['threads'][0]['isResolved'] = True
+        engine.poll(); engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
+        self.assertEqual(engine.store.tracked()[0]['resolved'], {'T1': 'C1'})
+
+    def test_thread_reopened_after_author_reply_queues_marked_response_once(self):
+        gh, engine = self.own_pr_engine(resolved=True)
+        gh.value['threads'][0]['comments'].append({'id': 'C2', 'body': 'Fixed.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll(); self.assertEqual(engine.store.rows(), [])
+        for cycle in (1, 2):
+            # Nobody comments; the reopening is the only signal that the answer was not accepted.
+            gh.value['threads'][0]['isResolved'] = False
+            engine.poll(); self.assertEqual(len(engine.store.rows()), cycle)
+            job = engine.store.next(); event = json.loads(job['event'])
+            self.assertEqual(job['scenario'], 'S2'); self.assertEqual(event['reopened']['threads'], ['T1'])
+            self.assertEqual([(c['thread_id'], c['last_comment_id'], c.get('reopened_after_author_reply')) for c in event['claims']],
+                             [('T1', 'C2', True)])
+            engine.poll(); self.assertEqual(len(engine.store.rows()), cycle)
+            with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo): engine.run_one()
+            self.assertEqual(engine.store.find_job(job['id'])['status'], 'local_ready')
+            self.assertTrue(read_json(Path(engine.store.find_job(job['id'])['run_dir']) / 'request.json')['claims'][0]['reopened_after_author_reply'])
+            engine.poll(); self.assertEqual(len(engine.store.rows()), cycle)
+            gh.value['threads'][0]['isResolved'] = True
+            engine.poll(); self.assertEqual(len(engine.store.rows()), cycle)
+
+    def answered_and_resolved(self):
+        gh, engine = self.own_pr_engine(resolved=True)
+        gh.value['threads'][0]['comments'].append({'id': 'C2', 'body': 'Fixed.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll(); self.assertEqual(engine.store.rows(), [])
+        return gh, engine
+
+    def test_author_reply_written_after_the_reopening_queues_nothing(self):
+        gh, engine = self.answered_and_resolved()
+        # Reopened and answered again between two polls: the new reply already covers the reopening.
+        gh.value['threads'][0]['isResolved'] = False
+        gh.value['threads'][0]['comments'].append({'id': 'C3', 'body': 'Reverted.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll(); engine.poll(); self.assertEqual(engine.store.rows(), [])
+
+    def test_reopening_after_the_recorded_last_comment_was_deleted_still_queues(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        gh.value['threads'][0]['comments'] += [
+            {'id': 'C2', 'body': 'Fixed.', 'author': {'login': 'me'}, 'pullRequestReview': None},
+            {**gh.value['threads'][0]['comments'][0], 'id': 'C3', 'body': 'Thanks.'}]
+        gh.value['threads'][0]['isResolved'] = True
+        engine.poll(); self.assertEqual(engine.store.rows(), [])
+        # The reviewer withdraws the closing comment and reopens: the author's reply is last again.
+        gh.value['threads'][0]['comments'].pop(); gh.value['threads'][0]['isResolved'] = False
+        engine.poll(); engine.poll()
+        self.assertEqual([json.loads(row['event'])['claims'][0].get('reopened_after_author_reply') for row in engine.store.rows()], [True])
+
+    def test_author_reply_written_while_draft_cancels_the_recorded_reopening(self):
+        gh, engine = self.answered_and_resolved()
+        gh.value['pr']['draft'] = True; engine.poll()
+        gh.value['threads'][0]['isResolved'] = False; engine.poll()
+        gh.value['threads'][0]['comments'].append({'id': 'C3', 'body': 'Reverted.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll()
+        gh.value['pr']['draft'] = False; engine.poll(); engine.poll()
+        self.assertEqual(engine.store.rows(), [])
+
+    def test_reopened_answered_thread_stays_input_for_the_job_that_replaces_a_waiting_one(self):
+        gh, engine = self.answered_and_resolved()
+        gh.value['threads'][0]['isResolved'] = False; engine.poll()
+        self.assertEqual(len(engine.store.rows()), 1)
+        # Other input arrives before the first job ran; the newer job must still carry the reopened thread.
+        other = copy.deepcopy(gh.value['threads'][0]); other['id'] = 'T2'; other['comments'] = [{**other['comments'][0], 'id': 'C9'}]
+        gh.value['threads'].append(other); engine.poll()
+        events = [json.loads(row['event']) for row in engine.store.rows()]; self.assertEqual(len(events), 2)
+        newest = next(event for event in events if 'reopened' not in event)
+        self.assertEqual({(c['thread_id'], c.get('reopened_after_author_reply')) for c in newest['claims']}, {('T1', True), ('T2', None)})
+        gh.value['threads'][0]['comments'].append({'id': 'C3', 'body': 'Reverted.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll(); self.assertEqual(engine.store.tracked()[0]['reopened'], {})
+
+    def test_watch_with_resolved_list_from_the_previous_format_still_detects_reopening(self):
+        gh, engine = self.answered_and_resolved()
+        row = engine.store.db.execute('SELECT id, data FROM watches').fetchone()
+        legacy = json.loads(row['data']); legacy['resolved'] = ['T1']; del legacy['reopened']
+        with engine.store.db:
+            engine.store.db.execute('UPDATE watches SET fingerprint=?, data=? WHERE id=?', (digest(legacy), json.dumps(legacy), row['id']))
+        gh.value['threads'][0]['isResolved'] = False; engine.poll(); engine.poll()
+        self.assertEqual(len(engine.store.rows()), 1)
+
+    def test_reopen_seen_while_draft_is_queued_once_ready(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        engine.poll()
+        with patch('hm2_review_harness.source.pr_checkout', return_value=self.repo): engine.run_one()
+        gh.value['threads'][0]['isResolved'] = True; gh.value['pr']['draft'] = True; engine.poll()
+        gh.value['threads'][0]['isResolved'] = False; engine.poll(); engine.poll()
+        self.assertEqual(len(engine.store.rows()), 1)
+        gh.value['pr']['draft'] = False; engine.poll(); engine.poll()
+        self.assertEqual(len(engine.store.rows()), 2); self.assertEqual(engine.store.next()['scenario'], 'S2')
+
+    def test_watches_from_before_reopen_tracking_do_not_requeue_open_threads(self):
+        gh, engine = self.own_pr_engine(resolved=False)
+        gh.value['threads'].append({**copy.deepcopy(gh.value['threads'][0]), 'id': 'T2', 'isResolved': True})
+        gh.value['threads'][1]['comments'][0]['id'] = 'C2'
+        engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
+        row = engine.store.db.execute('SELECT id, data FROM watches').fetchone()
+        legacy = json.loads(row['data']); del legacy['resolved']
+        with engine.store.db:
+            engine.store.db.execute('UPDATE watches SET fingerprint=?, data=? WHERE id=?', (digest(legacy), json.dumps(legacy), row['id']))
+        engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
+        self.assertEqual(engine.store.tracked()[0]['resolved'], {'T2': 'C2'})
+        gh.value['threads'][1]['isResolved'] = False
+        engine.poll(); self.assertEqual(len(engine.store.rows()), 2)
+
     def test_old_manually_reviewed_pr_is_discovered_without_new_request(self):
         snapshot = self.snapshot(reviewed=True); snapshot['pr']['requested_reviewers'] = []
         engine = Engine(self.cfg, self.root / 'state', github=FakeGitHub(snapshot), reviewer=self.reviewer)
@@ -548,6 +713,19 @@ class DeliveryTests(GitFixture):
             saved = delivery.save(self.cfg, gh, event, snapshot, {}, response, None, self.root, self.root / 'state')
         self.assertEqual(saved['status'], 'pending_saved'); self.assertEqual(len(gh.writes), 2)
         self.assertNotIn('event', gh.writes[0][1]); self.assertEqual(gh.writes[0][1]['commit_id'], self.head)
+
+    def test_reply_to_thread_reopened_after_author_reply_is_saved_pending(self):
+        snapshot = self.snapshot(own=True); add_thread(snapshot); gh = FakeGitHub(snapshot)
+        snapshot['threads'][0]['comments'].append({'id': 'C2', 'body': 'Fixed.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        gh.value = copy.deepcopy(snapshot)
+        self.assertEqual(claims(snapshot, 'S2', 'me'), [])
+        inputs = claims(snapshot, 'S2', 'me', ['T1'])
+        event = {'hostname': 'github.com', 'repo': 'example/app', 'pr': 7, 'claims': inputs}
+        response = {'review': None, 'claims': [{'id': inputs[0]['id'], 'reply': {'label': '질문', 'body': '[질문] 어떤 경우가 아직 남아 있나요?'}}]}
+        with patch('hm2_review_harness.delivery.module', return_value=self.helper(gh)):
+            saved = delivery.save(self.cfg, gh, event, snapshot, {}, response, None, self.root, self.root / 'state')
+        self.assertEqual(saved['status'], 'pending_saved')
+        self.assertEqual(gh.writes[1][1]['variables']['input']['pullRequestReviewThreadId'], 'T1')
 
     def test_existing_manual_pending_is_preserved(self):
         snapshot = self.snapshot(own=True); add_thread(snapshot); gh = FakeGitHub(snapshot)
