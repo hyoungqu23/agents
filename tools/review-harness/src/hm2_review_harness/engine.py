@@ -8,7 +8,7 @@ import subprocess
 import hashlib
 
 from . import __version__, agent, delivery, source
-from .github import ApiError, GitHub, claims, fingerprint
+from .github import ApiError, GitHub, claims, fingerprint, public_comments
 from .state import HarnessError, Store, digest, save_json, load_config
 from .trusted import module
 from .policy import PolicyChanged, require_pending
@@ -71,8 +71,14 @@ class Engine:
         watch_key = f'{self.config["hostname"]}/{repo}/{number}'
         previous = self.store.db.execute('SELECT data FROM watches WHERE id=?', (watch_key,)).fetchone()
         prior = json.loads(previous[0]) if previous else None
-        # A thread seen resolved on the last poll and open now is input even if the author answered last.
-        inputs = claims(snapshot, scenario, login, (prior or {}).get('resolved', []) if scenario == 'S2' else ())
+        # A thread seen resolved earlier and open now is input even if the author answered last, as long as
+        # nobody commented since: an author reply written after the reopening already answers it.
+        last = {t['id']: public_comments(t)[-1]['id'] for t in snapshot['threads'] if public_comments(t)}
+        was_resolved = (prior or {}).get('resolved', {}) if scenario == 'S2' else {}
+        if isinstance(was_resolved, list):  # watches written before the last comment was recorded
+            was_resolved = dict.fromkeys(was_resolved)
+        waiting = {**was_resolved, **((prior or {}).get('reopened', {}) if scenario == 'S2' else {})}
+        inputs = claims(snapshot, scenario, login, {t for t, seen in waiting.items() if seen in (None, last.get(t))})
         event = {'hostname': self.config['hostname'], 'repo': repo, 'pr': number, 'fingerprint': stamp,
                  'source_fingerprint': fingerprint(snapshot), 'account': login, 'policy_version': __version__, 'claims': inputs}
         value = {'hostname': self.config['hostname'], 'repo': repo, 'pr': number, 'fingerprint': stamp,
@@ -85,13 +91,16 @@ class Engine:
             # Watches written before this field have no 'resolved' list, so the first poll after an
             # upgrade only records it.
             resolved = {t['id'] for t in snapshot['threads'] if t.get('isResolved')}
-            reopened = sorted(set((prior or {}).get('resolved', [])) & {c['thread_id'] for c in inputs if c.get('thread_id')})
+            reopened = sorted(set(was_resolved) & {c['thread_id'] for c in inputs if c.get('thread_id')})
             if reopened:
                 # Head and comments can equal an earlier response job; without this its key would be ignored.
                 event['reopened'] = {'threads': reopened, 'nonce': uuid.uuid4().hex}
                 changed = True
             # A reopening seen while the PR cannot be answered (draft) stays recorded until a job is queued.
-            value['resolved'] = sorted(resolved if active else resolved | set(reopened))
+            value['resolved'] = {t: last.get(t) for t in sorted(resolved if active else resolved | set(reopened))}
+            # An answered thread stays input for later jobs too (the queued one may be superseded before it
+            # runs) until the author replies again or the thread is resolved.
+            value['reopened'] = {c['thread_id']: c['last_comment_id'] for c in inputs if c.get('reopened_after_author_reply')}
         if force and active:
             event['manual_request'] = uuid.uuid4().hex
             self.store.observe(watch_key, value)

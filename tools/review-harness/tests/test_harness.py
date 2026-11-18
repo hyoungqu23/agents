@@ -284,7 +284,7 @@ class EngineTests(GitFixture):
         # The conversation comment keeps S2 input non-empty, so only the resolution state changes.
         gh.value['threads'][0]['isResolved'] = True
         engine.poll(); engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
-        self.assertEqual(engine.store.tracked()[0]['resolved'], ['T1'])
+        self.assertEqual(engine.store.tracked()[0]['resolved'], {'T1': 'C1'})
 
     def test_thread_reopened_after_author_reply_queues_marked_response_once(self):
         gh, engine = self.own_pr_engine(resolved=True)
@@ -306,6 +306,50 @@ class EngineTests(GitFixture):
             gh.value['threads'][0]['isResolved'] = True
             engine.poll(); self.assertEqual(len(engine.store.rows()), cycle)
 
+    def answered_and_resolved(self):
+        gh, engine = self.own_pr_engine(resolved=True)
+        gh.value['threads'][0]['comments'].append({'id': 'C2', 'body': 'Fixed.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll(); self.assertEqual(engine.store.rows(), [])
+        return gh, engine
+
+    def test_author_reply_written_after_the_reopening_queues_nothing(self):
+        gh, engine = self.answered_and_resolved()
+        # Reopened and answered again between two polls: the new reply already covers the reopening.
+        gh.value['threads'][0]['isResolved'] = False
+        gh.value['threads'][0]['comments'].append({'id': 'C3', 'body': 'Reverted.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll(); engine.poll(); self.assertEqual(engine.store.rows(), [])
+
+    def test_author_reply_written_while_draft_cancels_the_recorded_reopening(self):
+        gh, engine = self.answered_and_resolved()
+        gh.value['pr']['draft'] = True; engine.poll()
+        gh.value['threads'][0]['isResolved'] = False; engine.poll()
+        gh.value['threads'][0]['comments'].append({'id': 'C3', 'body': 'Reverted.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll()
+        gh.value['pr']['draft'] = False; engine.poll(); engine.poll()
+        self.assertEqual(engine.store.rows(), [])
+
+    def test_reopened_answered_thread_stays_input_for_the_job_that_replaces_a_waiting_one(self):
+        gh, engine = self.answered_and_resolved()
+        gh.value['threads'][0]['isResolved'] = False; engine.poll()
+        self.assertEqual(len(engine.store.rows()), 1)
+        # Other input arrives before the first job ran; the newer job must still carry the reopened thread.
+        other = copy.deepcopy(gh.value['threads'][0]); other['id'] = 'T2'; other['comments'] = [{**other['comments'][0], 'id': 'C9'}]
+        gh.value['threads'].append(other); engine.poll()
+        events = [json.loads(row['event']) for row in engine.store.rows()]; self.assertEqual(len(events), 2)
+        newest = next(event for event in events if 'reopened' not in event)
+        self.assertEqual({(c['thread_id'], c.get('reopened_after_author_reply')) for c in newest['claims']}, {('T1', True), ('T2', None)})
+        gh.value['threads'][0]['comments'].append({'id': 'C3', 'body': 'Reverted.', 'author': {'login': 'me'}, 'pullRequestReview': None})
+        engine.poll(); self.assertEqual(engine.store.tracked()[0]['reopened'], {})
+
+    def test_watch_with_resolved_list_from_the_previous_format_still_detects_reopening(self):
+        gh, engine = self.answered_and_resolved()
+        row = engine.store.db.execute('SELECT id, data FROM watches').fetchone()
+        legacy = json.loads(row['data']); legacy['resolved'] = ['T1']; del legacy['reopened']
+        with engine.store.db:
+            engine.store.db.execute('UPDATE watches SET fingerprint=?, data=? WHERE id=?', (digest(legacy), json.dumps(legacy), row['id']))
+        gh.value['threads'][0]['isResolved'] = False; engine.poll(); engine.poll()
+        self.assertEqual(len(engine.store.rows()), 1)
+
     def test_reopen_seen_while_draft_is_queued_once_ready(self):
         gh, engine = self.own_pr_engine(resolved=False)
         engine.poll()
@@ -326,7 +370,7 @@ class EngineTests(GitFixture):
         with engine.store.db:
             engine.store.db.execute('UPDATE watches SET fingerprint=?, data=? WHERE id=?', (digest(legacy), json.dumps(legacy), row['id']))
         engine.poll(); self.assertEqual(len(engine.store.rows()), 1)
-        self.assertEqual(engine.store.tracked()[0]['resolved'], ['T2'])
+        self.assertEqual(engine.store.tracked()[0]['resolved'], {'T2': 'C2'})
         gh.value['threads'][1]['isResolved'] = False
         engine.poll(); self.assertEqual(len(engine.store.rows()), 2)
 
