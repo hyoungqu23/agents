@@ -655,6 +655,59 @@ class AcceptanceTests(Lab):
             "relativePath": f"materials/{name}", "title": "노트", "originKind": "local_file", "origin": name,
         })["entityIds"]["sourceId"]
 
+    def register_bytes(self, data, name="big.md"):
+        (self.root / "materials" / name).write_bytes(data)
+        return self.send("source.register", {
+            "relativePath": f"materials/{name}", "title": "노트", "originKind": "local_file", "origin": name,
+        })
+
+    def test_source_limit_counts_normalized_bytes_at_the_exact_boundary(self):
+        self.init()
+        limit = 5 * 1024 * 1024
+        self.assertTrue(self.register_bytes(b"a" * limit, "exact.md")["ok"])
+        response = self.register_bytes(b"a" * (limit + 1), "over.md")
+        self.assertEqual(response["error"]["code"], "INVALID_REQUEST"); self.assertIn("larger than 5 MiB", response["error"]["message"])
+        # Larger on disk, within the limit once CRLF becomes LF.
+        self.assertTrue(self.register_bytes(b"ab\r\n" * (limit // 3), "crlf.md")["ok"])
+
+    def test_oversized_source_is_refused_without_reading_all_of_it(self):
+        self.init()
+        path = self.root / "materials" / "huge.md"
+        with path.open("wb") as stream:
+            stream.truncate(64 * 1024 * 1024)
+        steps = []
+        original = cli.normalized
+        def counting(target, limit, chunk=64 * 1024):
+            real_open = type(target).open
+            def opened(self_path, *args, **kwargs):
+                stream = real_open(self_path, *args, **kwargs); read = stream.read
+                class Counted:
+                    def __enter__(self): return self
+                    def __exit__(self, *exc): stream.close()
+                    def read(self, size): steps.append(size); return read(size)
+                return Counted()
+            with mock.patch.object(type(target), "open", opened):
+                return original(target, limit, chunk)
+        with mock.patch.object(cli, "normalized", counting):
+            response = self.send("source.register", {
+                "relativePath": "materials/huge.md", "title": "t", "originKind": "local_file", "origin": "huge.md"})
+        self.assertIn("larger than 5 MiB", response["error"]["message"])
+        self.assertLessEqual(sum(steps), 5 * 1024 * 1024 + 2 * 64 * 1024); self.assertLessEqual(max(steps), 64 * 1024)
+
+    def test_chunked_normalization_matches_whole_file_normalization(self):
+        text = "가\r\n나\r다\n\r\n🙂끝\r"
+        data = text.encode("utf-8"); expected = text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
+        path = self.tmp / "sample.txt"; path.write_bytes(data)
+        for chunk in range(1, len(data) + 2):
+            with self.subTest(chunk=chunk):
+                self.assertEqual(cli.normalized(path, 1024, chunk), (expected, len(data)))
+        path.write_bytes(data[:-2] + b"\xff")
+        with self.assertRaises(UnicodeDecodeError):
+            cli.normalized(path, 1024, 3)
+        path.write_bytes(data[:2])  # a multi-byte character cut short at the end of the file
+        with self.assertRaises(UnicodeDecodeError):
+            cli.normalized(path, 1024, 3)
+
     def test_changed_or_non_utf8_snapshot_cannot_support_a_new_citation(self):
         self.ready()
         source_id = self.register()

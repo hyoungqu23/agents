@@ -77,7 +77,7 @@
       "name": "learn",
       "source": "./plugins/learn",
       "description": "Learn through questions in conversation or continue structured study with a local learning record.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "category": "Productivity",
       "keywords": [
         "learning",

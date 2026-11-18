@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 - 2026-11-18
+
+- `study-loop`: read registered materials in bounded steps and refuse one that passes 5 MiB after normalization without loading all of it. Normalized text, hash and errors are unchanged.
+
 ## 0.2.0 - 2026-11-12
 
 - Add `think-through` for Socratic tutoring in the current conversation, with one question at a time and no learning-folder setup.
