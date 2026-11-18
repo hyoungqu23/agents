@@ -150,24 +150,60 @@ class Engine:
         if assessment.get('status') != 'complete':
             raise HarnessError('Only an assessed implementation completion triggers S1')
         scope = self.gate.capture_scope(path, working_tree=True)
-        context = None
-        if inputs:
-            context = {'requirements': inputs.get('requirements', []), 'checks': inputs.get('checks', []), 'sources': []}
-            used = 0
-            for row in inputs.get('sources', []):
-                input_path = Path(row['path'])
-                if not input_path.is_absolute():
-                    input_path = path / input_path
-                if input_path.is_symlink() or not input_path.is_file():
-                    raise HarnessError('Implementation source is unavailable or symlinked')
-                raw = input_path.read_bytes(); used += len(raw)
-                if used > self.config['max_packet_bytes']:
-                    raise HarnessError('Implementation requirements exceed the review packet limit')
-                context['sources'].append({'id': row['id'], 'text': raw.decode(), 'sha256': hashlib.sha256(raw).hexdigest()})
+        context = self._verified_inputs(path, assessment, Path(inputs)) if inputs else None
         return self.store.enqueue('S1', {'hostname': self.config['hostname'], 'repo': repository['name'],
                                         'worktree': str(path), 'target': scope['target'],
                                         'account': self.config['login'], 'assessment': assessment,
                                         'implementation_context': context, 'policy_version': __version__, 'claims': []})
+
+    def _verified_inputs(self, root, assessment, inputs):
+        """Queue only the manifest and source bytes the completion check verified."""
+        stale = HarnessError('Implementation inputs or sources changed after the completion check; assess again before review')
+        limit = self.config['max_packet_bytes']
+
+        def regular(file):
+            # Recorded paths are fully resolved, so any symlink or '..' on the way is a different file.
+            return file.is_absolute() and file.resolve() == file and file.is_file()
+
+        try:
+            frozen = assessment.get('review_inputs')
+            if not frozen:
+                raise HarnessError('Assessment does not record the inputs it verified; assess again with build plugin 0.4.4+')
+            inputs = inputs.resolve()
+            if inputs != Path(frozen['inputs']['path']).resolve() or not regular(inputs):
+                raise stale
+            if inputs.stat().st_size > limit:
+                raise HarnessError('Implementation requirements exceed the review packet limit')
+            raw = inputs.read_bytes()
+            if hashlib.sha256(raw).hexdigest() != frozen['inputs']['sha256']:
+                raise stale
+            data = json.loads(raw)
+            rows, sources = data['sources'], frozen['sources']
+            if sorted(row['id'] for row in rows) != sorted(sources):
+                raise stale
+            # The same range the completion check accepts: the checkout, the manifest's directory and
+            # the external roots that manifest declares.
+            roots = [Path(item).resolve() for item in (root, inputs.parent, *data.get('source_roots', []))]
+            context = {'requirements': data.get('requirements', []), 'checks': data.get('checks', []),
+                       'inputs': {'path': str(inputs), 'sha256': frozen['inputs']['sha256']}, 'sources': []}
+            used = len(raw)
+            for row in rows:
+                entry = sources[row['id']]; file = Path(entry['path'])
+                if not any(file.is_relative_to(item) for item in roots):
+                    raise HarnessError('Implementation source is outside the checkout, the inputs directory and declared source_roots')
+                if not regular(file):
+                    raise HarnessError('Implementation source is unavailable or symlinked')
+                used += file.stat().st_size
+                if used > limit:
+                    raise HarnessError('Implementation requirements exceed the review packet limit')
+                with file.open('rb') as stream:
+                    text = stream.read(limit + 1)
+                if hashlib.sha256(text).hexdigest() != entry['sha256']:
+                    raise stale
+                context['sources'].append({'id': row['id'], 'path': str(file), 'text': text.decode(), 'sha256': entry['sha256']})
+            return context
+        except (KeyError, TypeError, ValueError, AttributeError, OSError) as error:
+            raise HarnessError('Implementation review inputs are malformed or unreadable: ' + str(error)) from error
 
     def _assess(self, request, response, scope, packet):
         self.contract.validate(request, response)

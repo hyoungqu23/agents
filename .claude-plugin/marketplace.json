@@ -64,7 +64,7 @@
       "name": "build",
       "source": "./plugins/build",
       "description": "Implement features with original SPEC coverage, apply scoped fixes and dogfood real user journeys with visual and persistence evidence.",
-      "version": "0.4.3",
+      "version": "0.4.4",
       "category": "Productivity",
       "keywords": [
         "implementation",

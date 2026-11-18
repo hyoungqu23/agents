@@ -523,6 +523,10 @@ def assess(worktree, baseline_path, verification_path, result_path):
                 if checks.get(check, {}).get('status') != 'passed':
                     gaps.append({'requirement': key, 'check': check, 'reason': 'outcome_unverified'})
         verdict['target'] = verified['digest']
+        # The exact manifest and source bytes this check verified. --notify-review hands them to the
+        # review harness, which refuses to queue anything that no longer matches.
+        verdict['review_inputs'] = {'inputs': {key: verified['inputs'][key] for key in ('path', 'sha256')},
+                                    'sources': verified['sources']}
         verdict['status'] = 'partial' if gaps else 'complete'
         required = [requirements.get(k, {}) for k, d in expected_req.items() if d['disposition'] == 'required']
         if gaps and not actual and required and all(r.get('state') == 'needs_decision' for r in required):

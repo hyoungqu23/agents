@@ -86,7 +86,13 @@ class ImplementationStateTests(unittest.TestCase):
 
     def test_implementation_changes_are_allowed_between_two_snapshots(self):
         self.assertNotEqual(self.baseline['digest'], self.verified['digest'])
-        self.assertEqual(self.assess()['status'], 'complete')
+        verdict = self.assess()
+        self.assertEqual(verdict['status'], 'complete')
+        # The review handoff carries exactly what this check verified.
+        self.assertEqual(verdict['review_inputs'], {
+            'inputs': {'path': str(self.inputs_path), 'sha256': hashlib.sha256(self.inputs_path.read_bytes()).hexdigest()},
+            'sources': {'spec': {'path': str(self.state / 'spec.md'),
+                                 'sha256': hashlib.sha256((self.state / 'spec.md').read_bytes()).hexdigest()}}})
 
     def test_standalone_install_captures_and_assesses_from_another_directory(self):
         scripts = self.root / '설치 경로' / 'scripts'

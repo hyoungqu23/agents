@@ -211,7 +211,7 @@ def main(argv=None):
         if args.action in ('enqueue-pr', 'notify-implementation'):
             engine = Engine(config, root)
             try:
-                job = engine.enqueue_pr(args.repo, args.pr, force=True) if args.action == 'enqueue-pr' else engine.notify_implementation(args.worktree, read_json(args.assessment), read_json(args.inputs) if args.inputs else None)
+                job = engine.enqueue_pr(args.repo, args.pr, force=True) if args.action == 'enqueue-pr' else engine.notify_implementation(args.worktree, read_json(args.assessment), args.inputs)
                 print(job or 'No new input')
             finally:
                 engine.store.close()

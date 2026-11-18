@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.4 - 2026-11-18
+
+- Record the verified inputs manifest and source paths and hashes in a complete assessment so the review harness queues exactly what the completion check accepted.
+
 ## 0.4.3
 
 - Retain a stable reproduction in the target CI suite when the real failure path is available.

@@ -63,7 +63,7 @@ finding identities rather than discarding everything at that source line.
 
 | Workflow | Trigger and behavior |
 | --- | --- |
-| S1 self review | The configured build `implement` assessment completes with `--notify-review`; capture staged/unstaged/untracked source in a separate equivalent snapshot and run review-code. Requires build plugin 0.3.0+ and a registered checkout path. |
+| S1 self review | The configured build `implement` assessment completes with `--notify-review`; capture staged/unstaged/untracked source in a separate equivalent snapshot and run review-code. Requires build plugin 0.4.4+ and a registered checkout path. The requirements and sources are queued only when the manifest and every source still match the path and hash the completion check recorded; a change in between is refused with a request to assess again, and a source outside the checkout, the manifest's directory and its declared `source_roots` is refused. |
 | S2 author response | An own PR receives new inline/review-body/conversation input, or a resolved thread is reopened, even when the author's reply is its last comment (that claim is marked `reopened_after_author_reply` and stays input for later jobs until the author replies again or the thread is resolved; who reopened it is not distinguished, and an author reply written after the reopening queues nothing); verify every claim, prepare fixes as proposals and responses as drafts. Resolving a thread never queues work. Only inline responses support GitHub Pending delivery. |
 | S3 reviewer | A person/team requests review, or `enqueue-pr` explicitly selects it; inspect the pinned PR and save supported comments as Pending. |
 | S4 re-review | A tracked, previously reviewed PR changes; reassess the original claims and inspect the previous-review delta and current code scope independently. Unavailable previous objects remain a gap. |
@@ -71,6 +71,8 @@ finding identities rather than discarding everything at that source line.
 An `implement` event only queues work; it does not start/install the service. Old
 build plugins can explicitly use `notify-implementation --worktree PATH --assessment FILE`
 with a complete trusted assessment, but this fallback is not automatic S1 integration.
+Their `--notify-review` passes `--inputs` without the verified record, so it is refused
+rather than queued unchecked.
 
 P1/P2/P3/P999/질문 are the only generated prefixes. P999 is optional style/taste;
 questions have no severity. Existing findings retain their IDs and original priority

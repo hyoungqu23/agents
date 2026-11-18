@@ -1,5 +1,7 @@
 """Real Git/SQLite integration with model/API doubles; no model calls or GitHub writes."""
 import copy
+import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -589,19 +591,77 @@ class EngineTests(GitFixture):
         self.addCleanup(engine.store.close); engine.poll()
         self.assertEqual(engine.store.next()['scenario'], 'S4')
 
-    def test_implementation_requirements_are_captured_as_review_input(self):
-        document = self.root / 'spec.md'; document.write_text('first([]) returns None.\n')
+    SPEC = 'first([]) returns None.\n'
+
+    def handoff(self, source, roots=()):
+        """Freeze a manifest with the implement skill's own completion check, as --notify-review hands it over."""
+        script = Path(__file__).resolve().parents[3] / 'plugins/build/skills/implement/scripts/implementation_state.py'
+        spec = importlib.util.spec_from_file_location('implementation_state', script)
+        gate = importlib.util.module_from_spec(spec); spec.loader.exec_module(gate)
+        inputs = self.root / 'handoff/inputs.json'; inputs.parent.mkdir(exist_ok=True)
+        inputs.write_text(json.dumps({
+            'schema_version': 1, 'task': 'Empty input', 'surface': 'code', 'scope': ['.'], 'source_roots': [str(r) for r in roots],
+            'sources': [{'id': 'spec', 'path': str(source)}],
+            'requirements': [{'id': 'AC1', 'source': 'spec', 'description': 'Keep None', 'disposition': 'required', 'checks': ['unit']}],
+            'checks': [{'id': 'unit', 'kind': 'command', 'required': True, 'description': 'Empty input assertion'}]}))
+        verified = gate.capture(self.repo, inputs)
+        return {'status': 'complete', 'review_inputs': {'inputs': {k: verified['inputs'][k] for k in ('path', 'sha256')},
+                                                         'sources': verified['sources']}}, inputs
+
+    def engine(self):
         engine = Engine(self.cfg, self.root / 'state', reviewer=self.reviewer); self.addCleanup(engine.store.close)
-        engine.notify_implementation(self.repo, {'status': 'complete'}, {'requirements': [{'id': 'AC1'}], 'sources': [{'id': 'spec', 'path': str(document)}]})
-        event = json.loads(engine.store.next()['event'])
-        self.assertEqual(event['implementation_context']['sources'][0]['text'], document.read_text())
+        return engine
+
+    def test_verified_implementation_inputs_are_queued_with_their_path_and_hash(self):
+        document = self.root / 'handoff/spec.md'; document.parent.mkdir(); document.write_text(self.SPEC)
+        assessment, inputs = self.handoff(document)
+        engine = self.engine(); engine.notify_implementation(self.repo, assessment, inputs)
+        context = json.loads(engine.store.next()['event'])['implementation_context']
+        frozen = assessment['review_inputs']
+        self.assertEqual(context['sources'], [{'id': 'spec', 'path': frozen['sources']['spec']['path'], 'text': self.SPEC,
+                                               'sha256': hashlib.sha256(self.SPEC.encode()).hexdigest()}])
+        self.assertEqual(context['sources'][0]['sha256'], frozen['sources']['spec']['sha256'])
+        self.assertEqual(context['inputs'], {'path': str(inputs.resolve()), 'sha256': hashlib.sha256(inputs.read_bytes()).hexdigest()})
+        self.assertEqual([row['id'] for row in context['requirements']], ['AC1'])
 
     def test_relative_implementation_sources_resolve_against_worktree(self):
-        (self.repo / 'spec.md').write_text('first([]) returns None.\n')
-        engine = Engine(self.cfg, self.root / 'state', reviewer=self.reviewer); self.addCleanup(engine.store.close)
-        args = (self.repo, {'status': 'complete'}, {'sources': [{'id': 'spec', 'path': 'spec.md'}]})
+        (self.repo / 'spec.md').write_text(self.SPEC)
+        args = (self.repo, *self.handoff('spec.md')); engine = self.engine()
         first = engine.notify_implementation(*args); second = engine.notify_implementation(*args)
         self.assertEqual(first, second); self.assertEqual(len(engine.store.rows()), 1)
+        self.assertEqual(json.loads(engine.store.next()['event'])['implementation_context']['sources'][0]['text'], self.SPEC)
+
+    def test_inputs_changed_after_the_completion_check_are_not_queued(self):
+        document = self.root / 'handoff/spec.md'; document.parent.mkdir(); document.write_text(self.SPEC)
+        assessment, inputs = self.handoff(document); manifest = inputs.read_text(); engine = self.engine()
+        changes = {'source': lambda: document.write_text('first([]) raises.\n'),
+                   'manifest': lambda: inputs.write_text(manifest.replace('Keep None', 'Raise instead')),
+                   'manifest path': lambda: (self.root / 'handoff/other.json').write_text(manifest)}
+        for name, change in changes.items():
+            with self.subTest(changed=name):
+                document.write_text(self.SPEC); inputs.write_text(manifest); change()
+                with self.assertRaisesRegex(HarnessError, 'assess again'):
+                    engine.notify_implementation(self.repo, assessment, self.root / 'handoff/other.json' if name == 'manifest path' else inputs)
+        with self.assertRaisesRegex(HarnessError, 'does not record'):
+            engine.notify_implementation(self.repo, {'status': 'complete'}, inputs)
+        self.assertEqual(engine.store.rows(), [])
+
+    def test_implementation_source_outside_the_approved_range_is_refused(self):
+        external = self.root / 'specs'; external.mkdir(); (external / 'spec.md').write_text(self.SPEC)
+        approved, inputs = self.handoff(external / 'spec.md', roots=[external]); engine = self.engine()
+        # A directly invoked harness gets whatever record the caller wrote: the range is checked again here.
+        record = lambda path: {'status': 'complete', 'review_inputs': {**approved['review_inputs'], 'sources': {
+            'spec': {'path': str(path), 'sha256': hashlib.sha256(self.SPEC.encode()).hexdigest()}}}}
+        outside = self.root / 'private/notes.md'; outside.parent.mkdir(); outside.write_text(self.SPEC)
+        (external / 'link.md').symlink_to(outside)
+        cases = {'outside': outside, 'symlink': external / 'link.md', 'dots': external / '../private/notes.md'}
+        for name, path in cases.items():
+            with self.subTest(path=name), self.assertRaisesRegex(HarnessError, 'outside the checkout|symlinked'):
+                engine.notify_implementation(self.repo, record(path), inputs)
+        self.assertEqual(engine.store.rows(), [])
+        # The registered external specification itself is still accepted.
+        engine.notify_implementation(self.repo, approved, inputs)
+        self.assertEqual(json.loads(engine.store.next()['event'])['implementation_context']['sources'][0]['text'], self.SPEC)
 
     def test_s4_retains_review_body_and_conversation_findings(self):
         snapshot = self.snapshot(reviewed=True)
