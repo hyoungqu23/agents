@@ -1,4 +1,5 @@
 """Prepare disposable Git sources without activating incoming hooks or filters."""
+import json
 import os
 from pathlib import Path, PurePosixPath
 import shlex
@@ -121,44 +122,64 @@ def packet(root, scope, max_bytes, previous_head=None):
     if scope['target']['mode'] == 'working-tree':
         present.update(index=set(git(root, 'ls-files', '-z').decode().split('\x00')), working=set(changed))
         revisions = ['working', 'head', 'index', 'base']
-    # Budget goes to the change and its comparison versions, then trusted base rules, then unchanged context.
+    # Budget goes to the change and its comparison versions, then trusted base rules, then the delta since
+    # the previous review, then unchanged context.
     # The scope lists every staged, unstaged and untracked path, so any other path is identical in head,
     # index and working tree: visit it once as head, with no copy to send or to name in same_as.
-    visits = dict.fromkeys([
+    first = dict.fromkeys([
         *((revision, name) for revision in revisions for name in changed if name in present[revision]),
-        *(('base', name) for name in base_rules),
-        *(('head', name) for name in paths)])
+        *(('base', name) for name in base_rules)])
+    context = [visit for visit in dict.fromkeys(('head', name) for name in paths) if visit not in first]
 
-    sources, same_as, omitted, used = {}, {}, [], 0
-    for revision, name in visits:
+    def cost(value):
+        return len(json.dumps(value, ensure_ascii=False).encode()) + 2  # as it is sent, plus its separator
+
+    # max_bytes bounds the packet as it is sent, not the raw source: the path list and one name per visit
+    # (a sources key, a same_as key or an omitted entry) are spent before any text.
+    sources, same_as, omitted = {}, {}, []
+    used = cost(paths) + sum(cost(revision + ':' + name) for revision, name in [*first, *context])
+
+    def visit(revision, name):
+        nonlocal used
+        key = revision + ':' + name
         try:
             if revision == 'working':
                 path = safe_path(root, name)
                 if path.is_symlink() or not path.is_file():
-                    continue
+                    return
                 raw = path.read_bytes()
             else:
                 ref = ':' + name if revision == 'index' else scope['target'][revision + '_sha'] + ':' + name
                 raw = git(root, 'cat-file', 'blob', ref)
             text = raw.decode('utf-8')
+            # A trusted base rule is sent a second time under trusted_base_rules.
+            rule = cost(key) + cost(text) if revision == 'base' and name in base_rules else 0
             # One path often has the same text in several revisions; send it once and name the copy.
             twin = next((other + ':' + name for other in revisions if sources.get(other + ':' + name) == text), None)
-            if twin:
-                same_as[revision + ':' + name] = twin
-            elif '\x00' in text or used + len(raw) > max_bytes:
-                omitted.append(revision + ':' + name)
+            need = rule + (cost(twin) if twin else cost(text))
+            if '\x00' in text or used + need > max_bytes:
+                omitted.append(key)
+            elif twin:
+                same_as[key] = twin; used += need
             else:
-                sources[revision + ':' + name] = text; used += len(raw)
+                sources[key] = text; used += need
         except (HarnessError, UnicodeError, OSError):
-            omitted.append(revision + ':' + name)
+            omitted.append(key)
+
+    for revision, name in first:
+        visit(revision, name)
     delta = None
     if previous_head:
         try:
             delta = git(root, 'diff', '--no-ext-diff', '--no-textconv', previous_head, scope['target']['head_sha'], '--').decode()
-            if len(delta.encode()) > max_bytes:
+            if used + cost(delta) > max_bytes:
                 delta = None; omitted.append('previous-review delta exceeds packet limit')
+            else:
+                used += cost(delta)
         except HarnessError:
             omitted.append('previous-review objects unavailable; full current PR scope is supplied')
+    for revision, name in context:
+        visit(revision, name)
     rules = {'base:' + name: sources[same_as.get('base:' + name, 'base:' + name)] for name in base_rules
              if same_as.get('base:' + name, 'base:' + name) in sources}
     return {'sources': sources, 'same_as': same_as, 'repository_paths': paths, 'trusted_base_rules': rules,

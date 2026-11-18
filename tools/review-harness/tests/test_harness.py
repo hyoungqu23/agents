@@ -141,6 +141,23 @@ class SourceTests(GitFixture):
         self.assertEqual(packet['trusted_base_rules'], {'base:AGENTS.md': self.RULES})
         self.assertEqual(packet['omitted'], ['head:docs.md'])
 
+    def test_packet_as_sent_stays_within_the_limit_when_most_paths_are_omitted(self):
+        # Path names and omission entries are sent too; many small files used to push the packet past its limit.
+        self.g('checkout', '-q', '--detach', self.base)
+        for number in range(300):
+            (self.repo / f'note-{number:03}.md').write_text('"quoted"\n' * 20)
+        self.g('add', '.'); self.g('commit', '-qm', 'many notes'); base = self.g('rev-parse', 'HEAD').strip()
+        (self.repo / 'app.py').write_text('def first(rows):\n    return rows[0]\n')
+        self.g('add', 'app.py'); self.g('commit', '-qm', 'remove guard')
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, base)
+        limit = 20_000
+        packet = source.packet(self.repo, scope, limit, previous_head=base)
+        self.assertLessEqual(len(json.dumps(packet, ensure_ascii=False).encode()), limit + 200)
+        self.assertIn('head:app.py', packet['sources']); self.assertIn('base:app.py', packet['sources'])
+        self.assertIn('rows[0] if rows else None', packet['previous_review_delta'])  # outranks unchanged notes
+        self.assertTrue(any(name.startswith('head:note-') for name in packet['sources']))
+        self.assertTrue(any(name.startswith('head:note-') for name in packet['omitted']))
+
     def test_staged_and_unstaged_versions_are_both_delivered(self):
         self.crowd()
         staged, unstaged = 'def first(rows):\n    return rows[1]\n', 'def first(rows):\n    return rows[2]\n'
