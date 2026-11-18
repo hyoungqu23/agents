@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.4 - 2026-11-17
+
+- Bundle the artifact contract and the problem, PRD and flow templates inside problem-frame, prd-write and flow-spec, so installing only the `skills/` folder keeps every link working.
+
 ## 0.5.3
 
 - Move prd-gate evaluation inputs outside the installed plugin.

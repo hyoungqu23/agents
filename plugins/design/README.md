@@ -25,7 +25,9 @@ a file, or through its documented local HTTP preview. The note also records desi
 decisions, intentional changes and checks that still need to be run. Use it alongside
 the HTML when implementing or reviewing the screen.
 
-Install or copy the complete plugin, including its shared `references/` folder.
+Each skill carries its own copy of the shared references it reads, so installing only
+the `skills/` folder works. The plugin-level `references/` folder is the original; a
+test keeps the copies identical to it.
 For detailed behavior, see [design authority](references/design-authority.md),
 [opening and verification](references/prototype-verification.md), and the
 [promotion workflow](skills/prototype-promote/SKILL.md).

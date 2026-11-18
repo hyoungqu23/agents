@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 — 2026-11-17
+
+- Bundle the design authority and prototype verification references inside each skill that reads them, so installing only the `skills/` folder keeps every link working.
+
 ## 0.1.4 — 2026-10-12
 
 - Preserve supplied flow provenance, requirement links and open policy choices through prototype exploration and promotion.

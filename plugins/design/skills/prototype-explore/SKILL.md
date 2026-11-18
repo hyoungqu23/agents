@@ -5,13 +5,13 @@ description: Explore structurally different UI options in an interactive HTML pr
 
 # Prototype Explore
 
-Build a runnable comparison that answers a specific design question. Read [design authority](../../references/design-authority.md), resolve the target's design source, and establish the applicable flow before drawing variants.
+Build a runnable comparison that answers a specific design question. Read [design authority](references/design-authority.md), resolve the target's design source, and establish the applicable flow before drawing variants.
 
 ## Choose the shape
 
 State the question and the structural alternatives. Default to three variants and cap at five unless the user explicitly requests another number. Vary hierarchy, layout or the primary interaction, not just colors and copy. Respect a selected concept and established tokens while exploring alternatives within them.
 
-Use the existing screen's shell and content when they provide useful context. Default to a portable HTML working prototype that reproduces that context. Choose direct-file or HTTP-preview operation using [the opening-mode contract](../../references/prototype-verification.md#choose-an-opening-mode); portable does not automatically mean double-click compatible. If the user requests an in-app route, follow the app's conventions and keep experimentation out of its production build. Do not edit a production screen merely because it resembles the prototype.
+Use the existing screen's shell and content when they provide useful context. Default to a portable HTML working prototype that reproduces that context. Choose direct-file or HTTP-preview operation using [the opening-mode contract](references/prototype-verification.md#choose-an-opening-mode); portable does not automatically mean double-click compatible. If the user requests an in-app route, follow the app's conventions and keep experimentation out of its production build. Do not edit a production screen merely because it resembles the prototype.
 
 Use available real content or clearly labeled sample content. Do not invent user research, product claims or lorem ipsum. Keep state in memory and simulate mutations locally. The comparison must not submit forms, call live mutation endpoints, or change production data.
 
@@ -28,7 +28,7 @@ Keep styles and demonstration scripts readable enough to extract the selected de
 
 ## Verify and hand over
 
-Follow [prototype verification](../../references/prototype-verification.md). Fix observed failures within the prototype and record unrun checks honestly. Iterate with targeted edits when feedback arrives.
+Follow [prototype verification](references/prototype-verification.md). Fix observed failures within the prototype and record unrun checks honestly. Iterate with targeted edits when feedback arrives.
 
 Return the runnable path or URL, variant keys and structural differences, the question each option tests, and verification limits. Record the user's selected variant or explicit combination and their stated reason when supplied. A currently visible variant, a default URL, or silence is not a selection.
 

@@ -5,7 +5,7 @@ description: Create or update a project's DESIGN.md from existing design rules, 
 
 # Design Brief
 
-Make a concise design reference that another designer or coding agent can use without rediscovering the product's choices. Read [design authority](../../references/design-authority.md) before locating or editing the applicable source.
+Make a concise design reference that another designer or coding agent can use without rediscovering the product's choices. Read [design authority](references/design-authority.md) before locating or editing the applicable source.
 
 ## Establish the brief
 

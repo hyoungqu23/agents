@@ -5,13 +5,13 @@ description: Turn an explicitly selected HTML prototype or variant into a durabl
 
 # Prototype Promote
 
-Preserve the chosen design as a reference that a later implementation or review can use. This is a selection-and-extraction workflow, not a redesign. Read [design authority](../../references/design-authority.md) before changing files.
+Preserve the chosen design as a reference that a later implementation or review can use. This is a selection-and-extraction workflow, not a redesign. Read [design authority](references/design-authority.md) before changing files.
 
 ## 1. Resolve selection and target
 
 Identify the source HTML/route, selected variant or explicit combination, intended app/screen, and output location. Accept selection stated in the current request or an existing user decision record. If the source has several variants and no selection, ask which one to preserve before writing the reference. A single supplied mockup explicitly requested for promotion needs no extra confirmation.
 
-Read the whole source, relevant styles/scripts/assets, existing design source and decision notes. Record their paths and available revisions or content digests, plus the selection and date. Include the applicable design authority and transitive source dependencies in this provenance, not just the top-level HTML. Resolve design rules from the intended implementation target, not the prototype's temporary location. Choose direct-file or HTTP-preview operation using [the opening-mode contract](../../references/prototype-verification.md#choose-an-opening-mode) before extraction.
+Read the whole source, relevant styles/scripts/assets, existing design source and decision notes. Record their paths and available revisions or content digests, plus the selection and date. Include the applicable design authority and transitive source dependencies in this provenance, not just the top-level HTML. Resolve design rules from the intended implementation target, not the prototype's temporary location. Choose direct-file or HTTP-preview operation using [the opening-mode contract](references/prototype-verification.md#choose-an-opening-mode) before extraction.
 
 Inspect existing output before writing. Compare resolved source and destination paths; do not overwrite the exploration source by accident. Prefer the project's established reference location, otherwise `prototype/<screen>/index.html` plus `reference.md`. When this collides with the source, use a separate `<screen>-reference` folder. An explicit in-place edit request authorizes targeted edits, not deleting unrelated files.
 
@@ -45,7 +45,7 @@ Keep paths relative to the project or artifact where possible. Label proposals a
 
 ## 5. Verify and finish
 
-Follow [prototype verification](../../references/prototype-verification.md) from the final location. Fix known broken assets, layout or interactions before calling the artifact ready. If tools are unavailable, deliver the explicit verification limits and manual checks; never invent screenshots or passing tests.
+Follow [prototype verification](references/prototype-verification.md) from the final location. Fix known broken assets, layout or interactions before calling the artifact ready. If tools are unavailable, deliver the explicit verification limits and manual checks; never invent screenshots or passing tests.
 
 On a rerun, resolve the current design authority again and compare it, all relevant source dependencies, the selection/target, and the existing reference against the recorded provenance. Return existing artifacts unchanged only when those inputs and requested scope are unchanged; do not duplicate decisions or rewrite files just to refresh a date. Missing revision evidence requires inspecting the current inputs, not assuming a no-op. If anything changed, compare the source, reference, design rules and recorded differences; preserve hand edits. Update only what the new request authorizes and ask if a conflict would discard a meaningful choice. Record changed input revisions and intentional differences, then rerun affected checks.
 

@@ -9,8 +9,8 @@ Turn a stated problem into bounded user outcomes and observable acceptance crite
 The Korean label is **제품 요구사항 작성**. Writing a draft is not implementation
 approval, proof of demand, or an independent review.
 
-Read [artifact-contract.md](../../references/artifact-contract.md) and
-[prd-template.md](../../references/prd-template.md) when writing a document.
+Read [artifact-contract.md](references/artifact-contract.md) and
+[prd-template.md](references/prd-template.md) when writing a document.
 No external CLI, other installed skill, or extra data store is required.
 
 ## Inputs and modes

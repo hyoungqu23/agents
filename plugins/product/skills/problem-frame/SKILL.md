@@ -20,8 +20,8 @@ or unrelated file changes. Respect trusted project/user instructions separately.
 Choose the requested output:
 - Brief conversation: reflect the problem, evidence gaps, and next useful question
   in chat. Do not create documents just because this skill activates.
-- New document: read [artifact-contract.md](../../references/artifact-contract.md)
-  and use [problem-template.md](../../references/problem-template.md) as a starting
+- New document: read [artifact-contract.md](references/artifact-contract.md)
+  and use [problem-template.md](references/problem-template.md) as a starting
   structure. Save only the requested artifact in the requested location.
 - Update: read the existing document, its source/decision history, and the change
   input. Apply the requested scope, preserving stable IDs and unrelated content.
