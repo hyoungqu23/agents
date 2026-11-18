@@ -1,6 +1,8 @@
 """One JSON request in, one JSON response out. Owns the clock, lock and files."""
 
 import argparse
+import codecs
+import io
 import json
 import os
 import sys
@@ -15,6 +17,7 @@ from .contracts import (
 from .storage import Store
 
 UUID_CHARS = set("0123456789abcdef-")
+READ_CHUNK = 64 * 1024
 
 
 def utc_now():
@@ -298,21 +301,32 @@ class Engine:
             if not path.is_file():
                 fail("INVALID_REQUEST", f"{relative} is not a file under materials/")
             before = path.stat()
-            data = path.read_bytes()
+            # Read in chunks and stop at the limit: an oversized source is refused
+            # without holding the raw, decoded and normalized copies at once.
+            # IncrementalNewlineDecoder keeps a multi-byte character or a CRLF
+            # split across two chunks intact, so the result matches a whole-file pass.
+            decoder = io.IncrementalNewlineDecoder(codecs.getincrementaldecoder("utf-8")(), translate=True)
+            parts, size, read = [], 0, 0
+            with path.open("rb") as handle:
+                while True:
+                    chunk = handle.read(READ_CHUNK)
+                    read += len(chunk)
+                    piece = decoder.decode(chunk, final=not chunk).encode("utf-8")
+                    size += len(piece)
+                    if size > SOURCE_LIMIT:
+                        fail("INVALID_REQUEST", f"{relative} is larger than 5 MiB after normalization")
+                    parts.append(piece)
+                    if not chunk:
+                        break
             after = path.stat()
         except OSError as error:
             fail("INVALID_REQUEST", f"cannot read {relative}: {error}")
-        if (before.st_mtime_ns, before.st_size) != (after.st_mtime_ns, after.st_size) or len(data) != after.st_size:
-            fail("SOURCE_CHANGED", f"{relative} changed while it was read")
-        try:
-            text = data.decode("utf-8")
         except UnicodeDecodeError:
             fail("INVALID_REQUEST", f"{relative} is not UTF-8 text; convert it to Markdown or text first")
-        text = text.replace("\r\n", "\n").replace("\r", "\n")
-        encoded = text.encode("utf-8")
-        if len(encoded) > SOURCE_LIMIT:
-            fail("INVALID_REQUEST", f"{relative} is larger than 5 MiB after normalization")
-        lines = text.count("\n") + (0 if text == "" or text.endswith("\n") else 1)
+        if (before.st_mtime_ns, before.st_size) != (after.st_mtime_ns, after.st_size) or read != after.st_size:
+            fail("SOURCE_CHANGED", f"{relative} changed while it was read")
+        encoded = b"".join(parts)
+        lines = encoded.count(b"\n") + (0 if not encoded or encoded.endswith(b"\n") else 1)
         return {
             "relativePath": path.relative_to(self.store.root.resolve()).as_posix(),
             "bytes": encoded, "contentHash": sha256(encoded), "byteLength": len(encoded), "lineCount": lines,

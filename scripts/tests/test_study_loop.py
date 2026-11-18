@@ -655,6 +655,57 @@ class AcceptanceTests(Lab):
             "relativePath": f"materials/{name}", "title": "노트", "originKind": "local_file", "origin": name,
         })["entityIds"]["sourceId"]
 
+    def material(self, data, name="big.md"):
+        (self.root / "materials" / name).write_bytes(data)
+        return self.request("source.register", {
+            "relativePath": f"materials/{name}", "title": "노트", "originKind": "local_file", "origin": name,
+        })
+
+    def test_source_limit_applies_to_normalized_bytes_without_reading_past_it(self):
+        self.ready()
+        limit = cli.SOURCE_LIMIT
+        # CRLF halves under normalization: a raw file above the limit still fits exactly.
+        response = self.call(self.material(b"a\r\n" * (limit // 2)))
+        self.assertTrue(response["ok"], response.get("error"))
+        source_id = response["result"]["entityIds"]["sourceId"]
+        self.assertEqual((self.root / "sources" / f"{source_id}.txt").read_bytes(), b"a\n" * (limit // 2))
+        before = self.journal()
+        reads = []
+        opened = Path.open
+
+        def counting(path, *args, **kwargs):
+            handle = opened(path, *args, **kwargs)
+            if path.name == "huge.md":
+                read = handle.read
+                handle = mock.Mock(wraps=handle, read=lambda size=-1: reads.append(size) or read(size))
+                handle.__enter__ = lambda self: self
+                handle.__exit__ = lambda self, *exc: None
+            return handle
+
+        request = self.material(b"a" * (limit + 1) + b"b" * (4 * limit), "huge.md")
+        with mock.patch.object(Path, "open", counting):
+            response = self.call(request)
+        self.assertEqual(response["error"]["code"], "INVALID_REQUEST")
+        self.assertIn("5 MiB", response["error"]["message"])
+        self.assertEqual(self.journal(), before)
+        self.assertTrue(reads and all(0 < size <= cli.READ_CHUNK for size in reads), "whole-file read")
+        self.assertLessEqual(sum(reads), limit + 2 * cli.READ_CHUNK)
+
+    def test_chunk_boundaries_keep_the_whole_file_normalization(self):
+        self.ready()
+        text = "가\r\n나\r다\n" * 50 + "끝\r"
+        expected = text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
+        # Every chunk size from 1 splits some CRLF pair and some 3-byte character.
+        for chunk in (1, 2, 3, 7):
+            with self.subTest(chunk=chunk), mock.patch.object(cli, "READ_CHUNK", chunk):
+                response = self.call(self.material(text.encode("utf-8"), f"split{chunk}.md"))
+                self.assertTrue(response["ok"], response.get("error"))
+                source_id = response["result"]["entityIds"]["sourceId"]
+                self.assertEqual((self.root / "sources" / f"{source_id}.txt").read_bytes(), expected)
+        for data in (b"ok\n\xff\n", "가".encode("utf-8")[:2]):
+            with self.subTest(data=data):
+                self.assertEqual(self.call(self.material(data, "bad.md"))["error"]["code"], "INVALID_REQUEST")
+
     def test_changed_or_non_utf8_snapshot_cannot_support_a_new_citation(self):
         self.ready()
         source_id = self.register()
