@@ -123,6 +123,7 @@ class FakeGitHub:
     def pages(self, *_args, **_kwargs): return [copy.deepcopy(self.value['pr'])]
     def reviewed(self, *_): return [7] if any((r.get('user') or {}).get('login') == 'me' and r['state'] != 'PENDING' for r in self.value['reviews']) else []
     def snapshot(self, *_args): return copy.deepcopy(self.value)
+    def pr_state(self, *_args): return self.value['pr']['state']
 
     def api(self, endpoint, payload=None):
         if payload is None:
@@ -480,10 +481,24 @@ class AccountSwitchTests(GitFixture):
         gh = self.as_other(self.snapshot()); engine = Engine(resumed, self.state, github=gh); self.addCleanup(engine.store.close)
         engine.poll(); engine.poll()
         self.assertTrue(run.exists())  # still open for the previous account
-        gh.pages = lambda *_args, **_kwargs: []
+        gh.pages = lambda *_args, **_kwargs: []  # missing from the list alone (a page shifted) does not close it
+        engine.poll(); engine.poll()
+        self.assertTrue(run.exists())
+        self.assertEqual([(row['account'], row['state']) for row in engine.store.tracked()], [('me', 'open')])
+        gh.value['pr']['state'] = 'closed'
         engine.poll(); engine.poll()
         self.assertFalse(run.exists())
         self.assertEqual([(row['account'], row['state']) for row in engine.store.tracked()], [('me', 'closed')])
+
+    def test_login_spelled_in_another_case_is_the_same_account(self):
+        engine = Engine(self.cfg, self.state, github=FakeGitHub(self.snapshot()))
+        job = engine.enqueue_pr('example/app', 7); engine.store.update(job, 'local_ready', result={'by': 'me'}); engine.store.close()
+        renamed = {**self.cfg, 'login': 'Me'}
+        engine = Engine(renamed, self.state, github=FakeGitHub(self.snapshot())); self.addCleanup(engine.store.close)
+        engine.gh.login = lambda: 'Me'
+        engine.poll()
+        self.assertEqual([row[0] for row in engine.store.db.execute('SELECT id FROM watches')], ['github.com/example/app/7'])
+        self.assertEqual(engine.store.previous('github.com', 'example/app', 7, 'Me'), {'by': 'me'})
 
     def test_prune_reads_the_watch_of_the_account_that_owns_the_run(self):
         store = Store(self.state); self.addCleanup(store.close)

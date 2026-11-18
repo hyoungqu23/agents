@@ -124,6 +124,9 @@ class GitHub:
                            f'run: hm2-review-harness{state} setup --switch-account', 401)
         return login
 
+    def pr_state(self, repo, number):
+        return self.api(f'repos/{repo}/pulls/{number}').get('state')
+
     def snapshot(self, repo, number):
         endpoint = f'repos/{repo}/pulls/{number}'
         pr = self.api(endpoint)

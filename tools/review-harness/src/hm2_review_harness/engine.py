@@ -9,7 +9,7 @@ import hashlib
 
 from . import __version__, agent, delivery, source
 from .github import ApiError, GitHub, claims, fingerprint
-from .state import HarnessError, Store, digest, save_json, load_config
+from .state import HarnessError, Store, digest, save_json, load_config, same_account
 from .trusted import module
 from .policy import PolicyChanged, require_pending
 
@@ -46,8 +46,8 @@ class Engine:
         for repository in self.config['repositories']:
             repo = repository['name']
             pulls = self.gh.pages(f'repos/{repo}/pulls?state=open', cached=True)
-            enrolled = {row['pr'] for row in tracked if row.get('repo') == repo and row.get('state') == 'open' and row.get('account', login) == login}
-            self.store.retire(repo, {pr['number'] for pr in pulls}, login)
+            enrolled = {row['pr'] for row in tracked if row.get('repo') == repo and row.get('state') == 'open' and same_account(row.get('account', login), login)}
+            self.store.retire(repo, {pr['number'] for pr in pulls}, login, lambda number: self.gh.pr_state(repo, number) == 'open')
             selected = set(enrolled) | set(self.gh.reviewed(repo, login))
             for pr in pulls:
                 own = pr['user']['login'].lower() == login.lower()
@@ -162,7 +162,7 @@ class Engine:
                 or (event.get('worktree') and (not repository.get('path')
                     or Path(repository['path']).resolve() != Path(event['worktree']).resolve()))):
             self.store.update(key, 'superseded', error='Queued scope is no longer registered'); return key
-        if event.get('account') != self.config['login']:
+        if not same_account(event.get('account'), self.config['login']):
             self.store.update(key, 'auth_required', error='Queued work belongs to another account'); return key
         if self.store.storage_bytes() >= self.config.get('max_state_bytes', 2 * 1024 ** 3):
             self.store.update(key, 'storage_limited', error='Local state budget reached; prune old runs or raise the configured limit'); return key

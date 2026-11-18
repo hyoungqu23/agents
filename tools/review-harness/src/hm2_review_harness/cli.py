@@ -13,7 +13,7 @@ import time
 from . import __version__, agent, delivery
 from .engine import Engine
 from .github import ApiError, GitHub
-from .state import HarnessError, Store, defaults, device, home, instance_lock, load_config, read_json, save_json, validate_config
+from .state import HarnessError, Store, defaults, device, home, instance_lock, load_config, read_json, same_account, save_json, validate_config
 from .trusted import bundle_root
 
 
@@ -29,7 +29,7 @@ def setup(args, root):
     previous = config['login']
     # Only an explicit switch may replace the stored account; it starts from import's unauthorized, paused baseline.
     config['login'] = GitHub({**config, 'login': ''} if args.switch_account else config, root).login()
-    switched = bool(previous) and config['login'].lower() != previous.lower()
+    switched = bool(previous) and not same_account(config['login'], previous)
     if switched:
         config.update(pending_enabled=False, active_device=None, paused=True)
     repository = args.repo
@@ -230,7 +230,7 @@ def main(argv=None):
                 print(json.dumps(result)); return 0 if result['status'] == 'local_ready' else 2
             if row['status'] in ('collecting', 'snapshotting', 'reviewing', 'saving', 'write_unconfirmed'):
                 raise HarnessError('Inspect remote state and durable receipts before retrying an uncertain write')
-            if json.loads(row['event']).get('account', config['login']) != config['login']:
+            if not same_account(json.loads(row['event']).get('account', config['login']), config['login']):
                 raise HarnessError('Job belongs to another account; switch back to it to retry')
             store.update(row['id'], 'queued'); return 0
         finally:
