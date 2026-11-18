@@ -197,19 +197,11 @@ class Engine:
             remaining = self.config['max_packet_bytes'] - len(json.dumps(context, ensure_ascii=False).encode())
             if remaining < 1:
                 raise HarnessError('Review context exceeds packet budget; narrow scope or raise the configured limit')
-            packet = source.packet(checkout, scope, remaining, previous_head)
-            if not packet['sources'] and len(json.dumps(packet['repository_paths'], ensure_ascii=False).encode()) > remaining // 2:
-                # Path names are sent before any text; a model call that carries no source reviews nothing.
-                raise HarnessError('Repository path names leave no packet budget for source; raise the configured limit')
+            review_versions = [(c['review_ref'], c['path']) for c in event['claims']
+                               if c.get('review_ref') and c.get('path')]
+            packet = source.packet(checkout, scope, remaining, previous_head, review_versions,
+                                   review_file_limit=self.config['max_packet_bytes'] // 10)
             packet['context'] = context
-            for claim in event['claims']:
-                if claim.get('review_ref') and claim.get('path'):
-                    try:
-                        value = source.git(checkout, 'show', claim['review_ref'] + ':' + claim['path']).decode()
-                        if len(value.encode()) < self.config['max_packet_bytes'] // 10:
-                            packet['sources']['review:' + claim['review_ref'] + ':' + claim['path']] = value
-                    except (HarnessError, UnicodeError):
-                        pass
             request = {'schema_version': 1, 'mode': 'draft-only', 'scenario': job['scenario'],
                        'target': scope['target'], 'claims': event['claims']}
             save_json(run_dir / 'request.json', request); save_json(run_dir / 'scope.json', scope)

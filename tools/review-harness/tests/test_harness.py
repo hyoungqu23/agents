@@ -106,8 +106,9 @@ class SourceTests(GitFixture):
         hook.write_text('#!/bin/sh\ntouch ' + str(marker)); hook.chmod(0o755)
         gate = module('review-code', 'review_result.py')
         checkout, scope = source.local_checkout(self.cfg, self.repo, self.root / 'snapshot', gate)
-        packet = source.packet(checkout, scope, 1)
-        self.assertTrue(packet['omitted']); self.assertFalse(marker.exists())
+        with self.assertRaisesRegex(HarnessError, 'path names'):
+            source.packet(checkout, scope, 1)
+        self.assertFalse(marker.exists())
 
     RULES = 'Keep empty input behavior.\n'
 
@@ -158,6 +159,36 @@ class SourceTests(GitFixture):
         self.assertIn('rows[0] if rows else None', packet['previous_review_delta'])  # outranks unchanged notes
         self.assertTrue(any(name.startswith('head:note-') for name in packet['sources']))
         self.assertTrue(any(name.startswith('head:note-') for name in packet['omitted']))
+
+    def test_unavailable_or_oversized_history_does_not_mark_current_sources_partial(self):
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, working_tree=True)
+        expected = source.packet(self.repo, scope, 4096)
+        actual = source.packet(self.repo, scope, 4096, review_file_limit=1,
+                               review_versions=[('0' * 40, 'app.py'), (self.head, 'app.py')])
+        self.assertEqual(actual, expected)
+
+    def test_names_fit_but_no_source_fits(self):
+        for name in ('app.py', 'export.py'):
+            (self.repo / name).write_text('x' * 4096)
+        self.g('add', '.'); self.g('commit', '-qm', 'large sources')
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, working_tree=True)
+        with self.assertRaisesRegex(HarnessError, 'source'):
+            source.packet(self.repo, scope, 1024)
+        self.assertTrue(source.packet(self.repo, scope, 16384)['sources'])
+
+    def test_historical_sources_share_the_packet_budget(self):
+        names = [f'snapshot-{i}' for i in range(8)]
+        for name in names:
+            (self.repo / name).write_text('z' * 600)
+        self.g('add', '.'); self.g('commit', '-qm', 'historical text')
+        ref = self.g('rev-parse', 'HEAD').strip()
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, working_tree=True)
+        packet = source.packet(self.repo, scope, 3000, review_versions=[(ref, n) for n in names])
+        keys = {f'review:{ref}:{n}' for n in names}
+        self.assertTrue(keys.intersection(packet['sources']))
+        self.assertTrue(keys.intersection(packet['omitted']))
+        self.assertFalse(keys - packet['sources'].keys() - set(packet['omitted']))
+        self.assertLessEqual(len(json.dumps(packet, ensure_ascii=False).encode()), 3200)
 
     def test_delta_that_is_not_utf8_is_reported_instead_of_failing(self):
         self.g('checkout', '-q', '--detach', self.base); previous = self.g('rev-parse', 'HEAD').strip()
@@ -425,8 +456,8 @@ class EngineTests(GitFixture):
 
     def test_path_names_that_leave_no_room_for_source_stop_before_the_model(self):
         self.cfg['max_packet_bytes'] = 4096
-        for number in range(60):
-            (self.repo / f'{number:03}-a-long-file-name-that-crowds-out-the-source-text.md').write_text('note\n')
+        for number in range(220):
+            (self.repo / f'a{number:03}').write_text('note\n')
         self.g('add', '.'); self.g('commit', '-qm', 'many names')
         (self.repo / 'app.py').write_text('def first(rows):\n    return rows[0]\n')
         called = []

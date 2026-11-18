@@ -105,7 +105,7 @@ def local_checkout(config, original, root, gate):
     return Path(root), copied
 
 
-def packet(root, scope, max_bytes, previous_head=None):
+def packet(root, scope, max_bytes, previous_head=None, review_versions=(), review_file_limit=None):
     """Send text only. Omitted/binary source is an explicit review limitation."""
     def tree_names(revision):
         raw = git(root, 'ls-tree', '-r', '--name-only', '-z', scope['target'][revision + '_sha'])
@@ -138,6 +138,10 @@ def packet(root, scope, max_bytes, previous_head=None):
     # (a sources key, a same_as key or an omitted entry) are spent before any text.
     sources, same_as, omitted = {}, {}, []
     used = cost(paths) + sum(cost(revision + ':' + name) for revision, name in [*first, *context])
+
+    review_versions = dict.fromkeys(review_versions)
+    if used >= max_bytes:
+        raise HarnessError('Repository path names leave no packet budget for source; raise the configured limit')
 
     def visit(revision, name):
         nonlocal used
@@ -180,8 +184,37 @@ def packet(root, scope, max_bytes, previous_head=None):
             omitted.append('previous-review objects unavailable; full current PR scope is supplied')
         except UnicodeError:
             omitted.append('previous-review delta is not UTF-8 text; full current PR scope is supplied')
+    # Reserve labels only for readable history within the per-file limit.
+    # Keep at most one packet of candidate text in memory across the two passes.
+    history = {}
+    cached = {}
+    cached_bytes = 0
+    for ref, name in review_versions:
+        key = f'review:{ref}:{name}'
+        try:
+            text = git(root, 'cat-file', 'blob', f'{ref}:{name}').decode()
+        except (HarnessError, UnicodeError):
+            continue
+        if '\x00' in text or (review_file_limit is not None and len(text.encode()) >= review_file_limit):
+            continue
+        size = cost(text)
+        used += cost(key)
+        if used > max_bytes:
+            raise HarnessError('Review path names exceed the packet budget; raise the configured limit')
+        history[key] = (ref, name, size)
+        if cached_bytes + size <= max_bytes:
+            cached[key] = text
+            cached_bytes += size
+    for key, (ref, name, size) in history.items():
+        if used + size > max_bytes:
+            omitted.append(key)
+            continue
+        sources[key] = cached[key] if key in cached else git(root, 'cat-file', 'blob', f'{ref}:{name}').decode()
+        used += size
     for revision, name in context:
         visit(revision, name)
+    if not sources:
+        raise HarnessError('No source text fits in the review packet; check the scope or raise the configured limit')
     rules = {'base:' + name: sources[same_as.get('base:' + name, 'base:' + name)] for name in base_rules
              if same_as.get('base:' + name, 'base:' + name) in sources}
     return {'sources': sources, 'same_as': same_as, 'repository_paths': paths, 'trusted_base_rules': rules,
