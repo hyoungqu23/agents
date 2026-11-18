@@ -499,6 +499,10 @@ class AccountSwitchTests(GitFixture):
         engine.poll()
         self.assertEqual([row[0] for row in engine.store.db.execute('SELECT id FROM watches')], ['github.com/example/app/7'])
         self.assertEqual(engine.store.previous('github.com', 'example/app', 7, 'Me'), {'by': 'me'})
+        allowed = {**renamed, 'pending_enabled': True, 'paused': False, 'active_device': device(self.state)}
+        save_json(self.state / 'config.json', allowed)
+        # The write boundary accepts work queued under the earlier spelling too.
+        require_pending(allowed, self.state, {'hostname': 'github.com', 'repo': 'example/app', 'account': 'me'})
 
     def test_prune_reads_the_watch_of_the_account_that_owns_the_run(self):
         store = Store(self.state); self.addCleanup(store.close)

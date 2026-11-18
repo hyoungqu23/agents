@@ -1,7 +1,7 @@
 """Read current local authorization at each remote-write boundary."""
 from pathlib import Path
 
-from .state import HarnessError, device, load_config
+from .state import HarnessError, device, load_config, same_account
 
 
 class PolicyChanged(HarnessError):
@@ -16,7 +16,7 @@ def require_pending(config, root, event):
     identity = ('hostname', 'login', 'gh_path', 'git_path')
     if (any(current[key] != config[key] for key in identity)
             or event['hostname'] != current['hostname']
-            or event.get('account', current['login']) != current['login']
+            or not same_account(event.get('account', current['login']), current['login'])
             or event['repo'] not in [row['name'] for row in current['repositories']]
             or current['paused'] or not current['pending_enabled']
             or current['active_device'] != device(root)):
