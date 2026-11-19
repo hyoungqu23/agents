@@ -1,7 +1,7 @@
 {
   "name": "learn",
   "displayName": "Learn",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Learn through questions in conversation or continue structured study with a local learning record.",
   "author": {
     "name": "HM2"
