@@ -577,7 +577,10 @@ def main():
                 try:
                     queued = subprocess.run([executable, 'notify-implementation', '--worktree', str(root),
                                              '--assessment', str(args.output.resolve()), '--inputs',
-                                             snapshot(args.verification_target)['inputs']['path']], capture_output=True, text=True, timeout=30)
+                                             snapshot(args.verification_target)['inputs']['path'],
+                                             # The harness refuses inputs or sources that differ from this check.
+                                             '--verified', str(args.verification_target.resolve())],
+                                            capture_output=True, text=True, timeout=30)
                     notification = {'status': 'queued' if queued.returncode == 0 else 'not_queued',
                                     'detail': queued.stdout.strip() if queued.returncode == 0 else queued.stderr.strip()}
                 except (OSError, subprocess.SubprocessError) as error:
