@@ -75,6 +75,8 @@ with a complete trusted assessment, but this fallback is not automatic S1 integr
 inputs folder or a `source_roots` entry of that file, with no symlink below that root.
 `--verified SNAPSHOT` (passed by `implement`) names the verification snapshot of the completion
 check: an inputs file or source whose path or hash differs from it is refused, not queued.
+Build plugin 0.4.4+ always passes `--verified`; a harness installed before this flag existed rejects the
+call and queues nothing, so update the harness together with the plugin.
 
 P1/P2/P3/P999/질문 are the only generated prefixes. P999 is optional style/taste;
 questions have no severity. Existing findings retain their IDs and original priority

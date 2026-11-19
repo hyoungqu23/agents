@@ -101,6 +101,23 @@ class ImplementationStateTests(unittest.TestCase):
                        cwd=self.repo, env=self.env, check=True, capture_output=True)
         self.assertEqual(json.loads(output.read_text())['status'], 'complete')
 
+    def test_notify_review_hands_the_verification_snapshot_to_the_harness(self):
+        # A stand-in executable records what the installed harness would receive.
+        tools = self.root / 'bin'; tools.mkdir(); seen = self.state / 'harness-argv.json'
+        stub = tools / 'hm2-review-harness'
+        stub.write_text(f'#!{sys.executable}\nimport json, sys\njson.dump(sys.argv[1:], open({str(seen)!r}, "w"))\nprint("job-1")\n')
+        stub.chmod(0o755)
+        self.write(self.result_path, self.report)
+        output = self.state / 'assessment.json'
+        subprocess.run([sys.executable, '-B', SCRIPT, 'assess', '--worktree', self.repo, '--target', self.baseline_path,
+                        '--verification-target', self.verified_path, '--result', self.result_path, '--output', output,
+                        '--notify-review'], cwd=self.repo, check=True, capture_output=True,
+                       env={**self.env, 'PATH': str(tools) + os.pathsep + self.env['PATH']})
+        self.assertEqual(json.loads(seen.read_text()), [
+            'notify-implementation', '--worktree', str(self.repo), '--assessment', str(output),
+            '--inputs', str(self.inputs_path), '--verified', str(self.verified_path)])
+        self.assertEqual(json.loads(output.with_suffix('.review-queue.json').read_text()), {'status': 'queued', 'detail': 'job-1'})
+
     def test_current_source_drift_invalidates_verification(self):
         (self.repo / 'src/app.js').write_text('export const name = "after checks";\n')
         self.assertEqual(self.assess()['status'], 'invalid')

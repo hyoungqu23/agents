@@ -1,6 +1,7 @@
 """Real Git/SQLite integration with model/API doubles; no model calls or GitHub writes."""
 import copy
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -612,6 +613,29 @@ class EngineTests(GitFixture):
         engine.notify_implementation(self.repo, {'status': 'complete'}, inputs, verified)
         source = json.loads(engine.store.next()['event'])['implementation_context']['sources'][0]
         self.assertEqual((source['text'], source['sha256']), (document.read_text(), verified['sources']['spec']['sha256']))
+
+    def test_snapshot_written_by_the_implement_checker_is_accepted_until_a_source_changes(self):
+        script = Path(__file__).resolve().parents[3] / 'plugins/build/skills/implement/scripts/implementation_state.py'
+        if not script.is_file():
+            self.skipTest('The implement checker ships with the repository, not with the harness package')
+        spec = importlib.util.spec_from_file_location('implementation_state', script)
+        checker = importlib.util.module_from_spec(spec); spec.loader.exec_module(checker)
+        bundle = self.root / 'bundle'; bundle.mkdir(); document = bundle / 'spec.md'; document.write_text('first([]) returns None.\n')
+        (self.repo / 'notes.md').write_text('Keep the guard.\n')
+        inputs = bundle / 'inputs.json'
+        save_json(inputs, {'schema_version': 1, 'task': 'Guard', 'surface': 'code', 'scope': ['.'],
+                           'sources': [{'id': 'spec', 'path': str(document)}, {'id': 'notes', 'path': 'notes.md'}],
+                           'requirements': [{'id': 'AC1', 'source': 'spec', 'description': 'Empty input returns None',
+                                             'disposition': 'required', 'checks': ['read']}],
+                           'checks': [{'id': 'read', 'kind': 'static', 'required': True, 'description': 'Guard is present'}]})
+        verified = checker.capture(self.repo, inputs)
+        engine = Engine(self.cfg, self.root / 'state', reviewer=self.reviewer); self.addCleanup(engine.store.close)
+        engine.notify_implementation(self.repo, {'status': 'complete'}, verified['inputs']['path'], verified)
+        sources = json.loads(engine.store.next()['event'])['implementation_context']['sources']
+        self.assertEqual({row['id']: row['sha256'] for row in sources}, {key: row['sha256'] for key, row in verified['sources'].items()})
+        document.write_text('first([]) raises.\n')
+        with self.assertRaisesRegex(HarnessError, 'changed since completion was verified'):
+            engine.notify_implementation(self.repo, {'status': 'complete'}, verified['inputs']['path'], verified)
 
     def test_inputs_or_sources_changed_after_verification_are_not_queued(self):
         engine, inputs, document, verified = self.handoff()
