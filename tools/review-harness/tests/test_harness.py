@@ -150,6 +150,41 @@ class SourceTests(GitFixture):
         self.assertEqual(packet['trusted_base_rules'], {'base:AGENTS.md': self.RULES})
         self.assertEqual(packet['omitted'], ['head:docs.md'])
 
+    def test_file_too_large_for_the_budget_is_omitted_without_being_read(self):
+        self.g('checkout', '-q', '--detach', self.base)
+        (self.repo / 'generated.txt').write_text('x' * 300_000); (self.repo / 'data.txt').write_text('y' * 200_000)
+        self.g('add', '.'); self.g('commit', '-qm', 'large files')
+        (self.repo / 'app.py').write_text('def first(rows):\n    return rows[0]\n')
+        (self.repo / 'data.txt').write_text('z' * 250_000)  # a changed file that cannot fit either
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, working_tree=True)
+        blobs, opened = [], []
+        real_git, real_open = source.git, Path.open
+        def git(root, *args, **kwargs):
+            if args[:2] == ('cat-file', 'blob'): blobs.append(args[2].split(':', 1)[1])
+            return real_git(root, *args, **kwargs)
+        def spy(path, *args, **kwargs):
+            opened.append(path.name); return real_open(path, *args, **kwargs)
+        with patch.object(source, 'git', git), patch.object(Path, 'open', spy):
+            packet = source.packet(self.repo, scope, 8192)
+        self.assertNotIn('generated.txt', blobs); self.assertNotIn('data.txt', blobs); self.assertNotIn('data.txt', opened)
+        self.assertIn('app.py', opened)
+        self.assertEqual(packet['sources']['working:app.py'], 'def first(rows):\n    return rows[0]\n')
+        self.assertLessEqual({'head:generated.txt', 'working:data.txt', 'head:data.txt', 'index:data.txt', 'base:data.txt'}, set(packet['omitted']))
+
+    def test_large_review_version_is_omitted_without_being_read(self):
+        self.g('checkout', '-q', '--detach', self.base)
+        (self.repo / 'generated.txt').write_text('x' * 300_000); self.g('add', '.'); self.g('commit', '-qm', 'large'); old = self.g('rev-parse', 'HEAD').strip()
+        (self.repo / 'app.py').write_text('def first(rows):\n    return rows[0]\n'); self.g('add', '.'); self.g('commit', '-qm', 'change')
+        scope = module('review-code', 'review_result.py').capture_scope(self.repo, old)
+        blobs = []; real_git = source.git
+        def git(root, *args, **kwargs):
+            if args[:2] == ('cat-file', 'blob'): blobs.append(args[2])
+            return real_git(root, *args, **kwargs)
+        with patch.object(source, 'git', git):
+            packet = source.packet(self.repo, scope, 8192, review_versions=[(old, 'generated.txt'), (old, 'app.py')])
+        self.assertNotIn(f'{old}:generated.txt', blobs)
+        self.assertIn(f'review:{old}:generated.txt', packet['omitted']); self.assertIn(f'review:{old}:app.py', packet['sources'])
+
     def test_packet_as_sent_stays_within_the_limit_when_most_paths_are_omitted(self):
         # Path names and omission entries are sent too; many small files used to push the packet past its limit.
         self.g('checkout', '-q', '--detach', self.base)

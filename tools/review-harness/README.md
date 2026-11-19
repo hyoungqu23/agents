@@ -107,7 +107,8 @@ base), then to the base `AGENTS.md`/`CLAUDE.md`, then to the delta since the pre
 and only then to unchanged files, which are sent once as `head:` (Git reports no change in
 their index and working copies; a checkout conversion such as `eol=crlf` is not sent separately). A changed file's revision, or a base rule file, whose
 text equals an already included revision of the same path is listed in `same_as` instead
-of being sent again, so `same_as` grows with the change, not with the repository. Omitted/binary paths
+of being sent again, so `same_as` grows with the change, not with the repository. A file whose size alone rules it out is omitted without being read (blob sizes come from one
+`git cat-file --batch-check` call); working files are read up to the packet limit. Omitted/binary paths
 and inaccessible contracts remain partial. Reviewers receive immutable source as data with command,
 connector/plugin and network tools disabled. They do not execute tests or target
 scripts. Static quote/coverage checks cannot certify the model's reasoning.

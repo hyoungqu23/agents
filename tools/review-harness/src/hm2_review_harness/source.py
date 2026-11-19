@@ -105,6 +105,15 @@ def local_checkout(config, original, root, gate):
     return Path(root), copied
 
 
+def blob_sizes(root, refs):
+    """Byte size of each blob, asked in one call and without reading any of them. Unknown refs are left out."""
+    listed = [ref for ref in dict.fromkeys(refs) if '\n' not in ref]
+    if not listed:
+        return {}
+    lines = git(root, 'cat-file', '--batch-check=%(objectsize)', data=('\n'.join(listed) + '\n').encode()).decode(errors='replace').split('\n')
+    return {ref: int(line) for ref, line in zip(listed, lines) if line.isdigit()}
+
+
 def packet(root, scope, max_bytes, previous_head=None, review_versions=(), review_file_limit=None):
     """Send text only. Omitted/binary source is an explicit review limitation."""
     def tree_names(revision):
@@ -143,6 +152,13 @@ def packet(root, scope, max_bytes, previous_head=None, review_versions=(), revie
     if used >= max_bytes:
         raise HarnessError('Repository path names leave no packet budget for source; raise the configured limit')
 
+    def blob(revision, name):
+        return ':' + name if revision == 'index' else scope['target'][revision + '_sha'] + ':' + name
+
+    # Sizes decide most omissions, so a file that cannot fit is never read into memory.
+    sizes = blob_sizes(root, [*(blob(revision, name) for revision, name in [*first, *context] if revision != 'working'),
+                              *(f'{ref}:{name}' for ref, name in review_versions)])
+
     def visit(revision, name):
         nonlocal used
         key = revision + ':' + name
@@ -151,10 +167,23 @@ def packet(root, scope, max_bytes, previous_head=None, review_versions=(), revie
                 path = safe_path(root, name)
                 if path.is_symlink() or not path.is_file():
                     return
-                raw = path.read_bytes()
+                size = path.stat().st_size
             else:
-                ref = ':' + name if revision == 'index' else scope['target'][revision + '_sha'] + ':' + name
-                raw = git(root, 'cat-file', 'blob', ref)
+                size = sizes.get(blob(revision, name))
+            # Sent text costs at least its bytes plus quotes. Only a copy of an included revision of the
+            # same path is cheaper, and that copy has the same size as text already held.
+            if (size is not None and used + size + 2 > max_bytes
+                    and not any(len(sources.get(other + ':' + name, '').encode()) == size for other in revisions)):
+                omitted.append(key)
+                return
+            if revision == 'working':
+                with path.open('rb') as stream:
+                    raw = stream.read(max_bytes + 1)
+                if len(raw) > max_bytes:  # grew after the size was taken
+                    omitted.append(key)
+                    return
+            else:
+                raw = git(root, 'cat-file', 'blob', blob(revision, name))
             text = raw.decode('utf-8')
             # A trusted base rule is sent a second time under trusted_base_rules.
             rule = cost(key) + cost(text) if revision == 'base' and name in base_rules else 0
@@ -191,6 +220,15 @@ def packet(root, scope, max_bytes, previous_head=None, review_versions=(), revie
     cached_bytes = 0
     for ref, name in review_versions:
         key = f'review:{ref}:{name}'
+        size = sizes.get(f'{ref}:{name}')
+        if size is not None and review_file_limit is not None and size >= review_file_limit:
+            continue
+        if size is not None and size + 2 > max_bytes:
+            used += cost(key)
+            if used > max_bytes:
+                raise HarnessError('Review path names exceed the packet budget; raise the configured limit')
+            omitted.append(key)
+            continue
         try:
             text = git(root, 'cat-file', 'blob', f'{ref}:{name}').decode()
         except (HarnessError, UnicodeError):
