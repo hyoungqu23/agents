@@ -1,0 +1,17 @@
+{
+  "name": "hstack",
+  "displayName": "Hstack",
+  "version": "0.1.0",
+  "description": "pstack engineering workflows and principles for Claude Code, imported from cursor/plugins with their source text intact.",
+  "author": {
+    "name": "HM2"
+  },
+  "license": "MIT",
+  "keywords": [
+    "workflow",
+    "principles",
+    "orchestration",
+    "pstack"
+  ],
+  "skills": "./skills/"
+}

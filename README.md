@@ -16,6 +16,7 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 | [`product`](plugins/product) | `problem-frame`, `prd-write`, `prd-gate`, `flow-spec`, `spec` | Problem framing, traceable requirements, readiness review, user flows and frontend implementation specifications. |
 | [`build`](plugins/build) | `implement`, `fix`, `dogfood` | Implement features, apply scoped corrections and dogfood real app journeys with current-source evidence. |
 | [`learn`](plugins/learn) | `think-through`, `study-loop` | Learn through questions in conversation, or continue structured study with a local learning record. Only `study-loop` needs Python 3.10+. |
+| [`hstack`](plugins/hstack) | 54 skills, listed in the [pstack README](plugins/hstack/UPSTREAM-README.md) | pstack workflows and principles imported from `cursor/plugins` with their source text intact. Claude Code only. |
 
 ## Repository layout
 

@@ -1,0 +1,2879 @@
+{
+  "repository": "https://github.com/cursor/plugins",
+  "commit": "aaeb0ea3a0584995aa8f55ce44c6c5259414b896",
+  "version": "0.15.46",
+  "upstream_root": "harness/pstack/claude-code",
+  "skip": [
+    ".claude-plugin/",
+    "plugin.json",
+    "docs/guide/images/",
+    "skills/make-bot-ui/",
+    "skills/statechart/",
+    "skills/create-formal-verification-skill/",
+    "skills/maintain-formal-verification-skill/"
+  ],
+  "relocate": {
+    "agents/": "upstream-agents/",
+    "README.md": "UPSTREAM-README.md"
+  },
+  "inject": {
+    "after": "In Claude Code, read [the Claude Code adapter](../../docs/harness/claude-code.md) once per session before you follow this skill. It maps the Cursor names in pstack skills to Claude Code.",
+    "line": "Then read [the Orca adapter](../../docs/harness/orca.md) once per session before you follow this skill. It overrides the Claude Code adapter where the two disagree."
+  },
+  "external_skills": [
+    "create-skill"
+  ],
+  "files": [
+    {
+      "upstream": "harness/pstack/claude-code/.claude-plugin/plugin.json",
+      "status": "skipped",
+      "upstream_blob": "fce40ca89885495288a48db1531061f65a21d240"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/LICENSE",
+      "status": "verbatim",
+      "upstream_blob": "6b5400237fdf6545be0b8fae370d6f2fcff8fb25",
+      "path": "LICENSE"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/README.md",
+      "status": "verbatim",
+      "upstream_blob": "d505dc809601e942cc093d48de0be1c9a828c020",
+      "path": "UPSTREAM-README.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/agents/comment-sicko.md",
+      "status": "verbatim",
+      "upstream_blob": "14c2402f3d8c81b39d75747d6eb892f343e6a903",
+      "path": "upstream-agents/comment-sicko.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/agents/poteto-agent.md",
+      "status": "verbatim",
+      "upstream_blob": "801b01c36067cdfb8bed8bc256bf9307fd7e22b1",
+      "path": "upstream-agents/poteto-agent.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/01-setup.md",
+      "status": "verbatim",
+      "upstream_blob": "c5813550d4e8fa8a844a9dd557307c8f7c0e2891",
+      "path": "docs/guide/01-setup.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/02-poteto-mode.md",
+      "status": "verbatim",
+      "upstream_blob": "5b78906907a6cf73c876b0eb2ecd9f0b3a7ffe33",
+      "path": "docs/guide/02-poteto-mode.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/03-understand.md",
+      "status": "verbatim",
+      "upstream_blob": "ee23324b363908fce4c0cbbf6253a11773e6e42b",
+      "path": "docs/guide/03-understand.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/04-design.md",
+      "status": "verbatim",
+      "upstream_blob": "4c5ebc27ca7f6f9b481a9027a9e99b720b8aa999",
+      "path": "docs/guide/04-design.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/05-build-and-clean.md",
+      "status": "verbatim",
+      "upstream_blob": "ce191d1150b567e96d5487de5af8b4132780b171",
+      "path": "docs/guide/05-build-and-clean.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/06-verify-and-ship.md",
+      "status": "verbatim",
+      "upstream_blob": "8ee5ca6c5b0043244a9f1795d09fb071d5f91908",
+      "path": "docs/guide/06-verify-and-ship.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/07-overnight.md",
+      "status": "verbatim",
+      "upstream_blob": "d052fb04432ad3e0731dd036cabf2e5f060d278a",
+      "path": "docs/guide/07-overnight.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/08-principles.md",
+      "status": "verbatim",
+      "upstream_blob": "d2921500bb44643ac3f841fa03e19e0b3a240c8b",
+      "path": "docs/guide/08-principles.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/09-make-it-yours.md",
+      "status": "verbatim",
+      "upstream_blob": "92ed39b6ebf9637e70052de035330a890c0d729a",
+      "path": "docs/guide/09-make-it-yours.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/10-recipes-and-pitfalls.md",
+      "status": "verbatim",
+      "upstream_blob": "3f339a80a99eac2b618f8deb30c3edfa8919432c",
+      "path": "docs/guide/10-recipes-and-pitfalls.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/README.md",
+      "status": "verbatim",
+      "upstream_blob": "17422b9921f1179b2a2b7137805267225ab271c2",
+      "path": "docs/guide/README.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/images/design.jpg",
+      "status": "skipped",
+      "upstream_blob": "f86909437f8b5a83da3cba7bc35a018c9d4887c8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/images/overnight.jpg",
+      "status": "skipped",
+      "upstream_blob": "d64e1c63066c9f088da909160f5e136049e9a512"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/images/recipes.jpg",
+      "status": "skipped",
+      "upstream_blob": "69fe992fdb9fb8e7baacc144ea140f9c93b262fb"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/images/router.jpg",
+      "status": "skipped",
+      "upstream_blob": "c8fba6a266505caf406d5185d7a4cc6e34be98a4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/images/understanding.jpg",
+      "status": "skipped",
+      "upstream_blob": "bb1b1ac15dd11da9ad047d203049a1a24abb2b46"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/guide/images/verification.jpg",
+      "status": "skipped",
+      "upstream_blob": "a252ae0b5e14cb6fcef2e3b806bbd66316242446"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/docs/harness/claude-code.md",
+      "status": "verbatim",
+      "upstream_blob": "2a59bc80edf61649b22e05cfd07a25bc7f997994",
+      "path": "docs/harness/claude-code.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/plugin.json",
+      "status": "skipped",
+      "upstream_blob": "fce40ca89885495288a48db1531061f65a21d240"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/architect/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "338d2fc8af352cbbfb00433df5d177c7871db04a",
+      "path": "skills/architect/SKILL.md",
+      "applied_blob": "a8223197f91d267277a281743cc8c4201830141f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/arena/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "17d19f7e529601b9b8bef6e53f0cda3dd01c7c33",
+      "path": "skills/arena/SKILL.md",
+      "applied_blob": "fd6f97ca6b6bc4f3f40d8576276a056195cdb99a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/automate-me/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "6ec2bc9e0fb50759b18a3827709aa462b9e5b37c",
+      "path": "skills/automate-me/SKILL.md",
+      "applied_blob": "97a8f235b236c6b6184c5651be07b578ce07fb22"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/benchmark-checklist/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "88546fa684c003625a13d61b975ced97b8fcb90e",
+      "path": "skills/benchmark-checklist/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/blast-radius/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "1f5c95140597b8aa42fadf165e1aa0bca01639ff",
+      "path": "skills/blast-radius/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/bro/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "b1701b778639c08bfc306291d70170c525c66a68",
+      "path": "skills/bro/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/correct/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "c45e06f48a0982ae19f92c6e83a8cd05988097a3",
+      "path": "skills/correct/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/create-formal-verification-skill/SKILL.md",
+      "status": "skipped",
+      "upstream_blob": "fbee46392b849f790085c0f2cf3924278a0477bc"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/create-verification-skill/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "553e53efb3fdbe813e9b39c8c5fe29a3a681b69a",
+      "path": "skills/create-verification-skill/SKILL.md",
+      "applied_blob": "dc46c6d8cb9f98ba15b13825899f35001d67e6d1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/create-verification-skill/references/feature-map-example/README.md",
+      "status": "verbatim",
+      "upstream_blob": "fb64570cfab3bbe672fe80925651933ebd57aa33",
+      "path": "skills/create-verification-skill/references/feature-map-example/README.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/create-verification-skill/references/feature-map-example/create-note.md",
+      "status": "verbatim",
+      "upstream_blob": "21357566b69223a503d6780a04fb90ce540eae22",
+      "path": "skills/create-verification-skill/references/feature-map-example/create-note.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/create-verification-skill/references/feature-map-example/search.md",
+      "status": "verbatim",
+      "upstream_blob": "1f8e57d3aaf19cf27a9464d55fa72e46bcbc8b0f",
+      "path": "skills/create-verification-skill/references/feature-map-example/search.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/figure-it-out/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "a18126c630cfcf2be94a0002bcfb16532d103e91",
+      "path": "skills/figure-it-out/SKILL.md",
+      "applied_blob": "5379dfeb3f1681226e5abdb03321d209a65127d9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/how/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "d7458ef5d6ad940dba66c3a63900d9f88cca9696",
+      "path": "skills/how/SKILL.md",
+      "applied_blob": "0367c21f5311f7057bc291134f6c8879acd40005"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/in-your-own-words/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "4b2a476a9017863032c8dba9d12f0a2026943292",
+      "path": "skills/in-your-own-words/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/interrogate/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "3e70013b0a2374561b5f51c1d175a8f0bace7a04",
+      "path": "skills/interrogate/SKILL.md",
+      "applied_blob": "84d79f6591676030c5adf438a05ce3ed6b9f2bb4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/ketchup-video/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "c0c614288dea9f413a418064d7e7d37791dd9e5e",
+      "path": "skills/ketchup-video/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/ketchup/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "9eef27f92f8029137a7bfa7378305b075df9dc4f",
+      "path": "skills/ketchup/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/maintain-formal-verification-skill/SKILL.md",
+      "status": "skipped",
+      "upstream_blob": "d56ef9ce9951b118f59db13e0baa0d33083e02b8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/maintain-verification-skill/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "efc2ffcf9000e14e4d1d5f92477e95fe72b499e5",
+      "path": "skills/maintain-verification-skill/SKILL.md",
+      "applied_blob": "ac637e12e81e977a5a18e33ebfcc82a3dd61633c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/make-bot-ui/SKILL.md",
+      "status": "skipped",
+      "upstream_blob": "7f05b0504297fd22dba9cd9f79edc352ed79987e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/no-comments/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "25196e15a14ae3c83264eeec5bdb153b7a89829b",
+      "path": "skills/no-comments/SKILL.md",
+      "applied_blob": "f969f35115f65df49813100e8bfd04e12a813ec3"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-help/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "180cd0868aea39150a5d317a222496e84a5484c8",
+      "path": "skills/poteto-help/SKILL.md",
+      "applied_blob": "865822cf83d58befb127dede30563c38b02aab65"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-help/references/prompting.md",
+      "status": "verbatim",
+      "upstream_blob": "6b72b2e6081fdb78a3261bd77cf7334596d1ee20",
+      "path": "skills/poteto-help/references/prompting.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-help/references/recipes.md",
+      "status": "verbatim",
+      "upstream_blob": "cc7a4e6828f5bfc3bcbf5954876358074718f45c",
+      "path": "skills/poteto-help/references/recipes.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "94e889568a91ef0c1bef9ea36c4b1e8fc0250b14",
+      "path": "skills/poteto-mode/SKILL.md",
+      "applied_blob": "8086220ea3e24bd9893c7c7b7996f0e017a70807"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/authoring-a-skill.md",
+      "status": "verbatim",
+      "upstream_blob": "8c5a55a44f5e95bba92f652da0ac87e941c49538",
+      "path": "skills/poteto-mode/playbooks/authoring-a-skill.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/autonomous-run.md",
+      "status": "verbatim",
+      "upstream_blob": "853f9ecad2531610c4df1d8caf3621cb29240d6d",
+      "path": "skills/poteto-mode/playbooks/autonomous-run.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/autopilot-full.md",
+      "status": "verbatim",
+      "upstream_blob": "be91d5ac4108da00f1a9626d7af9892b2a2361eb",
+      "path": "skills/poteto-mode/playbooks/autopilot-full.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/autopilot-stack.md",
+      "status": "verbatim",
+      "upstream_blob": "2cca41205ce59089b2a61f9691e0f46c572a0e04",
+      "path": "skills/poteto-mode/playbooks/autopilot-stack.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/babysit.md",
+      "status": "verbatim",
+      "upstream_blob": "0685ac21d6a88edbc77d53dd2e5576ea2e3e6f8a",
+      "path": "skills/poteto-mode/playbooks/babysit.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/bug-fix.md",
+      "status": "verbatim",
+      "upstream_blob": "0e9e734ed6e940a7ac512befb73f03bb7e6a150c",
+      "path": "skills/poteto-mode/playbooks/bug-fix.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/eval.md",
+      "status": "verbatim",
+      "upstream_blob": "5e5762500dec34b63219c9002161215fb45ec438",
+      "path": "skills/poteto-mode/playbooks/eval.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/feature.md",
+      "status": "verbatim",
+      "upstream_blob": "27d76a56eb074ed1d8910b289b318d1aa0b80c0a",
+      "path": "skills/poteto-mode/playbooks/feature.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/hillclimb.md",
+      "status": "verbatim",
+      "upstream_blob": "dbcff8f923eab39976bb2e34b89b328d4385e825",
+      "path": "skills/poteto-mode/playbooks/hillclimb.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/investigation.md",
+      "status": "verbatim",
+      "upstream_blob": "854d56f69388e24d0d9262cb6b545e1484873ca1",
+      "path": "skills/poteto-mode/playbooks/investigation.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/multi-phase-plan.md",
+      "status": "verbatim",
+      "upstream_blob": "8ddcfc7aec9ab5fc5962b1037d58880e09ca7307",
+      "path": "skills/poteto-mode/playbooks/multi-phase-plan.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/opening-a-pr.md",
+      "status": "verbatim",
+      "upstream_blob": "e7367ed4cc37c48caafcc1b20d1a66146e22976c",
+      "path": "skills/poteto-mode/playbooks/opening-a-pr.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/pause-safely.md",
+      "status": "verbatim",
+      "upstream_blob": "9d1c5f8303976fff40de099f7f28185909430c11",
+      "path": "skills/poteto-mode/playbooks/pause-safely.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/perf-issue.md",
+      "status": "verbatim",
+      "upstream_blob": "f5264c29516b7c6b63369369f58e07c8db5c0773",
+      "path": "skills/poteto-mode/playbooks/perf-issue.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/prototype.md",
+      "status": "verbatim",
+      "upstream_blob": "18bedc7e9249d180f9198d5b4b13e3817d41d281",
+      "path": "skills/poteto-mode/playbooks/prototype.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/refactoring.md",
+      "status": "verbatim",
+      "upstream_blob": "d4db06bb057f7b8a7df68d90896d9078a0656938",
+      "path": "skills/poteto-mode/playbooks/refactoring.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/runtime-forensics.md",
+      "status": "verbatim",
+      "upstream_blob": "8364ce4f1e7b0fd006f06c4bd0f70f68a902cdaf",
+      "path": "skills/poteto-mode/playbooks/runtime-forensics.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/session-pickup.md",
+      "status": "verbatim",
+      "upstream_blob": "fcde2b226265e3597b9ca8681864aa7e0868e464",
+      "path": "skills/poteto-mode/playbooks/session-pickup.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/shipping.md",
+      "status": "verbatim",
+      "upstream_blob": "8f7e7b9ffbfce6eb81bd0a5eb363a086188d4223",
+      "path": "skills/poteto-mode/playbooks/shipping.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/trace-forensics.md",
+      "status": "verbatim",
+      "upstream_blob": "2aec6f16451cc939348ac65fb90aaa77d431cefa",
+      "path": "skills/poteto-mode/playbooks/trace-forensics.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/visual-parity.md",
+      "status": "verbatim",
+      "upstream_blob": "248830ec74a593fc22143a842026388f92f1b9f4",
+      "path": "skills/poteto-mode/playbooks/visual-parity.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/worktree-cleanup.md",
+      "status": "verbatim",
+      "upstream_blob": "5ea9079b61ffc258aa713eb571eda7c2932bd81c",
+      "path": "skills/poteto-mode/playbooks/worktree-cleanup.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/references/bugbot-triage.md",
+      "status": "verbatim",
+      "upstream_blob": "b2fc7d35712783707607cf2f39752885c8d5105c",
+      "path": "skills/poteto-mode/references/bugbot-triage.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/bootstrap.ts",
+      "status": "verbatim",
+      "upstream_blob": "d9c63e2007449a80000abe75ecaf7f2a0bd5826b",
+      "path": "skills/poteto-mode/scripts/bootstrap.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/bun.lock",
+      "status": "verbatim",
+      "upstream_blob": "65f0c662f300a0f72b319ca93ea18f56219c2581",
+      "path": "skills/poteto-mode/scripts/bun.lock"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/package.json",
+      "status": "verbatim",
+      "upstream_blob": "b79dbf4b5cc4b42de781d70899545de0e83da2c1",
+      "path": "skills/poteto-mode/scripts/package.json"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/cli.test.ts",
+      "status": "verbatim",
+      "upstream_blob": "0656b413e6c180858ca42981105944c45caf9dca",
+      "path": "skills/poteto-mode/scripts/watch-pr/cli.test.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/cli.ts",
+      "status": "verbatim",
+      "upstream_blob": "ec8a2f27c5ac24866b699e6395e7d1f32e595068",
+      "path": "skills/poteto-mode/scripts/watch-pr/cli.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/fakes.test-helper.ts",
+      "status": "verbatim",
+      "upstream_blob": "84ccf596b01e03e7fb77e73ea82ec3b1738026ad",
+      "path": "skills/poteto-mode/scripts/watch-pr/fakes.test-helper.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/github.test.ts",
+      "status": "verbatim",
+      "upstream_blob": "4e58938389bb8ac6f3728aea65c56e30ed047a5e",
+      "path": "skills/poteto-mode/scripts/watch-pr/github.test.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/github.ts",
+      "status": "verbatim",
+      "upstream_blob": "123a33b19f807cff4c641fff3d44f9a02ba449e0",
+      "path": "skills/poteto-mode/scripts/watch-pr/github.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/policy.test.ts",
+      "status": "verbatim",
+      "upstream_blob": "966b7536754602e2550bf7245eed2124af623b76",
+      "path": "skills/poteto-mode/scripts/watch-pr/policy.test.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/policy.ts",
+      "status": "verbatim",
+      "upstream_blob": "8179f2d8ba5bf675feb3b1449161360827031518",
+      "path": "skills/poteto-mode/scripts/watch-pr/policy.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/render.ts",
+      "status": "verbatim",
+      "upstream_blob": "0e935839357335f24ab1bbc193d761495646ea99",
+      "path": "skills/poteto-mode/scripts/watch-pr/render.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/tsconfig.json",
+      "status": "verbatim",
+      "upstream_blob": "477af90b05cbd24fcf974fd73cf331d5ac7379cc",
+      "path": "skills/poteto-mode/scripts/watch-pr/tsconfig.json"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/types.compile.ts",
+      "status": "verbatim",
+      "upstream_blob": "1b53279c7f3e5da55703ed17d6ad0616254c5751",
+      "path": "skills/poteto-mode/scripts/watch-pr/types.compile.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/types.ts",
+      "status": "verbatim",
+      "upstream_blob": "60b9abcac983fc0a4319428c1be145dc110a8cc5",
+      "path": "skills/poteto-mode/scripts/watch-pr/types.ts"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/watch-pr/watch-pr",
+      "status": "verbatim",
+      "upstream_blob": "99807d577c3b006cfe6ee9e149cf2914bfd4afd6",
+      "path": "skills/poteto-mode/scripts/watch-pr/watch-pr",
+      "executable": true
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/scripts/worktree-audit.sh",
+      "status": "verbatim",
+      "upstream_blob": "47e08919d7b08c32923a7bdaaa70b17ca708f5f6",
+      "path": "skills/poteto-mode/scripts/worktree-audit.sh",
+      "executable": true
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/poteto-mode/worker.md",
+      "status": "verbatim",
+      "upstream_blob": "213fd63a4a03acf6ddb8a72429f6032b31f9b746",
+      "path": "skills/poteto-mode/worker.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-attack-the-premise/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "5ee25b02e701ca3e304122248a412d2372ab097c",
+      "path": "skills/principle-attack-the-premise/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-boundary-discipline/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "95b2209ce7d15ddbca7c2bf6ef3626ffdc8d595e",
+      "path": "skills/principle-boundary-discipline/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-build-the-lever/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "8f9b5a931b10839ad5ef71ce43d5411c2c7a1f6b",
+      "path": "skills/principle-build-the-lever/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-encode-lessons-in-structure/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "4a96f77fe70e36cb030f9c5efa142f66877bf58a",
+      "path": "skills/principle-encode-lessons-in-structure/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-exhaust-the-design-space/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "395a0839126bb231430a9c9da02ebab5422557d5",
+      "path": "skills/principle-exhaust-the-design-space/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-experience-first/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "5ea51741302cf3af4cc0b90ec70815bd3208dbf2",
+      "path": "skills/principle-experience-first/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-explain-the-number/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "7ff00fcf8805872cfb500308ed2bdf5fdd5d6b8b",
+      "path": "skills/principle-explain-the-number/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-fix-root-causes/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "b5e41168eb5944f583cf1d225e39552a48473dfe",
+      "path": "skills/principle-fix-root-causes/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-foundational-thinking/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "4571b23e34a5037d44c152d966e37650450c9724",
+      "path": "skills/principle-foundational-thinking/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-guard-the-context-window/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "0a1d3cfcf4539fe048887174000fecbf2fa40e81",
+      "path": "skills/principle-guard-the-context-window/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-laziness-protocol/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "016c3c7c8dfffd995c1a02135a62248e6625879b",
+      "path": "skills/principle-laziness-protocol/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-make-operations-idempotent/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "7c61fe4b203bfae1de7db570af4c57fd0ba0a3d3",
+      "path": "skills/principle-make-operations-idempotent/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "57ddd7b27d06ba4ee9e2d3811880476a18b88df6",
+      "path": "skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-minimize-reader-load/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "19dd4876d6e92c04caa2729d37ac87ac126d20ed",
+      "path": "skills/principle-minimize-reader-load/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-model-the-domain/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "88ba012f47bd51b2db0758c657610d56f871e1ba",
+      "path": "skills/principle-model-the-domain/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-never-block-on-the-human/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "4f59bdc69f79d536b30b0014a563ed3be05b8b62",
+      "path": "skills/principle-never-block-on-the-human/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-outcome-oriented-execution/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "c49be0bc74783f0dee013101365ae09b2abb48a2",
+      "path": "skills/principle-outcome-oriented-execution/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-prove-it-works/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "1c293b3c3ad0f7cb021858b17e7588d30a0a1acb",
+      "path": "skills/principle-prove-it-works/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-redesign-from-first-principles/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "5ca5246cbb0fa08884ce17b0d22c117ae1ad67b8",
+      "path": "skills/principle-redesign-from-first-principles/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-separate-before-serializing-shared-state/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "6a4c3b876b694097a12003996588f557d2b55d0e",
+      "path": "skills/principle-separate-before-serializing-shared-state/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-sequence-verifiable-units/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "3998185a29f287f6f30f0909c98ac4e2af5ddb97",
+      "path": "skills/principle-sequence-verifiable-units/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-subtract-before-you-add/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "b8740ba6f06922d8e7ef3b23f9fb16e0fc4a876f",
+      "path": "skills/principle-subtract-before-you-add/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-test-behavior-not-implementation/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "094b9427aa64294afd64d83e9495a5ee303631e0",
+      "path": "skills/principle-test-behavior-not-implementation/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/principle-type-system-discipline/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "0a04cf83e8499d583296c50a51bc838f69461e37",
+      "path": "skills/principle-type-system-discipline/SKILL.md",
+      "applied_blob": "d354910c037f7b784c07cd2dc19f0677821dbd1a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/recall/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "960a04784fc4c433391f3b9490129bec2847dd77",
+      "path": "skills/recall/SKILL.md",
+      "applied_blob": "b156ba46414f44c458cc7cfa083981c948c45efe"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/reflect/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "a2f1b1ace7f32928a99321829cc1d2e5ebde0f01",
+      "path": "skills/reflect/SKILL.md",
+      "applied_blob": "692d8dcb1fbebdae8a3be56020e62afbdc958f61"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/setup-pstack/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "bace8014f1c1a4e21d97408337095a27bf96255a",
+      "path": "skills/setup-pstack/SKILL.md",
+      "applied_blob": "aac675ff5988afefefe2dd4c00fecd0101364684"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/sharpen/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "2a03402b704012a626e9351b4db9c05cfd3afd20",
+      "path": "skills/sharpen/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/show-me-your-work/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "387fe5719094db373532fc2328c4e64f7900d7e1",
+      "path": "skills/show-me-your-work/SKILL.md",
+      "applied_blob": "f94dfa5eef249853f6c2b56b09279f408b7629aa"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/show-me-your-work/references/decision-log-template.tsv",
+      "status": "verbatim",
+      "upstream_blob": "db220376ecb8c582a6a4f6575a8f26469603a38d",
+      "path": "skills/show-me-your-work/references/decision-log-template.tsv"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/show-me-your-work/scripts/log.sh",
+      "status": "verbatim",
+      "upstream_blob": "052e53b7e1090579eaec1d3d59f7a1cd2f2e452a",
+      "path": "skills/show-me-your-work/scripts/log.sh",
+      "executable": true
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/SKILL.md",
+      "status": "skipped",
+      "upstream_blob": "18d653a810dfbb3ea35a6ed88bcfe8cb84f0a893"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/references/render.md",
+      "status": "skipped",
+      "upstream_blob": "5ef0519d6f7ae97ef7befceaf174f94f52dd42f5"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/backends/cfg.ts",
+      "status": "skipped",
+      "upstream_blob": "dec8b2f6671f2d110cd880f7af8d2c714cdf23a3"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/backends/mermaid.ts",
+      "status": "skipped",
+      "upstream_blob": "21ad39cb1efe72e4507df5c7599f32596612545f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/backends/plain-text.ts",
+      "status": "skipped",
+      "upstream_blob": "1ece33e8c45995493e84bc948ad613fce15481ab"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/backends/report.ts",
+      "status": "skipped",
+      "upstream_blob": "62e2a853375a1141491ef54fed8fd0d81a1bcd3c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/config.ts",
+      "status": "skipped",
+      "upstream_blob": "4f6ade5a9a74c8e74a58125dc7a5d035ea2ca36b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/dot.ts",
+      "status": "skipped",
+      "upstream_blob": "09d5481e70d9cf911dc16ddf655c91c197ff1fac"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/marks.ts",
+      "status": "skipped",
+      "upstream_blob": "9b1eda59f12861b8fb981d6046741417cd1be667"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/messages.ts",
+      "status": "skipped",
+      "upstream_blob": "e835b065e775a1b822eede5b1515d0401ce8356b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/spec.ts",
+      "status": "skipped",
+      "upstream_blob": "3fbe34f1a6b344c56cfd5afba3b90fe9a397c405"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/trace.ts",
+      "status": "skipped",
+      "upstream_blob": "43387c12b314c343d7a046de2fd095a3950b0026"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/value.ts",
+      "status": "skipped",
+      "upstream_blob": "d73ddec9ee3fa6077c644625002707a96d0938a1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/verdict.ts",
+      "status": "skipped",
+      "upstream_blob": "4f2ddd925332773b68918c40e62fc79a3a32571b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/view.ts",
+      "status": "skipped",
+      "upstream_blob": "ed8a1b5f9f0b4104a901a966bdfd66f13102d5ce"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/ir.ts",
+      "status": "skipped",
+      "upstream_blob": "80fd403fe3c231b0986f239ba8c74a60b52c05f7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/janitor.ts",
+      "status": "skipped",
+      "upstream_blob": "5e69fb316c9e6bd4bc1de68781b43c345381188b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/kill.ts",
+      "status": "skipped",
+      "upstream_blob": "014d7c35049a8786359264cb4489c0c5e0a7ff1d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/package.json",
+      "status": "skipped",
+      "upstream_blob": "16bd68507bac879f00d9efb90f6a5df689dbbd3a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/passes/annotate.ts",
+      "status": "skipped",
+      "upstream_blob": "7d95d4fb57311c26bbbaca42eb283421f56140e0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/passes/label.ts",
+      "status": "skipped",
+      "upstream_blob": "cc8c197726137a0875462702e39cd07cbf55d547"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/passes/lift.ts",
+      "status": "skipped",
+      "upstream_blob": "15db7deda016faee9c0da33c2c419be51e528ed6"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/passes/loop-check.ts",
+      "status": "skipped",
+      "upstream_blob": "7e5a3825adde46e8a625ad9e167cb0ce6b712174"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/passes/paths.ts",
+      "status": "skipped",
+      "upstream_blob": "632a5c4ae6d6101c89f46803605c09b6a96f9b6f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/passes/reach.ts",
+      "status": "skipped",
+      "upstream_blob": "d5b6a521dc970f888d615d41caf692d0f7bcb2ec"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/passes/region-check.ts",
+      "status": "skipped",
+      "upstream_blob": "ae499230f5ba441d704386bd24df73cad3c92af7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/passes/regions.ts",
+      "status": "skipped",
+      "upstream_blob": "bb7aea062410be42c25c779ca748c2b52c3e5a82"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/pipeline.ts",
+      "status": "skipped",
+      "upstream_blob": "f12a2e07f6e4fe283cfd1b2fc0d3f83dd3d75758"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/run.ts",
+      "status": "skipped",
+      "upstream_blob": "45e13dcb4d4ee41d4437ed64e3177fe1a412ae56"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/statechart",
+      "status": "skipped",
+      "upstream_blob": "7d3aeb8c219bf20aea4cbc321892fca9cbd582f1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/statechart.ts",
+      "status": "skipped",
+      "upstream_blob": "43ee983edfa7b1fa76ddab07e0e99cba897373b9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/ConfigOracle.java",
+      "status": "skipped",
+      "upstream_blob": "d916e540ba1d23733be5486ac2911252e49f81dc"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/chart.test.ts",
+      "status": "skipped",
+      "upstream_blob": "95ba9e86ba3f40fbe30b0a926f43bef082137af3"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/charts/Braces.mmd",
+      "status": "skipped",
+      "upstream_blob": "4cc99ed3082d412117750da757f767475daf63be"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/charts/Escapes.mmd",
+      "status": "skipped",
+      "upstream_blob": "6b2de4b7aebfb644700889469c0219d10424afde"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/charts/Phases.mmd",
+      "status": "skipped",
+      "upstream_blob": "1412a97ef4198500a1c730124c20e9cfc3a934f9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/cli.test.ts",
+      "status": "skipped",
+      "upstream_blob": "ee80722d6fdbb1e3c091c0c9f6f981636f61a264"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/config-fuzz.test.ts",
+      "status": "skipped",
+      "upstream_blob": "88ec2d3d0b09cd85759507aaf786722add1a2cb7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus.test.ts",
+      "status": "skipped",
+      "upstream_blob": "90a4104e9b24d3f6144fae69a8ac42ea5251299b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Counter/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "87dec2842dcace3f3725ab7e3570d649abb5022e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Counter/Counter.cfg",
+      "status": "skipped",
+      "upstream_blob": "accc477b2e456e9cacee880aa8a579b7f2fb3f7d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Counter/Counter.tla",
+      "status": "skipped",
+      "upstream_blob": "c72accbb7b5d4a0fd7302607798f1d5962156e31"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Counter/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "a65ea8434a27b918dd425548d1664ec02d030ab1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Counter/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "19ef461866782514d24f9bbe8e07a2e40fe4d5c1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Counter/report.md",
+      "status": "skipped",
+      "upstream_blob": "76a07da6b47cebf9b629f0f3fe2031603fb9eff0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Counter/sany.out",
+      "status": "skipped",
+      "upstream_blob": "bc0268192dd95ee0e3dd197657b324e780761cec"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Counter/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "769fa7cb9a5e69a7d5820309aba8da91edab9ac9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "4d04f9bfb7af5a34b663b9f98a7c6e8e9f0ca7c8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/CounterAction.cfg",
+      "status": "skipped",
+      "upstream_blob": "b1763a8ad02a313c1237039ad0ead0404716d5ec"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/CounterAction.tla",
+      "status": "skipped",
+      "upstream_blob": "148b1f3a0d0e7ebb30c00c164c403d6d1f2610fb"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "2142a4553be585c01cea18319acc580f0057f161"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "39f2651e18efcdf3da400eb5239175e340f2e6b7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/report.md",
+      "status": "skipped",
+      "upstream_blob": "d468ab4477bd75c9fcbb83540aebff57facceb6b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/sany.out",
+      "status": "skipped",
+      "upstream_blob": "a5c0ae2483c1a80e683adef887854fcc13d91eff"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "446128703357032b71fbe6c4c5e48651cebb3077"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "232ed26873747dc21e375b725ab4282cae09dc78"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterAction/verdict-3.out",
+      "status": "skipped",
+      "upstream_blob": "f49ccadb2c33ec641c935b5dcce5a591a2d46048"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "abf573b92cd3aec2e2eeb759d954aac4912476b7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/CounterDeadlock.cfg",
+      "status": "skipped",
+      "upstream_blob": "64e80fff74246f1c3ad536ca2084e63a9ae1afe0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/CounterDeadlock.tla",
+      "status": "skipped",
+      "upstream_blob": "67f26b04c403e2b24e682be5cba8019fbc52f755"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "9190b9fb7514f5af3275b3253e40cfd36289eabc"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "19ef461866782514d24f9bbe8e07a2e40fe4d5c1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/report.md",
+      "status": "skipped",
+      "upstream_blob": "d72af35b15cf5275490f6b8944681b1f7506858b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/sany.out",
+      "status": "skipped",
+      "upstream_blob": "87c12d75a5d0cd2487d481ef0a0e83a09bbf8a13"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "fc41768fce93b978734fd3aaeb60f9ca1a6c8612"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "b4de3947675361a7770d29b8982c407b0ec6b2a0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterDeadlock/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "1680ce4ae6586a7d86259046260f0f06435e98b7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "fe624fd4f650a8164f527d2f9a0955774dfe3e61"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/CounterFan.cfg",
+      "status": "skipped",
+      "upstream_blob": "27e8506dbb0a6da840cffa4a848804f312bf90f3"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/CounterFan.tla",
+      "status": "skipped",
+      "upstream_blob": "f2b4e5271068fe343a9d9557b145e6c7acec7c70"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "045aa4218b417aec221f3ad014c56c7c8903fff9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "d60e23ac86f212a53dff308f4c0298fb286f1df1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/report.md",
+      "status": "skipped",
+      "upstream_blob": "1090826acf60bd5b1f1803813e3c74ebfa33e273"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/sany.out",
+      "status": "skipped",
+      "upstream_blob": "eac7a21ab606f3d1e092b9a182658f788d94e89f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "6156d07f95185eb1951650fcebde54d482389faa"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterFan/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "a60056632dc77ea3338584851486cc7e6be453b0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/ChartRun.exit",
+      "status": "skipped",
+      "upstream_blob": "78eb67cee1ab25652fe5c9e29efc173671301400"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "bc54efe7c1b7595618b41ae1358daad63cc3c251"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/CounterGuard.cfg",
+      "status": "skipped",
+      "upstream_blob": "93c95c10ff801ffcbc5da14bae1b9f4246a21433"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/CounterGuard.tla",
+      "status": "skipped",
+      "upstream_blob": "84b115bef2952e55814fa49d14064e3b506801c4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "11839886fb466f8059e8683c8e886471f6298795"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "8312469c683be164474194eb4dfa787597d95f85"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/report.md",
+      "status": "skipped",
+      "upstream_blob": "3f37ac2326595ee790200a8b796dec46521f6dbe"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/sany.out",
+      "status": "skipped",
+      "upstream_blob": "c057222d7b5a33880d417cef92b2bdc7f7dd6514"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "c3169f0752ff1ab06b0d0bb4b58bde9660c7dbc4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "78eb67cee1ab25652fe5c9e29efc173671301400"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterGuard/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "ea9327a80672e55ceb70989234dd4abefd724352"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "6dab5e6f65a2328f257d7ab113577253a2c21f22"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/CounterInitPast.cfg",
+      "status": "skipped",
+      "upstream_blob": "18a798096dd459b718cf51c5a9a8b6d677c37044"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/CounterInitPast.tla",
+      "status": "skipped",
+      "upstream_blob": "dfe3125ca4355d205330148d47b6887bcdabb8c1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "e70633f1157c80d8f09cced99b6f381ac4e48414"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "5bdffe2b5caf1984f0249589f99fa929330ea93a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/report.md",
+      "status": "skipped",
+      "upstream_blob": "e6c422152821af9499fca3f2b64ed94a65965618"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/sany.out",
+      "status": "skipped",
+      "upstream_blob": "13471a1ab7ca435f685e66df4b2e7b6e47b17f0b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "e55acaa87b29fecb8f0e3be3525d29848b9ac2c6"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPast/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "ae7dfd0acb2c9ce6bcc36d8acc388c6faece36ac"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPastHolds/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "e8295dd7cc27b793fd56269be2f3596b4433b28a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPastHolds/CounterInitPastHolds.cfg",
+      "status": "skipped",
+      "upstream_blob": "823d31a55438107a7805ef0b92ef0d5da3f835a8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPastHolds/CounterInitPastHolds.tla",
+      "status": "skipped",
+      "upstream_blob": "cb291f044b9b799e6bcb4e294b17a0ab47e88b43"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPastHolds/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "b57b606becb0dde9c8ff1bc6ce1835de277c5bc1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPastHolds/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "5bdffe2b5caf1984f0249589f99fa929330ea93a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPastHolds/report.md",
+      "status": "skipped",
+      "upstream_blob": "5ad2f21648fe6caa2ebab960deeed49afcc38e5f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPastHolds/sany.out",
+      "status": "skipped",
+      "upstream_blob": "f4c128b5395a4bcff1d52b3c10b3d6586c2c33d0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInitPastHolds/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "b8c8f34dd061f48b210e49bd5014003d902d7fad"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "bd9932f5cd0aaae9308e121b89892322d54eca7c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/CounterInstance.cfg",
+      "status": "skipped",
+      "upstream_blob": "a73eb3f49699de9a2c9776368d9d1d79ba498529"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/CounterInstance.tla",
+      "status": "skipped",
+      "upstream_blob": "ad5bdcb74c40f03fc0400d1eb0ce10f1c36e8bba"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/CounterSteps.tla",
+      "status": "skipped",
+      "upstream_blob": "1551d5ec4db346e76ef013b90cddb07dd043ecb1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "58eb5e285fcb7c32de4967a656f5a213252aa4ca"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "6213bdaec4dd30c1af50e173b4ce62bc87ff7b89"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/report.md",
+      "status": "skipped",
+      "upstream_blob": "ffe2e10de17d69b211a8277cbf346d2ebb3d0e57"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/sany.out",
+      "status": "skipped",
+      "upstream_blob": "2b24bb54b8fcb7e92a23c4dfeb8df4b897d8a0cb"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "b1bd38b62a0800a4f6a80c34e21c5acffae52c7e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterInstance/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "e880efe7092914a114d2addc76a98ba3c7b276c2"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "18aedf2894414abbe939f68360d4d2f08f998022"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/CounterJump.cfg",
+      "status": "skipped",
+      "upstream_blob": "bb86e2c8cc5621168f4a4a64e4eb50d33b699237"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/CounterJump.tla",
+      "status": "skipped",
+      "upstream_blob": "9158973604d69dced60314510ad6dd39c0f9890b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "92d95a38f2343778641c69f500942cf1cc02146d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "a60662b180c48f9f3e51725c5ab87702f4325b14"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/report.md",
+      "status": "skipped",
+      "upstream_blob": "b92624593b84eb2a11cdcf0a069f3546d0f9b3f6"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/sany.out",
+      "status": "skipped",
+      "upstream_blob": "92b207093eb1484a0ef0dbb6e6b7938b14a44cc8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "920247b844f89238b291c643021e2bc22a0e1a4f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterJump/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "83457e1c6bde2a2e48f85714278fb6a95970aee9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterLoop/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "11e7ef47867e8d2f056b1ce74d4698f698f7b0e1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterLoop/CounterLoop.cfg",
+      "status": "skipped",
+      "upstream_blob": "a73eb3f49699de9a2c9776368d9d1d79ba498529"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterLoop/CounterLoop.tla",
+      "status": "skipped",
+      "upstream_blob": "51a6dd2cc62245f93dd1a8ace343475df3866b55"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterLoop/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "9198ee16fe2f14a4541e7541a6a667fbd707b697"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterLoop/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "4c4a31e899d8897a871007d9f11673c93dfb2f94"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterLoop/report.md",
+      "status": "skipped",
+      "upstream_blob": "db2cb8358dfb5adc37141d9f323e6ae9ceade117"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterLoop/sany.out",
+      "status": "skipped",
+      "upstream_blob": "7fc577a326189e64706e6c33ecfa2f1503393164"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterLoop/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "b1bd38b62a0800a4f6a80c34e21c5acffae52c7e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterLoop/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "114d60ba3e320ef621749a47bb09812cf98b21ee"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "b99b2956ac43a76c342e94b6d2284515b8b6fc02"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/CounterOrder.cfg",
+      "status": "skipped",
+      "upstream_blob": "cadbd94c6c11b355f17f51a61ef87099fb42d6ed"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/CounterOrder.tla",
+      "status": "skipped",
+      "upstream_blob": "9168efe4ea204dabd327f64ee4581d4ba6c5840b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "7dda491605eedca0200677f67265edecf0f25130"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "3943d6aa2c830224e97d65ea784d3ad22cc972a4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/report.md",
+      "status": "skipped",
+      "upstream_blob": "0578eb27de909c45ab5ef56d32262aa6f63fd4b4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/sany.out",
+      "status": "skipped",
+      "upstream_blob": "c0d4cd2165a1dcdfbb6d052d07facfb61c2e16af"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "981ed353203ceb9fda0b86c11ddc389906b89c49"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "b4de3947675361a7770d29b8982c407b0ec6b2a0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterOrder/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "8cc5e2d4f92272c7910bc77807cb340591d0ef92"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "1de92f9b10debbc6ed638dd01db1de427e4ee2fe"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/CounterRules.cfg",
+      "status": "skipped",
+      "upstream_blob": "e446955693a3dfb5bcb950548396c1afc46b4241"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/CounterRules.tla",
+      "status": "skipped",
+      "upstream_blob": "5cc3ba1f1cab9531b39d144574e7ae30cfb8a663"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/Moves.tla",
+      "status": "skipped",
+      "upstream_blob": "697939d4b33ffbbab7c02b4ccc858a96e2f13c6f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "83f65fd1be26e55bbaf479db4a36608012e239c2"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "b9fbd8c57ce94daa6a09a964bfdad9420d0e54ba"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/report.md",
+      "status": "skipped",
+      "upstream_blob": "2c6b305701506ec6ed7cfd7bbaa6ebe8f282d323"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/sany.out",
+      "status": "skipped",
+      "upstream_blob": "2fa0dadff235ddb7b52eddc31d5ed37c4afde198"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "af93dd028ac57a23027b9970647b92bbddd9bbf4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "5eb734bdabb5fdf59183e1edd29c7c40cad823dc"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/verdict-3.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/verdict-3.out",
+      "status": "skipped",
+      "upstream_blob": "b1649422a90755680f382b2e3b42b96613d3b4a4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterRules/verdict-4.out",
+      "status": "skipped",
+      "upstream_blob": "6421d1d8fc380bc021135e68dac995ac1a303f9a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "ccb7ba9df755eddc62505f4ce73528f575106783"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/CounterStart.cfg",
+      "status": "skipped",
+      "upstream_blob": "76c3fb0615201e903353213b74b5f8c5f65647bb"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/CounterStart.tla",
+      "status": "skipped",
+      "upstream_blob": "e701a8b64009098553aa32f5ff82e2f12a07b403"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "ead9269e2405193a20c160011a24c15940c156ef"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "00d34c42a93d088a1d67e48bbba8a7d1c9976123"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/report.md",
+      "status": "skipped",
+      "upstream_blob": "d565f6c8fac4d4c44c0894989e0ed01ef01ef3b1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/sany.out",
+      "status": "skipped",
+      "upstream_blob": "e3322a3edd39e50c1b075dcffbfef599cb0b84cd"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "273f6a9a53fe86b3441393e9565958420c535c38"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStart/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "8589bfb06807667f63069cf247c43fc8df72ffaa"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStop/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "27d7d2da037fe2aa038ab9b33752c24407786a63"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStop/CounterStop.cfg",
+      "status": "skipped",
+      "upstream_blob": "76c3fb0615201e903353213b74b5f8c5f65647bb"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStop/CounterStop.tla",
+      "status": "skipped",
+      "upstream_blob": "15b1224b32f256b49bfd6a9fe099d3bcef746e6f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStop/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "5b17bea12010ae2e3c2073a2cb424bc6c262ef74"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStop/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "00d34c42a93d088a1d67e48bbba8a7d1c9976123"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStop/report.md",
+      "status": "skipped",
+      "upstream_blob": "3dd1d7e35d2a08892aeabe556260f984333e4123"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStop/sany.out",
+      "status": "skipped",
+      "upstream_blob": "70180967286510ba8ac18f497c3285e270435b38"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterStop/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "fd43d16c353849bb15a9126c95f8e9f2ebc5d49b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "c5c8e5729b01b33a32f32f664c02f3c3ab226258"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/CounterTie.cfg",
+      "status": "skipped",
+      "upstream_blob": "e05d62cfb03aadd5d24632194775c224b7648eb1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/CounterTie.tla",
+      "status": "skipped",
+      "upstream_blob": "48e2ebdf1ee8227606184adfdecbf13656ee7349"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "f5a339c11c84dc72eafe4892e263be64928792b8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "39f2651e18efcdf3da400eb5239175e340f2e6b7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/report.md",
+      "status": "skipped",
+      "upstream_blob": "df2f7a667ae0700749b33217939d31216712ffd7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/sany.out",
+      "status": "skipped",
+      "upstream_blob": "7f2ea094a143757bd4c4fa346a50009601fcd931"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "d86c4b795ac1ffe16898f8fd90b46c2ea5234de8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "dfc61e8aa5e2b576bff3525b08a32d1187172a2d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/verdict-3.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/verdict-3.out",
+      "status": "skipped",
+      "upstream_blob": "b3deb6fe0b890afa6d59c5e6851cb1fc8fa1957a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTie/verdict-4.out",
+      "status": "skipped",
+      "upstream_blob": "a0e5fe809bc05a6fdf5e689744aae1002d912909"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "4175494b4970e0c51203135e076403eeffa3d734"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/CounterTieInGraph.cfg",
+      "status": "skipped",
+      "upstream_blob": "98f97b00a14215d2002d71616b1e8e838d722743"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/CounterTieInGraph.tla",
+      "status": "skipped",
+      "upstream_blob": "7716ca0a88b8fc19fac918a8f123aa9efa76cd9b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "190ae24a1e79e427a87e050b51271588fc12cbf9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "931dce5aa18499ac19d824ee13834f3d54197807"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/report.md",
+      "status": "skipped",
+      "upstream_blob": "bb60e8ae714a4f2d65b89eba4483eb8a8fc1dc13"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/sany.out",
+      "status": "skipped",
+      "upstream_blob": "ec054808242db7d1746947f95050db2e672d6639"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "1d977efee52a3bedbcb4873505e291a65830be4c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterTieInGraph/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "a4cfefd2489f371b080eb905e83d1292869c5325"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "d9d16365e43bc2623a0fc99018e9592e1ca5bbf7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/CounterView.cfg",
+      "status": "skipped",
+      "upstream_blob": "14229fa59e582bab0f937afda511c5a4facd3533"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/CounterView.tla",
+      "status": "skipped",
+      "upstream_blob": "7b3f3cf6543d9eb13dac49ad5f06e10152ad6279"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "8b60a051c7a2672ab60607f4215d13dc9b690ad8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "39f2651e18efcdf3da400eb5239175e340f2e6b7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/report.md",
+      "status": "skipped",
+      "upstream_blob": "06bc25fa1285b175be2987a91871f46c7e8e46ef"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/sany.out",
+      "status": "skipped",
+      "upstream_blob": "922b7fd110fbb1ab5b4d741b0aec85f510f012eb"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "7d9e8275a5dac9783086019d7eb7440ebb32b730"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "db0dcde38843ccadc4fd3f4aa3d0ddf14da7bc74"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/verdict-3.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/verdict-3.out",
+      "status": "skipped",
+      "upstream_blob": "e5e174109dcc9a7784798fe82ba2fcf1f30af5cf"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/verdict-4.out",
+      "status": "skipped",
+      "upstream_blob": "5531c01d2d039002e3822ca5534f8cb4df7ec6fc"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/CounterView/view.mjs",
+      "status": "skipped",
+      "upstream_blob": "2f72ecea21a746d09407a6ed9b2c8f993d40c3b7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "acbd2bda2bdde08c1160fd87b6435cb8cb4dae6c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/DieHard.cfg",
+      "status": "skipped",
+      "upstream_blob": "cefff25119959bbef1c313fcf771d1e79657d56d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/DieHard.tla",
+      "status": "skipped",
+      "upstream_blob": "52dc76c2c9f91d5c7b1b4ef763bd61e2d3959c0f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "7fe3c0ecc8a5d58b9201106de3ae425bf2a4a37f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "fafcf3fca9f42e3feeb9511ac22fa0911268a6e4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/report.md",
+      "status": "skipped",
+      "upstream_blob": "c08be40faa37f8d7df92967538faa4d1779cebc1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/sany.out",
+      "status": "skipped",
+      "upstream_blob": "0149b3d9df5df9832f82e44a47ac14cd98b08b7e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "20145d338d0f68089d31a288e3e93782ccf06893"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/DieHard/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "cd1b7f22e3d772635a1a7b01464c9578e0cc1091"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "f35d6c82c883997fec534d0095bff01d23e64cb8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/FirstRule.cfg",
+      "status": "skipped",
+      "upstream_blob": "5a874416408b99f75366a9c429d49c4acc73a86d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/FirstRule.tla",
+      "status": "skipped",
+      "upstream_blob": "a0e6353178bf9005d20d336821fe5a0aa1229998"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "c364eff2917b4b5703bfa2cdc15c7d4663af55a3"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "3b0721e409983954a3a2c8e5083b2d5868446f2e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/report.md",
+      "status": "skipped",
+      "upstream_blob": "412970238c167324dbc20f86a0fbdfec60ab6255"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/sany.out",
+      "status": "skipped",
+      "upstream_blob": "2a648ff2b71d24e244d9405a4fce27bb8e77d556"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "da83f3ad939d0384e671f34151ed0a15e957fbbd"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "2520b3e5904c6325ffd7369d55d0a43875af5272"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/verdict-3.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/verdict-3.out",
+      "status": "skipped",
+      "upstream_blob": "c1514b60dc2b4dd33b8056d479f804a49f6e7d5c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/verdict-4.exit",
+      "status": "skipped",
+      "upstream_blob": "b4de3947675361a7770d29b8982c407b0ec6b2a0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/FirstRule/verdict-4.out",
+      "status": "skipped",
+      "upstream_blob": "e19318748b58ba7712f88de6970f970509539019"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/HiddenClock/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "b0c640583ba1410c84c041905e2b72ec84d8cfab"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/HiddenClock/HiddenClock.cfg",
+      "status": "skipped",
+      "upstream_blob": "7e58ae943d9526b4d453e84238c0f5002e80948e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/HiddenClock/HiddenClock.tla",
+      "status": "skipped",
+      "upstream_blob": "baf36377c680a958f88fbacdf56d39038125534b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/HiddenClock/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "78e6754ae9fdb66697644b4c719e34bfe1fb31d8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/HiddenClock/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "1087ac95e2ce296b7fa2bf3a74eaf214b340e11a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/HiddenClock/report.md",
+      "status": "skipped",
+      "upstream_blob": "061c73f5500abe8c3bf1bc6e51f8eedf0dcc44d8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/HiddenClock/sany.out",
+      "status": "skipped",
+      "upstream_blob": "db2f8f586a001e654a27e778b36be23ea02a75e7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/HiddenClock/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "b1bd38b62a0800a4f6a80c34e21c5acffae52c7e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/HiddenClock/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "52d01fbc6c2f905a6364f588f631067dd009f689"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Login/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "b5e7e98aba9efd52c818d70499a0b6ea31f4be7c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Login/Login.cfg",
+      "status": "skipped",
+      "upstream_blob": "514c84e641fea64cce1cfeea28b805ee80514a33"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Login/Login.tla",
+      "status": "skipped",
+      "upstream_blob": "453215af9946e8de2747d57029a824d3f0537c65"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Login/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "547bd3e604b8f7ec7422a1c3006b4d70428f34e4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Login/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "229abaf8f6440dc69d0e79fabc1746c9ebe21937"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Login/report.md",
+      "status": "skipped",
+      "upstream_blob": "096dd7cb67a68a516293c622f314a3e38ce994d4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Login/sany.out",
+      "status": "skipped",
+      "upstream_blob": "af8bc6f7975591c1f67e7aaabc0496eb0f4f2b25"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Login/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "f74a91c43d6565f1bfe4538806fb9d4b78482508"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Login/view.mjs",
+      "status": "skipped",
+      "upstream_blob": "61b5120da1a33bd21b87f1de2ba7a32250e3aa09"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginGuarded/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "f6221e1efee943e4564ff0263418066812ab2e02"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginGuarded/LoginGuarded.cfg",
+      "status": "skipped",
+      "upstream_blob": "b8e4128c949c670da5254ebcb0309fa5910aa969"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginGuarded/LoginGuarded.tla",
+      "status": "skipped",
+      "upstream_blob": "4c6d4d4eb94b3fafe87b51ac65b1c79d98fc33a0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginGuarded/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "afb69d00ba56faf57c520e7c5eb155eaf669ad45"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginGuarded/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "68a7023bc5227504af03abe9e7339f50072d6619"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginGuarded/report.md",
+      "status": "skipped",
+      "upstream_blob": "1f2b2ebd98e9d5ee30f701e29070259f48df740e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginGuarded/sany.out",
+      "status": "skipped",
+      "upstream_blob": "20d5e4a5a1d7b5c705e6d50bafd997d41585b33a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginGuarded/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "f1f2dd15632140870ed95dd2256f87c665241a92"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginGuarded/view.mjs",
+      "status": "skipped",
+      "upstream_blob": "f47da36a6ab53eea5c987f87ed0e6a226b94cbd7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "5072b1e8bfc2cf3e18e669c9a983d7beffa188e4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/LoginParallel.cfg",
+      "status": "skipped",
+      "upstream_blob": "4d0bd3c81bdd6b9199294c055060100f6edd035b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/LoginParallel.tla",
+      "status": "skipped",
+      "upstream_blob": "1ad1667b835bed0b3fc89578eff48faee3691553"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "add577ee963f5bbfa0e966c65fd02fad3d31fb0c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "7e46e55eada3c043ba7b1ac64f84c50aa9e8d824"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/report.md",
+      "status": "skipped",
+      "upstream_blob": "1e8c75b1b5a836feb3523eb36d5a8864809b3032"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/sany.out",
+      "status": "skipped",
+      "upstream_blob": "38297c6ffeafdf4d909c172c9b4e4bdc0e3bc2c8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "c0f611bdd7ed6a99edc01f4f2acdcad3079be378"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "0f5c98a6698a44ddde55a198b314a6e02ebdce7a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/LoginParallel/view.mjs",
+      "status": "skipped",
+      "upstream_blob": "f47da36a6ab53eea5c987f87ed0e6a226b94cbd7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "21b790217edaabd9e7312162b02b6451929cb567"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/MediaPlayer.cfg",
+      "status": "skipped",
+      "upstream_blob": "31322ca0f0a4e46cbe2d52f6a0ee8c1e9975cef9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/MediaPlayer.tla",
+      "status": "skipped",
+      "upstream_blob": "4e4b02d7117a0a48c336563b59eda5fbdfb16d03"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "b75e94dd1e020a359458f3721f504147a47984b9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "c183699297118b011e08f24f2fcb99aa526fe548"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/report.md",
+      "status": "skipped",
+      "upstream_blob": "051f70750c6d96ccb9fb010ef225fd73dd0de77d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/sany.out",
+      "status": "skipped",
+      "upstream_blob": "f074d321e6d183444b3c5a1e8e58998ab8367268"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "4312101cdf93b7408aca9b28c90f61bf39cce884"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "f87fac119bdde872dd0729590b2b2c65bb3b13ae"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayer/view.mjs",
+      "status": "skipped",
+      "upstream_blob": "276e21fec5f54c760b9c70cc8fdbc836f3802b9c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerFixed/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "7385b348ad153091c96f4c99f24f91746344e355"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerFixed/MediaPlayerFixed.cfg",
+      "status": "skipped",
+      "upstream_blob": "d1743be9fda1b1d507580dc339820dc889e99e39"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerFixed/MediaPlayerFixed.tla",
+      "status": "skipped",
+      "upstream_blob": "27139f152c35f996eb59f37bc8d36bbd0443bc62"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerFixed/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "ab1e4ef168aa403dd24b96c50b1df3e46273335c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerFixed/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "a5ea519beee423c2ee44369598df913db82e392f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerFixed/report.md",
+      "status": "skipped",
+      "upstream_blob": "3dad98dca298694d82fcdee58650e4c50e127640"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerFixed/sany.out",
+      "status": "skipped",
+      "upstream_blob": "23b0edaa34642fe8b30dce09ed55f887eac47fff"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerFixed/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "a919ca8c22beb3169d7054a4db37b37cbe6ee3c7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerFixed/view.mjs",
+      "status": "skipped",
+      "upstream_blob": "276e21fec5f54c760b9c70cc8fdbc836f3802b9c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "632b6fa6b928bdfbde2116ca996c3b88aa13f4a9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/MediaPlayer.tla",
+      "status": "skipped",
+      "upstream_blob": "4e4b02d7117a0a48c336563b59eda5fbdfb16d03"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/MediaPlayerProps.cfg",
+      "status": "skipped",
+      "upstream_blob": "a3aa6caf6cf143933e7aeac37f679c8bfc897883"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/MediaPlayerProps.tla",
+      "status": "skipped",
+      "upstream_blob": "7291bce507eef12b129bfe9eb3f29fa3da6cd9ad"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "008a152d52c80d7be8eb5facde9c5d96ac9f444a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "c183699297118b011e08f24f2fcb99aa526fe548"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/report.md",
+      "status": "skipped",
+      "upstream_blob": "98681ff8c279450cd493e52139a93d46710f97ab"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/sany.out",
+      "status": "skipped",
+      "upstream_blob": "3dbc0429166f6e34096f04a6fd8a2ac450f6beb4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "b2be9190b4d72215291ab909c35d756f0d892398"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "71c88cdbabaffcf4e46d8739e5f7e5a98c90bc28"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/verdict-3.out",
+      "status": "skipped",
+      "upstream_blob": "9add0fabc6a694d0f03c4a3c9b7af61dd98391f6"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/verdict-4.exit",
+      "status": "skipped",
+      "upstream_blob": "b1bd38b62a0800a4f6a80c34e21c5acffae52c7e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/verdict-4.out",
+      "status": "skipped",
+      "upstream_blob": "4e24e1a21db8177eba11f0de96ae98db91e6861b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/verdict-5.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/verdict-5.out",
+      "status": "skipped",
+      "upstream_blob": "f318b72fc79d215c97fa77652a4f8baa1831a594"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/verdict-6.out",
+      "status": "skipped",
+      "upstream_blob": "68ae9cf11e110c81e419133741dec229cbf9d507"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/MediaPlayerProps/view.mjs",
+      "status": "skipped",
+      "upstream_blob": "276e21fec5f54c760b9c70cc8fdbc836f3802b9c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/PickWorker/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "23c3f60bb4b9962b0b94b6c2052e27a6fe5c8e5d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/PickWorker/PickWorker.cfg",
+      "status": "skipped",
+      "upstream_blob": "ebfa53e9c21e7e2fad3b714290f42040190bc57d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/PickWorker/PickWorker.tla",
+      "status": "skipped",
+      "upstream_blob": "914dc2b6bb0e41d4d1f4df03b5bbaf23f72d237f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/PickWorker/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "1d044ad68cae5ed9b4ce596b03596db86546067a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/PickWorker/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "72e7e24b8ba253ede0685395183828211c0848e9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/PickWorker/report.md",
+      "status": "skipped",
+      "upstream_blob": "505b488b189ed1d344d410eae4a998fb3cbcab2d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/PickWorker/sany.out",
+      "status": "skipped",
+      "upstream_blob": "454e2639b0c7e821db7928fe7e7254048a7b5b42"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/PickWorker/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "a524316408e37b31d509f36b4c93e1a4a8b7d61a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "f57a6ebb1f7049a46886574ba878a872c1bd6db8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/Shadow.cfg",
+      "status": "skipped",
+      "upstream_blob": "d01d1b8c8738a9a80b016301bd231be2c9bff014"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/Shadow.tla",
+      "status": "skipped",
+      "upstream_blob": "16204f0662e5602600f79ffa15ab5752f1b6a416"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/ShadowLib.tla",
+      "status": "skipped",
+      "upstream_blob": "ecdaa11f60fed1233844a259d86c14a684f492c7"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/ShadowSub.tla",
+      "status": "skipped",
+      "upstream_blob": "36bc01662741ca8fc3a17c2ece47b66990a652ed"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "d84b4d7f217246ceffb12c4265833e9a240f5e20"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "3b0721e409983954a3a2c8e5083b2d5868446f2e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/report.md",
+      "status": "skipped",
+      "upstream_blob": "2a68d874d5edf410bbccf9e4004f9741e8e2f7a6"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/sany.out",
+      "status": "skipped",
+      "upstream_blob": "3326567a7ca4a6600507b6dddd9b671cca50e21d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/Shadow/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "8f001abc6ffcd3b0ca9b86d67c0774de2fea7ecb"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "0d420bcb48ce7536207f636835cc821d05d20ff1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/SpacedNames.cfg",
+      "status": "skipped",
+      "upstream_blob": "a0df4743315913a449f5347236c7992d06f4d9c3"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/SpacedNames.tla",
+      "status": "skipped",
+      "upstream_blob": "d25f887b04afd74046c021096cf6ba78d4bbadb6"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "998ab69d9a58e7f327470c8b92dd3b7133af593b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "9b447cde43848bde6ca52f8cdbb7aa4bc9aba71a"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/report.md",
+      "status": "skipped",
+      "upstream_blob": "88410eb6b4ab158b3b1c6053cd138f2bc55fa88b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/sany.out",
+      "status": "skipped",
+      "upstream_blob": "046371b2720c68a2d4531bfb67a71d89db5bfc62"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "c0d2006acec6da3a54ac5af8535c94a2fd3e1aa0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "b4de3947675361a7770d29b8982c407b0ec6b2a0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/SpacedNames/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "13add5fd5e487dc64177b972bc5b36072fb305f9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "5211d3384f1d1f565ed6fdeea5619d85e1cb63d6"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/TwoPhase.cfg",
+      "status": "skipped",
+      "upstream_blob": "bbecf5002218920224d95830c738117990045ccf"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/TwoPhase.tla",
+      "status": "skipped",
+      "upstream_blob": "e7504b7bfe17a37b79f4af00d1d2f715ddc21899"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "0cb65843c51dd8aab620f8a5291ee74f20219880"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "66cb1a2d55f88ac2f3ee32231a5a724b0c128e96"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/report.md",
+      "status": "skipped",
+      "upstream_blob": "5319d1a992f76c36161e2606ddd6e3c7c7263ef8"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/sany.out",
+      "status": "skipped",
+      "upstream_blob": "291ac638280d2fb145633f1fdd0acdf82846776d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "65bace05d6847bba05ebb0bd2056f664024a0f4c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "4536a30bb05e1b98a49194b123cbd2caec642f41"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhase/view.mjs",
+      "status": "skipped",
+      "upstream_blob": "c8c0cce069ad756075a46d67f6f2a90b8874113d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhaseFixed/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "52bd87a04b4afff4cc7c8f11b6b5100da87ba4bd"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhaseFixed/TwoPhaseFixed.cfg",
+      "status": "skipped",
+      "upstream_blob": "bbecf5002218920224d95830c738117990045ccf"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhaseFixed/TwoPhaseFixed.tla",
+      "status": "skipped",
+      "upstream_blob": "9cec1f87ca23424fea63685d010c729e3bb494da"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhaseFixed/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "78ae397f0115b2897616148c2675a1d40f77cc7e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhaseFixed/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "f79b82c8e815ec41128056e93c0517449fca3e2c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhaseFixed/report.md",
+      "status": "skipped",
+      "upstream_blob": "5b007b5a6bbbb471ada6cbfe11ece1a7b4ddf258"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhaseFixed/sany.out",
+      "status": "skipped",
+      "upstream_blob": "3926f23e49a5e4a375a6c1af3e63eb185c3d56f1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhaseFixed/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "790d0918a63648d639a77e1b701e696c79c2db3d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TwoPhaseFixed/view.mjs",
+      "status": "skipped",
+      "upstream_blob": "c8c0cce069ad756075a46d67f6f2a90b8874113d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/ChartRun.exit",
+      "status": "skipped",
+      "upstream_blob": "dd475631baeff3ce652b97d921c1cc43c917b9e2"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "51681e080fc79b3a5f47675082754ad3e2daa727"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/TypeGuard.cfg",
+      "status": "skipped",
+      "upstream_blob": "5c621b4371370780884e4fdef9d4a70266116b76"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/TypeGuard.tla",
+      "status": "skipped",
+      "upstream_blob": "efb5952f04091e0f6120da8853540baf90698ddb"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "68f61ab9012738d1ca7d6ee4bd7a13ef72f6c413"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "1ef8e69e9d7164078e5ec8ef89f83d01b2902476"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/report.md",
+      "status": "skipped",
+      "upstream_blob": "014071988b3d273e6e80bc02ec4d981029c6f501"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/sany.out",
+      "status": "skipped",
+      "upstream_blob": "18f6d2a04af169ad1065b59e625df7275433fc2e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "1e9be9502f219b810c9b0e46c46dfa328e6bf6a0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "dd475631baeff3ce652b97d921c1cc43c917b9e2"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/TypeGuard/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "0e682f17a7839bb0f16641e45a630b1a7615eccd"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/ChartRun.out",
+      "status": "skipped",
+      "upstream_blob": "ea07460f3c120ec854186a51c2246719ec07a575"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/UserNoDeadlock.cfg",
+      "status": "skipped",
+      "upstream_blob": "86617d00fb7f53ebc2eee4bd5f413bc2d1d2cf94"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/UserNoDeadlock.tla",
+      "status": "skipped",
+      "upstream_blob": "e18662ad543ab0239cb6257fdde68955b45e8d9f"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/chart.mmd",
+      "status": "skipped",
+      "upstream_blob": "539790a87bab5bd8ba8d1d150af613264fc516ae"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/graph.dot",
+      "status": "skipped",
+      "upstream_blob": "3b0721e409983954a3a2c8e5083b2d5868446f2e"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/report.md",
+      "status": "skipped",
+      "upstream_blob": "31274731ca2f0c34b505b9e77d22b8e7b94fae62"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/sany.out",
+      "status": "skipped",
+      "upstream_blob": "a3c622cb4c7bba0d9994f290bc036e1da35220c2"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/verdict-1.exit",
+      "status": "skipped",
+      "upstream_blob": "48082f72f087ce7e6fa75b9c41d7387daecd447b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/verdict-1.out",
+      "status": "skipped",
+      "upstream_blob": "3f12e86b80f1c5f76374b3b445e758355987f22b"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/verdict-2.exit",
+      "status": "skipped",
+      "upstream_blob": "b4de3947675361a7770d29b8982c407b0ec6b2a0"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/corpus/UserNoDeadlock/verdict-2.out",
+      "status": "skipped",
+      "upstream_blob": "972408774099989024edb827f6a1b6f37d8ba385"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/differential.test.ts",
+      "status": "skipped",
+      "upstream_blob": "c6aff9cadcc724202d7308a93fe2e17cc9aa64f4"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/drawn.ts",
+      "status": "skipped",
+      "upstream_blob": "1290403c9f1a30f8832f8fbf2635482486ffb8f9"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/grid/Grid.cfg",
+      "status": "skipped",
+      "upstream_blob": "d0ee570affdd4f5c4a26cff74d7fcace15898db1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/grid/Grid.tla",
+      "status": "skipped",
+      "upstream_blob": "362afc474250b6d8892d7feb5b553bca3dc5d9ee"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/grid/sany.out",
+      "status": "skipped",
+      "upstream_blob": "79e7f1243077292f954650ba757ca13f5565fee1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/java.ts",
+      "status": "skipped",
+      "upstream_blob": "b6634ad7ac998851cbce400bf5a52b37ee96ea80"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/labels.ts",
+      "status": "skipped",
+      "upstream_blob": "82497246cf25f2f11892c1ecca2a7a33cf36ef75"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/messages.test.ts",
+      "status": "skipped",
+      "upstream_blob": "4e0d3c358809a2c3b17a171b3e4601f3f2790992"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/pipeline.test.ts",
+      "status": "skipped",
+      "upstream_blob": "81a5056a37276e38bb4f68993378a82fb55036f5"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/plain-tlc.test.ts",
+      "status": "skipped",
+      "upstream_blob": "434e25612db133034c5a9f7e04965906488ef01c"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/render.test.ts",
+      "status": "skipped",
+      "upstream_blob": "57ff41e926875b65a455e0694c743a5c3562c4d5"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/tlc-out.test.ts",
+      "status": "skipped",
+      "upstream_blob": "7f27d04ee195e05d0ccea6c9e024a7b2890fde45"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/tlc.ts",
+      "status": "skipped",
+      "upstream_blob": "f659423d24c489616168096695ecfde1714bf45d"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/tsconfig.json",
+      "status": "skipped",
+      "upstream_blob": "9b16905d0a049715f942bdbe4bf3a3a80be02bad"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/statechart/scripts/worker.ts",
+      "status": "skipped",
+      "upstream_blob": "9559314668f6573e17db7c278d05f5776b235ebc"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/swarm/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "0848ef87411d1d1f528e3e7ba8af4c86e1861479",
+      "path": "skills/swarm/SKILL.md",
+      "applied_blob": "599416d1175d3b92591061a4c6a47e83b92cec11"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/tdd/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "ca6f24c963001d9d518db2936dfe3d12f29b4e94",
+      "path": "skills/tdd/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/teach/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "a7846077d5116f0149b4e6516b473f8b37e95c5e",
+      "path": "skills/teach/SKILL.md",
+      "applied_blob": "0caff78557889bef1955b63b5b2d4d990d179af1"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/technical-writing/SKILL.md",
+      "status": "injected",
+      "upstream_blob": "c4079df3e31204299d8ae999508c08dad06d774c",
+      "path": "skills/technical-writing/SKILL.md",
+      "applied_blob": "1b67aae68f754af9a5f9a52c39967a931629efdc"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/typescript-best-practices/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "e1e5aa7c97ed39c425d60d933a96424a3f14539e",
+      "path": "skills/typescript-best-practices/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/typescript-best-practices/references/patterns.md",
+      "status": "verbatim",
+      "upstream_blob": "f8dd99b63ecb469a090b8fa0a7e235d3239cb9ec",
+      "path": "skills/typescript-best-practices/references/patterns.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/unslop/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "583fe48499c8f8f71bd2deef4228d1f0129c03c7",
+      "path": "skills/unslop/SKILL.md"
+    },
+    {
+      "upstream": "harness/pstack/claude-code/skills/why/SKILL.md",
+      "status": "verbatim",
+      "upstream_blob": "99397830ddc11c8d7118272a4a3b2e59c8803891",
+      "path": "skills/why/SKILL.md"
+    },
+    {
+      "path": ".claude-plugin/plugin.json",
+      "status": "local"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "status": "local"
+    },
+    {
+      "path": "README.md",
+      "status": "local"
+    },
+    {
+      "path": "docs/harness/orca.md",
+      "status": "local"
+    }
+  ]
+}
