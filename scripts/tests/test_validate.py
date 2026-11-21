@@ -9,18 +9,28 @@ import unittest
 
 
 class ValidationEnvironmentTests(unittest.TestCase):
-    def run_validation(self, scenario):
+    def run_validation(self, scenario, claude_only=(), codex_listed=("one", "two"),
+                       without_codex_manifest=(), codex_sources=None):
         with tempfile.TemporaryDirectory(prefix="hm2-validator-test-") as directory:
             root = Path(directory)
             scripts = root / "repo/scripts"
             scripts.mkdir(parents=True)
-            shutil.copy2(Path(__file__).parents[1] / "validate.sh", scripts / "validate.sh")
+            for script in ["validate.sh", "codex_plugins.py"]:
+                shutil.copy2(Path(__file__).parents[1] / script, scripts / script)
             for name in [".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json"]:
                 path = root / "repo" / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text("{}")
-            for plugin in ["one", "two"]:
+            (root / "repo/.agents/plugins/marketplace.json").write_text(
+                json.dumps({"plugins": [
+                    {"name": name, "source": {
+                        "source": "local",
+                        "path": (codex_sources or {}).get(name, f"./plugins/{name}")}}
+                    for name in codex_listed]}))
+            for plugin in ["one", "two", *claude_only]:
                 for platform in [".claude-plugin", ".codex-plugin"]:
+                    if platform == ".codex-plugin" and plugin in without_codex_manifest:
+                        continue
                     path = root / "repo/plugins" / plugin / platform / "plugin.json"
                     path.parent.mkdir(parents=True)
                     path.write_text("{}")
@@ -44,6 +54,11 @@ cache = os.environ.get("UV_CACHE_DIR", "")
 with open(os.environ["HM2_TEST_LOG"], "a") as log:
     log.write(json.dumps({"name": name, "args": args, "cache": cache}) + "\\n")
 if name == "python3":
+    if args and args[0].endswith("codex_plugins.py"):
+        import runpy
+        sys.argv = args
+        runpy.run_path(args[0], run_name="__main__")
+        sys.exit(0)
     if args == ["-c", "import yaml"]:
         sys.exit(0 if scenario == "system" else 1)
     if args[:2] == ["-m", "json.tool"]:
@@ -119,6 +134,48 @@ elif name == "uv":
         self.assertEqual(len([e for e in events if e["name"] == "uv"]), 2)
         self.assertFalse(fresh)
         self.assertFalse(any(e["name"] == "claude" for e in events))
+
+    def validated_plugins(self, events):
+        return sorted(Path(e["args"][-1]).name for e in events
+                      if e["name"] == "python3" and e["args"][0].endswith("validator.py"))
+
+    def test_plugin_outside_codex_marketplace_needs_no_codex_manifest(self):
+        result, events, _ = self.run_validation(
+            "system", claude_only=["three"], without_codex_manifest=["three"])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.validated_plugins(events), ["one", "two"])
+        claude = [e["args"][-1] for e in events if e["name"] == "claude"]
+        self.assertTrue(any(path.endswith("plugins/three") for path in claude), claude)
+
+    def test_codex_listed_plugin_without_manifest_fails(self):
+        result, events, _ = self.run_validation("system", without_codex_manifest=["two"])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing .codex-plugin/plugin.json", result.stderr)
+        self.assertEqual(self.validated_plugins(events), [])
+
+    def test_codex_manifest_without_marketplace_entry_fails(self):
+        result, events, _ = self.run_validation("system", claude_only=["three"])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("not listed in .agents/plugins/marketplace.json", result.stderr)
+        self.assertEqual(self.validated_plugins(events), [])
+
+    def test_unreadable_codex_marketplace_fails(self):
+        result, _, _ = self.run_validation("system", codex_listed=[""])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("has no name", result.stderr)
+
+    def test_codex_marketplace_entry_without_a_plugin_folder_fails(self):
+        result, events, _ = self.run_validation("system", codex_listed=["one", "two", "ghost"])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("plugins/ghost does not exist", result.stderr)
+        self.assertNotIn("Validation complete", result.stdout)
+        self.assertEqual(self.validated_plugins(events), [])
+
+    def test_codex_marketplace_entry_pointing_at_another_folder_fails(self):
+        result, _, _ = self.run_validation(
+            "system", codex_sources={"two": "./plugins/one"})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("does not point at plugins/two", result.stderr)
 
 
 if __name__ == "__main__":

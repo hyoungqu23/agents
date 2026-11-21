@@ -21,9 +21,33 @@ fi
 # ${a[@]+"${a[@]}"} keeps an empty array from tripping `set -u` on bash 3.2.
 python3 -m json.tool "${repo_root}/.claude-plugin/marketplace.json" >/dev/null
 python3 -m json.tool "${repo_root}/.agents/plugins/marketplace.json" >/dev/null
+
+# Only plugins the Codex marketplace lists owe a Codex manifest. Deciding from
+# the manifest's presence instead would let a cross-platform plugin lose its
+# manifest without any check noticing.
+codex_listed="$(python3 "${repo_root}/scripts/codex_plugins.py" "${repo_root}/.agents/plugins/marketplace.json")"
+while IFS= read -r listed; do
+  if [[ -n "${listed}" && ! -d "${repo_root}/plugins/${listed}" ]]; then
+    echo "${listed} is listed in .agents/plugins/marketplace.json but plugins/${listed} does not exist" >&2
+    exit 1
+  fi
+done <<<"${codex_listed}"
+codex_roots=()
 for plugin_root in ${plugin_roots[@]+"${plugin_roots[@]}"}; do
   python3 -m json.tool "${plugin_root}/.claude-plugin/plugin.json" >/dev/null
-  python3 -m json.tool "${plugin_root}/.codex-plugin/plugin.json" >/dev/null
+  plugin_name="$(basename "${plugin_root}")"
+  codex_manifest="${plugin_root}/.codex-plugin/plugin.json"
+  if grep -qxF -- "${plugin_name}" <<<"${codex_listed}"; then
+    if [[ ! -f "${codex_manifest}" ]]; then
+      echo "Missing .codex-plugin/plugin.json in ${plugin_root}: ${plugin_name} is listed in .agents/plugins/marketplace.json" >&2
+      exit 1
+    fi
+    python3 -m json.tool "${codex_manifest}" >/dev/null
+    codex_roots+=("${plugin_root}")
+  elif [[ -e "${plugin_root}/.codex-plugin" ]]; then
+    echo "${plugin_name} has .codex-plugin but is not listed in .agents/plugins/marketplace.json; list it or remove the manifest" >&2
+    exit 1
+  fi
 done
 
 codex_validator="${CODEX_PLUGIN_VALIDATOR:-${HOME}/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py}"
@@ -44,7 +68,7 @@ if [[ -f "${codex_validator}" ]]; then
     echo "Codex validation requires PyYAML or uv." >&2
     exit 1
   fi
-  for plugin_root in ${plugin_roots[@]+"${plugin_roots[@]}"}; do
+  for plugin_root in ${codex_roots[@]+"${codex_roots[@]}"}; do
     "${codex_python[@]}" "${codex_validator}" "${plugin_root}"
   done
 else
