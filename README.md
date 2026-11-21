@@ -41,6 +41,10 @@ A cross-platform marketplace for reusable Claude Code and Codex plugins.
 
 The Claude Code and Codex manifests are platform-specific wrappers. Each skill is stored once under `plugins/<plugin>/skills/<skill>/` and shared by both.
 
+A plugin Codex cannot load is published for Claude Code only: leave it out of `.agents/plugins/marketplace.json` and give it no `.codex-plugin/`. `validate.sh` requires a plugin folder and a Codex manifest for every plugin that marketplace lists and rejects a manifest from a plugin it does not list, so a cross-platform plugin cannot lose its manifest unnoticed.
+
+A plugin that imports files from another repository records them in `upstream.lock.json`. Skills the lock marks `verbatim`, `injected` or `patched` keep their source wording, so the description-phrasing tests skip them and their `playbooks/` count as a start for reaching the imported references of the same skill. An imported file may link a file the lock marks `skipped`. Such a plugin supports plugin installation only. Nothing else is relaxed, and a path the lock does not name gets no exemption.
+
 ## Local testing
 
 The [Review Harness CLI](tools/review-harness/README.md) packages the four automated
