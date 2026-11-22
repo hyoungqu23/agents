@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 - 2026-11-22
+
+- Sync with `cursor/plugins` at `7a58391` (upstream version 0.15.46).
+
 ## 0.1.0 - 2026-11-21
 
 - Import 54 pstack skills, the guide, the Claude Code adapter and the two agent definitions from `cursor/plugins` at `aaeb0ea` (pstack 0.15.46). `upstream.lock.json` records every upstream file and its hash.
