@@ -15,6 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parents[1]))
 import import_upstream  # noqa: E402
+import sync_upstream_pr  # noqa: E402
 import upstream_lock  # noqa: E402
 
 REPO_ROOT = Path(__file__).parents[2]
@@ -146,7 +147,7 @@ class SyncTests(ImportFixture):
         import_upstream.sync(self.plugin, self.source, accept_new=True)
         before = (self.plugin / upstream_lock.LOCK_NAME).read_text()
         report = import_upstream.sync(self.plugin, self.source)
-        self.assertEqual(report, {'updated': [], 'new': [], 'removed': [], 'unclassified': []})
+        self.assertFalse(any(report.values()))
         self.assertEqual((self.plugin / upstream_lock.LOCK_NAME).read_text(), before)
 
     def test_upstream_change_is_followed_and_the_line_inserted_again(self):
@@ -273,16 +274,176 @@ class SyncTests(ImportFixture):
         git(self.source, 'checkout', '-q', first)
         self.assertEqual(self.problems(), [])
 
-    def test_patched_file_stops_the_sync(self):
+    def test_skipped_file_deleted_upstream_leaves_the_lock(self):
         import_upstream.sync(self.plugin, self.source, accept_new=True)
-        lock = import_upstream.read_lock(self.plugin)
-        for entry in lock['files']:
-            if entry.get('path') == 'skills/beta/SKILL.md':
-                entry['status'] = 'patched'
-        import_upstream.write_lock(self.plugin, lock)
+        (self.pack / 'skills/gone/SKILL.md').unlink()
+        self.commit('second')
+        report = import_upstream.sync(self.plugin, self.source)
+        self.assertEqual(report['removed'], [])
+        self.assertNotIn('vendor/pack/skills/gone/SKILL.md', self.entries())
+        self.assertEqual(self.problems(), [])
+
+    def patch_beta(self):
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        target = self.plugin / 'skills/beta/SKILL.md'
+        target.write_text('# Beta\n\nSee the **gone** skill.\n\nOur added step.\n')
+        import_upstream.mark_patched(self.plugin, 'skills/beta/SKILL.md')
+        self.assertEqual(self.problems(), [])
+        return target
+
+    def test_upstream_change_is_merged_into_a_patched_file(self):
+        target = self.patch_beta()
+        self.write(self.pack / 'skills/beta/SKILL.md', '# Beta, renamed\n\nSee the **gone** skill.\n')
+        self.commit('second')
+        report = import_upstream.sync(self.plugin, self.source)
+        self.assertEqual(report['patched'], ['skills/beta/SKILL.md'])
+        self.assertEqual(report['conflicts'], [])
+        self.assertEqual(
+            target.read_text(), '# Beta, renamed\n\nSee the **gone** skill.\n\nOur added step.\n')
+        self.assertEqual(self.entries()['skills/beta/SKILL.md']['status'], 'patched')
+        self.assertEqual(self.problems(), [])
+
+    def test_untouched_patched_file_is_left_alone(self):
+        target = self.patch_beta()
+        before = target.read_bytes()
+        self.write(self.pack / 'README.md', 'changed elsewhere\n')
+        self.commit('second')
+        report = import_upstream.sync(self.plugin, self.source)
+        self.assertEqual(report['patched'], ['skills/beta/SKILL.md'])
+        self.assertEqual(target.read_bytes(), before)
+        self.assertEqual(self.problems(), [])
+
+    def test_new_upstream_file_cannot_take_the_place_of_a_kept_patched_file(self):
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        target = self.plugin / 'upstream-agents/helper.md'
+        target.write_text('helper, patched\n')
+        import_upstream.mark_patched(self.plugin, 'upstream-agents/helper.md')
+        before = (self.plugin / upstream_lock.LOCK_NAME).read_text()
+        self.write(self.pack / 'upstream-agents/helper.md', 'another helper\n')
+        self.commit('second')
+        with self.assertRaises(SystemExit) as stopped:
+            import_upstream.sync(self.plugin, self.source, accept_new=True)
+        self.assertIn('upstream-agents/helper.md: already holds the upstream file '
+                      'vendor/pack/agents/helper.md', str(stopped.exception))
+        self.assertEqual(target.read_text(), 'helper, patched\n')
+        self.assertEqual((self.plugin / upstream_lock.LOCK_NAME).read_text(), before)
+
+    def test_unrecorded_edit_to_a_patched_file_is_not_merged_into_the_patch(self):
+        target = self.patch_beta()
+        target.write_text(target.read_text() + '\nA draft nobody recorded.\n')
+        before = (self.plugin / upstream_lock.LOCK_NAME).read_text()
+        # Upstream changing another file only must stop too, then the patched one.
+        for changed in ('README.md', 'skills/beta/SKILL.md'):
+            self.write(self.pack / changed, '# Beta, renamed\n\nSee the **gone** skill.\n')
+            self.commit(f'change {changed}')
+            with self.subTest(changed=changed), self.assertRaises(SystemExit) as stopped:
+                import_upstream.sync(self.plugin, self.source)
+            self.assertIn('skills/beta/SKILL.md: differs from the recorded patch',
+                          str(stopped.exception))
+            self.assertIn('A draft nobody recorded.', target.read_text())
+            self.assertEqual((self.plugin / 'UPSTREAM-README.md').read_text(), 'upstream readme\n')
+            self.assertEqual((self.plugin / upstream_lock.LOCK_NAME).read_text(), before)
+
+    def test_unrecorded_edit_to_a_patched_file_deleted_upstream_stops_too(self):
+        target = self.patch_beta()
+        target.write_text(target.read_text() + '\nA draft nobody recorded.\n')
+        before = (self.plugin / upstream_lock.LOCK_NAME).read_text()
+        (self.pack / 'skills/beta/SKILL.md').unlink()
+        self.write(self.pack / 'README.md', 'changed too\n')
+        self.commit('second')
         with self.assertRaises(SystemExit) as stopped:
             import_upstream.sync(self.plugin, self.source)
-        self.assertIn('skills/beta/SKILL.md', str(stopped.exception))
+        self.assertIn('skills/beta/SKILL.md: differs from the recorded patch', str(stopped.exception))
+        self.assertEqual((self.plugin / 'UPSTREAM-README.md').read_text(), 'upstream readme\n')
+        self.assertEqual((self.plugin / upstream_lock.LOCK_NAME).read_text(), before)
+
+    def test_skip_written_from_the_repository_root_is_refused(self):
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        self.write(self.pack / 'skills/fresh/SKILL.md', '# Fresh\n')
+        self.commit('second')
+        lock = import_upstream.read_lock(self.plugin)
+        lock['skip'].append('vendor/pack/skills/fresh/')
+        import_upstream.write_lock(self.plugin, lock)
+        with self.assertRaises(SystemExit) as stopped:
+            import_upstream.sync(self.plugin, self.source, accept_new=True)
+        self.assertIn('skip: vendor/pack/skills/fresh/ starts with upstream_root',
+                      str(stopped.exception))
+        self.assertFalse((self.plugin / 'skills/fresh').exists())
+        self.assertEqual(self.problems(source=False), [
+            'skip: vendor/pack/skills/fresh/ starts with upstream_root; '
+            'write it relative to vendor/pack/'])
+
+    def test_executable_bit_change_alone_reaches_a_patched_file(self):
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        target = self.plugin / 'skills/beta/run.sh'
+        target.write_text('#!/bin/sh\necho ours\n')
+        import_upstream.mark_patched(self.plugin, 'skills/beta/run.sh')
+        (self.pack / 'skills/beta/run.sh').chmod(0o644)
+        self.commit('second')
+        import_upstream.sync(self.plugin, self.source)
+        self.assertEqual(target.read_text(), '#!/bin/sh\necho ours\n')
+        self.assertFalse(import_upstream.is_executable(target))
+        self.assertNotIn('executable', self.entries()['skills/beta/run.sh'])
+        self.assertEqual(self.problems(), [])
+
+    def test_conflicting_upstream_change_leaves_markers_that_fail_the_check(self):
+        target = self.patch_beta()
+        self.write(self.pack / 'skills/beta/SKILL.md',
+                   '# Beta\n\nSee the **gone** skill.\n\nTheir added step.\n')
+        self.commit('second')
+        report = import_upstream.sync(self.plugin, self.source)
+        self.assertEqual(report['conflicts'], ['skills/beta/SKILL.md'])
+        self.assertIn('<<<<<<< this repository', target.read_text())
+        self.assertEqual(self.problems(), ['skills/beta/SKILL.md: has a merge conflict marker'])
+        target.write_text('# Beta\n\nSee the **gone** skill.\n\nBoth steps.\n')
+        self.assertEqual(self.problems(), [
+            'skills/beta/SKILL.md: content does not match applied_blob'])
+        import_upstream.mark_patched(self.plugin, 'skills/beta/SKILL.md')
+        self.assertEqual(self.problems(), [])
+
+    def test_patch_on_an_injected_file_keeps_the_generated_line(self):
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        target = self.plugin / 'skills/alpha/SKILL.md'
+        target.write_text(target.read_text().replace('**beta** skill', '**beta** skill here'))
+        import_upstream.mark_patched(self.plugin, 'skills/alpha/SKILL.md')
+        self.write(self.pack / 'skills/alpha/SKILL.md',
+                   f'# Alpha 2\n\n{ANCHOR}\n\nUse the **beta** skill.\n')
+        self.commit('second')
+        report = import_upstream.sync(self.plugin, self.source)
+        self.assertEqual(report['conflicts'], [])
+        self.assertEqual(
+            target.read_text(),
+            f'# Alpha 2\n\n{ANCHOR}\n\n{LINE}\n\nUse the **beta** skill here.\n')
+
+    def test_only_an_imported_file_can_be_marked_patched(self):
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        for path in ('README.md', 'skills/gone/SKILL.md', 'nowhere.md'):
+            with self.subTest(path=path), self.assertRaises(SystemExit):
+                import_upstream.mark_patched(self.plugin, path)
+
+    def test_upstream_version_is_copied_into_the_lock(self):
+        self.write(self.pack / 'plugin.json', '{"version": "1.2.3"}')
+        self.commit('second')
+        lock = import_upstream.read_lock(self.plugin)
+        lock.update(version_file='plugin.json', skip=[*lock['skip'], 'plugin.json'])
+        import_upstream.write_lock(self.plugin, lock)
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        self.assertEqual(import_upstream.read_lock(self.plugin)['version'], '1.2.3')
+        self.assertFalse((self.plugin / 'plugin.json').exists())
+
+    def test_unreadable_upstream_version_stops_before_writing(self):
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        lock = import_upstream.read_lock(self.plugin)
+        lock['version_file'] = 'plugin.json'
+        import_upstream.write_lock(self.plugin, lock)
+        before = (self.plugin / upstream_lock.LOCK_NAME).read_text()
+        self.write(self.pack / 'skills/beta/SKILL.md', '# Beta 2\n')
+        self.commit('second')
+        with self.assertRaises(SystemExit):
+            import_upstream.sync(self.plugin, self.source)
+        self.assertEqual((self.plugin / 'skills/beta/SKILL.md').read_text(),
+                         '# Beta\n\nSee the **gone** skill.\n')
+        self.assertEqual((self.plugin / upstream_lock.LOCK_NAME).read_text(), before)
 
 
 class CheckTests(ImportFixture):
@@ -405,6 +566,28 @@ class CheckTests(ImportFixture):
         self.assertEqual(len(self.problems()), 1)
         self.assertIn("not at the lock's commit", self.problems()[0])
 
+    def test_check_can_fetch_the_lock_commit_itself(self):
+        lock = import_upstream.read_lock(self.plugin)
+        lock['repository'] = self.source.as_uri()
+        import_upstream.write_lock(self.plugin, lock)
+        fetched = self.plugin.parent / 'fetched'
+        self.assertEqual(import_upstream.main(
+            ['check', '--plugin', str(self.plugin), '--fetch', str(fetched / '1')]), 0)
+        # An existing checkout is refused: fetching into it would detach its HEAD.
+        branch = import_upstream.git_output(self.source, 'symbolic-ref', 'HEAD')
+        for used in (fetched / '1', self.source):
+            with self.subTest(directory=used), self.assertRaises(SystemExit):
+                import_upstream.main(['check', '--plugin', str(self.plugin), '--fetch', str(used)])
+        self.assertEqual(import_upstream.git_output(self.source, 'symbolic-ref', 'HEAD'), branch)
+        self.write(self.pack / 'skills/fresh/SKILL.md', '# Fresh\n')
+        self.commit('second')
+        # The fetch pins the lock's commit, so later upstream commits do not matter.
+        self.assertEqual(import_upstream.main(
+            ['check', '--plugin', str(self.plugin), '--fetch', str(fetched / '2')]), 0)
+        (self.plugin / 'skills/beta/run.sh').chmod(0o644)
+        self.assertEqual(import_upstream.main(
+            ['check', '--plugin', str(self.plugin), '--fetch', str(fetched / '3')]), 1)
+
     def test_path_leaving_the_plugin_fails(self):
         lock = import_upstream.read_lock(self.plugin)
         lock['files'].append({'path': '../../README.md', 'status': 'local'})
@@ -428,6 +611,112 @@ class CheckTests(ImportFixture):
         import_upstream.write_lock(self.plugin, lock)
         self.assertEqual(unknown_skill_names(self.plugin), [
             'skills/beta/SKILL.md: absent principle', 'skills/beta/SKILL.md: missing skill'])
+
+
+class SyncPullRequestTests(ImportFixture):
+    def setUp(self):
+        super().setUp()
+        self.repo = self.plugin.parents[1]
+        lock = import_upstream.read_lock(self.plugin)
+        lock['repository'] = 'https://github.com/example/pack'
+        lock['files'] += [{'path': path, 'status': 'local'}
+                          for path in ('.claude-plugin/plugin.json', 'CHANGELOG.md')]
+        import_upstream.write_lock(self.plugin, lock)
+        self.write(self.plugin / '.claude-plugin/plugin.json',
+                   '{\n  "name": "demo",\n  "version": "0.1.9"\n}\n')
+        self.write(self.plugin / 'CHANGELOG.md', '# Changelog\n\n## 0.1.9 - 2026-01-01\n\n- First.\n')
+        self.write(self.repo / '.claude-plugin/marketplace.json', json.dumps(
+            {'plugins': [{'name': 'other', 'version': '3.0.0'},
+                         {'name': 'demo', 'version': '0.1.9'}]}, indent=4) + '\n')
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        self.first = import_upstream.read_lock(self.plugin)['commit']
+
+    def prepare(self):
+        return sync_upstream_pr.prepare(self.repo, self.plugin, self.source, '2026-02-03')
+
+    def test_change_outside_the_imported_folder_prepares_nothing(self):
+        self.write(self.source / 'elsewhere/SKILL.md', 'changed outside the pack\n')
+        self.commit('second')
+        before = {path: path.read_bytes() for path in self.repo.rglob('*') if path.is_file()}
+        self.assertIsNone(self.prepare())
+        self.assertEqual(
+            {path: path.read_bytes() for path in self.repo.rglob('*') if path.is_file()}, before)
+        self.assertEqual(import_upstream.read_lock(self.plugin)['commit'], self.first)
+
+    def test_upstream_change_is_released_as_the_next_patch_version(self):
+        self.write(self.pack / 'skills/beta/SKILL.md', '# Beta 2\n')
+        self.write(self.pack / 'skills/fresh/SKILL.md', '# Fresh\n')
+        (self.pack / 'agents/helper.md').unlink()
+        self.commit('second')
+        second = import_upstream.checked_out_commit(self.source)
+        text = self.prepare()
+
+        manifest = (self.plugin / '.claude-plugin/plugin.json').read_text()
+        self.assertEqual(manifest, '{\n  "name": "demo",\n  "version": "0.1.10"\n}\n')
+        marketplace = json.loads((self.repo / '.claude-plugin/marketplace.json').read_text())
+        self.assertEqual([entry['version'] for entry in marketplace['plugins']], ['3.0.0', '0.1.10'])
+        self.assertIn('\n    "plugins"', (self.repo / '.claude-plugin/marketplace.json').read_text())
+        notes = (self.plugin / 'CHANGELOG.md').read_text()
+        self.assertTrue(notes.startswith(
+            f'# Changelog\n\n## 0.1.10 - 2026-02-03\n\n- Sync with `example/pack` at `{second[:7]}`'))
+        self.assertIn('## 0.1.9 - 2026-01-01', notes)
+        sys.path.insert(0, str(REPO_ROOT / 'scripts'))
+        import check_release_notes
+        self.assertIsNone(check_release_notes.check_notes('0.1.10', notes))
+
+        self.assertIn(f'https://github.com/example/pack/compare/{self.first}...{second}', text)
+        self.assertIn(
+            '### 분류되지 않은 새 원문 파일 (`vendor/pack` 기준 경로)\n\n- `skills/fresh/SKILL.md`', text)
+        self.assertIn('### 원문에서 지워진 파일\n\n- `vendor/pack/agents/helper.md`', text)
+        self.assertIn('### 충돌이 남은 파일\n\n- 없음', text)
+        self.assertIn('### 내용이 바뀐 원문 파일\n\n- `vendor/pack/skills/beta/SKILL.md`', text)
+        self.assertEqual(import_upstream.check(self.plugin), [])
+
+    def test_unreleased_entries_move_into_the_new_release(self):
+        self.write(self.plugin / 'CHANGELOG.md',
+                   '# Changelog\n\n## Unreleased\n\n- Pending.\n\n## 0.1.9 - 2026-01-01\n\n- First.\n')
+        self.write(self.pack / 'skills/beta/SKILL.md', '# Beta 2\n')
+        self.commit('second')
+        self.prepare()
+        notes = (self.plugin / 'CHANGELOG.md').read_text()
+        self.assertRegex(notes, r'^# Changelog\n\n## Unreleased\n\n## 0\.1\.10 - 2026-02-03\n\n'
+                                r'- Sync with [^\n]+\n- Pending\.\n\n## 0\.1\.9 - 2026-01-01\n')
+        sys.path.insert(0, str(REPO_ROOT / 'scripts'))
+        import check_release_notes
+        self.assertIsNone(check_release_notes.check_notes('0.1.10', notes))
+
+    def test_unreleased_entries_below_a_release_move_too(self):
+        self.write(self.plugin / 'CHANGELOG.md',
+                   '# Changelog\n\n## 0.1.9 - 2026-01-01\n\n- First.\n\n##  Unreleased\t\n\n- Pending.\n')
+        self.write(self.pack / 'skills/beta/SKILL.md', '# Beta 2\n')
+        self.commit('second')
+        self.prepare()
+        notes = (self.plugin / 'CHANGELOG.md').read_text()
+        self.assertRegex(notes, r'^# Changelog\n\n## 0\.1\.10 - 2026-02-03\n\n- Sync with [^\n]+\n'
+                                r'- Pending\.\n\n## 0\.1\.9 - 2026-01-01\n\n- First\.\n\n##  Unreleased\t\n\n$')
+        sys.path.insert(0, str(REPO_ROOT / 'scripts'))
+        import check_release_notes
+        self.assertIsNone(check_release_notes.check_notes('0.1.10', notes))
+
+    def test_a_release_that_cannot_finish_writes_nothing(self):
+        self.write(self.pack / 'skills/beta/SKILL.md', '# Beta 2\n')
+        self.commit('second')
+        broken = {'.claude-plugin/marketplace.json': b'{"plugins": []}',
+                  'plugins/demo/CHANGELOG.md': b'# Changelog \xff\n',
+                  'plugins/demo/.claude-plugin/plugin.json': b'{"name": "demo", "version": "1.0"}'}
+        for name, content in broken.items():
+            with self.subTest(file=name):
+                path = self.repo / name
+                good = path.read_bytes()
+                path.write_bytes(content)
+                before = {found: found.read_bytes()
+                          for found in self.repo.rglob('*') if found.is_file()}
+                with self.assertRaises(SystemExit):
+                    self.prepare()
+                self.assertEqual({found: found.read_bytes()
+                                  for found in self.repo.rglob('*') if found.is_file()}, before)
+                path.write_bytes(good)
+        self.assertIsNotNone(self.prepare())
 
 
 if __name__ == '__main__':

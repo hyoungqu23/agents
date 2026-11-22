@@ -1,0 +1,188 @@
+name: hstack-upstream-sync
+
+# Opens a pull request when pstack changed upstream. Nothing is merged
+# automatically: a person approves the PR's `validate` run, classifies new
+# upstream files and resolves conflicts.
+on:
+  schedule:
+    # Mondays 09:00 KST.
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: hstack-upstream-sync-${{ github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  PLUGIN: plugins/hstack
+  BASE: ${{ github.ref_name }}
+  HEAD_BRANCH: hstack-sync/${{ github.ref_name }}
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      # The branch as it is now, not the commit that started the run: a re-run
+      # of an old run would otherwise sync from a lock that has since moved on.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Fetch upstream at the lock's commit and at main
+        id: upstream
+        run: |
+          field() { python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))[sys.argv[2]])' "$PLUGIN/upstream.lock.json" "$1"; }
+          repository="$(field repository)"
+          locked="$(field commit)"
+          source="$RUNNER_TEMP/upstream"
+          git init -q "$source"
+          # Both commits come with their files: sync reads the new content and
+          # needs the old content to merge patched files.
+          git -C "$source" fetch -q --depth 1 "$repository" "$locked"
+          git -C "$source" fetch -q --depth 1 "$repository" main
+          git -C "$source" checkout -q --detach FETCH_HEAD
+          {
+            echo "source=$source"
+            echo "repository=$repository"
+            echo "root=$(field upstream_root)"
+            echo "latest=$(git -C "$source" rev-parse HEAD)"
+            echo "base_sha=$(git rev-parse HEAD)"
+          } >> "$GITHUB_OUTPUT"
+
+      # An open sync PR may hold a person's conflict resolution, so it is never
+      # rewritten. What it is compared with is its own lock, not the base
+      # branch's: it gets one comment per upstream state it does not cover.
+      - name: Comment on an open sync pull request instead of replacing it
+        id: open
+        env:
+          SOURCE: ${{ steps.upstream.outputs.source }}
+          REPOSITORY: ${{ steps.upstream.outputs.repository }}
+          ROOT: ${{ steps.upstream.outputs.root }}
+          LATEST: ${{ steps.upstream.outputs.latest }}
+        run: |
+          # --head matches the branch name alone, so a fork's pull request from
+          # a branch of the same name is left out here.
+          number="$(gh pr list --head "$HEAD_BRANCH" --base "$BASE" --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository | not)][0].number // empty')"
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+          echo "remote=$(git ls-remote origin "refs/heads/$HEAD_BRANCH" | cut -f1)" >> "$GITHUB_OUTPUT"
+          [[ -n "$number" ]] || exit 0
+          head="$(gh pr view "$number" --json headRefOid --jq .headRefOid)"
+          git fetch -q --depth 1 origin "$head"
+          covered="$(git show "FETCH_HEAD:$PLUGIN/upstream.lock.json" | python3 -c 'import json,sys; print(json.load(sys.stdin)["commit"])')"
+          git -C "$SOURCE" fetch -q --depth 1 --filter=blob:none "$REPOSITORY" "$covered"
+          # Tree ids, because upstream holds other plugins whose commits say
+          # nothing about this one.
+          tree="$(git -C "$SOURCE" rev-parse "HEAD:$ROOT")"
+          # Read on its own line: inside a condition a failed lookup would look
+          # like "no such comment" and a duplicate would be posted.
+          comments="$(gh pr view "$number" --json comments --jq '.comments[].body')"
+          if [[ "$(git -C "$SOURCE" rev-parse "$covered:$ROOT")" == "$tree" ]]; then
+            echo "PR #$number already covers $ROOT at $LATEST."
+          elif grep -qF "$tree" <<< "$comments"; then
+            echo "PR #$number already has a comment about tree $tree."
+          else
+            {
+              echo "원문이 이 PR 뒤로 더 바뀌었습니다: $REPOSITORY/compare/$covered...$LATEST"
+              echo
+              echo '이 PR은 그대로 둡니다. 병합된 뒤의 실행이 나머지를 가져옵니다.'
+              echo
+              echo "<!-- upstream tree $tree -->"
+            } > "$RUNNER_TEMP/comment.md"
+            gh pr comment "$number" --body-file "$RUNNER_TEMP/comment.md"
+          fi
+
+      - name: Stop when upstream did not change under the imported folder
+        id: changed
+        if: steps.open.outputs.number == ''
+        env:
+          SOURCE: ${{ steps.upstream.outputs.source }}
+        run: |
+          changed="$(python3 -c '
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "scripts")
+          import import_upstream
+          lock = import_upstream.read_lock(Path(sys.argv[1]))
+          print("true" if import_upstream.upstream_changed(lock, sys.argv[2]) else "false")
+          ' "$PLUGIN" "$SOURCE")"
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          [[ "$changed" == true ]] || echo "pstack is unchanged since the lock's commit; no pull request."
+
+      - name: Sync and release
+        if: steps.changed.outputs.changed == 'true'
+        env:
+          SOURCE: ${{ steps.upstream.outputs.source }}
+        run: |
+          git switch -q -C "$HEAD_BRANCH"
+          python3 scripts/sync_upstream_pr.py --plugin "$PLUGIN" --source "$SOURCE" \
+            --date "$(TZ=Asia/Seoul date +%F)" --body-file "$RUNNER_TEMP/body.md"
+          git add -A -- "$PLUGIN" .claude-plugin/marketplace.json
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -q -m "hstack: 원문 ${{ steps.upstream.outputs.latest }} 반영"
+
+      # validate.sh and load-check.sh need the Codex validator and the Claude
+      # CLI, so they stay in validate.yml. These checks only show, before
+      # anyone approves that run, whether the lock and the files agree.
+      - name: Run the light checks and record them in the body
+        if: steps.changed.outputs.changed == 'true'
+        env:
+          SOURCE: ${{ steps.upstream.outputs.source }}
+          BASE_SHA: ${{ steps.upstream.outputs.base_sha }}
+        run: |
+          {
+            echo
+            echo '## 이 작업 안에서 돌린 검사'
+            echo
+            echo '`validate.sh`와 `load-check.sh`는 여기서 돌리지 않습니다. `validate` 실행이 맡습니다.'
+            echo
+          } >> "$RUNNER_TEMP/body.md"
+          record() {
+            local label="$1"; shift
+            if "$@" > "$RUNNER_TEMP/check.log" 2>&1; then
+              echo "- 통과: $label" >> "$RUNNER_TEMP/body.md"
+            else
+              {
+                echo "- 실패: $label"
+                echo
+                echo '  ```'
+                tail -n 40 "$RUNNER_TEMP/check.log" | sed 's/^/  /'
+                echo '  ```'
+              } >> "$RUNNER_TEMP/body.md"
+            fi
+          }
+          record '잠금 파일과 원문·폴더 대조 (`import_upstream.py check --source`)' \
+            python3 scripts/import_upstream.py check --plugin "$PLUGIN" --source "$SOURCE"
+          record '잠금 파일, 원문 형식 참조, 설명, 설치 후 링크 테스트' \
+            python3 -m unittest scripts/tests/test_upstream_import.py \
+              scripts/tests/test_skill_frontmatter.py scripts/tests/test_review_skill_install.py
+          record '릴리스 항목 (`check_release_notes.py`)' \
+            python3 scripts/check_release_notes.py pull_request "$BASE_SHA" HEAD
+
+      - name: Open the pull request
+        if: steps.changed.outputs.changed == 'true'
+        env:
+          REMOTE: ${{ steps.open.outputs.remote }}
+        run: |
+          # A leftover branch from a closed PR is replaced, but only while it is
+          # still what the first step saw: someone may have reopened that PR and
+          # pushed to it since.
+          # Assigned first, so a failed lookup stops the step instead of
+          # reading as "no open pull request".
+          number="$(gh pr list --head "$HEAD_BRANCH" --base "$BASE" --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository | not)][0].number // empty')"
+          if [[ -n "$number" ]]; then
+            echo "A sync pull request was opened while this ran; leaving it alone."
+            exit 0
+          fi
+          git push -q --force-with-lease="refs/heads/$HEAD_BRANCH:$REMOTE" origin "$HEAD_BRANCH"
+          gh pr create --base "$BASE" --head "$HEAD_BRANCH" \
+            --title "hstack: 원문 $(echo '${{ steps.upstream.outputs.latest }}' | cut -c1-7) 반영" \
+            --body-file "$RUNNER_TEMP/body.md"
