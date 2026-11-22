@@ -15,6 +15,30 @@ This plugin is installed as `hstack`, not `pstack`.
 | Install with `/plugin marketplace add cursor/plugins` and `/plugin install pstack@cursor-plugins` | Never suggest it. hstack is already installed, and pstack would run without this file. |
 | `pstack:poteto-agent`, `pstack:comment-sicko` as `subagent_type` | Neither is registered. `Read` `<pstack>/upstream-agents/<name>.md`, start a `general-purpose` agent, and put that file's body at the top of its brief. Ignore the file's `model:` line. |
 
+## Project skills
+
+Codex and agy read a project's skills from `.agents/skills/`, and Claude Code reads them from `.claude/skills/`. A project skill that a skill writes, such as the `verify-<app>` skill from `create-verification-skill`, lives in `.agents/skills/` and is linked into `.claude/skills/`, so every seat finds the same file. Claude Code follows the link.
+
+| Claude Code adapter | Here |
+| --- | --- |
+| `.cursor/skills/<path>/` in a project, which the Claude Code adapter maps to `.claude/skills/<path>/`. `<path>` is the skill's folder under `skills/`, such as `verify-app` or `sam/sam-mode` | Write `.agents/skills/<path>/`, link it into `.claude/skills/<path>` as below, and commit both |
+| Finding a project skill, such as `maintain-verification-skill`'s `.cursor/skills/verify-*/` | Look in `.agents/skills/` first, then `.claude/skills/`. A skill found only in `.claude/skills/` is still the target; offer to move it and link it |
+| `~/.cursor/skills/`, the user's own skills | `~/.claude/skills/`, as the Claude Code adapter says |
+
+Link from the top of the project. The link is relative to its own folder, so it works for a skill in a category folder, and running it again for a skill that is already linked changes nothing. When `.claude/skills/<path>` exists and is not that link, it stops; tell the user instead of replacing it:
+
+```sh
+src=.agents/skills/<path> dst=.claude/skills/<path>
+if [ -L "$dst" ] && [ "$(cd "$dst" && pwd -P)" = "$(cd "$src" && pwd -P)" ]; then
+  echo "already linked"
+elif [ -e "$dst" ] || [ -L "$dst" ]; then
+  echo "$dst exists and is not the link" >&2; false
+else
+  mkdir -p "$(dirname "$dst")" &&
+  ln -s "$(python3 -c 'import os, sys; print(os.path.relpath(sys.argv[1], os.path.dirname(sys.argv[2])))' "$src" "$dst")" "$dst"
+fi
+```
+
 ## Skills that are not installed
 
 `make-bot-ui`, `statechart`, `create-formal-verification-skill` and `maintain-formal-verification-skill` are not part of hstack. Where a skill offers or calls one of them, say that hstack does not include it and continue without it.
