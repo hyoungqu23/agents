@@ -152,19 +152,20 @@ Each seat works in its own worktree, which you create before the start so the wo
 For `interrogate`, freeze the scope once, before the first seat, so every seat reviews the same changes even when a seat waits for a free slot. `arena`'s candidate worktrees are adapted with the rest of `arena`.
 
 1. Write `<paths>` relative to the top of your checkout: the paths the user named, each prefixed with `git rev-parse --show-prefix` when you are in a subfolder, or `.` when the scope is the whole branch. Use the same `<paths>` in the spec.
-2. Save the commit, the tracked changes and the untracked files under `<snapshot>`: the run record's path without `.json`, plus `-scope`, as an absolute path. A new run's record is new, so `mkdir` without `-p` refuses a folder an earlier run left. The `&&` stops at the first command that fails:
+2. Save the commit, the base commit the seats diff from, the tracked changes and the untracked files under `<snapshot>`: the run record's path without `.json`, plus `-scope`, as an absolute path. A new run's record is new, so `mkdir` without `-p` refuses a folder an earlier run left. The `&&` stops at the first command that fails:
 
    ```sh
    cd "$(git rev-parse --show-toplevel)" &&
    mkdir -p "$(dirname <snapshot>)" &&
    mkdir <snapshot> <snapshot>/files &&
    git rev-parse HEAD > <snapshot>/head &&
+   <base> > <snapshot>/base &&
    git diff --binary "$(cat <snapshot>/head)" -- <paths> > <snapshot>/tracked.patch &&
    git ls-files --others --exclude-standard -z -- <paths> > <snapshot>/untracked &&
    rsync -a --from0 --files-from=<snapshot>/untracked ./ <snapshot>/files/
    ```
 
-   When it fails, report the command and its output and start no seat. A symbolic link whose target is missing is known to fail here.
+   `<base>` is `git merge-base <base branch> "$(cat <snapshot>/head)"` when the scope is the branch, or `cat <snapshot>/head` when it is only uncommitted work. When the block fails, report the command and its output and start no seat. A symbolic link whose target is missing is known to fail here.
 
 Then, for each seat:
 
@@ -190,19 +191,21 @@ Then, for each seat:
 
 ### Spec
 
-Write the spec as Workers says. Leave out `--instructions`: a panel worker follows its own brief, not `worker.md`. For `interrogate`, give it the scope's base commit and `<paths>`: the merge base of the saved commit with the base branch (`git merge-base <base branch> "$(cat <snapshot>/head)"`) when the scope is the branch, or the saved commit when it is only uncommitted work. Tell it that the commits and the copied changes are already in its worktree, so `git diff --cached <base commit> -- <paths>` shows the whole scope. Tell it to report with `worker_done`.
+Write the spec as Workers says. Leave out `--instructions`: a panel worker follows its own brief, not `worker.md`. For `interrogate`, give it `<paths>` and the base commit saved in `<snapshot>/base`, the same for every seat. Tell it that the commits and the copied changes are already in its worktree, so `git diff --cached <base commit> -- <paths>` shows the whole scope. Tell it to report with `worker_done`.
 
 ### Verify
 
 Rerun each reported command yourself in that seat's worktree, where its repros are, after the worker reports. Read the output yourself; a worker's description of its output is not evidence.
 
-First list what the worker changed in its worktree since it was given the scope, commits included:
+First list what the worker changed in its worktree since it was given the scope, without touching its Git state. The first command compares through a separate index, so the worktree's own index stays as the worker left it, and it covers commits, deletions and untracked files. The second lists every file written since, ignored files such as `.env.local` included:
 
 ```sh
-git -C <worktree> add -A && git -C <worktree> diff --cached --name-status "$(cat <snapshot>/<letter>.tree)"
+GIT_INDEX_FILE=<snapshot>/<letter>.index git -C <worktree> add -A &&
+GIT_INDEX_FILE=<snapshot>/<letter>.index git -C <worktree> diff --cached --name-status "$(cat <snapshot>/<letter>.tree)"
+find <worktree> -newer <snapshot>/<letter>.tree -type f -not -path '<worktree>/.git'
 ```
 
-A failure that needs one of those changes to the code under review is the worker's, not the scope's: keep the finding only when the command runs the scope's code as it was given, plus repro scripts and tests the worker added. Otherwise report it as unverified.
+A failure that needs one of those changes, to the code under review or to a file it reads such as configuration, is the worker's, not the scope's. Keep the finding only when the command runs the scope's code and files as they were given, plus repro scripts and tests the worker added. When you cannot tell what the command reads, report it as unverified.
 
 The command and the files it runs were written by the worker, and a rerun runs them with your permissions. Before each rerun, read the command and every script, test or fixture it runs that the worker added or changed. Rerun only with your session's sandbox on. Never turn it off for a rerun. A finding whose command reaches the network, reads credentials, writes outside the worktree, or cannot run inside the sandbox stays unverified: report it as unverified, not as verified or dropped.
 
