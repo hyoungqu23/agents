@@ -52,7 +52,7 @@ python3 scripts/import_upstream.py sync --plugin plugins/hstack --source <checko
 python3 scripts/import_upstream.py check --plugin plugins/hstack --source <the same checkout>
 ```
 
-`sync` reads the checkout's `HEAD` commit, rewrites the imported files and inserts the generated line again. It reports upstream files the lock does not classify instead of importing them: to leave some out, add their paths to `skip` in the lock first, then run `sync --accept-new` once for the rest. In the other order the files meant to be left out are imported too.
+`sync` reads the checkout's `HEAD` commit, rewrites the imported files and inserts the generated line again. It reports upstream files the lock does not classify instead of importing them. To classify the files a sync pull request lists, first check the upstream checkout out at the commit in that pull request's lock, or files added upstream since then come in as well. To leave some out, add their paths to `skip` in the lock first, then run `sync --accept-new` once for the rest. In the other order the files meant to be left out are imported too.
 
 A file deleted upstream is reported and kept. Delete the file together with its entry in the lock, or keep it by removing `upstream`, `upstream_blob` and `applied_blob` from the entry and setting its `status` to `local`.
 
