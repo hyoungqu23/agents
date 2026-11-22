@@ -1,6 +1,6 @@
 # Hstack
 
-> **Not usable yet: `poteto-mode`, `arena`, `interrogate`, `swarm`, `show-me-your-work`, `setup-pstack`.** The first five need workers or reviewers on other vendors' models, and hstack cannot start those until its Orca adapter is complete. `setup-pstack` writes model choices hstack does not read. Each one stops and says so when invoked. The other 48 skills work now.
+> **Not usable yet: `poteto-mode`, `arena`, `interrogate`, `swarm`, `show-me-your-work`.** They need workers or reviewers on other vendors' models, and hstack cannot start those until its Orca adapter is complete. Each one stops and says so when invoked. The other 49 skills work now.
 
 Hstack is [pstack](https://github.com/cursor/plugins/tree/main/pstack) for Claude Code, imported with its source text intact. pstack is written by Lauren Tan and published under the MIT license; see [LICENSE](LICENSE) and the original [README](UPSTREAM-README.md).
 
@@ -27,6 +27,10 @@ Files come from `harness/pstack/claude-code/` in `cursor/plugins`, the Claude Co
 Two things are placed differently from upstream. `agents/` is imported as `upstream-agents/`, so Claude Code does not register the two definitions as agents. The upstream `README.md` is imported as `UPSTREAM-README.md`, because this file takes its place.
 
 To read a file as upstream has it, open `https://github.com/cursor/plugins/blob/<commit>/<upstream path>` with the commit and path from the lock, or replace the commit with `main` for the latest text.
+
+## Seats
+
+Each pstack role runs on a seat: Claude Code, Codex or agy, with a model. `/hstack:setup-pstack` writes your choices to `~/.config/hstack/seats.md`; roles you leave out keep the defaults. [`scripts/hstack_seats.py`](scripts/hstack_seats.py) reads that file, and it is the only way hstack starts a worker. Before each start it checks that Orca is reachable, that this session runs in an Orca terminal, that the seat's CLI is installed, that an agy model is one `agy models` offers, and that agy may report and read without asking. When a check fails it starts nothing. It writes each request to a run record under `~/.local/state/hm2/hstack/runs/` before starting, so a lost response can be looked up instead of starting the worker twice.
 
 ## Not imported
 

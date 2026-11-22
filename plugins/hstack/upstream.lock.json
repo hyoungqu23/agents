@@ -2875,6 +2875,10 @@
     {
       "path": "docs/harness/orca.md",
       "status": "local"
+    },
+    {
+      "path": "scripts/hstack_seats.py",
+      "status": "local"
     }
   ]
 }
