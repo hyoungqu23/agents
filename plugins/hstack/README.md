@@ -52,7 +52,9 @@ python3 scripts/import_upstream.py sync --plugin plugins/hstack --source <checko
 python3 scripts/import_upstream.py check --plugin plugins/hstack --source <the same checkout>
 ```
 
-`sync` reads the checkout's `HEAD` commit, rewrites the imported files and inserts the generated line again. It reports upstream files the lock does not classify instead of importing them: add `--accept-new` to import them, or add their path to `skip` in the lock and run `sync` again.
+`sync` reads the checkout's `HEAD` commit, rewrites the imported files and inserts the generated line again. It reports upstream files the lock does not classify instead of importing them: to leave some out, add their paths to `skip` in the lock first, then run `sync --accept-new` once for the rest. In the other order the files meant to be left out are imported too.
+
+A file deleted upstream is reported and kept. Delete the file together with its entry in the lock, or keep it by removing `upstream`, `upstream_blob` and `applied_blob` from the entry and setting its `status` to `local`.
 
 Do not edit an imported file by hand without recording it: `check` fails when a file differs from the hash in the lock. When an upstream skill has to change to run here, edit it and record the patch:
 
@@ -60,4 +62,4 @@ Do not edit an imported file by hand without recording it: `check` fails when a 
 python3 scripts/import_upstream.py patch --plugin plugins/hstack --path skills/<name>/SKILL.md
 ```
 
-From then on `sync` merges upstream changes into that file instead of replacing it. A change it cannot merge is left with conflict markers, and `check` fails until they are resolved and the file is recorded with `patch` again. `sync` writes nothing when a patched file differs from what was recorded, so an edit made after `patch` has to be recorded or undone first.
+From then on `sync` merges upstream changes into that file instead of replacing it. A change it cannot merge is left with conflict markers, and `check` fails until they are resolved and the file is recorded with `patch` again. `sync` writes nothing when any patched file differs from what was recorded, so an edit made after `patch` has to be recorded or undone first.
