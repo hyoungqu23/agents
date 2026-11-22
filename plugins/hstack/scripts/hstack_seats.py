@@ -1,6 +1,7 @@
 """hstack seats: which CLI and model each pstack role runs on, and the one way to start a worker.
 
     seats      print every role's seats as JSON, from the seats file or the defaults
+               (--defaults: the defaults alone)
     validate   check the seats file; setup-pstack runs this before it finishes
     preflight  check that the seats of the named roles can start now
     start      check one seat, record the request, then start it as an Orca worker
@@ -362,17 +363,33 @@ def checked_arguments(args):
     return problems
 
 
+def strings(data, keys):
+    """Every string under any of keys, anywhere in a nested receipt."""
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if key in keys and isinstance(value, str):
+                yield value
+            yield from strings(value, keys)
+    elif isinstance(data, list):
+        for value in data:
+            yield from strings(value, keys)
+
+
 def outcome(returncode, receipt):
     """started, failed (Orca says nothing ran) or unknown."""
     if not isinstance(receipt, dict):
         return 'unknown'
-    # A timed-out request says so in its recovery advice, beside an ordinary error code.
-    states = {find(receipt, key) for key in ('disposition', 'state', 'outcome', 'status', 'code')}
+    # Every value, not the first: a timed-out request says so in its recovery
+    # advice, after an ordinary error code.
+    states = set(strings(receipt, {'disposition', 'state', 'outcome', 'status', 'code'}))
     if 'outcome_unknown' in states:
         return 'unknown'
     # A worker that reached ready has started, even if a later step such as
-    # --keep-open failed and made the command exit 1.
-    if (returncode == 0 and receipt.get('ok', True)) or find(receipt, 'state') == 'ready':
+    # --keep-open failed and made the command exit 1. Only the worker's own
+    # state counts, not a nested step's.
+    result = receipt.get('result')
+    state = result.get('state') if isinstance(result, dict) else receipt.get('state')
+    if (returncode == 0 and receipt.get('ok', True)) or state == 'ready':
         return 'started'
     # Refused before acting, such as a bad argument, or a start Orca saw fail.
     if receipt.get('error') or 'failed' in states:
@@ -397,6 +414,16 @@ def start(args):
     # Orca takes only a UUID here.
     request = str(uuid.uuid4())
     record = Path(args.record) if args.record else state_dir() / f'hstack-{request}.json'
+    # A record belongs to one Run. Without --run Orca uses the session's, which
+    # may be another one when an earlier run is resumed.
+    try:
+        known = (json.loads(record.read_text(encoding='utf-8')).get('run_id')
+                 if record.is_file() else None)
+    except (OSError, ValueError, AttributeError) as error:
+        return refuse([f'{record} cannot be read: {error}'])
+    if args.run and known and args.run != known:
+        return refuse([f'{record} belongs to Run {known}, not {args.run}'])
+    args.run = args.run or known
     command = ['orca', 'orchestration', 'worker-start', '--environment', 'local',
                '--agent', CLIS[seat['cli']], '--worktree', args.worktree,
                '--retry-request', request, '--json']
@@ -411,9 +438,11 @@ def start(args):
         title = f'{args.task_title} · {request[-8:]}'
         spec = record.with_name(f'{record.stem}.{request[-8:]}.spec.md')
         spec.parent.mkdir(parents=True, exist_ok=True)
-        spec.write_text(kickoff(seat, args.instructions,
-                                Path(args.spec_file).read_text(encoding='utf-8')),
-                        encoding='utf-8')
+        # Private from the start, like the record: it holds the task and worker.md.
+        fd = os.open(spec, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, 'w', encoding='utf-8') as handle:
+            handle.write(kickoff(seat, args.instructions,
+                                 Path(args.spec_file).read_text(encoding='utf-8')))
         command += ['--spec-file', str(spec), '--task-title', title]
         entry.update(task_title=title, spec=str(spec))
     if seat['model']:
@@ -455,6 +484,9 @@ def start(args):
     if status == 'started' and result.returncode != 0:
         found['warning'] = (find(receipt, 'message', 'lastError')
                             or 'the worker started but the command reported an error')
+        # Orca writes why and how to recover there.
+        if result.stderr.strip():
+            found['stderr'] = result.stderr.strip()[-2000:]
 
     def answer(data):
         for seen in data['seats']:
@@ -479,7 +511,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--seats', type=Path, help='seats file (default ~/.config/hstack/seats.md)')
     commands = parser.add_subparsers(dest='command', required=True)
-    commands.add_parser('seats')
+    listed = commands.add_parser('seats')
+    listed.add_argument('--defaults', action='store_true',
+                        help="hstack's defaults, whatever the seats file says")
     check = commands.add_parser('validate')
     check.add_argument('--offline', action='store_true',
                        help='skip asking agy which models it offers')
@@ -511,6 +545,11 @@ def main(argv=None):
 
     if args.command == 'start':
         return start(args)
+    if args.command == 'seats' and args.defaults:
+        # setup-pstack needs them again after its first run wrote every role.
+        print(json.dumps({role: {'seats': parse_role(role, DEFAULTS[role])[0],
+                                 'source': 'default'} for role in ROLES}, indent=2))
+        return 0
     roles, problems = read_seats(args.seats)
     if args.command == 'seats':
         print(json.dumps(roles, indent=2))

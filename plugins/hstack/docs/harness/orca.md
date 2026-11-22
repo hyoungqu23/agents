@@ -46,16 +46,22 @@ The seats live in `~/.config/hstack/seats.md`, one `role: seat, seat` line per r
 python3 <hstack>/scripts/hstack_seats.py seats
 ```
 
-`agy fallback` is hstack's own role: the agy seat to use when an agy seat stopped on its usage limit. It starts as another attempt at the same Task: `hstack_seats.py start --fallback --task <task> --retry-of <failed dispatch>`.
+`agy fallback` is hstack's own role: the agy seat to use when an agy seat stopped on its usage limit. It starts as another attempt at the same Task:
+
+```sh
+python3 <hstack>/scripts/hstack_seats.py start --role <role> --worktree <selector> --fallback --task <task> --retry-of <failed dispatch>
+```
+
+Add `--index` when the role has more than one agy seat.
 
 ## setup-pstack
 
 Follow the skill with these changes. They replace the Claude Code adapter's section on it.
 
-- Detect. Claude seats take full model ids that this Claude Code can run, such as `claude-opus-5-5` and `claude-fable-5-2`. agy seats take the ids `agy models` lists, and only `gemini-*` ids without `orchestrator`. Leave Codex seats without a model unless the user names one.
+- Detect. Claude seats take full model ids that this Claude Code can run, such as `claude-opus-5-5` and `claude-fable-5-2`. agy seats take the ids `agy models` lists, and only `gemini-*` ids without `orchestrator`. Leave Codex seats without a model unless the user names one. The aliases `inherit-parent` and `auto` are not seats: do not offer or write them.
 - Load. Read `~/.config/hstack/seats.md` if it exists. There are no old defaults to replace and no `# defaults` line. A line whose role `hstack_seats.py` does not know is dropped; tell the user.
-- Defaults. The defaults are what `hstack_seats.py seats` prints for roles the file does not set. Every panel role (`arena runners`, `arena cross-judge pool`, `interrogate reviewers`) keeps at least one `codex` or `agy` seat, because the coordinator is a Claude session and its judge or reviewers must be another vendor.
+- Defaults. The defaults are what `python3 <hstack>/scripts/hstack_seats.py seats --defaults` prints. On a later run, compare each role in the file with them to tell which roles the user changed. Every panel role (`arena runners`, `arena cross-judge pool`, `interrogate reviewers`) keeps at least one `codex` or `agy` seat, because the coordinator is a Claude session and its judge or reviewers must be another vendor.
 - Budget. Move the effort of each `claude` and `codex` seat that names one, and the effort suffix of each `agy` id to an id `agy models` lists. Families are CLIs.
 - Validate. Write the file, then run `python3 <hstack>/scripts/hstack_seats.py validate`. Fix every line it reports and run it again until it passes.
-- Write. No frontmatter. Comment lines first, then the `# budget` line, then one line per role in the order `seats` prints them. Overwrite the whole file.
+- Write. No frontmatter. Comment lines first, then the `# budget` line, then one line per role in the order `seats` prints them. Leave out the `agy fallback` line when no other role has an `agy` seat, so a machine without agy can pass `validate`. Overwrite the whole file.
 - Steps 7 and 8. Offer step 7. Skip step 8: hstack does not include `create-formal-verification-skill`.

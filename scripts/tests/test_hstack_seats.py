@@ -66,6 +66,7 @@ elif args[:2] == ['orchestration', 'worker-start']:
         print(json.dumps({'ok': False, 'result': {'state': 'ready', 'dispatchId': 'ctx_1',
                           'taskId': 'task_1', 'runId': 'run_1', 'terminal': 'term_1'},
                           'error': {'code': 'keep_open_failed', 'message': 'could not keep open'}}))
+        print('recover with: orca terminal keep-open term_1', file=sys.stderr)
         sys.exit(1)
     if mode == 'error_code':
         print(json.dumps({'ok': False, 'error': {'code': 'outcome_unknown', 'message': 'lost'}}))
@@ -201,6 +202,16 @@ class SeatsFileTests(Fixture):
         self.assertEqual(seats.main(['validate']), 0)
         self.write_seats('arena cross-judge pool: codex\nagy fallback: agy gemini-4-neon-xhigh\n')
         self.assertEqual(seats.main(['validate']), 1)
+
+    def test_defaults_are_listed_whatever_the_file_says(self):
+        self.write_seats('bug-fix: codex\n')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(seats.main(['seats', '--defaults']), 0)
+        listed = json.loads(output.getvalue())
+        self.assertEqual(listed['bug-fix']['seats'],
+                         [{'cli': 'claude', 'model': 'claude-opus-5-5', 'effort': 'xhigh'}])
+        self.assertEqual(set(listed), set(seats.ROLES))
 
     def test_validate_asks_agy_for_its_models(self):
         self.write_seats('swarm workers: agy gemini-4-argon-high\n')
@@ -400,6 +411,42 @@ class StartTests(Fixture):
         [entry] = json.loads(self.record.read_text())['seats']
         self.assertEqual((entry['status'], entry['dispatch_id']), ('started', 'ctx_1'))
         self.assertEqual(entry['warning'], 'could not keep open')
+        self.assertIn('orca terminal keep-open term_1', entry['stderr'])
+
+    def test_outcome_reads_every_value_and_only_the_workers_state(self):
+        cases = [
+            # An earlier code must not hide a later outcome_unknown.
+            ({'ok': False, 'error': {'code': 'runtime_timeout', 'data': {
+                'setup': {'status': 'skipped'}, 'recovery': {'disposition': 'outcome_unknown'}}}},
+             'unknown'),
+            # A nested step that is ready is not the worker.
+            ({'ok': False, 'result': {'state': 'failed', 'setup': {'state': 'ready'}}}, 'failed'),
+            ({'ok': False, 'error': {'code': 'bad', 'data': {'state': 'ready'}}}, 'failed'),
+            # Values that are not strings are skipped, not a crash.
+            ({'ok': False, 'result': {'state': {'phase': 'x'}, 'status': ['a']},
+              'error': {'code': 'bad'}}, 'failed'),
+            ({'ok': False, 'result': {'state': 'ready'}}, 'started'),
+        ]
+        for receipt, expected in cases:
+            with self.subTest(receipt=receipt):
+                self.assertEqual(seats.outcome(1, receipt), expected)
+
+    def test_spec_given_to_orca_is_private(self):
+        self.assertEqual(self.start(index='1'), 0)
+        [call] = self.starts()
+        self.assertEqual(Path(call[call.index('--spec-file') + 1]).stat().st_mode & 0o777, 0o600)
+
+    def test_a_record_keeps_its_run(self):
+        self.assertEqual(self.start('--run', 'run_a', index='0'), 0)
+        # Without --run the next worker joins the record's Run, not the session's.
+        self.assertEqual(self.start(index='1'), 0)
+        second = self.starts()[1]
+        self.assertEqual(second[second.index('--run') + 1], 'run_a')
+        self.assertEqual(self.start('--run', 'run_b', index='1'), 2)
+        self.assertEqual(len(self.starts()), 2)
+        self.record.write_text('[]')
+        self.assertEqual(self.start(index='1'), 2)
+        self.assertEqual(len(self.starts()), 2)
 
     def test_given_run_survives_a_lost_response(self):
         os.environ['FAKE_START'] = 'garbled'
