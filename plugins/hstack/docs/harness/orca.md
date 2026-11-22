@@ -98,7 +98,7 @@ python3 <hstack>/scripts/hstack_seats.py start --role <role> --worktree <selecto
 
 - Write the spec to a file first, under the run record's folder, not the repository. Make it stand alone: the goal, the scope, what the worker may edit, and the evidence that proves it is done.
 - `--instructions` replaces the kickoff line `Read <path>/worker.md before anything else.` that `poteto-mode` asks for. Do not also write that line into the spec.
-- `--worktree current` for a worker that only reads. A worker that writes gets its own: `--worktree new-child --name <short-name>`.
+- `--worktree current` for a worker that only reads. A worker that writes gets its own: `--worktree new-child --name <short-name>`. Its spec tells it to commit there and to report the worktree path, branch and commits. Its changes are not in your checkout, so before a later step reproduces, checks, stages or commits them, bring the commits in with `git cherry-pick`, or run that step in the worker's worktree.
 - Use one `--record` file for the whole run. A new run gets a path that does not exist yet, such as `~/.local/state/hm2/hstack/runs/<date>-<HHMMSS>-<slug>.json`. `start` joins the Run an existing record names, so reuse a path only to resume that run. Add `--run <run id>` only when this session is bound to another Run.
 - An agy worker reads nothing outside its own workspace without asking. Pass every other path it must read with `--reads`. When `start` refuses those reads, start another seat of the role with `--index` or report that the step did not run.
 - Keep at most four workers open at once.
@@ -130,8 +130,8 @@ The run record holds each start's request id, Task id, Dispatch id and status. W
 1. For each seat whose status is `unknown`, run `orca orchestration request-show --request <request id> --environment local --json`. `start` runs on the local Orca, so ask the same one. This needs no Run, so it works when the first start lost its response and the record's `run_id` is still empty.
    - `completed`: Orca recorded an outcome, which may be a failure. Read its `receipt`. Fill the record with it: started when `state` is `ready`, otherwise failed or unknown as the outcome says. Take the Run from `runId` when the record has none.
    - `pending`: the start is still running or was cut off. Wait for it if it runs. Otherwise follow Orca's recovery steps with that request id. Do not call `start` again, because it makes a new request id.
-   - `absent`: not proof that nothing started. Look for the worker by its Task title: in the record's Run with `task-list`, or, when the record has no Run, in each recent Run from `run-list`. If you find it, fill the record. Otherwise report the seat as unconfirmed and do not start it again.
-2. Bind to the record's Run: `orca orchestration run-use --id <run id> --environment local`. When no Run was found, nothing started in one; there is nothing to bind.
+   - `absent`: not proof that nothing started. A first start has a `task_title` in the record: look for that Task in the record's Run with `task-list`, or, when the record has no Run, in each recent Run from `run-list`. A fallback start reuses the Task, so its title proves nothing: run `dispatch-show --task <task id> --environment local` and look for a Dispatch other than its `retry_of` that began after the seat's `requested` time. If you find the worker, fill the record. Otherwise keep the seat `unknown`, report it as unconfirmed and do not start it again.
+2. Bind to the record's Run: `orca orchestration run-use --id <run id> --environment local`. When no Run was found, skip this step only. A seat that is still `unknown` stays unconfirmed in the record and in your report.
 3. Match the other seats with the Run's workers and your messages.
 
 ## setup-pstack
