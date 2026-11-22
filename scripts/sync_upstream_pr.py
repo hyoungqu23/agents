@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 import import_upstream  # noqa: E402
 
 UNCHANGED = 3
+UNRELEASED = re.compile(r'##[ \t]+(unreleased|\[unreleased\])[ \t]*', flags=re.I)
 
 
 def bump_patch(version):
@@ -58,17 +59,18 @@ def planned_release(repo, plugin):
 
 def with_release(notes, version, date, note):
     """The changelog with a new newest release that also takes the Unreleased entries."""
-    head, *sections = re.split(r'^(?=## )', notes, flags=re.M)
+    # Headings are read the way check_release_notes.py reads them.
+    head, *sections = re.split(r'^(?=##[ \t])', notes, flags=re.M)
     carried = []
     for index, section in enumerate(sections):
         title, _, pending = section.partition('\n')
-        if re.fullmatch(r'## \[?unreleased\]?\s*', title, flags=re.I):
+        if UNRELEASED.fullmatch(title):
             if pending.strip():
                 carried.append(pending.strip())
             sections[index] = f'{title}\n\n'
     # Above the newest release, and below an Unreleased heading that leads the file.
     at = next((index for index, section in enumerate(sections)
-               if not re.match(r'## \[?unreleased\]?\s*$', section, flags=re.I | re.M)),
+               if not UNRELEASED.fullmatch(section.partition('\n')[0])),
               len(sections))
     entries = '\n'.join([f'- {note}', *carried])
     sections.insert(at, f'## {version} - {date}\n\n{entries}\n\n')
@@ -110,9 +112,11 @@ def body(old, new, report, version):
         '## 병합 전에 할 일',
         '',
         '1. 이 PR의 `validate` 실행이 승인 대기 중이면 "Approve workflows to run"을 누릅니다.',
-        '2. 아래 "분류되지 않은 새 원문 파일"을 잠금 파일에 분류합니다. 들일 파일은 '
-        '`sync --accept-new`로, 들이지 않을 파일은 `skip`에 경로를 더한 뒤 `sync`로 처리합니다.',
-        '3. "원문에서 지워진 파일"은 이 저장소에서도 지우거나 잠금 파일에서 `local`로 바꿉니다.',
+        '2. 아래 "분류되지 않은 새 원문 파일"을 분류합니다. 들이지 않을 파일의 경로를 먼저 '
+        '잠금 파일의 `skip`에 더하고, 그다음 `sync --accept-new`를 한 번 돌립니다. 순서를 바꾸면 '
+        '들이지 않으려던 파일까지 들어옵니다.',
+        '3. "원문에서 지워진 파일"은 파일과 잠금 파일의 항목을 함께 지웁니다. 남겨 둘 파일은 '
+        '항목에서 `upstream`, `upstream_blob`, `applied_blob`을 빼고 `status`를 `local`로 바꿉니다.',
         '4. "충돌이 남은 파일"의 충돌 표시를 풀고 `import_upstream.py patch`로 다시 기록합니다.',
         '',
     ]

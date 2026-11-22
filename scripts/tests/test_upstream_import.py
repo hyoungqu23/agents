@@ -332,15 +332,17 @@ class SyncTests(ImportFixture):
         target = self.patch_beta()
         target.write_text(target.read_text() + '\nA draft nobody recorded.\n')
         before = (self.plugin / upstream_lock.LOCK_NAME).read_text()
-        self.write(self.pack / 'skills/beta/SKILL.md', '# Beta, renamed\n\nSee the **gone** skill.\n')
-        self.write(self.pack / 'README.md', 'changed too\n')
-        self.commit('second')
-        with self.assertRaises(SystemExit) as stopped:
-            import_upstream.sync(self.plugin, self.source)
-        self.assertIn('skills/beta/SKILL.md: differs from the recorded patch', str(stopped.exception))
-        self.assertIn('A draft nobody recorded.', target.read_text())
-        self.assertEqual((self.plugin / 'UPSTREAM-README.md').read_text(), 'upstream readme\n')
-        self.assertEqual((self.plugin / upstream_lock.LOCK_NAME).read_text(), before)
+        # Upstream changing another file only must stop too, then the patched one.
+        for changed in ('README.md', 'skills/beta/SKILL.md'):
+            self.write(self.pack / changed, '# Beta, renamed\n\nSee the **gone** skill.\n')
+            self.commit(f'change {changed}')
+            with self.subTest(changed=changed), self.assertRaises(SystemExit) as stopped:
+                import_upstream.sync(self.plugin, self.source)
+            self.assertIn('skills/beta/SKILL.md: differs from the recorded patch',
+                          str(stopped.exception))
+            self.assertIn('A draft nobody recorded.', target.read_text())
+            self.assertEqual((self.plugin / 'UPSTREAM-README.md').read_text(), 'upstream readme\n')
+            self.assertEqual((self.plugin / upstream_lock.LOCK_NAME).read_text(), before)
 
     def test_executable_bit_change_alone_reaches_a_patched_file(self):
         import_upstream.sync(self.plugin, self.source, accept_new=True)
@@ -541,15 +543,21 @@ class CheckTests(ImportFixture):
         import_upstream.write_lock(self.plugin, lock)
         fetched = self.plugin.parent / 'fetched'
         self.assertEqual(import_upstream.main(
-            ['check', '--plugin', str(self.plugin), '--fetch', str(fetched)]), 0)
+            ['check', '--plugin', str(self.plugin), '--fetch', str(fetched / '1')]), 0)
+        # An existing checkout is refused: fetching into it would detach its HEAD.
+        branch = import_upstream.git_output(self.source, 'symbolic-ref', 'HEAD')
+        for used in (fetched / '1', self.source):
+            with self.subTest(directory=used), self.assertRaises(SystemExit):
+                import_upstream.main(['check', '--plugin', str(self.plugin), '--fetch', str(used)])
+        self.assertEqual(import_upstream.git_output(self.source, 'symbolic-ref', 'HEAD'), branch)
         self.write(self.pack / 'skills/fresh/SKILL.md', '# Fresh\n')
         self.commit('second')
         # The fetch pins the lock's commit, so later upstream commits do not matter.
         self.assertEqual(import_upstream.main(
-            ['check', '--plugin', str(self.plugin), '--fetch', str(fetched)]), 0)
+            ['check', '--plugin', str(self.plugin), '--fetch', str(fetched / '2')]), 0)
         (self.plugin / 'skills/beta/run.sh').chmod(0o644)
         self.assertEqual(import_upstream.main(
-            ['check', '--plugin', str(self.plugin), '--fetch', str(fetched)]), 1)
+            ['check', '--plugin', str(self.plugin), '--fetch', str(fetched / '3')]), 1)
 
     def test_path_leaving_the_plugin_fails(self):
         lock = import_upstream.read_lock(self.plugin)
@@ -649,13 +657,13 @@ class SyncPullRequestTests(ImportFixture):
 
     def test_unreleased_entries_below_a_release_move_too(self):
         self.write(self.plugin / 'CHANGELOG.md',
-                   '# Changelog\n\n## 0.1.9 - 2026-01-01\n\n- First.\n\n## Unreleased\n\n- Pending.\n')
+                   '# Changelog\n\n## 0.1.9 - 2026-01-01\n\n- First.\n\n##  Unreleased\t\n\n- Pending.\n')
         self.write(self.pack / 'skills/beta/SKILL.md', '# Beta 2\n')
         self.commit('second')
         self.prepare()
         notes = (self.plugin / 'CHANGELOG.md').read_text()
         self.assertRegex(notes, r'^# Changelog\n\n## 0\.1\.10 - 2026-02-03\n\n- Sync with [^\n]+\n'
-                                r'- Pending\.\n\n## 0\.1\.9 - 2026-01-01\n\n- First\.\n\n## Unreleased\n\n$')
+                                r'- Pending\.\n\n## 0\.1\.9 - 2026-01-01\n\n- First\.\n\n##  Unreleased\t\n\n$')
         sys.path.insert(0, str(REPO_ROOT / 'scripts'))
         import check_release_notes
         self.assertIsNone(check_release_notes.check_notes('0.1.10', notes))

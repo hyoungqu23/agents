@@ -195,16 +195,18 @@ def sync(plugin, source, accept_new=False):
         if entry['status'] == 'patched':
             report['patched'].append(entry['path'])
             target = plugin / entry['path']
+            if (not target.is_file() or target.is_symlink()
+                    or blob_id(target.read_bytes()) != entry.get('applied_blob')):
+                # Checked even when upstream left this file alone: merging would
+                # fold an edit nobody recorded into the patch, and moving the
+                # lock on would leave a plugin that fails `check`.
+                refused.append(
+                    f"{entry['path']}: differs from the recorded patch; "
+                    'restore it or record it with `patch` first')
+                entries.append(entry)
+                continue
             # Content and the executable bit change independently upstream.
             if entry.get('upstream_blob') != blob or bool(entry.get('executable')) != executable:
-                if (not target.is_file() or target.is_symlink()
-                        or blob_id(target.read_bytes()) != entry.get('applied_blob')):
-                    # Merging would fold an edit nobody recorded into the patch.
-                    refused.append(
-                        f"{entry['path']}: differs from the recorded patch; "
-                        'restore it or record it with `patch` first')
-                    entries.append(entry)
-                    continue
                 content, conflicted = target.read_bytes(), False
                 if entry.get('upstream_blob') != blob:
                     content, conflicted = merged(
@@ -277,8 +279,9 @@ def sync(plugin, source, accept_new=False):
             # Nothing of it is here, so there is nothing for a person to decide.
             continue
         if upstream not in files:
-            # Deleting here would hide the removal; a person deletes the file
-            # or marks it local, and `check --source` fails until then.
+            # Deleting here would hide the removal. A person deletes the file
+            # and its lock entry, or keeps the file as a local entry without
+            # `upstream`; `check --source` fails until then.
             report['removed'].append(upstream)
             entries.append(entry)
 
@@ -304,6 +307,10 @@ def mark_patched(plugin, path):
 
 def fetched(lock, directory):
     """Fetch the lock's commit into directory, without file contents, and check it out."""
+    if directory.exists() and (not directory.is_dir() or any(directory.iterdir())):
+        # `git init` in an existing checkout would reuse it, and the update-ref
+        # below would then detach that checkout's HEAD.
+        raise SystemExit(f'{directory}: --fetch needs a new or empty directory')
     directory.mkdir(parents=True, exist_ok=True)
     git_output(directory, 'init', '-q')
     git_output(directory, 'fetch', '-q', '--depth', '1', '--filter=blob:none',
