@@ -2,7 +2,7 @@
 
 ## 0.4.0 - 2026-11-22
 
-- `interrogate` is usable. Each seat of `interrogate reviewers`, `claude` included, runs as an Orca worker in its own worktree, created from the current commit with the uncommitted changes copied in and staged, and named without its vendor. Adversaries read the scope from its merge base. The coordinator reads each reported command and reruns it inside its own sandbox before keeping a finding; one it cannot rerun there is reported as unverified.
+- `interrogate` is usable. Each seat of `interrogate reviewers`, `claude` included, runs as an Orca worker in its own worktree, created from one snapshot of the scope taken before the first seat (the commit, the tracked changes and the untracked files), with the changes copied in and staged, and named without its vendor. Adversaries read the scope from its merge base. The coordinator reads each reported command and reruns it inside its own sandbox before keeping a finding. A finding it cannot rerun there, or one that needs the worker's own change to the code under review, is reported as unverified.
 - `hstack_seats.py` refuses an `arena runners` or `interrogate reviewers` line with fewer than two seats, and an `interrogate reviewers` worktree whose name says which seat works there.
 - The Orca adapter's new Panels section covers arena's seat picking, worktrees and fan-out (Phases A and B) and the rerun check. `arena` and `swarm` stay stopped until their remaining steps are adapted.
 

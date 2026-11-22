@@ -149,35 +149,60 @@ A panel runs one worker per seat of a role: `arena runners` for `arena`, `interr
 
 Each seat works in its own worktree, which you create before the start so the worker finds the changes in its own workspace. An agy worker then needs no `--reads`.
 
-1. Name it `<slug>-<label>-<letter>`, such as `login-retry-adversary-a`: `candidate` for `arena`, `adversary` for `interrogate`, and letters in seat order. Never put a CLI, vendor or model in the name. Which seat has which letter is written only in the run record.
-2. Create it from the commit you are on:
+For `interrogate`, freeze the scope once, before the first seat, so every seat reviews the same changes even when a seat waits for a free slot. `arena`'s candidate worktrees are adapted with the rest of `arena`.
 
-   ```sh
-   orca worktree create --environment local --name <name> --base-branch "$(git rev-parse HEAD)" --parent-worktree current --json
-   ```
-
-3. For `interrogate`, copy the scope's uncommitted changes into it, tracked and untracked, and stage them there: `apply --index` stages the tracked changes, deletions and files added with `git add -f` included, and the last line stages the copied untracked files. `arena`'s candidate worktrees are adapted with the rest of `arena`. Run this from the top of your checkout. `<paths>` are the paths the user named, or `.` when the scope is the whole branch. `<record folder>` is the run record's folder as an absolute path. The `&&` stops at the first command that fails:
+1. Write `<paths>` relative to the top of your checkout: the paths the user named, each prefixed with `git rev-parse --show-prefix` when you are in a subfolder, or `.` when the scope is the whole branch. Use the same `<paths>` in the spec.
+2. Save the commit, the tracked changes and the untracked files under `<snapshot>`: the run record's path without `.json`, plus `-scope`, as an absolute path. A new run's record is new, so `mkdir` without `-p` refuses a folder an earlier run left. The `&&` stops at the first command that fails:
 
    ```sh
    cd "$(git rev-parse --show-toplevel)" &&
-   mkdir -p <record folder> &&
-   git diff --binary HEAD -- <paths> > <record folder>/<slug>.patch &&
-   git -C <worktree> apply --index --allow-empty <record folder>/<slug>.patch &&
-   git ls-files --others --exclude-standard -z -- <paths> | rsync -a --from0 --files-from=- ./ <worktree>/ &&
-   git ls-files --others --exclude-standard -z -- <paths> | git -C <worktree> add --pathspec-from-file=- --pathspec-file-nul
+   mkdir -p "$(dirname <snapshot>)" &&
+   mkdir <snapshot> <snapshot>/files &&
+   git rev-parse HEAD > <snapshot>/head &&
+   git diff --binary "$(cat <snapshot>/head)" -- <paths> > <snapshot>/tracked.patch &&
+   git ls-files --others --exclude-standard -z -- <paths> > <snapshot>/untracked &&
+   rsync -a --from0 --files-from=<snapshot>/untracked ./ <snapshot>/files/
    ```
 
-   When it fails, do not start the seat. Report the command and its output, then compare `git -C <worktree> status` with yours and fix the copy by hand, or treat the seat as a dropout. A rename that changes only letter case and a symbolic link whose target is missing are known to fail here.
+   When it fails, report the command and its output and start no seat. A symbolic link whose target is missing is known to fail here.
+
+Then, for each seat:
+
+1. Name its worktree `<slug>-<label>-<letter>`, such as `login-retry-adversary-a`: `candidate` for `arena`, `adversary` for `interrogate`, and letters in seat order. Never put a CLI, vendor or model in the name. Which seat has which letter is written only in the run record.
+2. Create it from the saved commit:
+
+   ```sh
+   orca worktree create --environment local --name <name> --base-branch "$(cat <snapshot>/head)" --parent-worktree current --json
+   ```
+
+3. Copy the saved changes in and stage them. `apply --index` stages the tracked changes, deletions and files added with `git add -f` included. The `add` line stages the untracked files; `-f` keeps a `.gitignore` change outside `<paths>` from blocking them. The last line saves what the seat was given, which Verify compares with:
+
+   ```sh
+   git -C <worktree> apply --index --allow-empty <snapshot>/tracked.patch &&
+   rsync -a --from0 --files-from=<snapshot>/untracked <snapshot>/files/ <worktree>/ &&
+   git -C <worktree> add -f --pathspec-from-file=<snapshot>/untracked --pathspec-file-nul &&
+   git -C <worktree> write-tree > <snapshot>/<letter>.tree
+   ```
+
+   When it fails, do not start the seat. Report the command and its output, then compare `git -C <worktree> status` with yours and fix the copy by hand, or treat the seat as a dropout. A rename that changes only letter case is known to fail here.
 
 4. Start the seat in it with `--worktree path:<worktree>`.
 
 ### Spec
 
-Write the spec as Workers says. Leave out `--instructions`: a panel worker follows its own brief, not `worker.md`. For `interrogate`, give it the scope's base commit and paths: the merge base with the base branch (`git merge-base <base branch> HEAD`) when the scope is the branch, or `HEAD` when it is only uncommitted work. Tell it that the commits and the copied changes are already in its worktree, so `git diff --cached <base commit> -- <paths>` shows the whole scope. Tell it to report with `worker_done`.
+Write the spec as Workers says. Leave out `--instructions`: a panel worker follows its own brief, not `worker.md`. For `interrogate`, give it the scope's base commit and `<paths>`: the merge base of the saved commit with the base branch (`git merge-base <base branch> "$(cat <snapshot>/head)"`) when the scope is the branch, or the saved commit when it is only uncommitted work. Tell it that the commits and the copied changes are already in its worktree, so `git diff --cached <base commit> -- <paths>` shows the whole scope. Tell it to report with `worker_done`.
 
 ### Verify
 
 Rerun each reported command yourself in that seat's worktree, where its repros are, after the worker reports. Read the output yourself; a worker's description of its output is not evidence.
+
+First list what the worker changed in its worktree since it was given the scope, commits included:
+
+```sh
+git -C <worktree> add -A && git -C <worktree> diff --cached --name-status "$(cat <snapshot>/<letter>.tree)"
+```
+
+A failure that needs one of those changes to the code under review is the worker's, not the scope's: keep the finding only when the command runs the scope's code as it was given, plus repro scripts and tests the worker added. Otherwise report it as unverified.
 
 The command and the files it runs were written by the worker, and a rerun runs them with your permissions. Before each rerun, read the command and every script, test or fixture it runs that the worker added or changed. Rerun only with your session's sandbox on. Never turn it off for a rerun. A finding whose command reaches the network, reads credentials, writes outside the worktree, or cannot run inside the sandbox stays unverified: report it as unverified, not as verified or dropped.
 
@@ -187,7 +212,7 @@ Release a panel worker once it has reported and you have read its report. Its wo
 
 ## interrogate
 
-Follow the skill with Panels. Its "Run Phase A steps 3 and 4 and Phase B of the **arena** skill" means Panels' Seats, Worktrees and Spec with `interrogate reviewers`. Copying the scope's uncommitted changes is Worktrees step 3. "Spawn each adversary as `generalPurpose`" is the Orca worker. The brief goes in the spec word for word, after the scope and the intent.
+Follow the skill with Panels. Its "Run Phase A steps 3 and 4 and Phase B of the **arena** skill" means Panels' Seats, Worktrees and Spec with `interrogate reviewers`. Copying the scope's uncommitted changes is the snapshot and the per-seat copy in Worktrees. "Spawn each adversary as `generalPurpose`" is the Orca worker. The brief goes in the spec word for word, after the scope and the intent.
 
 Its Verify step reruns each finding as Panels' Verify says. Add an **Unverified** list to the output for the findings that Verify could not rerun, each with the reason. In the output, name each adversary by its seat as the seats file writes it, such as `codex` or `agy gemini-4-neon-xhigh`.
 
