@@ -6,14 +6,14 @@ hstack runs other vendors' models as Orca workers. It never runs a Codex or agy 
 
 ## Skills that cannot run yet
 
-`arena`, `interrogate` and `swarm` start panels of workers, and hstack has not adapted them yet. When one of the three is invoked, stop before its first step and tell the user that it is unavailable until hstack adapts it. Do not start subagents or workers for it.
+`arena` and `swarm` start panels of workers, and hstack has not adapted all of their steps yet. When either is invoked, stop before its first step and tell the user that it is unavailable until hstack adapts it. Do not start subagents or workers for it. `interrogate` runs, as Panels says.
 
-When another skill routes a step to one of the three, do not do that step another way. What happens next depends on whether a later step needs what the skipped step makes:
+When another skill routes a step to either of them, do not do that step another way. What happens next depends on whether a later step needs what the skipped step makes:
 
-- Nothing later needs it, as with the Feature playbook's "If the design is contested, `interrogate` before shipping": put one line in your reply, `Skipped in hstack: <step>. <skill> is not available yet.`, and go on to the next step.
+- Nothing later needs it: put one line in your reply, `Skipped in hstack: <step>. <skill> is not available yet.`, and go on to the next step.
 - A later step needs it, as with the code that the Feature playbook delegates to `arena` when the implementation admits several shapes, or the Eval playbook's candidates and judge: stop the playbook at that step. Tell the user which step needs which skill, and report what the earlier steps finished. Do not go on to the steps that would check, ship or score the missing output.
 
-A skill that only names one of the three, as `poteto-help` does in its tables and recipes, still runs. When it suggests that the user type one of them, say that it is not available yet.
+A skill that only names one of them, as `poteto-help` does in its tables and recipes, still runs. When it suggests that the user type one of them, say that it is not available yet.
 
 ## Names
 
@@ -66,8 +66,9 @@ These rows replace the Claude Code adapter's Models table and every skill's rule
 | pstack | Here |
 | --- | --- |
 | The role lines in `pstack-models.mdc` or `pstack-models.md`, and the skill's default slug for a role | The role's seats from `hstack_seats.py seats`. There is no `# defaults` line, so never tell the user to rerun `setup-pstack` for one |
-| A subagent for a role whose seat is `claude <model> <effort>` | An `Agent` call with `model` set to the id's family (`claude-opus-5-5` is `opus`, `claude-fable-5-2` is `fable`, and likewise `sonnet` and `haiku`) and `effort` set to the seat's effort. Raise or lower the effort for the job as the skill says |
+| A subagent for a role whose seat is `claude <model> <effort>`, outside a panel | An `Agent` call with `model` set to the id's family (`claude-opus-5-5` is `opus`, `claude-fable-5-2` is `fable`, and likewise `sonnet` and `haiku`) and `effort` set to the seat's effort. Raise or lower the effort for the job as the skill says |
 | A subagent for a role whose seat is `codex` or `agy` | One Orca worker on that seat. See Workers |
+| A panel seat of `arena runners` or `interrogate reviewers`, whatever its CLI | One Orca worker on that seat. See Panels |
 | A second opinion "on another vendor's model", and the cross-model review in `show-me-your-work` | One Orca worker from the `arena cross-judge pool` role. `start` without `--index` picks the pool's first seat that is not `claude` |
 | `-fast`, and "use the nearest valid slug of the same family" when a slug is rejected | Do not apply. When `start` refuses a seat, report the refusal. Never fall back to the session model |
 | `reviewed by <model>` | The seat as the seats file writes it, such as `reviewed by codex` or `reviewed by agy gemini-4-neon-xhigh` |
@@ -134,13 +135,69 @@ The run record holds each start's request id, Task id, Dispatch id and status. W
 2. Bind to the record's Run: `orca orchestration run-use --id <run id> --environment local`. When no Run was found, skip this step only. A seat that is still `unknown` stays unconfirmed in the record and in your report.
 3. Match the other seats with the Run's workers and your messages.
 
+## Panels
+
+A panel runs one worker per seat of a role: `arena runners` for `arena`, `interrogate reviewers` for `interrogate`. Every seat, `claude` seats included, runs as an Orca worker through `start`, so one record, one resume and one cleanup cover the whole panel. These rules replace arena Phase A steps 3 and 4 and Phase B.
+
+### Seats
+
+1. Run `python3 <hstack>/scripts/hstack_seats.py preflight --role <role>` before anything else. When it prints a problem, show it and stop.
+2. Start one worker per seat, in the order `seats` prints them, with `--index <n>`. Do not add or repeat seats. Keep at most four open: when a role has more seats, start the rest as earlier workers report and are released.
+3. A seat that `start` refuses or fails to start is a dropout, and so is a seat that drops out later as Dropouts says. Go on while two seats remain and one of them is `codex` or `agy`. Otherwise end the skill unfinished: release the workers that have finished, and stop the ones still running with `orca orchestration worker-stop --dispatch <dispatch id> --environment local`.
+
+### Worktrees
+
+Each seat works in its own worktree, which you create before the start so the worker finds the changes in its own workspace. An agy worker then needs no `--reads`.
+
+1. Name it `<slug>-<label>-<letter>`, such as `login-retry-adversary-a`: `candidate` for `arena`, `adversary` for `interrogate`, and letters in seat order. Never put a CLI, vendor or model in the name. Which seat has which letter is written only in the run record.
+2. Create it from the commit you are on:
+
+   ```sh
+   orca worktree create --environment local --name <name> --base-branch "$(git rev-parse HEAD)" --parent-worktree current --json
+   ```
+
+3. For `interrogate`, copy the scope's uncommitted changes into it, tracked and untracked, and stage them there: `apply --index` stages the tracked changes, deletions and files added with `git add -f` included, and the last line stages the copied untracked files. `arena`'s candidate worktrees are adapted with the rest of `arena`. Run this from the top of your checkout. `<paths>` are the paths the user named, or `.` when the scope is the whole branch. `<record folder>` is the run record's folder as an absolute path. The `&&` stops at the first command that fails:
+
+   ```sh
+   cd "$(git rev-parse --show-toplevel)" &&
+   mkdir -p <record folder> &&
+   git diff --binary HEAD -- <paths> > <record folder>/<slug>.patch &&
+   git -C <worktree> apply --index --allow-empty <record folder>/<slug>.patch &&
+   git ls-files --others --exclude-standard -z -- <paths> | rsync -a --from0 --files-from=- ./ <worktree>/ &&
+   git ls-files --others --exclude-standard -z -- <paths> | git -C <worktree> add --pathspec-from-file=- --pathspec-file-nul
+   ```
+
+   When it fails, do not start the seat. Report the command and its output, then compare `git -C <worktree> status` with yours and fix the copy by hand, or treat the seat as a dropout. A rename that changes only letter case and a symbolic link whose target is missing are known to fail here.
+
+4. Start the seat in it with `--worktree path:<worktree>`.
+
+### Spec
+
+Write the spec as Workers says. Leave out `--instructions`: a panel worker follows its own brief, not `worker.md`. For `interrogate`, give it the scope's base commit and paths: the merge base with the base branch (`git merge-base <base branch> HEAD`) when the scope is the branch, or `HEAD` when it is only uncommitted work. Tell it that the commits and the copied changes are already in its worktree, so `git diff --cached <base commit> -- <paths>` shows the whole scope. Tell it to report with `worker_done`.
+
+### Verify
+
+Rerun each reported command yourself in that seat's worktree, where its repros are, after the worker reports. Read the output yourself; a worker's description of its output is not evidence.
+
+The command and the files it runs were written by the worker, and a rerun runs them with your permissions. Before each rerun, read the command and every script, test or fixture it runs that the worker added or changed. Rerun only with your session's sandbox on. Never turn it off for a rerun. A finding whose command reaches the network, reads credentials, writes outside the worktree, or cannot run inside the sandbox stays unverified: report it as unverified, not as verified or dropped.
+
+### Finishing
+
+Release a panel worker once it has reported and you have read its report. Its worktree stays, so Verify can still rerun its commands there. Release the dropouts too, as Dropouts says. Ask before deleting the worktrees, and list them in the report with each letter's seat.
+
+## interrogate
+
+Follow the skill with Panels. Its "Run Phase A steps 3 and 4 and Phase B of the **arena** skill" means Panels' Seats, Worktrees and Spec with `interrogate reviewers`. Copying the scope's uncommitted changes is Worktrees step 3. "Spawn each adversary as `generalPurpose`" is the Orca worker. The brief goes in the spec word for word, after the scope and the intent.
+
+Its Verify step reruns each finding as Panels' Verify says. Add an **Unverified** list to the output for the findings that Verify could not rerun, each with the reason. In the output, name each adversary by its seat as the seats file writes it, such as `codex` or `agy gemini-4-neon-xhigh`.
+
 ## setup-pstack
 
 Follow the skill with these changes. They replace the Claude Code adapter's section on it.
 
 - Detect. Claude seats take full model ids that this Claude Code can run, such as `claude-opus-5-5` and `claude-fable-5-2`. agy seats take the ids `agy models` lists, and only `gemini-*` ids without `orchestrator`. Leave Codex seats without a model unless the user names one. The aliases `inherit-parent` and `auto` are not seats: do not offer or write them.
 - Load. Read `~/.config/hstack/seats.md` if it exists. There are no old defaults to replace and no `# defaults` line. A line whose role `hstack_seats.py` does not know is dropped; tell the user.
-- Defaults. The defaults are what `python3 <hstack>/scripts/hstack_seats.py seats --defaults` prints. On a later run, compare each role in the file with them to tell which roles the user changed. Every panel role (`arena runners`, `arena cross-judge pool`, `interrogate reviewers`) keeps at least one `codex` or `agy` seat, because the coordinator is a Claude session and its judge or reviewers must be another vendor.
+- Defaults. The defaults are what `python3 <hstack>/scripts/hstack_seats.py seats --defaults` prints. On a later run, compare each role in the file with them to tell which roles the user changed. Every panel role (`arena runners`, `arena cross-judge pool`, `interrogate reviewers`) keeps at least one `codex` or `agy` seat, because the coordinator is a Claude session and its judge or reviewers must be another vendor. `arena runners` and `interrogate reviewers` keep at least two seats.
 - Budget. Move the effort of each `claude` and `codex` seat that names one, and the effort suffix of each `agy` id to an id `agy models` lists. Families are CLIs.
 - Validate. Write the file, then run `python3 <hstack>/scripts/hstack_seats.py validate`. Fix every line it reports and run it again until it passes.
 - Write. No frontmatter. Comment lines first, then the `# budget` line, then one line per role in the order `seats` prints them. Leave out the `agy fallback` line when no other role has an `agy` seat, so a machine without agy can pass `validate`. Overwrite the whole file.

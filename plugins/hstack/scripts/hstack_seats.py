@@ -52,8 +52,11 @@ DEFAULTS = {
 }
 # The coordinator is a Claude Code session, so these need another vendor.
 CROSS_VENDOR = PANELS
-# Worktree names an arena judge reads must not say which seat wrote them.
-NAMED_ROLES = ('arena runners',)
+# Panel worktree names must not say which seat works there: an arena judge reads them,
+# and the run record is the one place that maps a letter to a seat.
+NAMED_ROLES = ('arena runners', 'interrogate reviewers')
+# A panel compares seats, so it needs two to start.
+PANEL_RUNNERS = ('arena runners', 'interrogate reviewers')
 VENDOR_WORDS = re.compile(r'claude|codex|agy|gemini|gpt|openai|anthropic|google|opus|fable|sonnet'
                           r'|haiku|neon|argon|hydrogen|flash', re.I)
 REPORT_RULES = ('command(orca orchestration send)', 'command(orca orchestration check)')
@@ -105,6 +108,8 @@ def parse_role(role, value):
     problems = [f'{role}: {problem}' for problem in problems]
     if role in SINGLE and len(seats) + len(problems) != 1:
         problems.append(f'{role}: takes one seat')
+    if role in PANEL_RUNNERS and len(seats) + len(problems) < 2:
+        problems.append(f'{role}: takes at least two seats')
     if role == 'agy fallback' and any(seat['cli'] != 'agy' for seat in seats):
         problems.append(f'{role}: takes an agy seat')
     if role in CROSS_VENDOR and seats and all(seat['cli'] == 'claude' for seat in seats):
@@ -358,8 +363,8 @@ def checked_arguments(args):
             selector = Path(selector).name
         for label in (args.name, args.display_name, selector):
             if label and VENDOR_WORDS.search(label):
-                problems.append(f'"{label}" says which seat wrote the candidate; '
-                                'name it like candidate-a')
+                problems.append(f'"{label}" says which seat works there; '
+                                'name it like candidate-a or adversary-a')
     return problems
 
 

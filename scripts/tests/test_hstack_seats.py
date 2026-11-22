@@ -176,6 +176,8 @@ class SeatsFileTests(Fixture):
             'bug-fix: codex, agy gemini-4-neon-xhigh': 'takes one seat',
             'arena runners: claude claude-opus-5-5 high, claude claude-fable-5-2 high':
                 'needs a codex or agy seat',
+            'interrogate reviewers: codex': 'takes at least two seats',
+            'arena runners: agy gemini-4-neon-xhigh': 'takes at least two seats',
             'agy fallback: codex': 'takes an agy seat',
             'hardest tasks: codex': 'unknown role',
             'bug-fix: codex\nbug-fix: codex': 'listed twice',
@@ -378,6 +380,13 @@ class StartTests(Fixture):
                                          '--spec-file', str(self.spec), '--record',
                                          str(self.record), '--worktree',
                                          'path:/work/neon-db/candidate-a']), 0)
+        self.assertEqual(len(self.starts()), 2)
+        # interrogate's adversaries are named the same way.
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(seats.main(['start', '--role', 'interrogate reviewers', '--index', '1',
+                                         '--spec-file', str(self.spec), '--record',
+                                         str(self.record), '--worktree',
+                                         'path:/tmp/login-codex-adversary-b']), 2)
         self.assertEqual(len(self.starts()), 2)
 
     def test_bad_seats_file_refuses_every_start(self):
