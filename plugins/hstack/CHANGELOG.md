@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 - 2026-11-22
+
+- Add the `hstack` skill, the way in: `/hstack:hstack` checks the seats file, reads both adapters and follows `poteto-mode`. Before a playbook's first step, the roles it will start as workers are checked with `hstack_seats.py preflight`.
+- The Orca adapter now says how a role's seat runs. A `claude` seat runs as a Claude Code subagent. A `codex` or `agy` seat runs as an Orca worker started through `hstack_seats.py start`, and a second opinion or cross-model review takes the first seat of `arena cross-judge pool` that is not Claude. It also covers usage-limit fallback, dropouts, releasing workers and resuming a run from its record.
+- `poteto-mode` and `show-me-your-work` are usable. `arena`, `interrogate` and `swarm` stay stopped. A step routed to one of them is skipped with a line, unless a later step needs its output; then the playbook stops at that step.
+
 ## 0.2.0 - 2026-11-22
 
 - Add seats: each pstack role runs on a Claude Code, Codex or agy seat, set in `~/.config/hstack/seats.md`. agy seats take only `gemini-*` ids without `orchestrator`, and every panel role keeps a seat from a vendor other than Claude.
