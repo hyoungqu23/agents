@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1 - 2026-11-22
+
+- A project skill that a skill writes, such as `verify-<app>` from `create-verification-skill`, goes in `.agents/skills/`, where Codex and agy read it, and is linked into `.claude/skills/` for Claude Code. `maintain-verification-skill` looks for its target in both places.
+
 ## 0.5.0 - 2026-11-22
 
 - `arena` and `swarm` are usable, so no skill is stopped any more and no routed step is skipped for one.
