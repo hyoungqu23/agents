@@ -90,7 +90,7 @@
       "name": "hstack",
       "source": "./plugins/hstack",
       "description": "pstack engineering workflows and principles for Claude Code, imported from cursor/plugins with their source text intact.",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "category": "Productivity",
       "keywords": [
         "workflow",

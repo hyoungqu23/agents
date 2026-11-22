@@ -1,6 +1,6 @@
 # Hstack
 
-> **Not usable yet: `arena`, `swarm`.** They start panels of workers on several vendors' models, and hstack has not adapted all of their steps yet. Each one stops and says so when invoked, and a step that routes to one of them is skipped with a line, or stops the playbook when a later step needs its output. The other 53 skills work now, `interrogate` among them.
+> **Not checked from a new session yet.** `arena`, `interrogate` and `swarm` start Orca workers, and the Orca adapter now covers every step of them. Until each has been run by its slash command in a new session, expect to find gaps; report them.
 
 Hstack is [pstack](https://github.com/cursor/plugins/tree/main/pstack) for Claude Code, imported with its source text intact. pstack is written by Lauren Tan and published under the MIT license; see [LICENSE](LICENSE) and the original [README](UPSTREAM-README.md).
 

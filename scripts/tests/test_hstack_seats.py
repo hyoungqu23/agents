@@ -246,6 +246,15 @@ class PreflightTests(Fixture):
             self.assertEqual(seats.main(['preflight', '--role', 'arena cross-judge pool']), 0)
             self.assertEqual(seats.main(['preflight', '--role', 'arena runners']), 2)
 
+    def test_judge_preflight_can_check_a_later_seat_of_the_pool(self):
+        os.environ['FAKE_AGENTS'] = 'claude,antigravity'
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(seats.main(['preflight', '--role', 'arena cross-judge pool']), 2)
+            self.assertEqual(seats.main(['preflight', '--role', 'arena cross-judge pool',
+                                         '--judge-index', '1']), 0)
+            self.assertEqual(seats.main(['preflight', '--role', 'arena cross-judge pool',
+                                         '--judge-index', '5']), 2)
+
     def test_agent_disabled_in_orca_is_reported(self):
         os.environ['FAKE_AGENTS'] = 'claude,antigravity'
         self.assertTrue(any('cannot start the codex agent' in p

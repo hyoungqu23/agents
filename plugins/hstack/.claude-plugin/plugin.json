@@ -1,7 +1,7 @@
 {
   "name": "hstack",
   "displayName": "Hstack",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "pstack engineering workflows and principles for Claude Code, imported from cursor/plugins with their source text intact.",
   "author": {
     "name": "HM2"

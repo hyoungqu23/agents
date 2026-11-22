@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 - 2026-11-22
+
+- `arena` and `swarm` are usable, so no skill is stopped any more and no routed step is skipped for one.
+- `arena` runs each seat of `arena runners` as an Orca worker in its own worktree, started from one frozen copy of your checkout. The judge from `arena cross-judge pool` starts after the candidates are released, reads them by worktree and diff only, and never sees a seat's name. The picked candidate comes back as a patch applied to your checkout.
+- Comparing a seat's worktree with what it was given starts from a copy of the worktree's own index, so a tracked file that `.gitignore` matches is no longer reported as deleted or deleted by the picked candidate's patch, and a file the seat added with `git add -f` is kept.
+- `hstack_seats.py preflight --judge-index` checks a later seat of `arena cross-judge pool`, for when the first judge cannot start.
+- `swarm` runs a `claude` worker seat as Claude Code subagents and a `codex` or `agy` seat as Orca workers, at most four at a time. A model race takes its arms from `arena runners`. A worker that verifies or measures named SHAs gets its own worktree at that ref, and a worker whose report misses its SHAs or method is asked again once, the way it first ran.
+
 ## 0.4.0 - 2026-11-22
 
 - `interrogate` is usable. Each seat of `interrogate reviewers`, `claude` included, runs as an Orca worker in its own worktree, created from one snapshot of the scope taken before the first seat (the commit, the tracked changes and the untracked files), with the changes copied in and staged, and named without its vendor. Adversaries read the scope from its merge base. The coordinator reads each reported command and reruns it inside its own sandbox before keeping a finding. A finding it cannot rerun there, or one that needs the worker's own change to the code under review or a file it reads, is reported as unverified. Every seat diffs from the same base commit, saved with the scope.
