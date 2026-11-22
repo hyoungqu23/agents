@@ -5,9 +5,11 @@ A plugin that carries another repository's files records them in
 they are placed; its `files` list says what happened to each upstream file.
 
     sync   copy the upstream files named by the lock from a checkout, re-insert
-           the generated line, and rewrite the lock
+           the generated line, merge upstream changes into patched files, and
+           rewrite the lock
     check  compare the lock with the plugin folder, and with a checkout when
-           one is given
+           one is given or fetched
+    patch  record a hand-edited imported file as patched
 
 Header fields this script reads:
 
@@ -17,6 +19,8 @@ Header fields this script reads:
     relocate       path prefixes under that folder and where they go instead
     inject         {"after": line, "line": line}: every imported file that has
                    the first line gets the second one as the next paragraph
+    version_file   a JSON file under that folder whose `version` is copied to
+                   the lock's `version`
 
 Hashes are git blob ids, so they can be compared with `git ls-tree` output or
 the GitHub tree API without downloading a file. Upstream content, the file list
@@ -28,6 +32,7 @@ import hashlib
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path, PurePosixPath
 
 LOCK_NAME = 'upstream.lock.json'
@@ -115,23 +120,62 @@ def is_executable(path):
     return bool(path.stat().st_mode & 0o100)
 
 
+def upstream_changed(lock, source):
+    """Whether the checkout's HEAD differs from the lock's commit under the root."""
+    root = lock['upstream_root'].rstrip('/')
+    old, new = (git_output(source, 'rev-parse', f'{commit}:{root}').strip()
+                for commit in (lock['commit'], 'HEAD'))
+    return old != new
+
+
+def merged(plugin, source, lock, entry, new):
+    """Merge upstream's change into a patched file. Returns (content, conflicted)."""
+    try:
+        old = git_output(source, 'cat-file', 'blob', entry['upstream_blob'])
+    except subprocess.CalledProcessError:
+        raise SystemExit(
+            f"{entry['path']}: the checkout lacks the old upstream content "
+            f"{entry['upstream_blob']}; fetch the lock's commit {lock['commit']} into it")
+    with tempfile.TemporaryDirectory() as directory:
+        names = []
+        # The patch was made on the injected text, so both upstream sides get
+        # the generated line before they are compared with it.
+        for label, data in (('ours', (plugin / entry['path']).read_bytes()),
+                            ('base', injected(lock, old) or old),
+                            ('theirs', injected(lock, new) or new)):
+            names.append(str(Path(directory) / label))
+            Path(names[-1]).write_bytes(data)
+        result = subprocess.run(
+            ['git', 'merge-file', '-p', '-L', 'this repository', '-L', 'old upstream',
+             '-L', 'new upstream', *names], capture_output=True)
+    if result.returncode < 0 or result.returncode > 127:
+        raise SystemExit(f"{entry['path']}: merge failed: {result.stderr.decode()}")
+    return result.stdout, result.returncode > 0
+
+
 def sync(plugin, source, accept_new=False):
     """Bring the plugin to the checkout's commit. Returns a report dict."""
     lock = read_lock(plugin)
     root = lock['upstream_root'].rstrip('/') + '/'
     known = {entry['upstream']: entry for entry in lock['files'] if entry.get('upstream')}
-    patched = sorted(e['path'] for e in known.values() if e['status'] == 'patched')
-    if patched:
-        raise SystemExit(
-            'patched files need a three-way merge, which this script does not do: '
-            + ', '.join(patched))
 
-    report = {'updated': [], 'new': [], 'removed': [], 'unclassified': []}
+    report = {'updated': [], 'new': [], 'removed': [], 'unclassified': [],
+              'patched': [], 'conflicts': []}
     # Resolved once: the checkout may move while this runs, and the lock must
     # name the commit the files were read from.
     commit = checked_out_commit(source)
     files = upstream_files(source, commit, root.rstrip('/'))
+    version = lock.get('version')
+    if lock.get('version_file'):
+        # Read before anything is written, so a bad manifest changes nothing.
+        try:
+            manifest = git_output(source, 'show', f"{commit}:{root}{lock['version_file']}")
+            version = json.loads(manifest)['version']
+        except (subprocess.CalledProcessError, ValueError, KeyError, TypeError):
+            raise SystemExit(
+                f"nothing was written: {root}{lock['version_file']} has no readable version")
     entries = [entry for entry in lock['files'] if not entry.get('upstream')]
+    refused = []
     writes = []
     for upstream, (blob, executable) in sorted(files.items()):
         relative = upstream[len(root):]
@@ -148,6 +192,33 @@ def sync(plugin, source, accept_new=False):
         elif entry.get('upstream_blob') != blob:
             report['updated'].append(upstream)
 
+        if entry['status'] == 'patched':
+            report['patched'].append(entry['path'])
+            target = plugin / entry['path']
+            # Content and the executable bit change independently upstream.
+            if entry.get('upstream_blob') != blob or bool(entry.get('executable')) != executable:
+                if (not target.is_file() or target.is_symlink()
+                        or blob_id(target.read_bytes()) != entry.get('applied_blob')):
+                    # Merging would fold an edit nobody recorded into the patch.
+                    refused.append(
+                        f"{entry['path']}: differs from the recorded patch; "
+                        'restore it or record it with `patch` first')
+                    entries.append(entry)
+                    continue
+                content, conflicted = target.read_bytes(), False
+                if entry.get('upstream_blob') != blob:
+                    content, conflicted = merged(
+                        plugin, source, lock, entry, git_output(source, 'cat-file', 'blob', blob))
+                if conflicted:
+                    report['conflicts'].append(entry['path'])
+                entry = {**entry, 'upstream_blob': blob, 'applied_blob': blob_id(content)}
+                entry.pop('executable', None)
+                if executable:
+                    entry['executable'] = True
+                writes.append((entry['path'], content, executable, upstream))
+            entries.append(entry)
+            continue
+
         entry = {'upstream': upstream, 'status': entry['status'], 'upstream_blob': blob}
         if entry['status'] != 'skipped':
             entry['path'] = placed(lock, relative)
@@ -158,17 +229,18 @@ def sync(plugin, source, accept_new=False):
                 entry['applied_blob'] = blob_id(content)
             if executable:
                 entry['executable'] = True
-            writes.append((entry['path'], data if content is None else content, executable))
+            writes.append(
+                (entry['path'], data if content is None else content, executable, upstream))
         entries.append(entry)
 
     # Nothing is written until every destination is known to be safe: one
     # upstream file must not replace another, a file written here, or anything
-    # outside the plugin folder.
-    owned = {entry['path'] for entry in known.values() if entry.get('path')}
+    # outside the plugin folder. A destination belongs to the upstream file the
+    # lock already places there, including one that is kept without a write.
+    owner = {entry['path']: upstream for upstream, entry in known.items() if entry.get('path')}
     local = {entry['path'] for entry in entries if not entry.get('upstream')}
-    refused = []
     seen = set()
-    for path, _, _ in writes:
+    for path, _, _, upstream in writes:
         parts = PurePosixPath(path).parts
         target = plugin / path
         if PurePosixPath(path).is_absolute() or '..' in parts or not parts:
@@ -177,7 +249,9 @@ def sync(plugin, source, accept_new=False):
             refused.append(f'{path}: two upstream files are placed here')
         elif path in local or path == LOCK_NAME:
             refused.append(f'{path}: is a file written in this repository')
-        elif path not in owned and (target.exists() or target.is_symlink()):
+        elif owner.get(path, upstream) != upstream:
+            refused.append(f'{path}: already holds the upstream file {owner[path]}')
+        elif path not in owner and (target.exists() or target.is_symlink()):
             refused.append(f'{path}: exists but the lock does not list it as imported')
         elif target.is_dir() and not target.is_symlink():
             refused.append(f'{path}: is a folder here; remove it first')
@@ -192,13 +266,16 @@ def sync(plugin, source, accept_new=False):
     if refused:
         raise SystemExit('nothing was written:\n' + '\n'.join(refused))
 
-    for path, content, executable in writes:
+    for path, content, executable, _ in writes:
         target = plugin / path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(content)
         target.chmod(0o755 if executable else 0o644)
 
     for upstream, entry in sorted(known.items()):
+        if upstream not in files and entry['status'] == 'skipped':
+            # Nothing of it is here, so there is nothing for a person to decide.
+            continue
         if upstream not in files:
             # Deleting here would hide the removal; a person deletes the file
             # or marks it local, and `check --source` fails until then.
@@ -207,8 +284,33 @@ def sync(plugin, source, accept_new=False):
 
     lock['files'] = entries
     lock['commit'] = commit
+    if version is not None:
+        lock['version'] = version
     write_lock(plugin, lock)
     return report
+
+
+def mark_patched(plugin, path):
+    """Record the file's current content as a reviewed patch of its upstream file."""
+    lock = read_lock(plugin)
+    for entry in lock['files']:
+        if entry.get('path') == path and entry.get('status') in IMPORTED:
+            entry['status'] = 'patched'
+            entry['applied_blob'] = blob_id((plugin / path).read_bytes())
+            write_lock(plugin, lock)
+            return
+    raise SystemExit(f'{path}: not an imported file in {LOCK_NAME}')
+
+
+def fetched(lock, directory):
+    """Fetch the lock's commit into directory, without file contents, and check it out."""
+    directory.mkdir(parents=True, exist_ok=True)
+    git_output(directory, 'init', '-q')
+    git_output(directory, 'fetch', '-q', '--depth', '1', '--filter=blob:none',
+               lock['repository'], lock['commit'])
+    # `check` reads tree entries only, so nothing is checked out.
+    git_output(directory, 'update-ref', '--no-deref', 'HEAD', 'FETCH_HEAD')
+    return directory
 
 
 def check(plugin, source=None):
@@ -294,11 +396,18 @@ def compare_with_source(lock, source):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     commands = parser.add_subparsers(dest='command', required=True)
-    for name in ('sync', 'check'):
+    for name in ('sync', 'check', 'patch'):
         command = commands.add_parser(name)
         command.add_argument('--plugin', required=True, type=Path)
-        command.add_argument('--source', type=Path, required=name == 'sync',
-                             help='checkout of the upstream repository')
+    for name in ('sync', 'check'):
+        commands.choices[name].add_argument(
+            '--source', type=Path, required=name == 'sync',
+            help='checkout of the upstream repository')
+    commands.choices['check'].add_argument(
+        '--fetch', type=Path, metavar='DIR',
+        help="fetch the lock's commit into DIR and compare with it")
+    commands.choices['patch'].add_argument(
+        '--path', required=True, help='imported file, relative to the plugin folder')
     commands.choices['sync'].add_argument(
         '--accept-new', action='store_true',
         help='import upstream files the lock does not classify, instead of reporting them')
@@ -309,7 +418,13 @@ def main(argv=None):
         json.dump(report, sys.stdout, indent=2)
         print()
         return 0
-    problems = check(args.plugin, args.source)
+    if args.command == 'patch':
+        mark_patched(args.plugin, args.path)
+        return 0
+    source = args.source
+    if args.fetch:
+        source = fetched(read_lock(args.plugin), args.fetch)
+    problems = check(args.plugin, source)
     for problem in problems:
         print(problem, file=sys.stderr)
     return 1 if problems else 0

@@ -1,7 +1,8 @@
 {
   "repository": "https://github.com/cursor/plugins",
-  "commit": "aaeb0ea3a0584995aa8f55ce44c6c5259414b896",
-  "version": "0.15.46",
+  "commit": "e58dd043600587dbaf58ba315e7f2b38373eeb43",
+  "version": "0.15.44",
+  "version_file": "plugin.json",
   "upstream_root": "harness/pstack/claude-code",
   "skip": [
     ".claude-plugin/",
@@ -27,7 +28,7 @@
     {
       "upstream": "harness/pstack/claude-code/.claude-plugin/plugin.json",
       "status": "skipped",
-      "upstream_blob": "fce40ca89885495288a48db1531061f65a21d240"
+      "upstream_blob": "d4ca0bd6741ea4b7b70fa5bad92e4e8615414207"
     },
     {
       "upstream": "harness/pstack/claude-code/LICENSE",
@@ -152,13 +153,13 @@
     {
       "upstream": "harness/pstack/claude-code/docs/harness/claude-code.md",
       "status": "verbatim",
-      "upstream_blob": "2a59bc80edf61649b22e05cfd07a25bc7f997994",
+      "upstream_blob": "fae9e6dc2d8b3763eb26b50dbe103060bb881278",
       "path": "docs/harness/claude-code.md"
     },
     {
       "upstream": "harness/pstack/claude-code/plugin.json",
       "status": "skipped",
-      "upstream_blob": "fce40ca89885495288a48db1531061f65a21d240"
+      "upstream_blob": "d4ca0bd6741ea4b7b70fa5bad92e4e8615414207"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/architect/SKILL.md",
@@ -170,9 +171,9 @@
     {
       "upstream": "harness/pstack/claude-code/skills/arena/SKILL.md",
       "status": "injected",
-      "upstream_blob": "17d19f7e529601b9b8bef6e53f0cda3dd01c7c33",
+      "upstream_blob": "74d0f445b09c4f0f25bfc820bebaf4e40c5335e9",
       "path": "skills/arena/SKILL.md",
-      "applied_blob": "fd6f97ca6b6bc4f3f40d8576276a056195cdb99a"
+      "applied_blob": "c4c2e748b06a434a093e1e02c3fd9b81ae832b00"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/automate-me/SKILL.md",
@@ -320,9 +321,9 @@
     {
       "upstream": "harness/pstack/claude-code/skills/poteto-mode/SKILL.md",
       "status": "injected",
-      "upstream_blob": "94e889568a91ef0c1bef9ea36c4b1e8fc0250b14",
+      "upstream_blob": "d8ee6d59199bb82acfc7eb8369ba6ca651f34f26",
       "path": "skills/poteto-mode/SKILL.md",
-      "applied_blob": "8086220ea3e24bd9893c7c7b7996f0e017a70807"
+      "applied_blob": "ab921985e6d51a815ae186968e731d63df925376"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/poteto-mode/playbooks/authoring-a-skill.md",
@@ -728,9 +729,9 @@
     {
       "upstream": "harness/pstack/claude-code/skills/setup-pstack/SKILL.md",
       "status": "injected",
-      "upstream_blob": "bace8014f1c1a4e21d97408337095a27bf96255a",
+      "upstream_blob": "b4a1ed9cc5d108ca7b9d72ce4969fecbc0c67592",
       "path": "skills/setup-pstack/SKILL.md",
-      "applied_blob": "aac675ff5988afefefe2dd4c00fecd0101364684"
+      "applied_blob": "952bb6748bbdedfc8cbfadcfb452a61fa5aee078"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/sharpen/SKILL.md",
@@ -761,7 +762,7 @@
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/SKILL.md",
       "status": "skipped",
-      "upstream_blob": "18d653a810dfbb3ea35a6ed88bcfe8cb84f0a893"
+      "upstream_blob": "f5a64a8db4b8a5957ac5e76e051b1823cecd4d5e"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/references/render.md",
@@ -796,7 +797,7 @@
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/dot.ts",
       "status": "skipped",
-      "upstream_blob": "09d5481e70d9cf911dc16ddf655c91c197ff1fac"
+      "upstream_blob": "003dfc89d4925c6aed3e59073b6a9414da78117b"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/frontends/marks.ts",
@@ -901,7 +902,7 @@
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/run.ts",
       "status": "skipped",
-      "upstream_blob": "45e13dcb4d4ee41d4437ed64e3177fe1a412ae56"
+      "upstream_blob": "017684f82ddffe860b4b9312771174622603c4a7"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/statechart",
@@ -911,7 +912,7 @@
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/statechart.ts",
       "status": "skipped",
-      "upstream_blob": "43ee983edfa7b1fa76ddab07e0e99cba897373b9"
+      "upstream_blob": "4e2967e680895875d7d5352bfe997a4c08c2d1fc"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/ConfigOracle.java",
@@ -941,7 +942,7 @@
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/cli.test.ts",
       "status": "skipped",
-      "upstream_blob": "ee80722d6fdbb1e3c091c0c9f6f981636f61a264"
+      "upstream_blob": "11f06a6fd7ee078a66b9cfbc15452e4a8eb20471"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/config-fuzz.test.ts",
@@ -2771,7 +2772,7 @@
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/messages.test.ts",
       "status": "skipped",
-      "upstream_blob": "4e0d3c358809a2c3b17a171b3e4601f3f2790992"
+      "upstream_blob": "61af006968a6e9c2dc359c8b5859a1238b9e56cb"
     },
     {
       "upstream": "harness/pstack/claude-code/skills/statechart/scripts/test/pipeline.test.ts",
