@@ -21,9 +21,23 @@ Codex and agy read a project's skills from `.agents/skills/`, and Claude Code re
 
 | Claude Code adapter | Here |
 | --- | --- |
-| `.cursor/skills/<name>/` in a project, which the Claude Code adapter maps to `.claude/skills/<name>/` | Write `.agents/skills/<name>/`, then link it with `mkdir -p .claude/skills && ln -s ../../.agents/skills/<name> .claude/skills/<name>` from the top of the project. Commit both. When `.claude/skills/<name>` already exists and is not that link, stop and tell the user instead of replacing it |
+| `.cursor/skills/<path>/` in a project, which the Claude Code adapter maps to `.claude/skills/<path>/`. `<path>` is the skill's folder under `skills/`, such as `verify-app` or `sam/sam-mode` | Write `.agents/skills/<path>/`, link it into `.claude/skills/<path>` as below, and commit both |
 | Finding a project skill, such as `maintain-verification-skill`'s `.cursor/skills/verify-*/` | Look in `.agents/skills/` first, then `.claude/skills/`. A skill found only in `.claude/skills/` is still the target; offer to move it and link it |
 | `~/.cursor/skills/`, the user's own skills | `~/.claude/skills/`, as the Claude Code adapter says |
+
+Link from the top of the project. The link is relative to its own folder, so it works for a skill in a category folder, and running it again for a skill that is already linked changes nothing. When `.claude/skills/<path>` exists and is not that link, it stops; tell the user instead of replacing it:
+
+```sh
+src=.agents/skills/<path> dst=.claude/skills/<path>
+if [ -L "$dst" ] && [ "$(cd "$dst" && pwd -P)" = "$(cd "$src" && pwd -P)" ]; then
+  echo "already linked"
+elif [ -e "$dst" ] || [ -L "$dst" ]; then
+  echo "$dst exists and is not the link" >&2; false
+else
+  mkdir -p "$(dirname "$dst")" &&
+  ln -s "$(python3 -c 'import os, sys; print(os.path.relpath(sys.argv[1], os.path.dirname(sys.argv[2])))' "$src" "$dst")" "$dst"
+fi
+```
 
 ## Skills that are not installed
 

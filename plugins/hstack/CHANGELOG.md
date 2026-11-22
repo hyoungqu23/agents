@@ -2,7 +2,7 @@
 
 ## 0.5.1 - 2026-11-22
 
-- A project skill that a skill writes, such as `verify-<app>` from `create-verification-skill`, goes in `.agents/skills/`, where Codex and agy read it, and is linked into `.claude/skills/` for Claude Code. `maintain-verification-skill` looks for its target in both places.
+- A project skill that a skill writes, such as `verify-<app>` from `create-verification-skill`, goes in `.agents/skills/`, where Codex and agy read it, and is linked into `.claude/skills/` for Claude Code. The link works for a skill in a category folder, and linking again leaves an existing link alone. `maintain-verification-skill` looks for its target in both places.
 
 ## 0.5.0 - 2026-11-22
 
