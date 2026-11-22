@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/cursor/plugins",
-  "commit": "7a583913eb1b8d1a0ee76753d1a2cf072e7b54f9",
+  "commit": "e58dd043600587dbaf58ba315e7f2b38373eeb43",
   "version": "0.15.46",
   "version_file": "plugin.json",
   "upstream_root": "harness/pstack/claude-code",
