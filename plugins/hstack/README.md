@@ -1,6 +1,6 @@
 # Hstack
 
-> **Not usable yet: `poteto-mode`, `arena`, `interrogate`, `swarm`, `show-me-your-work`.** They need workers or reviewers on other vendors' models, and hstack cannot start those until its Orca adapter is complete. Each one stops and says so when invoked. The other 49 skills work now.
+> **Not usable yet: `arena`, `interrogate`, `swarm`.** They start panels of workers on several vendors' models, and hstack has not adapted them yet. Each one stops and says so when invoked, and a step that routes to one of them is skipped with a line, or stops the playbook when a later step needs its output. The other 52 skills work now.
 
 Hstack is [pstack](https://github.com/cursor/plugins/tree/main/pstack) for Claude Code, imported with its source text intact. pstack is written by Lauren Tan and published under the MIT license; see [LICENSE](LICENSE) and the original [README](UPSTREAM-README.md).
 
@@ -10,6 +10,8 @@ Hstack is for Claude Code only. Install it from this marketplace and call a skil
 /plugin install hstack@hm2-tools
 /hstack:how
 ```
+
+Start work with `/hstack:hstack <goal>`. It checks your seats, then follows `poteto-mode`. Reviews and second opinions from another vendor run as Orca workers, so start Claude Code in an Orca terminal.
 
 Installing the `skills/` folder by itself is not supported. The skills link `docs/` in the plugin folder, and their short names (`how`, `why`, `tdd`) would be installed without a prefix.
 

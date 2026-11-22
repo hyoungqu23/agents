@@ -2879,6 +2879,10 @@
     {
       "path": "scripts/hstack_seats.py",
       "status": "local"
+    },
+    {
+      "path": "skills/hstack/SKILL.md",
+      "status": "local"
     }
   ]
 }
