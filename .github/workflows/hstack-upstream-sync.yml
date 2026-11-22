@@ -68,8 +68,11 @@ jobs:
           ROOT: ${{ steps.upstream.outputs.root }}
           LATEST: ${{ steps.upstream.outputs.latest }}
         run: |
-          number="$(gh pr list --head "$HEAD_BRANCH" --base "$BASE" --state open --json number --jq '.[0].number // empty')"
+          # --head matches the branch name alone, so a fork's pull request from
+          # a branch of the same name is left out here.
+          number="$(gh pr list --head "$HEAD_BRANCH" --base "$BASE" --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository | not)][0].number // empty')"
           echo "number=$number" >> "$GITHUB_OUTPUT"
+          echo "remote=$(git ls-remote origin "refs/heads/$HEAD_BRANCH" | cut -f1)" >> "$GITHUB_OUTPUT"
           [[ -n "$number" ]] || exit 0
           head="$(gh pr view "$number" --json headRefOid --jq .headRefOid)"
           git fetch -q --depth 1 origin "$head"
@@ -163,9 +166,17 @@ jobs:
 
       - name: Open the pull request
         if: steps.changed.outputs.changed == 'true'
+        env:
+          REMOTE: ${{ steps.open.outputs.remote }}
         run: |
-          # No open PR uses this branch, so a leftover from a closed one is replaced.
-          git push -q --force origin "$HEAD_BRANCH"
+          # A leftover branch from a closed PR is replaced, but only while it is
+          # still what the first step saw: someone may have reopened that PR and
+          # pushed to it since.
+          if [[ -n "$(gh pr list --head "$HEAD_BRANCH" --base "$BASE" --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository | not)][0].number // empty')" ]]; then
+            echo "A sync pull request was opened while this ran; leaving it alone."
+            exit 0
+          fi
+          git push -q --force-with-lease="refs/heads/$HEAD_BRANCH:$REMOTE" origin "$HEAD_BRANCH"
           gh pr create --base "$BASE" --head "$HEAD_BRANCH" \
             --title "hstack: 원문 $(echo '${{ steps.upstream.outputs.latest }}' | cut -c1-7) 반영" \
             --body-file "$RUNNER_TEMP/body.md"
