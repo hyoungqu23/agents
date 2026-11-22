@@ -112,15 +112,18 @@ def body(old, new, report, version):
         '## 병합 전에 할 일',
         '',
         '1. 이 PR의 `validate` 실행이 승인 대기 중이면 "Approve workflows to run"을 누릅니다.',
-        '2. 아래 "분류되지 않은 새 원문 파일"을 분류합니다. 들이지 않을 파일의 경로를 먼저 '
-        '잠금 파일의 `skip`에 더하고, 그다음 `sync --accept-new`를 한 번 돌립니다. 순서를 바꾸면 '
+        '2. 아래 "분류되지 않은 새 원문 파일"을 분류합니다. 들이지 않을 파일의 경로를 아래에 '
+        '적힌 그대로 먼저 잠금 파일의 `skip`에 더하고, 그다음 `sync --accept-new`를 한 번 돌립니다. 순서를 바꾸면 '
         '들이지 않으려던 파일까지 들어옵니다.',
         '3. "원문에서 지워진 파일"은 파일과 잠금 파일의 항목을 함께 지웁니다. 남겨 둘 파일은 '
         '항목에서 `upstream`, `upstream_blob`, `applied_blob`을 빼고 `status`를 `local`로 바꿉니다.',
         '4. "충돌이 남은 파일"의 충돌 표시를 풀고 `import_upstream.py patch`로 다시 기록합니다.',
         '',
     ]
-    lines += listing('분류되지 않은 새 원문 파일', report['unclassified'], '없음')
+    # Relative to the root, the form `skip` takes.
+    lines += listing(f'분류되지 않은 새 원문 파일 (`{root}` 기준 경로)',
+                     [path.removeprefix(root.rstrip('/') + '/') for path in report['unclassified']],
+                     '없음')
     lines += listing('원문에서 지워진 파일', report['removed'], '없음')
     lines += listing('충돌이 남은 파일', report['conflicts'], '없음')
     lines += listing('사람이 고쳐 둔 파일 (`patched`)', report['patched'], '없음')

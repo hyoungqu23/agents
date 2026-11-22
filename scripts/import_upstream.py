@@ -120,6 +120,13 @@ def is_executable(path):
     return bool(path.stat().st_mode & 0o100)
 
 
+def misplaced_skips(lock):
+    """`skip` prefixes written from the repository root, which would never match."""
+    root = lock['upstream_root'].rstrip('/') + '/'
+    return [f'skip: {prefix} starts with upstream_root; write it relative to {root}'
+            for prefix in lock.get('skip', []) if prefix.startswith(root)]
+
+
 def upstream_changed(lock, source):
     """Whether the checkout's HEAD differs from the lock's commit under the root."""
     root = lock['upstream_root'].rstrip('/')
@@ -175,7 +182,18 @@ def sync(plugin, source, accept_new=False):
             raise SystemExit(
                 f"nothing was written: {root}{lock['version_file']} has no readable version")
     entries = [entry for entry in lock['files'] if not entry.get('upstream')]
-    refused = []
+    refused = misplaced_skips(lock)
+    # Every patched file, including one upstream left alone or deleted: merging
+    # would fold an edit nobody recorded into the patch, and moving the lock on
+    # would leave a plugin that fails `check`.
+    for entry in known.values():
+        target = plugin / entry.get('path', '')
+        if entry['status'] == 'patched' and (
+                not target.is_file() or target.is_symlink()
+                or blob_id(target.read_bytes()) != entry.get('applied_blob')):
+            refused.append(
+                f"{entry['path']}: differs from the recorded patch; "
+                'restore it or record it with `patch` first')
     writes = []
     for upstream, (blob, executable) in sorted(files.items()):
         relative = upstream[len(root):]
@@ -195,18 +213,9 @@ def sync(plugin, source, accept_new=False):
         if entry['status'] == 'patched':
             report['patched'].append(entry['path'])
             target = plugin / entry['path']
-            if (not target.is_file() or target.is_symlink()
-                    or blob_id(target.read_bytes()) != entry.get('applied_blob')):
-                # Checked even when upstream left this file alone: merging would
-                # fold an edit nobody recorded into the patch, and moving the
-                # lock on would leave a plugin that fails `check`.
-                refused.append(
-                    f"{entry['path']}: differs from the recorded patch; "
-                    'restore it or record it with `patch` first')
-                entries.append(entry)
-                continue
             # Content and the executable bit change independently upstream.
-            if entry.get('upstream_blob') != blob or bool(entry.get('executable')) != executable:
+            if not refused and (entry.get('upstream_blob') != blob
+                                or bool(entry.get('executable')) != executable):
                 content, conflicted = target.read_bytes(), False
                 if entry.get('upstream_blob') != blob:
                     content, conflicted = merged(
@@ -323,7 +332,7 @@ def fetched(lock, directory):
 def check(plugin, source=None):
     """List what disagrees between the lock, the plugin folder and a checkout."""
     lock = read_lock(plugin)
-    problems = []
+    problems = misplaced_skips(lock)
     listed = set()
     for entry in lock['files']:
         status, path = entry.get('status'), entry.get('path')

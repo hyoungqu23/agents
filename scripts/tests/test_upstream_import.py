@@ -344,6 +344,35 @@ class SyncTests(ImportFixture):
             self.assertEqual((self.plugin / 'UPSTREAM-README.md').read_text(), 'upstream readme\n')
             self.assertEqual((self.plugin / upstream_lock.LOCK_NAME).read_text(), before)
 
+    def test_unrecorded_edit_to_a_patched_file_deleted_upstream_stops_too(self):
+        target = self.patch_beta()
+        target.write_text(target.read_text() + '\nA draft nobody recorded.\n')
+        before = (self.plugin / upstream_lock.LOCK_NAME).read_text()
+        (self.pack / 'skills/beta/SKILL.md').unlink()
+        self.write(self.pack / 'README.md', 'changed too\n')
+        self.commit('second')
+        with self.assertRaises(SystemExit) as stopped:
+            import_upstream.sync(self.plugin, self.source)
+        self.assertIn('skills/beta/SKILL.md: differs from the recorded patch', str(stopped.exception))
+        self.assertEqual((self.plugin / 'UPSTREAM-README.md').read_text(), 'upstream readme\n')
+        self.assertEqual((self.plugin / upstream_lock.LOCK_NAME).read_text(), before)
+
+    def test_skip_written_from_the_repository_root_is_refused(self):
+        import_upstream.sync(self.plugin, self.source, accept_new=True)
+        self.write(self.pack / 'skills/fresh/SKILL.md', '# Fresh\n')
+        self.commit('second')
+        lock = import_upstream.read_lock(self.plugin)
+        lock['skip'].append('vendor/pack/skills/fresh/')
+        import_upstream.write_lock(self.plugin, lock)
+        with self.assertRaises(SystemExit) as stopped:
+            import_upstream.sync(self.plugin, self.source, accept_new=True)
+        self.assertIn('skip: vendor/pack/skills/fresh/ starts with upstream_root',
+                      str(stopped.exception))
+        self.assertFalse((self.plugin / 'skills/fresh').exists())
+        self.assertEqual(self.problems(source=False), [
+            'skip: vendor/pack/skills/fresh/ starts with upstream_root; '
+            'write it relative to vendor/pack/'])
+
     def test_executable_bit_change_alone_reaches_a_patched_file(self):
         import_upstream.sync(self.plugin, self.source, accept_new=True)
         target = self.plugin / 'skills/beta/run.sh'
@@ -636,7 +665,8 @@ class SyncPullRequestTests(ImportFixture):
         self.assertIsNone(check_release_notes.check_notes('0.1.10', notes))
 
         self.assertIn(f'https://github.com/example/pack/compare/{self.first}...{second}', text)
-        self.assertIn('### 분류되지 않은 새 원문 파일\n\n- `vendor/pack/skills/fresh/SKILL.md`', text)
+        self.assertIn(
+            '### 분류되지 않은 새 원문 파일 (`vendor/pack` 기준 경로)\n\n- `skills/fresh/SKILL.md`', text)
         self.assertIn('### 원문에서 지워진 파일\n\n- `vendor/pack/agents/helper.md`', text)
         self.assertIn('### 충돌이 남은 파일\n\n- 없음', text)
         self.assertIn('### 내용이 바뀐 원문 파일\n\n- `vendor/pack/skills/beta/SKILL.md`', text)
