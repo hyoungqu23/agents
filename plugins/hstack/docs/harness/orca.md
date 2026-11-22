@@ -4,17 +4,6 @@ Read this after [the Claude Code adapter](claude-code.md). Where the two disagre
 
 hstack runs other vendors' models as Orca workers. It never runs a Codex or agy seat on the session model, so a review that should come from another vendor never comes from Claude.
 
-## Skills that cannot run yet
-
-`arena` and `swarm` start panels of workers, and hstack has not adapted all of their steps yet. When either is invoked, stop before its first step and tell the user that it is unavailable until hstack adapts it. Do not start subagents or workers for it. `interrogate` runs, as Panels says.
-
-When another skill routes a step to either of them, do not do that step another way. What happens next depends on whether a later step needs what the skipped step makes:
-
-- Nothing later needs it: put one line in your reply, `Skipped in hstack: <step>. <skill> is not available yet.`, and go on to the next step.
-- A later step needs it, as with the code that the Feature playbook delegates to `arena` when the implementation admits several shapes, or the Eval playbook's candidates and judge: stop the playbook at that step. Tell the user which step needs which skill, and report what the earlier steps finished. Do not go on to the steps that would check, ship or score the missing output.
-
-A skill that only names one of them, as `poteto-help` does in its tables and recipes, still runs. When it suggests that the user type one of them, say that it is not available yet.
-
 ## Names
 
 This plugin is installed as `hstack`, not `pstack`.
@@ -149,9 +138,9 @@ A panel runs one worker per seat of a role: `arena runners` for `arena`, `interr
 
 Each seat works in its own worktree, which you create before the start so the worker finds the changes in its own workspace. An agy worker then needs no `--reads`.
 
-For `interrogate`, freeze the scope once, before the first seat, so every seat reviews the same changes even when a seat waits for a free slot. `arena`'s candidate worktrees are adapted with the rest of `arena`.
+Freeze the scope once, before the first seat, so every seat starts from the same code even when a seat waits for a free slot. For `interrogate` the scope is the changes under review. For `arena` it is your checkout as it is, `<paths>` is `.`, and the base is the saved commit, so each candidate starts from your uncommitted work too.
 
-1. Write `<paths>` relative to the top of your checkout: the paths the user named, each prefixed with `git rev-parse --show-prefix` when you are in a subfolder, or `.` when the scope is the whole branch. Use the same `<paths>` in the spec.
+1. Write `<paths>` relative to the top of your checkout: for `interrogate`, the paths the user named, each prefixed with `git rev-parse --show-prefix` when you are in a subfolder, or `.` when the scope is the whole branch. Use the same `<paths>` in the spec.
 2. Save the commit, the base commit the seats diff from, the tracked changes and the untracked files under `<snapshot>`: the run record's path without `.json`, plus `-scope`, as an absolute path. A new run's record is new, so `mkdir` without `-p` refuses a folder an earlier run left. The `&&` stops at the first command that fails:
 
    ```sh
@@ -191,15 +180,16 @@ Then, for each seat:
 
 ### Spec
 
-Write the spec as Workers says. Leave out `--instructions`: a panel worker follows its own brief, not `worker.md`. For `interrogate`, give it `<paths>` and the base commit saved in `<snapshot>/base`, the same for every seat. Tell it that the commits and the copied changes are already in its worktree, so `git diff --cached <base commit> -- <paths>` shows the whole scope. Tell it to report with `worker_done`.
+Write the spec as Workers says. Leave out `--instructions`: a panel worker follows its own brief, not `worker.md`. For `arena`, give every candidate the same spec: the task, the shared grounding written into the spec itself, since an agy worker reads nothing outside its worktree, and instructions to leave the artifact in its worktree and to report a short rationale naming the alternatives it considered and what it rejected. Never name a seat, vendor or model in it. For `interrogate`, give it `<paths>` and the base commit saved in `<snapshot>/base`, the same for every seat. Tell it that the commits and the copied changes are already in its worktree, so `git diff --cached <base commit> -- <paths>` shows the whole scope. Tell it to report with `worker_done`.
 
 ### Verify
 
 Rerun each reported command yourself in that seat's worktree, where its repros are, after the worker reports. Read the output yourself; a worker's description of its output is not evidence.
 
-First list what the worker changed in its worktree since it was given the scope, without touching its Git state. The first command compares through a separate index, so the worktree's own index stays as the worker left it, and it covers commits, deletions and untracked files. The second lists every file written since, ignored files such as `.env.local` included:
+First list what the worker changed in its worktree since it was given the scope, without touching its Git state. The first command compares through a separate index, so the worktree's own index stays as the worker left it, and it covers commits, deletions and untracked files. The index starts from what the seat was given, so a tracked file that `.gitignore` matches is not reported as deleted. The second lists every file written since, ignored files such as `.env.local` included:
 
 ```sh
+GIT_INDEX_FILE=<snapshot>/<letter>.index git -C <worktree> read-tree "$(cat <snapshot>/<letter>.tree)" &&
 GIT_INDEX_FILE=<snapshot>/<letter>.index git -C <worktree> add -A &&
 GIT_INDEX_FILE=<snapshot>/<letter>.index git -C <worktree> diff --cached --name-status "$(cat <snapshot>/<letter>.tree)"
 find <worktree> -newer <snapshot>/<letter>.tree -type f -not -path '<worktree>/.git'
@@ -218,6 +208,35 @@ Release a panel worker once it has reported and you have read its report. Its wo
 Follow the skill with Panels. Its "Run Phase A steps 3 and 4 and Phase B of the **arena** skill" means Panels' Seats, Worktrees and Spec with `interrogate reviewers`. Copying the scope's uncommitted changes is the snapshot and the per-seat copy in Worktrees. "Spawn each adversary as `generalPurpose`" is the Orca worker. The brief goes in the spec word for word, after the scope and the intent.
 
 Its Verify step reruns each finding as Panels' Verify says. Add an **Unverified** list to the output for the findings that Verify could not rerun, each with the reason. In the output, name each adversary by its seat as the seats file writes it, such as `codex` or `agy gemini-4-neon-xhigh`.
+
+## arena
+
+Follow the skill with Panels, `arena runners` as the role and `candidate` as the label. Panels' Seats, Worktrees and Spec replace Phase A steps 3 and 4 and Phase B. Spawning more runners for more design directions, or repeating a model, is not done: one worker per seat.
+
+- After each candidate reports, list what it changed since it was given the scope, as Panels' Verify does, through `<snapshot>/<letter>.index`. Do not diff against its `HEAD`: a candidate may commit only its own files and leave the frozen scope staged, and that diff would show the scope reversed.
+- Phase C. Start the judge after every candidate has reported and been released, so it fits under four open workers:
+
+  ```sh
+  python3 <hstack>/scripts/hstack_seats.py start --role "arena cross-judge pool" --worktree current \
+    --spec-file <judge spec> --task-title <title> --record <record> --reads <each candidate worktree>
+  ```
+
+  `start` picks the pool's first seat that is not `claude`. When a playbook checked the judge before its first step and that seat failed, check the next one that is not `claude` with `preflight --role "arena cross-judge pool" --judge-index <n>` instead of stopping, and pass the `--index` that passed to `start`. The judge spec gives the rubric, and for each candidate its worktree path and the files it changed, so the judge reads those files there. It names candidates only by their worktree, never by seat, and tells the judge not to edit anything. When `start` refuses or the judge drops out, start the next seat of the pool that is not `claude` with `--index`. When none is left, skip the judge and say so.
+- Phase D. Read each candidate's change with `GIT_INDEX_FILE=<snapshot>/<letter>.index git -C <worktree> diff --cached "$(cat <snapshot>/<letter>.tree)"` and read the rationales from the reports.
+- Phase E. Bring the base in with `GIT_INDEX_FILE=<snapshot>/<letter>.index git -C <worktree> diff --cached --binary "$(cat <snapshot>/<letter>.tree)" > <snapshot>/base.patch` and apply it from the top of your checkout, which still holds the frozen scope: `git -C "$(git rev-parse --show-toplevel)" apply <snapshot>/base.patch`. From a subfolder, a plain `git apply` applies nothing and still succeeds. When it does not apply because your checkout changed, report that and stop. Fold grafts in by hand as the skill says.
+- Phase F runs in your checkout.
+- The synthesis note names candidates by letter and adds each letter's seat from the run record, so the reader learns which vendor wrote what only after the pick.
+
+Release the judge after its report. Ask before deleting the candidate worktrees; an unpicked candidate's work lives only there.
+
+## swarm
+
+- Phase A step 3. The worker seat is the `swarm workers` line from `hstack_seats.py seats`. A `claude` seat runs as `Agent` calls, as Models says. A `codex` or `agy` seat runs each worker as an Orca worker through `start --role "swarm workers"`. A model race takes its arms from the seats of `arena runners`, one arm per seat with `start --role "arena runners" --index <n>`, and names each arm's seat up front. Before the first Orca worker, run `preflight` for the role, as Panels' Seats step 1 says.
+- Phase B. With Orca workers, start at most four at a time. When a batch has reported, read the results, release those workers, and start the next. Their worktrees stay.
+  - A worker that writes gets `--worktree new-child --name <slug>-<n>`, plus `--base-branch <ref>` when the brief names a branch or commit, which is what `environment: "cloud"` and `cloud_base_branch` map to.
+  - A worker that only reads gets `--worktree current` when your checkout is at the commit it must read. Its brief forbids `git checkout` and `git switch`, so it never moves your checkout. When it must read another branch or commit, give it its own worktree with `new-child --base-branch <ref>` instead. This replaces the Claude Code adapter's "Tell the worker to check out `<b>` first" for Orca workers.
+- Phase C. A worker that reported but left out its SHAs or method finished its Task, so it is not retried. Ask again once with a new Task on the same seat: `start` with the same `--role` and `--index`, a spec that names what was missing, and the same worktree (`path:<worktree>` for a writer, the same selector for a reader). A `claude` seat gets a new `Agent` call. `--task` with `--retry-of` is only for a Dispatch that failed or was lost.
+- Every worker that started is released before the report, which lists them and the kept worktrees.
 
 ## setup-pstack
 

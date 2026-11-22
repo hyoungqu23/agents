@@ -525,6 +525,8 @@ def main(argv=None):
     ready = commands.add_parser('preflight')
     ready.add_argument('--role', action='append', required=True)
     ready.add_argument('--reads', nargs='*', default=[], help='paths agy seats will read')
+    ready.add_argument('--judge-index', type=int,
+                       help='the arena cross-judge pool seat to check, as start --index takes it')
     begin = commands.add_parser('start')
     begin.add_argument('--role', required=True)
     begin.add_argument('--index', type=int,
@@ -581,8 +583,12 @@ def main(argv=None):
     for role in args.role:
         if role == 'arena cross-judge pool' and role in roles:
             # One judge runs, chosen as start chooses it; the rest of the pool is not used.
-            picked = pick_seat(roles, argparse.Namespace(role=role, index=None, fallback=False))
-            seats += [picked[1]] if not isinstance(picked, str) else []
+            picked = pick_seat(roles, argparse.Namespace(role=role, index=args.judge_index,
+                                                         fallback=False))
+            if isinstance(picked, str):
+                problems = problems + [picked]
+            else:
+                seats.append(picked[1])
         else:
             seats += roles.get(role, {'seats': []})['seats']
     unknown = [role for role in args.role if role not in roles]
