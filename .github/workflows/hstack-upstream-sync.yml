@@ -81,9 +81,12 @@ jobs:
           # Tree ids, because upstream holds other plugins whose commits say
           # nothing about this one.
           tree="$(git -C "$SOURCE" rev-parse "HEAD:$ROOT")"
+          # Read on its own line: inside a condition a failed lookup would look
+          # like "no such comment" and a duplicate would be posted.
+          comments="$(gh pr view "$number" --json comments --jq '.comments[].body')"
           if [[ "$(git -C "$SOURCE" rev-parse "$covered:$ROOT")" == "$tree" ]]; then
             echo "PR #$number already covers $ROOT at $LATEST."
-          elif gh pr view "$number" --json comments --jq '.comments[].body' | grep -qF "$tree"; then
+          elif grep -qF "$tree" <<< "$comments"; then
             echo "PR #$number already has a comment about tree $tree."
           else
             {
@@ -172,7 +175,10 @@ jobs:
           # A leftover branch from a closed PR is replaced, but only while it is
           # still what the first step saw: someone may have reopened that PR and
           # pushed to it since.
-          if [[ -n "$(gh pr list --head "$HEAD_BRANCH" --base "$BASE" --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository | not)][0].number // empty')" ]]; then
+          # Assigned first, so a failed lookup stops the step instead of
+          # reading as "no open pull request".
+          number="$(gh pr list --head "$HEAD_BRANCH" --base "$BASE" --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository | not)][0].number // empty')"
+          if [[ -n "$number" ]]; then
             echo "A sync pull request was opened while this ran; leaving it alone."
             exit 0
           fi
