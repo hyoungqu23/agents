@@ -40,6 +40,10 @@ jobs:
         env:
           CODEX_PLUGIN_VALIDATOR: ${{ github.workspace }}/.ci/codex/codex-rs/skills/src/assets/samples/plugin-creator/scripts/validate_plugin.py
       - run: ./scripts/load-check.sh
+      # The tests can only compare the lock with this repository. Whether the
+      # lock tells the truth about upstream needs the upstream commit itself.
+      - name: Compare hstack with its upstream commit
+        run: python3 scripts/import_upstream.py check --plugin plugins/hstack --fetch "$RUNNER_TEMP/hstack-upstream"
       - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
       - run: node --test plugins/design/evals/tests/fixtures.test.mjs
       - run: node --test plugins/build/skills/implement/evals/files/feature-app/tests/*.test.mjs
