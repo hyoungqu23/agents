@@ -7,7 +7,7 @@ Hstack is [pstack](https://github.com/cursor/plugins/tree/main/pstack) for Claud
 Hstack is for Claude Code only. Install it from this marketplace and call a skill with the plugin prefix:
 
 ```text
-/plugin install hstack@hm2-tools
+/plugin install hstack@hm2
 /hstack:how
 ```
 

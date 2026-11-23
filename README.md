@@ -2,7 +2,7 @@
 
 A cross-platform marketplace for reusable Claude Code and Codex plugins.
 
-- Marketplace ID: `hm2-tools`
+- Marketplace ID: `hm2`
 - Display name: `HM2 Agent Tools`
 - Repository: `agents`
 
@@ -59,10 +59,10 @@ From the parent directory of this repository:
 
 ```text
 /plugin marketplace add ./agents
-/plugin install content@hm2-tools
-/plugin install review@hm2-tools
-/plugin install design@hm2-tools
-/plugin install learn@hm2-tools
+/plugin install content@hm2
+/plugin install review@hm2
+/plugin install design@hm2
+/plugin install learn@hm2
 ```
 
 After publishing to GitHub, replace the local path with `<github-owner>/agents`.

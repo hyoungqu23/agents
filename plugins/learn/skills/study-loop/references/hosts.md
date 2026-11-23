@@ -5,12 +5,12 @@ any folder; no conversation ID, chat log or login is stored in it.
 
 ## Install
 
-Both hosts install the `learn` plugin from the `hm2-tools` marketplace (this
+Both hosts install the `learn` plugin from the `hm2` marketplace (this
 repository). Each skill exists once under `plugins/learn/skills/study-loop/`.
 
 | Host | Install | Invoke |
 | --- | --- | --- |
-| Claude Code CLI or desktop | `/plugin marketplace add <path-or-owner/repo>` then `/plugin install learn@hm2-tools` | `/learn:study-loop` |
+| Claude Code CLI or desktop | `/plugin marketplace add <path-or-owner/repo>` then `/plugin install learn@hm2` | `/learn:study-loop` |
 | Codex CLI | `codex plugin marketplace add <absolute path>` then install `learn` from HM2 Agent Tools | `$study-loop` |
 
 The plugin skill is namespaced, so it does not replace other `learn` or `tutor`
